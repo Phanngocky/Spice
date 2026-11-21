@@ -1,7 +1,7 @@
 # BẢN ĐỐI CHIẾU KIỂM CHỨNG KỸ THUẬT & BENCHMARK DỮ LIỆU
 ## HỌC PHẦN THỰC HÀNH THIẾT KẾ VLSI (5505382)
 
-> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
+> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
 
 ---
 
@@ -72,3 +72,94 @@ Delay Estimation (CL = 50 fF):
 - `03 - Instructor_Solutions/lab01/cmos_inverter_vtc_only.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab01/cmos_inverter_vtc_only.sp)
 - `03 - Instructor_Solutions/lab01/cmos_inverter_vtc_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab01/cmos_inverter_vtc_tran.sp)
 - `03 - Instructor_Solutions/lab01/cmos_inverter_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab01/cmos_inverter_pex_postlayout.sp)
+
+---
+
+### 3. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 2 (LAB 02)
+
+Script kiểm chứng: `python scripts/verify_lab02.py`
+
+```
+============================================================
+VERIFICATION: LAB 02 (CMOS NAND2 & NOR2 GATES)
+============================================================
+NAND2 Sizing:
+  NMOS: W = 2.4u, L = 0.6u (Req_N = 969.0 Ohm)
+  PMOS: W = 3.6u, L = 0.6u (Req_P_worst = 992.1 Ohm, Req_P_best = 496.0 Ohm)
+NAND2 Delay (CL = 50 fF):
+  tpHL = 33.43 ps
+  tpLH (worst: 1 PMOS) = 34.23 ps
+  tpLH (best:  2 PMOS) = 17.11 ps
+  tpd (worst) = 33.83 ps
+
+NOR2 Sizing:
+  PMOS: W = 7.2u, L = 0.6u (Req_P = 992.1 Ohm)
+  NMOS: W = 1.2u, L = 0.6u (Req_N_worst = 969.0 Ohm, Req_N_best = 484.5 Ohm)
+NOR2 Delay (CL = 50 fF):
+  tpLH = 34.23 ps
+  tpHL (worst: 1 NMOS) = 33.43 ps
+  tpHL (best:  2 NMOS) = 16.72 ps
+  tpd (worst) = 33.83 ps
+
+PPA Comparison:
+  Total Transistor Width: NAND2 = 12.0 um vs NOR2 = 16.8 um (+40.0%)
+  Input Capacitance (Pin A): NAND2 (Wn+Wp = 6.0u) vs NOR2 (Wn+Wp = 8.4u, +40%)
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab02/nand2_dc_vtc.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab02/nand2_dc_vtc.sp)
+- `03 - Instructor_Solutions/lab02/nand2_tran_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab02/nand2_tran_meas.sp)
+- `03 - Instructor_Solutions/lab02/nor2_tran_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab02/nor2_tran_meas.sp)
+- `03 - Instructor_Solutions/lab02/nand2_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab02/nand2_pex_postlayout.sp)
+
+---
+
+### 4. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 3 (LAB 03)
+
+Script kiểm chứng: `python scripts/verify_lab03.py`
+
+```
+======================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 03 - AOI21 & LOGICAL EFFORT
+======================================================================
+
+1. Inverter tham chiếu (INV_X1):
+   Wn = 1.20 um (4 lambda), Wp = 3.60 um (12 lambda), L = 0.60 um
+
+2. Kích thước tế bào AOI21_X1:
+   MN_A, MN_B (PDN nối tiếp): Wn = 2.40 um (8 lambda)
+   MN_C       (PDN nhánh đơn): Wn = 1.20 um (4 lambda)
+   MP_A, MP_B, MP_C (PUN):    Wp = 7.20 um (24 lambda)
+
+3. Logical Effort (g):
+   g_A = Cin_A / Cin_inv = 32 / 16 = 2.000 (= 6/3 = 2.000)
+   g_B = Cin_B / Cin_inv = 32 / 16 = 2.000 (= 6/3 = 2.000)
+   g_C = Cin_C / Cin_inv = 28 / 16 = 1.750 (= 7/4 = 1.750)
+
+4. Parasitic Delay (p):
+   Cout_aoi = 24 + 8 + 4 = 36 lambda
+   Cout_inv = 12 + 4 = 16 lambda
+   p_aoi21 = 36 / 16 = 2.250 (= 2.25 tau)
+
+5. Tối ưu hóa chuỗi đệm Inverter (Inverter Buffer Chain):
+   Cin = 20.0 fF, CL = 1.0 pF -> H = CL/Cin = 50.0
+   N = 1 tầng: f_hat = 50.000, Trễ D = 51.00 tau
+   N = 2 tầng: f_hat = 7.071, Trễ D = 16.14 tau
+   N = 3 tầng: f_hat = 3.684, Trễ D = 14.05 tau
+   N = 4 tầng: f_hat = 2.659, Trễ D = 14.64 tau
+   N = 5 tầng: f_hat = 2.187, Trễ D = 15.93 tau
+   => Số tầng tối ưu: N = 3 (Trễ cực tiểu D = 14.05 tau)
+   => Cải thiện tốc độ so với N=1 (lái trực tiếp): 3.63 lần (362.9%)
+
+6. Định kích thước các tầng chuỗi đệm (N = 3, f_hat = 3.684):
+   Tầng 1 (1.0X):  Wn = 1.20 um, Wp = 3.60 um
+   Tầng 2 (3.68X): Wn = 4.42 um, Wp = 13.26 um
+   Tầng 3 (13.57X): Wn = 16.29 um, Wp = 48.86 um
+======================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab03/aoi21_logic_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/aoi21_logic_tran.sp)
+- `03 - Instructor_Solutions/lab03/logical_effort_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/logical_effort_meas.sp)
+- `03 - Instructor_Solutions/lab03/buffer_chain_opt.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/buffer_chain_opt.sp)
+- `03 - Instructor_Solutions/lab03/aoi21_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/aoi21_pex_postlayout.sp)
