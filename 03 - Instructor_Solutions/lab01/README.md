@@ -35,7 +35,7 @@
 | Thông số đo đạc | Giá trị Lý thuyết | Giá trị Mô phỏng SPICE Pre-layout | Giá trị Mô phỏng SPICE Post-layout (PEX) | Ghi chú đánh giá |
 | :--- | :---: | :---: | :---: | :--- |
 | **$V_{thn}$** | $0.70\,\text{V}$ | $0.69 - 0.71\,\text{V}$ | $0.69 - 0.71\,\text{V}$ | Đo qua tiếp tuyến $\sqrt{I_{DS}}$ |
-| **$V_{thp}$** | $-0.80\,\text{V}$ | $-0.79 - -0.81\,\text{V}$ | $-0.79 - -0.81\,\text{V}$ | Đo qua tiếp tuyến $\sqrt{\|I_{DS}\|}$ |
+| **$V_{thp}$** | $-0.80\,\text{V}$ | $-0.79 - -0.81\,\text{V}$ | $-0.79 - -0.81\,\text{V}$ | Đo qua tiếp tuyến $\sqrt{\vert I_{DS}\vert}$ |
 | **Điện áp chuyển mạch $V_M$** | $2.50\,\text{V}$ | $2.48 - 2.52\,\text{V}$ | $2.47 - 2.52\,\text{V}$ | Giao điểm $V_{out} = V_{in}$ |
 | **$V_{IL}$** | $\sim 2.10\,\text{V}$ | $2.05 - 2.15\,\text{V}$ | $2.05 - 2.15\,\text{V}$ | Điểm $dV_{out}/dV_{in} = -1$ |
 | **$V_{IH}$** | $\sim 2.85\,\text{V}$ | $2.80 - 2.90\,\text{V}$ | $2.80 - 2.90\,\text{V}$ | Điểm $dV_{out}/dV_{in} = -1$ |

@@ -78,8 +78,8 @@ Sơ đồ nguyên lý CMOS Inverter gồm 1 PMOS kéo lên nguồn ($V_{DD}$) v�
 | **A** | $0 \le V_{in} < V_{thn}$ | Ngưng dẫn (Cut-off) | Tuyến tính (Linear) | $V_{OH} = V_{DD}$ |
 | **B** | $V_{thn} \le V_{in} < V_M$ | Bão hòa (Saturation) | Tuyến tính (Linear) | Giảm chậm |
 | **C** | $V_{in} = V_M \approx V_{DD}/2$ | Bão hòa (Saturation) | Bão hòa (Saturation) | Giảm dốc đứng (Khuếch đại cao) |
-| **D** | $V_M < V_{in} \le V_{DD} - \|V_{thp}\|$ | Tuyến tính (Linear) | Bão hòa (Saturation) | Giảm chậm về mức thấp |
-| **E** | $V_{in} > V_{DD} - \|V_{thp}\|$ | Tuyến tính (Linear) | Ngưng dẫn (Cut-off) | $V_{OL} = 0\,\text{V}$ |
+| **D** | $V_M < V_{in} \le V_{DD} - \vert V_{thp} \vert$ | Tuyến tính (Linear) | Bão hòa (Saturation) | Giảm chậm về mức thấp |
+| **E** | $V_{in} > V_{DD} - \vert V_{thp} \vert$ | Tuyến tính (Linear) | Ngưng dẫn (Cut-off) | $V_{OL} = 0\,\text{V}$ |
 
 #### a. Điện áp ngưỡng chuyển mạch $V_M$ (Switching Threshold)
 Điểm chuyển mạch $V_M$ được định nghĩa tại vị trí $V_{out} = V_{in} = V_M$. Tại điểm này, cả NMOS và PMOS đều ở vùng bão hòa. Cân bằng phương trình dòng điện:

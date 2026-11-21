@@ -75,7 +75,7 @@ $\implies$ **Quy tắc thiết kế sư phạm:** Trễ tăng theo **hàm bậc 
 | Cấu hình khóa dẫn | Mức điện áp cực tiểu $V_{min}$ | Mức điện áp cực đại $V_{max}$ | Biên độ logic đỉnh-đỉnh | Nhận xét tính chất vật lý |
 | :--- | :---: | :---: | :---: | :--- |
 | **NMOS Pass Transistor** | **$0.000\,\text{V}$** | **$3.631\,\text{V}$** | $3.631\,\text{V}$ | **Weak '1'** (sụt áp $1.369\,\text{V}$ do Body Effect) |
-| **PMOS Pass Transistor** | **$0.865\,\text{V}$** | **$5.000\,\text{V}$** | $4.135\,\text{V}$ | **Weak '0'** (sụt áp $0.865\,\text{V}$ do $|V_{thp}|$) |
+| **PMOS Pass Transistor** | **$0.865\,\text{V}$** | **$5.000\,\text{V}$** | $4.135\,\text{V}$ | **Weak '0'** (sụt áp $0.865\,\text{V}$ do $\vert V_{thp} \vert$) |
 | **CMOS Transmission Gate**| **$0.000\,\text{V}$** | **$5.000\,\text{V}$** | **$5.000\,\text{V}$** | **Strong '0' & Strong '1' (Full Rail-to-Rail)** |
 
 ---
