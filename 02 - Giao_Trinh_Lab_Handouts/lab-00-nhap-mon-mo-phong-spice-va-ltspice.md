@@ -21,7 +21,7 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
    - **`.TRAN` (Transient Analysis):** Mô phỏng quá độ đáp ứng theo thời gian thực (Time-domain).
    - **`.AC` (AC Analysis):** Phân tích đáp ứng tần số, vẽ biểu đồ Bode biên độ (dB) và pha.
 5. **Khai thác câu lệnh đo lường tự động (`.MEASURE` / `.MEAS`):** Sử dụng câu lệnh đo lường tự động của SPICE để xuất thông số hằng số thời gian $\tau$, thời gian tăng/giảm, tần số cắt $f_{-3\text{dB}}$ trực tiếp từ nhật ký `SPICE Error Log` mà không cần chấm thủ công bằng mắt.
-6. **Mô phỏng phân cực DC và vẽ đặc tuyến Transistor lưỡng cực (BJT):** Nắm vững cú pháp khai báo linh kiện BJT trong SPICE, phân tích điểm làm việc tĩnh DC ($Q$-point) của mạch phân cực phân áp (Voltage Divider Bias), thực hiện quét quét DC Sweep 1 biến và 2 biến để vẽ đặc tuyến ngõ vào $I_B(V_{BE})$ và họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$, nhận diện rõ 3 vùng hoạt động: Ngưng dẫn (Cut-off), Khuếch đại tích cực (Forward Active) và Bão hòa (Saturation).
+6. **Khảo sát đặc tuyến ngõ vào và họ đặc tuyến ngõ ra của Transistor lưỡng cực (BJT):** Nắm vững cú pháp khai báo linh kiện BJT trong SPICE, cấu hình sơ đồ đo testbench cực phát chung (CE), thực hiện quét DC Sweep 1 biến và 2 biến lồng nhau để vẽ đặc tuyến ngõ vào $I_B(V_{BE})$ và họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$, nhận diện rõ 3 vùng làm việc: Ngưng dẫn (Cut-off), Khuếch đại tích cực (Forward Active) và Bão hòa (Saturation), trích xuất hệ số khuếch đại dòng $\beta$ và phân tích ảnh hưởng của điện áp Early $V_A$.
 7. **Khai báo mô hình ngoài (Third-party Models):** Biết cách gọi tệp mô hình bán dẫn bên ngoài (`.include C5_models.txt`) để chuẩn bị cho các bài thiết kế vi mạch CMOS từ Bài 1 trở đi.
 
 ---
@@ -170,67 +170,68 @@ Lệnh `.MEAS` cho phép trích xuất tự động các tham số đặc trưng
 
 ---
 
-### 7. Khảo sát Transistor Lưỡng cực BJT: Phân cực DC và Đặc tuyến Vào / Ra
+### 7. Khảo sát Transistor Lưỡng cực BJT: Cú pháp SPICE và Đặc tuyến I-V Vào / Ra
 
-Transistor lưỡng cực (BJT - *Bipolar Junction Transistor*) là linh kiện bán dẫn 3 cực gồm cực Thu (Collector - C), cực Gốc (Base - B) và cực Phát (Emitter - E). Trong vi mạch tích hợp tương tự (BiCMOS, Analog ICs), BJT đóng vai trò then chốt nhờ độ hỗ dẫn $g_m$ rất cao và độ méo thấp.
+Transistor lưỡng cực (BJT - *Bipolar Junction Transistor*) là linh kiện bán dẫn 3 cực gồm cực Thu (Collector - C), cực Gốc (Base - B) và cực Phát (Emitter - E). Trong vi mạch tích hợp tương tự (BiCMOS, Analog ICs), BJT đóng vai trò then chốt nhờ độ hỗ dẫn $g_m$ rất cao và khả năng điều khiển dòng điện ngõ ra $I_C$ thông qua dòng kích thích cực gốc $I_B$.
 
 #### a. Cú pháp khai báo BJT trong SPICE
 Trong SPICE Netlist, phần tử BJT bắt đầu bằng ký tự **`Q`**:
 ```spice
 Q<tên> <nút_Collector> <nút_Base> <nút_Emitter> [nút_Substrate] <tên_Model>
 ```
-*Ví dụ:* Khai báo BJT 2N3904:
+*Ví dụ:* Khai báo BJT 2N3904 cấu hình cực phát chung (Emitter nối đất 0):
 ```spice
-Q1 coll base emit Q2N3904
+Q1 coll base 0 Q2N3904
 .model Q2N3904 NPN(Is=1e-14 Bf=160 Vaf=74 Ikf=0.1 Rb=10 Rc=1 Cjc=4p Cje=8p)
 ```
-- `Is`: Dòng bão hòa ngược ($I_S \approx 10^{-14}\,\text{A}$).
-- `Bf`: Hệ số khuếch đại dòng điện phát chung ($\beta_F \approx 160$).
-- `Vaf`: Điện áp Early ($V_A \approx 74\,\text{V}$).
+- `Is`: Dòng bão hòa ngược ($I_S = 10^{-14}\,\text{A}$).
+- `Bf`: Hệ số khuếch đại dòng điện phát chung ($\beta_F = 160$).
+- `Vaf`: Điện áp Early ($V_A = 74\,\text{V}$).
 
-#### b. Mạch Phân cực Phân áp (Voltage Divider Bias) và Điểm Tĩnh Q
-Để BJT khuếch đại tín hiệu xoay chiều không méo, transistor phải được phân cực ổn định trong **vùng khuếch đại tích cực (Forward Active)** sao cho điểm làm việc tĩnh $Q(V_{CEQ}, I_{CQ})$ nằm gần trung tâm đường tải tĩnh DC.
+#### b. Sơ đồ Testbench Đo Đặc tuyến Vào và Ra trong SPICE
+Để khảo sát toàn diện đặc tính tĩnh $I-V$ của BJT, ta sử dụng hai sơ đồ testbench đo đạc chuẩn trong LTspice như sau:
 
-![Mạch phân cực phân áp BJT](images/bjt_bias_schematic.png)
+![Sơ đồ Testbench đo đặc tuyến BJT](images/bjt_bias_schematic.png)
 
-*Hình 0.1: Sơ đồ nguyên lý mạch phân cực phân áp (Voltage Divider Bias) cho BJT NPN.*
+*Hình 0.1: Sơ đồ Testbench trong SPICE đo đặc tuyến ngõ vào (Trái) và họ đặc tuyến ngõ ra (Phải) của BJT NPN.*
 
-Áp dụng định lý Thevenin tại cực Base (cắt mạch tại nút Base):
-$$V_{TH} = V_{CC} \times \frac{R_2}{R_1 + R_2}$$
-$$R_{TH} = R_1 \parallel R_2 = \frac{R_1 \times R_2}{R_1 + R_2}$$
+1. **Mạch đo đặc tuyến ngõ vào (Hình 0.1 - Trái):**
+   - Nối cực Emitter xuống đất (GND - `0`).
+   - Cố định điện áp Collector-Emitter ở mức danh định $V_{CE} = 5.0\,\text{V}$ (bằng nguồn điện áp độc lập).
+   - Quét điện áp ngõ vào $V_{BE}$ từ $0\,\text{V} \to 1.0\,\text{V}$ bằng lệnh `.dc Vbe 0 1.0 0.005`.
+   - Đo dòng điện đi vào cực Base: $I_B$.
 
-Phương trình vòng cực ngõ vào (Base - Emitter):
-$$V_{TH} = I_B R_{TH} + V_{BE} + I_E R_E$$
-Vì $I_E = (\beta + 1) I_B$, ta suy ra dòng cực Base:
-$$I_B = \frac{V_{TH} - V_{BE}}{R_{TH} + (\beta + 1) R_E}$$
-Dòng cực Collector và Emitter:
-$$I_C = \beta I_B, \quad I_E = I_C + I_B \approx I_C$$
-Phương trình vòng cực ngõ ra (Collector - Emitter):
-$$V_C = V_{CC} - I_C R_C, \quad V_E = I_E R_E$$
-$$V_{CE} = V_C - V_E = V_{CC} - I_C R_C - I_E R_E$$
+2. **Mạch đo họ đặc tuyến ngõ ra (Hình 0.1 - Phải):**
+   - Cực Emitter nối đất (GND - `0`).
+   - Cực Base được kích thích bằng **nguồn dòng độc lập** $I_B$ (phần tử `current` trong LTspice, mũi tên hướng vào cực Base).
+   - Cực Collector được cấp bởi nguồn điện áp quét $V_{CE}$ từ $0\,\text{V} \to 10.0\,\text{V}$.
+   - Thực hiện lệnh quét DC lồng nhau 2 tham số:
+     ```spice
+     .dc Vce 0 10 0.05 Ib 10u 50u 10u
+     ```
+   - Đo dòng điện đi vào cực Collector: $I_C$.
 
-*Điều kiện để mạch phân cực độc lập với $\beta$ (ổn định nhiệt độ tối ưu):*
-$$R_{TH} \ll (\beta + 1) R_E \quad \text{(thông thường chọn } R_{TH} \le 0.1 \times \beta R_E \text{)}$$
-
-#### c. Đặc tuyến Ngõ vào và Họ Đặc tuyến Ngõ ra của BJT
+#### c. Nguyên lý Vật lý của Đặc tuyến Ngõ vào và Họ Đặc tuyến Ngõ ra
 
 ![Đặc tuyến ngõ vào và họ đặc tuyến ngõ ra BJT](images/bjt_iv_characteristic.png)
 
-*Hình 0.2: (Trái) Đặc tuyến ngõ vào $I_B(V_{BE})$; (Phải) Họ đặc tuyến ngõ ra $I_C(V_{CE})$ quét tham số theo dòng $I_B$ với điểm tĩnh Q và vùng bão hòa.*
+*Hình 0.2: (Trái) Đặc tuyến ngõ vào $I_B(V_{BE})$ dẫn hàm mũ; (Phải) Họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$ với vùng bão hòa và độ dốc Early.*
 
 1. **Đặc tuyến ngõ vào $I_B - V_{BE}$:**
-   - Tiếp giáp Base - Emitter tương đương một Diode phân cực thuận:
+   - Tiếp giáp Base - Emitter hoạt động như một tiếp giáp $p-n$ phân cực thuận. Theo phương trình Ebers-Moll:
      $$I_B \approx \frac{I_S}{\beta} \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$$
-     (với thế nhiệt $V_T = \frac{k_B T}{q} \approx 26\,\text{mV}$ ở $300\,\text{K}$).
-   - Khi $V_{BE} < 0.5\,\text{V}$: BJT ở **vùng ngưng dẫn (Cut-off)**, dòng $I_B \approx 0$.
-   - Khi $V_{BE} \ge 0.65 - 0.7\,\text{V}$: Tiếp giáp dẫn hàm mũ dốc đứng, điện áp phân cực thuận ổn định ở mức $V_{BE,on} \approx 0.65 - 0.70\,\text{V}$.
+     (với thế nhiệt $V_T = \frac{k_B T}{q} \approx 25.85\,\text{mV}$ ở $300\,\text{K}$).
+   - **Vùng ngưng dẫn:** Khi $V_{BE} < 0.60\,\text{V}$, dòng $I_B \approx 0$.
+   - **Ngưỡng mở (Knee Voltage):** Tại $V_{BE,on} \approx 0.65 - 0.70\,\text{V}$, dòng $I_B$ bắt đầu tăng vọt theo hàm số mũ.
 
-2. **Họ đặc tuyến ngõ ra $I_C - V_{CE}$ (quét theo các mức dòng $I_B$):**
-   - **Vùng Bão hòa (Saturation Mode):** $V_{CE} < V_{CE,sat} \approx 0.2\,\text{V}$. Cả hai tiếp giáp $BE$ và $BC$ đều phân cực thuận. Dòng $I_C$ tăng nhanh theo $V_{CE}$ và bị khống chế bởi mạch ngoài ($I_C < \beta I_B$).
-   - **Vùng Khuếch đại Tích cực (Forward Active Mode):** $V_{CE} \ge 0.2\,\text{V}$. Tiếp giáp $BE$ phân cực thuận, tiếp giáp $BC$ phân cực nghịch. Dòng $I_C$ gần như bằng phẳng và tỉ lệ thuận với dòng kích thích ngõ vào $I_B$:
+2. **Họ đặc tuyến ngõ ra $I_C - V_{CE}$ (quét theo các mức dòng tham số $I_B$):**
+   - **Vùng Bão hòa (Saturation Mode):** $V_{CE} < V_{CE,sat} \approx 0.20 - 0.25\,\text{V}$. Cả hai tiếp giáp $BE$ và $BC$ đều phân cực thuận. Dòng $I_C$ tăng dốc gần như tuyến tính theo $V_{CE}$ và bị khống chế bởi nội trở bão hòa của transistor ($I_C < \beta I_B$).
+   - **Vùng Khuếch đại Tích cực (Forward Active Mode):** $V_{CE} \ge 0.25\,\text{V}$. Tiếp giáp $BE$ phân cực thuận, tiếp giáp $BC$ phân cực nghịch. Dòng $I_C$ gần như nằm ngang và tỉ lệ thuận với dòng kích thích ngõ vào $I_B$:
      $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
-     Trong đó $V_A$ là **Điện áp Early (Early Voltage)**. Do sự thu hẹp bề dày vùng Base hiệu dụng khi $V_{CE}$ tăng, đường đặc tuyến có độ dốc dương nhẹ. Khi kéo dài ngược về trục điện áp âm, tất cả các đường đều quy tụ tại điểm $-V_A$.
-   - **Vùng Ngưng dẫn (Cut-off Mode):** Khi $I_B = 0\,\mu\text{A}$, dòng rò $I_C \approx 0$.
+     * Hệ số khuếch đại dòng: $\beta = \frac{\Delta I_C}{\Delta I_B} \approx 160$.
+     * **Hiệu ứng Early ($V_A = 74\,\text{V}$):** Khi $V_{CE}$ tăng, bề dày vùng nghèo tiếp giáp $BC$ nở rộng lấn vào vùng Base, làm giảm bề dày Base hiệu dụng khiến dòng $I_C$ tăng nhẹ. Ngoại suy các đường đặc tuyến về phía điện áp âm đều quy tụ tại điểm $-V_A$. Điện trở ngõ ra tín hiệu nhỏ:
+       $$r_o = \left(\frac{\partial I_C}{\partial V_{CE}}\right)^{-1} = \frac{V_A + V_{CE}}{I_C} \approx \frac{V_A}{\beta I_B}$$
+   - **Vùng Ngưng dẫn (Cut-off Mode):** Khi $I_B = 0\,\mu\text{A}$, transistor ngắt hoàn toàn, dòng rò $I_C \approx 0$.
 
 ---
 
@@ -305,26 +306,38 @@ Dựa trên kiến thức cú pháp ở mục III, viết tệp Netlist SPICE ho
 
 ---
 
-### 5. Tính toán lý thuyết Phân cực DC Mạch Phân áp BJT 2N3904 (Hình 0.1)
-Cho mạch phân cực phân áp dùng transistor BJT NPN 2N3904 có các thông số:
-- Nguồn cấp: $V_{CC} = 12.0\,\text{V}$
-- Điện trở cực Base: $R_1 = 33\,\text{k}\Omega$, $R_2 = 10\,\text{k}\Omega$
-- Điện trở cực Collector và Emitter: $R_C = 2.2\,\text{k}\Omega$, $R_E = 1.0\,\text{k}\Omega$
-- Thông số transistor: Giả định $V_{BE} = 0.70\,\text{V}$, hệ số khuếch đại dòng $\beta = 160$.
+### 5. Tính toán lý thuyết Đặc tuyến I-V của BJT NPN 2N3904 (Hình 0.1 & 0.2)
+Cho transistor BJT NPN 2N3904 có các thông số mô hình chuẩn SPICE:
+- Dòng bão hòa ngược: $I_S = 1.0 \times 10^{-14}\,\text{A}$
+- Hệ số khuếch đại dòng: $\beta = 160.0$
+- Điện áp Early: $V_A = 74.0\,\text{V}$
+- Thế nhiệt tại nhiệt độ phòng ($T = 300\,\text{K}$): $V_T = \frac{k_B T}{q} \approx 25.85\,\text{mV}$
 
-Áp dụng phương pháp tương đương Thevenin:
-1. **Tính điện áp và điện trở Thevenin tại cực Base:**
-   $$V_{TH} = V_{CC} \times \frac{R_2}{R_1 + R_2} = .................................................... \quad (\text{V})$$
-   $$R_{TH} = \frac{R_1 \times R_2}{R_1 + R_2} = .................................................... \quad (\text{k}\Omega)$$
-2. **Tính dòng điện tĩnh $I_{BQ}$ và $I_{CQ}$:**
-   $$I_B = \frac{V_{TH} - V_{BE}}{R_{TH} + (\beta + 1) R_E} = .................................................... \quad (\mu\text{A})$$
-   $$I_C = \beta \times I_B = .................................................... \quad (\text{mA})$$
-3. **Tính điện áp các cực và điện áp $V_{CEQ}$:**
-   $$V_E = I_E \times R_E \approx I_C \times R_E = .................................................... \quad (\text{V})$$
-   $$V_C = V_{CC} - I_C \times R_C = .................................................... \quad (\text{V})$$
-   $$V_{CEQ} = V_C - V_E = .................................................... \quad (\text{V})$$
-4. **Kiểm tra vùng hoạt động:** $V_{CEQ} > 0.2\,\text{V}$ và tiếp giáp $BC$ có phân cực nghịch ($V_B < V_C$) không? BJT ở vùng nào?  
-   ................................................................................................................................................
+1. **Khảo sát đặc tuyến ngõ vào $I_B(V_{BE})$:**
+   Áp dụng công thức Ebers-Moll: $I_B = \frac{I_S}{\beta} \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$.  
+   Tính giá trị dòng cực Base $I_B$ tại các mức điện áp ngõ vào:
+   - Tại $V_{BE} = 0.50\,\text{V}$: $I_B = .................................................... \quad (\mu\text{A})$
+   - Tại $V_{BE} = 0.65\,\text{V}$: $I_B = .................................................... \quad (\mu\text{A})$
+   - Tại $V_{BE} = 0.70\,\text{V}$: $I_B = .................................................... \quad (\mu\text{A})$
+   - Tính điện áp ngưỡng mở $V_{BE}$ khi $I_B = 10\,\mu\text{A}$ và $I_B = 20\,\mu\text{A}$:
+     $$V_{BE} = V_T \ln\left( \frac{I_B \times \beta}{I_S} + 1 \right) = .................................................... \quad (\text{V})$$
+
+2. **Khảo sát họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$:**
+   Trong vùng khuếch đại tích cực, dòng Collector có xét hiệu ứng Early:
+   $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
+   Tính giá trị dòng $I_C$ (mA) tại các điểm điện áp $V_{CE}$:
+   - **Khi dòng kích thích $I_B = 10\,\mu\text{A}$:**
+     * Tại $V_{CE} = 1.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+     * Tại $V_{CE} = 5.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+     * Tại $V_{CE} = 10.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+   - **Khi dòng kích thích $I_B = 20\,\mu\text{A}$:**
+     * Tại $V_{CE} = 1.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+     * Tại $V_{CE} = 5.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+     * Tại $V_{CE} = 10.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
+
+3. **Tính hệ số khuếch đại vi sai $\beta$ và điện trở ngõ ra $r_o$ tại $V_{CE} = 5.0\,\text{V}$:**
+   $$\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{20\mu\text{A} - 10\mu\text{A}} = ....................................................$$
+   $$r_o = \frac{V_A}{\beta I_B} \quad (\text{tại } I_B = 10\mu\text{A}) = .................................................... \quad (\text{k}\Omega)$$
 
 ---
 
@@ -419,60 +432,50 @@ Cho mạch phân cực phân áp dùng transistor BJT NPN 2N3904 có các thông
 
 ---
 
-### 5. Bài tập 5: Mô phỏng Điểm Tĩnh Q và Khảo sát Họ Đặc tuyến Vào / Ra của BJT 2N3904
+### 5. Bài tập 5: Khảo sát Họ Đặc tuyến Ngõ vào và Ngõ ra của BJT 2N3904
 
-#### a. Mô phỏng Điểm làm việc tĩnh DC (`.OP`) Mạch Phân cực Phân áp
+#### a. Khảo sát Đặc tuyến Ngõ vào $I_B - V_{BE}$ (Quét DC Sweep 1 biến)
 1. Tạo một Schematic mới trong LTspice (`Ctrl + N`).
-2. Vẽ sơ đồ mạch phân cực phân áp như Hình 0.1:
-   - Nhấn `R`: đặt $R_1 = 33\,\text{k}\Omega$, $R_2 = 10\,\text{k}\Omega$, $R_C = 2.2\,\text{k}\Omega$, $R_E = 1.0\,\text{k}\Omega$.
-   - Nhấn `F2`, chọn `voltage`: đặt nguồn $V_{CC} = 12.0\,\text{V}$.
-   - Nhấn `F2`, chọn linh kiện `npn`. Nhấp chuột phải vào transistor, chọn **Pick New Transistor**, cuộn tìm và chọn mã **`2N3904`** (hoặc nhấn phím `S`, dán trực tiếp dòng lệnh model: `.model Q2N3904 NPN(Is=1e-14 Bf=160 Vaf=74 Ikf=0.1 Rb=10 Rc=1)`).
-   - Nhấn `G`: đặt cọc đất GND tại cực âm nguồn $V_{CC}$ và cực dưới của $R_2, R_E$.
-   - Nhấn `F4`: đặt tên các nhãn nút: `B` (Base), `C` (Collector), `E` (Emitter).
-3. Thiết lập câu lệnh mô phỏng `.op` và các lệnh đo lường tự động (nhấn phím `S`):
+2. Vẽ sơ đồ mạch đo đặc tuyến ngõ vào theo Hình 0.1 (Trái):
+   - Nhấn `F2`, chọn linh kiện `npn`. Nhấp chuột phải vào transistor, chọn **Pick New Transistor**, chọn mã **`2N3904`** (hoặc nhấn phím `S`, dán trực tiếp dòng lệnh: `.model Q2N3904 NPN(Is=1e-14 Bf=160 Vaf=74 Ikf=0.1 Rb=10 Rc=1)`).
+   - Nối cực Emitter trực tiếp xuống đất (GND - `0`).
+   - Nhấn `F2`, chọn `voltage`: đặt nguồn cố định $V_{CE} = 5.0\,\text{V}$ nối vào cực Collector.
+   - Nhấn `F2`, chọn `voltage`: đặt nguồn quét $V_{BE}$ nối vào cực Base.
+3. Thiết lập câu lệnh mô phỏng quét DC (nhấn phím `S`):
    ```spice
-   .op
-   .meas op V_B FIND V(B)
-   .meas op V_C FIND V(C)
-   .meas op V_E FIND V(E)
-   .meas op V_CE PARAM V(C)-V(E)
-   .meas op I_C PARAM -I(RC)
-   .meas op I_B PARAM (V(1)-V(B))/33k - V(B)/10k
+   .dc Vbe 0 1.0 0.005
+   .meas dc Vbe_at_10u WHEN I(B)=10u
+   .meas dc Vbe_at_20u WHEN I(B)=20u
    ```
-4. Nhấn **Run**. Đọc giá trị tại cửa sổ kết quả hoặc mở nhật ký **SPICE Error Log** (`Ctrl + L`). Ghi lại các giá trị $V_B, V_C, V_E, V_{CE}, I_C, I_B$ và so sánh với lý thuyết Pre-lab.
+4. Nhấn **Run**. Đưa que đo nhấp vào cực Base của transistor (biểu tượng ampe kế đo dòng $I_B$).
+5. Quan sát dạng đồ thị đặc tuyến ngõ vào:
+   - **Vùng ngưng dẫn:** Tại $V_{BE} < 0.60\,\text{V}$, dòng $I_B \approx 0$.
+   - **Vùng dẫn hàm mũ:** Khi $V_{BE} \ge 0.65\,\text{V}$, dòng $I_B$ tăng vọt theo hàm số mũ.
+   - Nhấn `Ctrl + L` mở SPICE Error Log, đọc giá trị điện áp ngưỡng mở $V_{BE}$ tại $I_B = 10\,\mu\text{A}$ và $20\,\mu\text{A}$.
 
-#### b. Khảo sát Đặc tuyến Ngõ vào $I_B - V_{BE}$
-1. Mở sơ đồ mới để đo riêng đặc tuyến ngõ vào transistor 2N3904:
-   - Cực Emitter nối trực tiếp xuống GND (0).
-   - Nối một nguồn điện áp cố định $V_{CE} = 5.0\,\text{V}$ vào cực Collector.
-   - Nối một nguồn điện áp điều khiển $V_{BE}$ vào cực Base.
-2. Cấu hình mô phỏng quét một chiều (**DC Sweep**):
-   - Vào *Simulate $\to$ Edit Simulation Cmd*, chọn thẻ **DC Sweep**.
-   - Thiết lập: *1st Source:* `Vbe`, *Type:* `Linear`, *Start:* `0`, *Stop:* `1.0`, *Increment:* `0.005` (hoặc gõ lệnh: `.dc Vbe 0 1.0 0.005`).
-3. Nhấn **Run**. Đưa que đo nhấp vào dòng cực Base $I_B$ (hoặc nhấp que đo dòng vào chân Base của transistor).
-4. Quan sát đặc tuyến ngõ vào:
-   - Vùng ngưng dẫn ($V_{BE} < 0.5\,\text{V}$): Dòng $I_B \approx 0$.
-   - Vùng dẫn hàm mũ ($V_{BE} \ge 0.65\,\text{V}$): Dòng $I_B$ tăng vọt theo hàm số mũ. Đọc điện áp $V_{BE}$ tại dòng $I_B = 10\,\mu\text{A}$ và $20\,\mu\text{A}$.
-
-#### c. Khảo sát Họ Đặc tuyến Ngõ ra $I_C - V_{CE}$ (Quét 2 tham số $V_{CE}$ và $I_B$)
-1. Cấu hình mạch đo họ đặc tuyến ngõ ra:
-   - Giữ nguyên transistor 2N3904 có Emitter nối GND.
-   - Cực Collector nối nguồn điện áp quét $V_{CE}$.
-   - Thay nguồn áp tại cực Base bằng **nguồn dòng độc lập** (Nhấn `F2`, gõ `current` để lấy nguồn dòng, mũi tên hướng vào cực Base), đặt tên là `Ib`.
-2. Thiết lập quét DC hai tham số (**Nested DC Sweep**):
+#### b. Khảo sát Họ Đặc tuyến Ngõ ra $I_C - V_{CE}$ (Quét DC Sweep 2 tham số lồng nhau)
+1. Cấu hình sơ đồ mạch đo họ đặc tuyến ngõ ra theo Hình 0.1 (Phải):
+   - Giữ nguyên transistor 2N3904 với Emitter nối GND.
+   - Nối cực Collector vào nguồn điện áp quét $V_{CE}$.
+   - Thay nguồn áp tại Base bằng **nguồn dòng độc lập** (Nhấn `F2`, gõ `current` để lấy nguồn dòng, phím tắt `Ctrl + R` xoay cho mũi tên hướng vào cực Base), đặt tên là `Ib`.
+2. Thiết lập quét DC hai tham số lồng nhau (**Nested DC Sweep**):
+   - Vào menu *Simulate $\to$ Edit Simulation Cmd*, chọn thẻ **DC Sweep**.
    - *1st Source (Biến quét chính trên trục hoành):*  
      `Name: Vce`, `Type: Linear`, `Start: 0`, `Stop: 10`, `Increment: 0.05`.
    - *2nd Source (Tham số quét đường cong):*  
      `Name: Ib`, `Type: Linear`, `Start: 10u`, `Stop: 50u`, `Increment: 10u`.  
      *(Tương đương lệnh SPICE Directive: `.dc Vce 0 10 0.05 Ib 10u 50u 10u`)*.
-3. Nhấn **Run**. Đưa que đo dòng nhấp vào cực Collector của transistor.
-4. Cửa sổ đồ thị xuất hiện **5 đường đặc tuyến cong** $I_C$ tương ứng 5 bước dòng $I_B$ ($10\,\mu\text{A}, 20\,\mu\text{A}, 30\,\mu\text{A}, 40\,\mu\text{A}, 50\,\mu\text{A}$):
-   - **Xác định Vùng Bão hòa:** Quan sát đoạn cong dốc đứng gần gốc tọa độ ($0 < V_{CE} < 0.25\,\text{V}$).
-   - **Xác định Vùng Khuếch đại Tích cực:** Quan sát đoạn đặc tuyến nằm ngang phẳng ($V_{CE} \ge 0.25\,\text{V}$).
-   - **Đo hệ số khuếch đại dòng $\beta$:** Tại $V_{CE} = 5.0\,\text{V}$, đọc giá trị $I_C$ tại $I_B = 10\,\mu\text{A}$ và $I_B = 20\,\mu\text{A}$. Tính:
+3. Chèn câu lệnh đo dòng Collector tại mức điện áp $V_{CE} = 5.0\,\text{V}$:
+   ```spice
+   .meas dc Ic_at_5V WHEN V(C)=5.0
+   ```
+4. Nhấn **Run**. Đưa que đo nhấp vào cực Collector của transistor để vẽ đồ thị dòng $I_C$.
+5. Cửa sổ đồ thị xuất hiện **5 đường đặc tuyến cong** $I_C$ tương ứng 5 bước dòng $I_B$ ($10\,\mu\text{A}, 20\,\mu\text{A}, 30\,\mu\text{A}, 40\,\mu\text{A}, 50\,\mu\text{A}$):
+   - **Xác định Vùng Bão hòa:** Quan sát đoạn dốc đứng gần gốc tọa độ ($0 < V_{CE} < 0.25\,\text{V}$). Xác định điện áp bão hòa $V_{CE,sat}$.
+   - **Xác định Vùng Khuếch đại Tích cực:** Quan sát đoạn nằm ngang phẳng ($V_{CE} \ge 0.25\,\text{V}$).
+   - **Tính hệ số khuếch đại dòng $\beta$:** Đọc giá trị $I_C$ tại $V_{CE} = 5.0\,\text{V}$ ứng với $I_B = 10\,\mu\text{A}$ và $I_B = 20\,\mu\text{A}$. Tính:
      $$\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{20\mu\text{A} - 10\mu\text{A}}$$
-     Kiểm tra hệ số $\beta$ đo được có xấp xỉ giá trị $160$ của mô hình không.
-   - **Quan sát Hiệu ứng Early:** Để ý thấy các đường đặc tuyến ở vùng tích cực không hoàn toàn nằm ngang mà hơi dốc lên khi $V_{CE}$ tăng từ $1\,\text{V}$ lên $10\,\text{V}$ do điện áp Early ($V_A = 74\,\text{V}$).
+   - **Quan sát Hiệu ứng Early:** Để ý thấy các đường đặc tuyến ở vùng tích cực không hoàn toàn nằm ngang mà hơi dốc lên khi $V_{CE}$ tăng từ $1\,\text{V}$ lên $10\,\text{V}$ do điện áp Early ($V_A = 74\,\text{V}$). Xác định điện trở ngõ ra vi sai $r_o = \frac{\Delta V_{CE}}{\Delta I_C}$.
 
 ---
 
@@ -518,12 +521,12 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    .end
    ```
 
-5. **Tính toán lý thuyết Phân cực DC BJT 2N3904 ($V_{CC}=12\text{V}, R_1=33\text{k}\Omega, R_2=10\text{k}\Omega, R_C=2.2\text{k}\Omega, R_E=1.0\text{k}\Omega$):**
-   - $V_{TH} =$ ........................................ V ; $R_{TH} =$ ........................................ $\text{k}\Omega$
-   - Dòng cực Base lý thuyết: $I_B =$ ........................................ $\mu\text{A}$
-   - Dòng cực Collector lý thuyết: $I_C =$ ........................................ mA
-   - Điện áp các cực: $V_E =$ ........................ V ; $V_C =$ ........................ V ; $V_{CE} =$ ........................ V
-   - Trạng thái phân cực của BJT: ................................................................................................................
+5. **Tính toán lý thuyết Đặc tuyến I-V của BJT 2N3904 ($I_S = 10^{-14}\text{A}, \beta = 160, V_A = 74\text{V}, V_T = 25.85\text{mV}$):**
+   - Dòng Base lý thuyết: $I_B(0.5\text{V}) =$ .................... $\mu\text{A}$ ; $I_B(0.65\text{V}) =$ .................... $\mu\text{A}$ ; $I_B(0.70\text{V}) =$ .................... $\mu\text{A}$
+   - Ngưỡng mở $V_{BE}$ tính toán: Tại $I_B = 10\,\mu\text{A}$: $V_{BE} =$ .................... V ; Tại $I_B = 20\,\mu\text{A}$: $V_{BE} =$ .................... V
+   - Dòng Collector khi $I_B = 10\,\mu\text{A}$: $I_C(1\text{V}) =$ ................ mA ; $I_C(5\text{V}) =$ ................ mA ; $I_C(10\text{V}) =$ ................ mA
+   - Dòng Collector khi $I_B = 20\,\mu\text{A}$: $I_C(1\text{V}) =$ ................ mA ; $I_C(5\text{V}) =$ ................ mA ; $I_C(10\text{V}) =$ ................ mA
+   - Hệ số $\beta$ tại $V_{CE} = 5.0\,\text{V}$: $\beta =$ .................... ; Điện trở ngõ ra $r_o(10\mu\text{A}) =$ .................... $\text{k}\Omega$
 
 ---
 
@@ -572,21 +575,19 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    - Trạng thái gọi thư viện thành công (Ghi lại thông báo trong SPICE Error Log nếu có):  
      ................................................................................................................................................
 
-6. **Kết quả Phân cực DC và Họ Đặc tuyến Vào / Ra BJT 2N3904:**
-   - **Điểm tĩnh Q (Mô phỏng `.OP` mạch phân áp):**
-     * $V(B) =$ ........................ V ; $V(C) =$ ........................ V ; $V(E) =$ ........................ V
-     * $V_{CE} = V(C) - V(E) =$ ........................ V ; $V_{BE} = V(B) - V(E) =$ ........................ V
-     * Dòng điện: $I_C =$ ........................ mA ; $I_B =$ ........................ $\mu\text{A}$
-     * *So sánh với tính toán Pre-lab:* Sai số $V_{CE}$ = .................... % ; Sai số $I_C$ = .................... %
-     * Kết luận vùng làm việc: .........................................................................................................
-   - **Đặc tuyến ngõ vào $I_B(V_{BE})$:**
-     * Điện áp ngưỡng dẫn tại $I_B = 10\,\mu\text{A}$: $V_{BE} =$ ........................................ V
-     * Điện áp ngưỡng dẫn tại $I_B = 20\,\mu\text{A}$: $V_{BE} =$ ........................................ V
+6. **Kết quả Khảo sát Họ Đặc tuyến Ngõ vào và Ngõ ra BJT 2N3904:**
+   - **Đặc tuyến ngõ vào $I_B(V_{BE})$ ($V_{CE} = 5.0\,\text{V}$):**
+     * Vùng ngưng dẫn ($I_B \approx 0$): $0 \le V_{BE} <$ ........................ V
+     * Điện áp ngưỡng mở đo được tại $I_B = 10\,\mu\text{A}$: $V_{BE} =$ ........................................ V
+     * Điện áp ngưỡng mở đo được tại $I_B = 20\,\mu\text{A}$: $V_{BE} =$ ........................................ V
+     * *So sánh với tính toán lý thuyết:* Sai số $V_{BE}$ = .................... %
    - **Họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$:**
      * Điện áp bão hòa Collector-Emitter: $V_{CE,sat} \approx$ ........................................ V
      * Dòng $I_C$ tại $V_{CE} = 5.0\,\text{V}$ ứng với $I_B = 10\,\mu\text{A}$: $I_C =$ ........................................ mA
      * Dòng $I_C$ tại $V_{CE} = 5.0\,\text{V}$ ứng với $I_B = 20\,\mu\text{A}$: $I_C =$ ........................................ mA
      * Hệ số $\beta$ đo được tại $V_{CE} = 5.0\,\text{V}$: $\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{10\mu\text{A}} =$ ........................................
+     * Dòng $I_C$ tại $V_{CE} = 10.0\,\text{V}$ ứng với $I_B = 10\,\mu\text{A}$: $I_C =$ ........................................ mA
+     * Điện trở ngõ ra vi sai trích xuất từ độ dốc: $r_o = \frac{\Delta V_{CE}}{\Delta I_C} =$ ........................................ $\text{k}\Omega$
    - *Vẽ phác hoặc dán đồ thị họ đặc tuyến ngõ ra $I_C - V_{CE}$ vào khung dưới đây:*
    ```
    ┌──────────────────────────────────────────────────────────────────────────────────┐
@@ -604,7 +605,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    - *Câu hỏi 2: Tại sao khi phân tích đáp ứng tần số `.AC`, ta thường đặt biên độ nguồn AC là `1` (AC 1)? Nếu đặt biên độ là `10` thì đồ thị biên độ có bị thay đổi không?*  
      ................................................................................................................................................  
      ................................................................................................................................................
-   - *Câu hỏi 3: Tại sao trong mạch phân cực phân áp, điện trở $R_E$ ở cực Emitter lại có tác dụng ổn định điểm làm việc tĩnh Q khi nhiệt độ thay đổi? Cơ chế tự điều chỉnh diễn ra như thế nào?*  
+   - *Câu hỏi 3: Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý của hai tiếp giáp $p-n$ lúc này là gì?*  
      ................................................................................................................................................  
      ................................................................................................................................................
 
@@ -614,9 +615,9 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 | Tiêu chí | Trọng số | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
 | :--- | :---: | :--- | :--- | :--- | :--- |
-| **1. Chuẩn bị Pre-lab (Mục VI.a)** | **20%** | Phân biệt đúng toàn bộ tiền tố đơn vị; Tính đúng 100% các giá trị $V_{out}, I, \tau, f_{-3\text{dB}}$ và điểm tĩnh $Q$ của BJT; Netlist viết tay chuẩn cú pháp. | Phân biệt đúng đơn vị; Tính đúng các thông số chính nhưng còn nhầm lẫn nhỏ ở bài BJT; Netlist đúng. | Tính toán còn sai sót số học; Chưa tính xong thông số BJT hoặc chưa viết khung Netlist. | Không làm bài chuẩn bị hoặc sao chép bài của người khác. |
+| **1. Chuẩn bị Pre-lab (Mục VI.a)** | **20%** | Phân biệt đúng toàn bộ tiền tố đơn vị; Tính đúng 100% các giá trị $V_{out}, I, \tau, f_{-3\text{dB}}$ và đặc tuyến $I-V$ của BJT; Netlist viết tay chuẩn cú pháp. | Phân biệt đúng đơn vị; Tính đúng các thông số chính nhưng còn nhầm lẫn nhỏ ở bài BJT; Netlist đúng. | Tính toán còn sai sót số học; Chưa tính xong thông số đặc tuyến BJT hoặc chưa viết khung Netlist. | Không làm bài chuẩn bị hoặc sao chép bài của người khác. |
 | **2. Phân tích .OP và .DC Sweep Mạch Cơ bản** | **15%** | Dựng Schematic chuẩn; Thiết lập thành thạo phân tích `.OP` và `.DC`; Đo đạc và đọc số liệu chính xác; Tự giải thích được độ dốc. | Dựng Schematic đúng; Chạy được `.OP` và `.DC` nhưng thao tác đặt tên nhãn dây còn chậm. | Dựng được mạch nhưng cấu hình nguồn hoặc thông số quét còn lúng túng. | Không vẽ được mạch hoặc mô phỏng báo lỗi không tìm thấy node. |
 | **3. Mô phỏng Transient & Lệnh .MEAS** | **20%** | Cấu hình nguồn xung `PULSE` chuẩn xác; Sử dụng thành thạo câu lệnh `.MEAS` đo tự động $\tau$; Sai số so với lý thuyết $< 2\%$. | Chạy được quá độ; Đo được $\tau$ bằng `.MEAS` nhưng cần hướng dẫn cú pháp `TRIG/TARG`. | Chạy được quá độ nhưng đo $\tau$ thủ công bằng con trỏ do chưa gõ được `.MEAS`. | Không cấu hình được nguồn xung hoặc không đo được hằng số thời gian. |
 | **4. Phân tích AC & Biểu đồ Bode** | **20%** | Thiết lập nguồn `AC 1` đúng; Biểu đồ Bode rõ nét; Trích xuất đúng tần số cắt $f_{-3\text{dB}}$ và góc pha $-45^\circ$ bằng `.MEAS AC`. | Chạy được mô phỏng AC; Đo được tần số cắt nhưng thao tác chọn đơn vị dB/Phase còn lúng túng. | Đồ thị Bode hiển thị được nhưng chưa xác định được tần số cắt $-3\,\text{dB}$. | Không chạy được phân tích `.AC`. |
-| **5. Phân cực & Đặc tuyến BJT (Bài 5)** | **15%** | Dựng chuẩn mạch phân cực BJT; Quét đúng đặc tuyến vào $I_B(V_{BE})$ và quét 2 tham số họ đặc tuyến ra $I_C(V_{CE}, I_B)$; Nhận diện rõ 3 vùng làm việc và tính đúng $\beta$. | Chạy được `.OP` và họ đặc tuyến ra nhưng chưa thiết lập được quét đặc tuyến vào hoặc lúng túng khi khai báo nguồn dòng $I_B$. | Chạy được `.OP` BJT nhưng chưa quét được họ đặc tuyến 2 tham số. | Không cấu hình được transistor BJT hoặc mô phỏng lỗi. |
-| **6. Liên kết Thư viện & Báo cáo** | **10%** | Gọi thành công `C5_models.txt`; Hoàn thiện đầy đủ phiếu báo cáo; Trả lời sắc bén các câu hỏi phân tích bản chất (ổn định $R_E$, timestep). | Gọi được mô hình ngoài; Điền đủ phiếu báo cáo; Trả lời đúng các câu hỏi lý thuyết. | Gọi được mô hình nhưng báo cáo còn để trống một số kết luận. | Không gọi được thư viện ngoài hoặc nộp báo cáo sơ sài. |
+| **5. Khảo sát Đặc tuyến BJT (Bài 5)** | **15%** | Quét đúng đặc tuyến vào $I_B(V_{BE})$ và quét 2 tham số họ đặc tuyến ra $I_C(V_{CE}, I_B)$; Nhận diện rõ 3 vùng làm việc, trích xuất chuẩn $\beta$ và phân tích hiện tượng Early. | Chạy được họ đặc tuyến ra nhưng chưa thiết lập được quét đặc tuyến vào hoặc lúng túng khi khai báo nguồn dòng $I_B$. | Chạy được đặc tuyến ngõ vào nhưng chưa quét được họ đặc tuyến 2 tham số. | Không cấu hình được transistor BJT hoặc mô phỏng lỗi. |
+| **6. Liên kết Thư viện & Báo cáo** | **10%** | Gọi thành công `C5_models.txt`; Hoàn thiện đầy đủ phiếu báo cáo; Trả lời sắc bén các câu hỏi phân tích bản chất (bão hòa BJT, timestep). | Gọi được mô hình ngoài; Điền đủ phiếu báo cáo; Trả lời đúng các câu hỏi lý thuyết. | Gọi được mô hình nhưng báo cáo còn để trống một số kết luận. | Không gọi được thư viện ngoài hoặc nộp báo cáo sơ sài. |

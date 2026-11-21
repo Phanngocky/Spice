@@ -1,82 +1,68 @@
 """
-Script kiểm chứng tính toán giải tích và mô phỏng SPICE:
-Mô phỏng Phân cực DC và Đặc tuyến Vào - Ra của Transistor Lưỡng cực BJT NPN (2N3904)
-Học phần: Thực hành Thiết kế VLSI (5505382)
+KIEM CHUNG GIAI TICH: KHAO SAT DAC TUYEN VAO VA RA BJT 2N3904
+Hoc phan: Thuc hanh Thiet ke VLSI (5505382) - DH Su pham Ky thuat Da Nang
+Tac gia: Phan Ngoc Ky (2026)
 """
 
-def verify_bjt():
+import numpy as np
+
+def verify_bjt_characteristics():
     print("=" * 75)
-    print("KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH BJT NPN - PHÂN CỰC & ĐẶC TUYẾN VÀO/RA")
+    print("KIỂM CHỨNG GIẢI TÍCH: KHẢO SÁT ĐẶC TUYẾN VÀO - RA BJT NPN (2N3904)")
     print("=" * 75)
 
-    # Thông số linh kiện mạch phân cực phân áp (Voltage Divider Bias)
-    VCC = 12.0      # V
-    R1 = 33.0e3     # 33 kOhm
-    R2 = 10.0e3     # 10 kOhm
-    RC = 2.2e3      # 2.2 kOhm
-    RE = 1.0e3      # 1.0 kOhm
+    # 1. Thông số mô hình 2N3904 chuẩn SPICE
+    Is = 1.0e-14     # Dòng bão hòa ngược (A)
+    Bf = 160.0       # Hệ số khuếch đại dòng cực phát chung beta
+    VA = 74.0        # Điện áp Early (V)
+    Vt = 0.02585     # Thế nhiệt ở 300K (25.85 mV)
 
-    # Thông số transistor 2N3904 tiêu chuẩn
-    VBE_on = 0.68   # V
-    beta = 160.0    # hFE tiêu chuẩn ở dòng mA
-    VA = 74.0       # Early Voltage (V)
+    print("\n1. THÔNG SỐ MÔ HÌNH BJT 2N3904:")
+    print(f"   - Is (Dòng bão hòa ngược) = {Is:.1e} A")
+    print(f"   - Bf (Hệ số khuếch đại beta) = {Bf:.1f}")
+    print(f"   - VA (Điện áp Early)       = {VA:.1f} V")
+    print(f"   - Vt (Thế nhiệt ở 300K)   = {Vt*1e3:.2f} mV")
 
-    # 1. Phân tích Phân cực DC (Điểm làm việc tĩnh Q)
-    print("\n1. Phân tích Điểm làm việc tĩnh DC (Q-Point) Mạch Phân áp:")
-    V_TH = VCC * (R2 / (R1 + R2))
-    R_TH = (R1 * R2) / (R1 + R2)
+    # 2. Đặc tuyến ngõ vào: Ib theo Vbe (cố định Vce = 5.0V)
+    print("\n2. KHẢO SÁT ĐẶC TUYẾN NGÕ VÀO Ib(Vbe):")
+    print("   Công thức Ebers-Moll: Ib = (Is / beta) * [exp(Vbe / Vt) - 1]")
+    vbe_test = [0.40, 0.50, 0.60, 0.65, 0.68, 0.70, 0.72]
+    for v in vbe_test:
+        ib_val = (Is / Bf) * (np.exp(v / Vt) - 1)
+        print(f"   * Vbe = {v:.2f} V -> Ib = {ib_val*1e6:10.4f} uA")
 
-    print(f"   - Nguồn tương đương Thevenin: V_TH = VCC * R2/(R1+R2) = {V_TH:.3f} V")
-    print(f"   - Trở tương đương Thevenin:   R_TH = R1 // R2          = {R_TH/1e3:.3f} kOhm")
+    # Tính ngưỡng mở Vbe tại Ib = 10 uA và 20 uA
+    vbe_10u = Vt * np.log((10e-6 * Bf / Is) + 1)
+    vbe_20u = Vt * np.log((20e-6 * Bf / Is) + 1)
+    print(f"   => Điện áp ngưỡng mở tại Ib = 10 uA: Vbe = {vbe_10u:.4f} V (≈ 0.675 V)")
+    print(f"   => Điện áp ngưỡng mở tại Ib = 20 uA: Vbe = {vbe_20u:.4f} V (≈ 0.693 V)")
 
-    # Dòng cực Base IB:
-    # V_TH - IB * R_TH - VBE - IE * RE = 0, với IE = (beta + 1) * IB
-    IB = (V_TH - VBE_on) / (R_TH + (beta + 1) * RE)
-    IC = beta * IB
-    IE = (beta + 1) * IB
+    # 3. Khảo sát Họ đặc tuyến ngõ ra: Ic(Vce, Ib)
+    print("\n3. KHẢO SÁT HỌ ĐẶC TUYẾN NGÕ RA Ic(Vce, Ib):")
+    print("   Công thức vùng tích cực: Ic = beta * Ib * (1 + Vce / VA)")
+    ib_list = [10e-6, 20e-6, 30e-6, 40e-6, 50e-6]
+    vce_points = [1.0, 5.0, 10.0]
 
-    VE = IE * RE
-    VB = VE + VBE_on
-    VC = VCC - IC * RC
-    VCE = VC - VE
+    for ib in ib_list:
+        print(f"\n   --- Mức dòng Base Ib = {ib*1e6:.0f} uA (Ic lý tưởng chưa tính Early = {Bf*ib*1e3:.2f} mA) ---")
+        for vce in vce_points:
+            ic_val = Bf * ib * (1.0 + vce / VA) * 1e3
+            beta_eff = (ic_val * 1e-3) / ib
+            print(f"       Vce = {vce:4.1f} V -> Ic = {ic_val:.4f} mA (beta hiệu dụng = {beta_eff:.1f})")
 
-    print(f"   - Dòng điện cực gốc:          I_B  = {IB*1e6:.2f} uA")
-    print(f"   - Dòng điện cực thu:          I_C  = {IC*1e3:.3f} mA")
-    print(f"   - Dòng điện cực phát:         I_E  = {IE*1e3:.3f} mA")
-    print(f"   - Điện áp cực phát:           V_E  = {VE:.3f} V")
-    print(f"   - Điện áp cực gốc:            V_B  = {VB:.3f} V")
-    print(f"   - Điện áp cực thu:            V_C  = {VC:.3f} V")
-    print(f"   - Điện áp Collector - Emitter: V_CE = {VCE:.3f} V")
+    # 4. Trích xuất hệ số khuếch đại dòng beta và điện trở ngõ ra ro tại Vce = 5V
+    ic_10u_5v = Bf * 10e-6 * (1.0 + 5.0 / VA) * 1e3
+    ic_20u_5v = Bf * 20e-6 * (1.0 + 5.0 / VA) * 1e3
+    beta_extracted = ((ic_20u_5v - ic_10u_5v) * 1e-3) / (10e-6)
+    ro_10u = VA / (Bf * 10e-6)
+    ro_20u = VA / (Bf * 20e-6)
 
-    # Kiểm tra điều kiện vùng tích cực (Forward-Active Mode):
-    VCE_sat = 0.20
-    if VCE > VCE_sat and VB > VE:
-        print(f"   => KẾT LUẬN CHẾ ĐỘ: V_CE ({VCE:.2f}V) > V_CE,sat ({VCE_sat}V) và V_BE ({VBE_on}V) > 0:")
-        print(f"      Transistor hoạt động ở CHẾ ĐỘ TÍCH CỰC THUẬN (Forward-Active) lý tưởng.")
-        print(f"      Điểm tĩnh Q (V_CEQ = {VCE:.2f}V, I_CQ = {IC*1e3:.2f}mA) nằm ở vị trí trung tâm đường tải tĩnh!")
-    else:
-        print("   => CẢNH BÁO: Transistor rơi vào vùng bão hòa hoặc ngưng dẫn!")
-
-    # 2. Đặc tuyến Ngõ vào (Input Characteristic: IB vs VBE)
-    print("\n2. Phân tích Đặc tuyến Ngõ vào (Input Characteristic: I_B vs V_BE):")
-    print("   - Phương trình Ebers-Moll: I_B = (I_S / beta) * [exp(V_BE / V_T) - 1]")
-    print(f"   - Điện áp nhiệt ở 300K:    V_T = k*T/q ≈ 25.85 mV")
-    print("   - Vùng ngưng dẫn:          V_BE < 0.60V -> I_B ≈ 0")
-    print(f"   - Ngưỡng mở (Knee Voltage): V_BE,on ≈ 0.65V - 0.70V")
-    print("   - Khi V_BE >= 0.70V:       Dòng I_B tăng theo hàm mũ dốc đứng.")
-
-    # 3. Họ Đặc tuyến Ngõ ra (Output Family: IC vs VCE theo tham số IB)
-    print("\n3. Phân tích Họ Đặc tuyến Ngõ ra (Output Characteristics: I_C vs V_CE):")
-    print("   - Quét tham số: I_B = 10 uA, 20 uA, 30 uA, 40 uA, 50 uA")
-    print("   - Vùng bão hòa (Saturation): 0 <= V_CE < 0.2V (I_C tăng tuyến tính dốc theo V_CE)")
-    print("   - Vùng khuếch đại (Active):  V_CE >= 0.2V:")
-    for ib_val in [10e-6, 20e-6, 30e-6, 40e-6, 50e-6]:
-        # Xét hiệu ứng Early: IC = beta * IB * (1 + VCE / VA) tại VCE = 5V
-        ic_active = beta * ib_val * (1.0 + 5.0 / VA)
-        print(f"     + Tại I_B = {ib_val*1e6:2.0f} uA, V_CE = 5.0V: I_C ≈ {ic_active*1e3:.3f} mA (beta_eff = {ic_active/ib_val:.1f})")
-    print(f"   - Hiệu ứng Early: Độ dốc đường đặc tuyến dI_C/dV_CE = (beta * I_B) / V_A")
-    print(f"     Ngoại suy giao trục hoành tại V_CE = -V_A = -{VA:.1f} V")
+    print("\n4. THÔNG SỐ ĐẶC TRƯNG TRÍCH XUẤT:")
+    print(f"   - Hệ số khuếch đại dòng vi sai beta tại Vce = 5V: {beta_extracted:.2f}")
+    print(f"   - Điện trở ngõ ra ro tại Ib = 10 uA: {ro_10u*1e-3:.2f} kOhm (Độ dốc: {1/ro_10u*1e6:.2f} uS)")
+    print(f"   - Điện trở ngõ ra ro tại Ib = 20 uA: {ro_20u*1e-3:.2f} kOhm (Độ dốc: {1/ro_20u*1e6:.2f} uS)")
+    print(f"   - Vùng bão hòa (Saturation): Vce < 0.20 - 0.25 V")
     print("=" * 75)
 
 if __name__ == "__main__":
-    verify_bjt()
+    verify_bjt_characteristics()

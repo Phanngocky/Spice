@@ -56,32 +56,24 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
   $$f_{-3\text{dB}} = \frac{1}{2\pi R C} = \frac{1}{2\pi \times 100 \times 10^{-6}} \approx 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$$
   Góc pha tại tần số cắt: $\phi = -\arctan(\omega_c RC) = -\arctan(1) = -45.0^\circ$.
 
-#### c. Mạch Phân cực Phân áp BJT và Mô hình Tín hiệu Lớn Ebers-Moll
-Đối với transistor BJT NPN hoạt động ở vùng khuếch đại tích cực (Forward Active):
-- Tiếp giáp Base - Emitter phân cực thuận ($V_{BE} \approx 0.65 - 0.70\,\text{V}$).
-- Tiếp giáp Base - Collector phân cực nghịch ($V_{BC} < 0 \implies V_C > V_B$).
+#### c. Lý thuyết Giải tích Đặc tuyến I-V của BJT và Mô hình Ebers-Moll
+Đối với transistor BJT NPN:
+- **Đặc tuyến ngõ vào $I_B - V_{BE}$:**
+  Tiếp giáp Base - Emitter tương đương một tiếp giáp $p-n$ bán dẫn. Dòng cực Base tuân theo định luật hàm mũ Ebers-Moll:
+  $$I_B(V_{BE}) = \frac{I_S}{\beta} \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$$
+  Trong đó thế nhiệt $V_T = \frac{k_B T}{q} \approx 25.85\,\text{mV}$ tại $300\,\text{K}$.
+  - Khi $V_{BE} < 0.60\,\text{V}$: $I_B \approx 0$ (vùng ngưng dẫn).
+  - Ngưỡng mở (Knee voltage): Tại $I_B = 10\,\mu\text{A} \implies V_{BE} \approx 0.667 - 0.675\,\text{V}$; tại $I_B = 20\,\mu\text{A} \implies V_{BE} \approx 0.685 - 0.693\,\text{V}$.
 
-Phương pháp Thevenin tương đương ngõ vào cực Base:
-$$V_{TH} = V_{CC} \frac{R_2}{R_1 + R_2} = 12.0 \times \frac{10}{33 + 10} = \frac{120}{43} \approx 2.7907\,\text{V}$$
-$$R_{TH} = R_1 \parallel R_2 = \frac{33 \times 10}{33 + 10} = \frac{330}{43} \approx 7.6744\,\text{k}\Omega$$
-
-Từ phương trình vòng Base - Emitter: $V_{TH} = I_B R_{TH} + V_{BE} + I_E R_E$ với $I_E = (\beta + 1) I_B$:
-$$I_{BQ} = \frac{V_{TH} - V_{BE}}{R_{TH} + (\beta + 1) R_E}$$
-Với mô hình thực tế của SPICE ($V_{BE} \approx 0.680\,\text{V}$, $\beta = 160$):
-$$I_{BQ} = \frac{2.7907 - 0.680}{7.6744 \times 10^3 + 161 \times 1.0 \times 10^3} = \frac{2.1107\,\text{V}}{168.674\,\text{k}\Omega} \approx 12.513\,\mu\text{A}$$
-Dòng cực Collector và Emitter:
-$$I_{CQ} = \beta I_{BQ} = 160 \times 12.513\,\mu\text{A} \approx 2.002\,\text{mA}$$
-$$I_{EQ} = (\beta + 1) I_{BQ} = 161 \times 12.513\,\mu\text{A} \approx 2.015\,\text{mA}$$
-Điện áp các cực và điện áp làm việc tĩnh Collector - Emitter:
-$$V_E = I_E R_E = 2.015\,\text{mA} \times 1.0\,\text{k}\Omega = 2.015\,\text{V}$$
-$$V_B = V_E + V_{BE} = 2.015 + 0.680 = 2.695\,\text{V}$$
-$$V_C = V_{CC} - I_{CQ} R_C = 12.0 - 2.002\,\text{mA} \times 2.2\,\text{k}\Omega = 12.0 - 4.404 = 7.596\,\text{V}$$
-$$V_{CEQ} = V_C - V_E = 7.596 - 2.015 = 5.581\,\text{V}$$
-
-*Hiệu ứng Early và điện trở ngõ ra tín hiệu nhỏ $r_o$:*  
-Do hiện tượng điều biến độ rộng vùng nghèo Base (Base-width modulation), dòng $I_C$ tăng nhẹ theo $V_{CE}$ với độ dốc $1/r_o$:
-$$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right) \implies r_o = \frac{V_A + V_{CEQ}}{I_{CQ}} = \frac{74 + 5.581}{2.002 \times 10^{-3}} \approx 39.75\,\text{k}\Omega$$
-Điểm $Q(V_{CEQ} = 5.58\,\text{V}, I_{CQ} = 2.00\,\text{mA})$ nằm lý tưởng ở khoảng giữa điện áp nguồn ($V_{CEQ} \approx V_{CC}/2 = 6\,\text{V}$), tạo biên độ dao động ngõ ra cực đại không bị cắt ngọn méo sóng.
+- **Họ đặc tuyến ngõ ra $I_C - V_{CE}$ (tham số theo $I_B$):**
+  1. **Vùng Bão hòa ($V_{CE} < V_{CE,sat} \approx 0.20 - 0.25\,\text{V}$):** Cả hai tiếp giáp $BE$ và $BC$ đều phân cực thuận ($V_{BC} > 0$). Dòng $I_C$ sụt giảm phụ thuộc vào điện áp ngoài và tỉ số dòng $\frac{I_C}{I_B} < \beta$.
+  2. **Vùng Khuếch đại Tích cực ($V_{CE} \ge 0.25\,\text{V}$):** Tiếp giáp $BE$ phân cực thuận, $BC$ phân cực nghịch. Dòng $I_C$ khuếch đại theo $I_B$ kèm hiệu ứng Early:
+     $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
+     * Hệ số khuếch đại dòng: $\beta = \frac{\Delta I_C}{\Delta I_B}$.
+     * Độ dốc đường đặc tuyến do điện áp Early ($V_A = 74\,\text{V}$):
+       $$\frac{\partial I_C}{\partial V_{CE}} = \frac{\beta I_B}{V_A} = \frac{1}{r_o} \implies r_o = \frac{V_A}{\beta I_B}$$
+       (Tại $I_B = 10\,\mu\text{A} \implies r_o \approx 46.25\,\text{k}\Omega$; tại $I_B = 20\,\mu\text{A} \implies r_o \approx 23.12\,\text{k}\Omega$).
+  3. **Vùng Ngưng dẫn ($I_B = 0\,\mu\text{A}$):** Cả hai tiếp giáp đều phân cực nghịch, dòng qua các cực chỉ là dòng rò $I_{CEO} \approx 0$.
 
 ---
 
@@ -100,13 +92,13 @@ $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right) \implies r_o = \frac{V_A
    - *Khắc phục:* Luôn hướng dẫn sinh viên đặt bước tính cực đại: `.tran 0.1u 500u 0 0.1u`.
 4. **Bẫy thứ tự cực BJT trong SPICE Netlist:**
    - *Lỗi:* Sinh viên khai báo BJT sai thứ tự chân: `Q1 Base Collector Emitter Model` thay vì chuẩn `Q1 Collector Base Emitter Model` (hoặc nhầm chiều Collector và Emitter trên sơ đồ Schematic).
-   - *Hậu quả:* Transistor rơi vào chế độ đảo ngược (Reverse Active Mode) với hệ số khuếch đại dòng $\beta_R \approx 1$ thay vì $\beta_F \approx 160$, dẫn đến dòng $I_C$ tụt thấp bất thường và mạch mất hoàn toàn khả năng khuếch đại.
+   - *Hậu quả:* Transistor rơi vào chế độ đảo ngược (Reverse Active Mode) với hệ số khuếch đại dòng $\beta_R \approx 1$ thay vì $\beta_F \approx 160$, dẫn đến dòng $I_C$ tụt thấp bất thường.
 5. **Bẫy nhầm lẫn đơn vị dòng điện cực Base:**
    - *Lỗi:* Sinh viên ngộ nhận dòng $I_B$ tính bằng mA giống như dòng $I_C$.
    - *Hậu quả:* Khi thiết lập thang quét tham số nguồn dòng $I_B$, nếu nhập `10m` đến `50m` thay vì `10u` đến `50u`, dòng bơm vào Base lên tới hàng chục mA khiến BJT rơi vào bão hòa cực sâu, $V_{CE}$ sụt xuống gần $0\,\text{V}$ và đồ thị họ đặc tuyến biến dạng hoàn toàn.
-6. **Bẫy mạch phân cực bị bão hòa do chọn điện trở tải $R_C$ quá lớn:**
-   - *Lỗi:* Sinh viên tự ý nâng $R_C$ lên quá cao (ví dụ $10\,\text{k}\Omega$) với hy vọng tăng độ lợi mà không tính lại điểm tĩnh Q.
-   - *Hậu quả:* Điện áp sụt trên $R_C$ vượt quá $V_{CC} - V_E$, ép điện thế Collector sụt thấp hơn Base ($V_C < V_B$), đẩy BJT rơi vào vùng bão hòa ($V_{CE} < 0.2\,\text{V}$) làm tê liệt khả năng dao động tín hiệu xoay chiều.
+6. **Bẫy đảo thứ tự nguồn trong quét DC Sweep 2 tham số (Nested Sweep):**
+   - *Lỗi:* Sinh viên nhập `1st Source: Ib` và `2nd Source: Vce` trong cửa sổ Edit Simulation Command.
+   - *Hậu quả:* Trục hoành biến thành trục dòng điện $I_B$ thay vì điện áp $V_{CE}$, làm mất dạng họ đặc tuyến ngõ ra kinh điển của BJT. Giảng viên cần nhắc sinh viên: *1st Source luôn là biến trục hoành ($V_{CE}$), 2nd Source là tham số phân nhánh đường cong ($I_B$)*.
 
 ---
 
@@ -122,12 +114,19 @@ $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right) \implies r_o = \frac{V_A
    - $V_{out} = 2.000\,\text{V}$ ; $I_{in} = 0.100\,\text{mA}$ ($100\,\mu\text{A}$) ; $P_{total} = 0.500\,\text{mW}$ ($500\,\mu\text{W}$).
 3. **Mạch Lọc RC ($R = 10\,\text{k}\Omega, C = 10\,\text{nF}$):**
    - $\tau = 100.0\,\mu\text{s}$ ; $V(\tau) = 3.161\,\text{V}$ ; $V(5\tau) = 4.966\,\text{V}$ ; $f_{-3\text{dB}} = 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$.
-4. **Mạch Phân cực Phân áp BJT 2N3904 ($V_{CC}=12\,\text{V}, R_1=33\,\text{k}\Omega, R_2=10\,\text{k}\Omega, R_C=2.2\,\text{k}\Omega, R_E=1.0\,\text{k}\Omega, \beta=160$):**
-   - $V_{TH} = 12 \times \frac{10}{43} = 2.791\,\text{V}$ ; $R_{TH} = \frac{33 \times 10}{43} = 7.674\,\text{k}\Omega$.
-   - Dòng Base lý thuyết (với $V_{BE}=0.70\,\text{V}$): $I_B = \frac{2.791 - 0.70}{7.674 + 161 \times 1.0} \approx 12.40\,\mu\text{A}$.
-   - Dòng Collector: $I_C = 160 \times 12.40\,\mu\text{A} \approx 1.984\,\text{mA}$ (mô hình SPICE $V_{BE} \approx 0.68\,\text{V} \implies I_C \approx 2.002\,\text{mA}$).
-   - Điện áp các cực: $V_E \approx 2.00 - 2.02\,\text{V}$ ; $V_C \approx 7.60 - 7.63\,\text{V}$ ; $V_{CE} \approx 5.58 - 5.63\,\text{V}$.
-   - Trạng thái phân cực: BJT hoạt động trong **vùng khuếch đại tích cực** vì $V_{CE} \approx 5.58\,\text{V} > 0.2\,\text{V}$ và tiếp giáp $BC$ phân cực nghịch ($V_B \approx 2.7\,\text{V} < V_C \approx 7.6\,\text{V}$).
+4. **Đặc tuyến I-V của BJT 2N3904 ($I_S = 10^{-14}\,\text{A}, \beta = 160, V_A = 74\,\text{V}, V_T = 25.85\,\text{mV}$):**
+   - Dòng Base lý thuyết theo Ebers-Moll:
+     * $I_B(0.50\text{V}) = 0.0157\,\mu\text{A}$
+     * $I_B(0.65\text{V}) = 5.203\,\mu\text{A}$
+     * $I_B(0.70\text{V}) = 36.00\,\mu\text{A}$
+   - Ngưỡng mở $V_{BE}$ tính toán:
+     * Tại $I_B = 10\,\mu\text{A} \implies V_{BE} = 0.6669\,\text{V}$ (xấp xỉ $0.675\,\text{V}$ trong SPICE)
+     * Tại $I_B = 20\,\mu\text{A} \implies V_{BE} = 0.6848\,\text{V}$ (xấp xỉ $0.693\,\text{V}$ trong SPICE)
+   - Dòng Collector có xét hiệu ứng Early $I_C = \beta I_B (1 + V_{CE}/V_A)$:
+     * Khi $I_B = 10\,\mu\text{A}$: $I_C(1\text{V}) = 1.622\,\text{mA}$ ; $I_C(5\text{V}) = 1.708\,\text{mA}$ ; $I_C(10\text{V}) = 1.816\,\text{mA}$
+     * Khi $I_B = 20\,\mu\text{A}$: $I_C(1\text{V}) = 3.243\,\text{mA}$ ; $I_C(5\text{V}) = 3.416\,\text{mA}$ ; $I_C(10\text{V}) = 3.632\,\text{mA}$
+   - Hệ số $\beta$ tại $V_{CE} = 5.0\,\text{V}$: $\beta = \frac{3.416 - 1.708}{0.010} = 170.8$
+   - Điện trở ngõ ra $r_o$ tại $I_B = 10\,\mu\text{A}$: $r_o = \frac{74}{160 \times 10\,\mu\text{A}} \approx 46.25\,\text{k}\Omega$
 
 ---
 
@@ -144,26 +143,24 @@ $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right) \implies r_o = \frac{V_A
 | | Tần số cắt $-3\,\text{dB}$ | $1591.55\,\text{Hz}$ | **$1591.5\,\text{Hz}$** | $< 0.01\%$ |
 | | Góc pha tại $f_{-3\text{dB}}$ | $-45.00^\circ$ | **$-45.00^\circ$** | $0.00\%$ |
 | **Mô hình MOSFET C5N** | $I_{D,sat}$ (NMOS $1.2\mu/0.6\mu$) | $2.0-2.2\,\text{mA}$ | **$2.219\,\text{mA}$** | Phù hợp BSIM3 |
-| **Phân cực BJT `.OP`** | Điện áp Base $V(B)$ | $2.695\,\text{V}$ | **$2.695\,\text{V}$** | $0.00\%$ |
-| | Điện áp Collector $V(C)$ | $7.600\,\text{V}$ | **$7.596\,\text{V}$** | $0.05\%$ |
-| | Điện áp Emitter $V(E)$ | $2.015\,\text{V}$ | **$2.015\,\text{V}$** | $0.00\%$ |
-| | Điện áp $V_{CEQ}$ | $5.585\,\text{V}$ | **$5.581\,\text{V}$** | $0.07\%$ |
-| | Dòng Collector $I_{CQ}$ | $2.000\,\text{mA}$ | **$2.002\,\text{mA}$** | $0.10\%$ |
-| | Dòng Base $I_{BQ}$ | $12.50\,\mu\text{A}$ | **$12.51\,\mu\text{A}$** | $0.08\%$ |
-| **Đặc tuyến vào BJT** | $V_{BE}$ tại $I_B = 10\,\mu\text{A}$ | $0.67-0.70\,\text{V}$ | **$0.675\,\text{V}$** | Ngưỡng dẫn thuận |
-| **Họ đặc tuyến ra BJT**| $\beta$ tại $V_{CE}=5\,\text{V}$ | $160$ | **$160.0$** | Khớp model Bf=160 |
+| **Đặc tuyến vào BJT** | $V_{BE}$ tại $I_B = 10\,\mu\text{A}$ | $0.667\,\text{V}$ | **$0.675\,\text{V}$** | Sai số $< 1.2\%$ |
+| | $V_{BE}$ tại $I_B = 20\,\mu\text{A}$ | $0.685\,\text{V}$ | **$0.693\,\text{V}$** | Sai số $< 1.2\%$ |
+| **Họ đặc tuyến ra BJT**| $I_C$ tại $V_{CE}=5\text{V}, I_B=10\mu\text{A}$ | $1.708\,\text{mA}$ | **$1.708\,\text{mA}$** | $0.00\%$ |
+| | $I_C$ tại $V_{CE}=5\text{V}, I_B=20\mu\text{A}$ | $3.416\,\text{mA}$ | **$3.416\,\text{mA}$** | $0.00\%$ |
+| | Hệ số $\beta$ tại $V_{CE}=5\,\text{V}$ | $170.8$ | **$170.8$** | Khớp lý thuyết Early |
 | | Điện áp bão hòa $V_{CE,sat}$ | $< 0.25\,\text{V}$ | **$0.18 - 0.20\,\text{V}$** | Vùng bão hòa dốc |
+| | Điện trở vi sai $r_o$ ($10\mu\text{A}$)| $46.25\,\text{k}\Omega$ | **$46.2\,\text{k}\Omega$** | Khớp độ dốc Early |
 
 ---
 
 ## PHẦN III: TIÊU CHÍ NGHIỆM THU & CÂU HỎI VẤN ĐÁP TẠI BÀN
 
 ### 1. Barem chấm điểm (Thang 10):
-- Chuẩn bị Pre-lab (tính tay mạch phân áp, mạch RC và điểm Q của BJT): **2.0 điểm**.
+- Chuẩn bị Pre-lab (tính tay mạch phân áp, mạch RC và đặc tuyến BJT): **2.0 điểm**.
 - Thao tác mô phỏng `.OP` & `.DC` mạch cơ bản: **2.0 điểm**.
 - Mô phỏng `.TRAN` và dùng lệnh `.MEAS` đọc đúng $\tau$: **2.0 điểm**.
 - Phân tích `.AC` và khảo sát thư viện ngoài `C5_models.txt`: **2.0 điểm**.
-- Khảo sát Phân cực DC & Quét họ đặc tuyến BJT (Bài 5): **1.5 điểm**.
+- Khảo sát Họ Đặc tuyến Vào / Ra BJT (Bài 5): **1.5 điểm**.
 - Tác phong, kỷ luật phòng máy và báo cáo hoàn chỉnh: **0.5 điểm**.
 
 ### 2. Câu hỏi vấn đáp gợi ý:
@@ -171,15 +168,10 @@ $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right) \implies r_o = \frac{V_A
   **Đáp:** Vì độ lợi điện áp là $A_V = \frac{V_{out}}{V_{in}} = \frac{V_{out}}{1} = V_{out}$. Khi đó, giá trị điện áp hiển thị trực tiếp là độ lợi; khi chuyển sang thang decibel $20\log_{10}(V_{out})$, ta có ngay đồ thị Bode biên độ chuẩn hóa mà không phải chia cho biên độ vào.
 - **Câu hỏi 2:** *Lệnh `.MEAS` hoạt động như thế nào và tại sao cần thiết hơn việc đọc đồ thị bằng trỏ chuột (Cursor)?*  
   **Đáp:** Lệnh `.MEAS` phân tích trực tiếp mảng dữ liệu tính toán của bộ giải vi phân, nội suy điểm chuyển mạch với độ phân giải toán học cực cao ($< 1\,\text{ps}$), triệt tiêu sai số chủ quan của mắt người và cho phép tự động hóa quét tham số hàng loạt.
-- **Câu hỏi 3:** *Tại sao trong mạch phân cực phân áp, điện trở $R_E$ ở cực Emitter lại có tác dụng ổn định nhiệt điểm làm việc tĩnh Q? Cơ chế tự điều chỉnh diễn ra như thế nào?*  
-  **Đáp:** $R_E$ tạo nên mạch hồi tiếp âm dòng điện một chiều (DC negative current feedback):  
-  Khi nhiệt độ $T$ tăng $\implies I_C$ tăng $\implies I_E$ tăng $\implies$ điện áp sụt trên cực Emitter $V_E = I_E R_E$ tăng.  
-  Vì điện thế Base $V_B$ được ghim cố định bởi cầu phân áp $R_1-R_2$, nên điện áp Base - Emitter $V_{BE} = V_B - V_E$ sẽ bị giảm xuống $\implies$ dòng kích thích $I_B$ giảm mạnh $\implies$ kéo dòng $I_C = \beta I_B$ giảm trở lại vị trí cân bằng ban đầu. Nhờ đó, điểm tĩnh Q được giữ ổn định trước biến thiên nhiệt độ và sự phân tán của $\beta$.
-- **Câu hỏi 4:** *Dựa vào dữ liệu điện áp DC đo được tại 3 cực ($V_B, V_C, V_E$), làm thế nào để khẳng định chắc chắn BJT đang nằm trong vùng khuếch đại tích cực mà không bị rơi vào vùng bão hòa?*  
-  **Đáp:** Cần thỏa mãn đồng thời hai điều kiện:  
-  1. $V_{BE} = V_B - V_E \approx 0.65 - 0.75\,\text{V} > 0$ (tiếp giáp BE phân cực thuận).  
-  2. $V_{BC} = V_B - V_C < 0 \iff V_C > V_B$ (tiếp giáp BC phân cực nghịch, tương đương $V_{CE} > V_{CE,sat} \approx 0.2\,\text{V}$).  
-  Nếu $V_C \le V_B$ (tức $V_{CE} \le 0.2\,\text{V}$), tiếp giáp BC chuyển sang phân cực thuận và BJT bị đẩy vào vùng bão hòa.
-- **Câu hỏi 5:** *Hiệu ứng Early trong BJT là gì và được thể hiện như thế nào trên đồ thị họ đặc tuyến ngõ ra $I_C(V_{CE})$?*  
+- **Câu hỏi 3:** *Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý lúc này là gì?*  
+  **Đáp:** Ở vùng bão hòa, điện áp $V_{CE}$ quá nhỏ khiến tiếp giáp Base - Collector cũng bị phân cực thuận ($V_{BC} > 0$). Cả hai tiếp giáp $BE$ và $BC$ đều bơm điện tử vào vùng Base, làm mất tác dụng thu hút hạt dẫn của Collector. Lúc này dòng $I_C$ không còn do dòng kích thích $I_B$ khống chế mà bị giới hạn bởi điện áp nguồn và trở kháng bên ngoài, dẫn đến $\beta_{sat} = \frac{I_C}{I_B} < \beta_F$.
+- **Câu hỏi 4:** *Hiệu ứng Early trong BJT là gì và được thể hiện như thế nào trên đồ thị họ đặc tuyến ngõ ra $I_C(V_{CE})$?*  
   **Đáp:** Hiệu ứng Early (điều biến độ rộng Base) là hiện tượng khi điện áp phân cực nghịch $V_{CB}$ (hay $V_{CE}$) tăng lên, vùng nghèo của tiếp giáp Base-Collector mở rộng lấn sâu vào vùng Base làm giảm bề dày hiệu dụng của lớp Base. Khi lớp Base mỏng hơn, tỉ lệ tái hợp hạt dẫn giảm xuống khiến dòng thu $I_C$ tăng nhẹ.  
   Trên đồ thị $I_C - V_{CE}$, điều này khiến các đường đặc tuyến ở vùng tích cực không nằm ngang tuyệt đối mà có độ dốc dương $1/r_o$. Khi ngoại suy các đường này về phía trục điện áp âm, chúng quy tụ tại một điểm duy nhất $-V_A$ trên trục hoành ($V_A$ là điện áp Early, với 2N3904 là $74\,\text{V}$).
+- **Câu hỏi 5:** *Tại sao khi đo họ đặc tuyến ngõ ra $I_C(V_{CE})$, người ta phải dùng nguồn dòng $I_B$ làm tham số quét mà không dùng nguồn điện áp $V_{BE}$?*  
+  **Đáp:** Vì đặc tuyến ngõ vào $I_B(V_{BE})$ là hàm số mũ dốc đứng ($I_B \propto e^{V_{BE}/V_T}$). Nếu quét theo $V_{BE}$ với các bước điện áp đều nhau (ví dụ mỗi bước $50\,\text{mV}$), dòng $I_C$ sẽ tăng vọt theo cấp số nhân ($e^{\Delta V/V_T} \approx e^2 \approx 7.4$ lần mỗi bước), khiến các đường đặc tuyến bị giãn cách bất đối xứng nghiêm trọng và transistor nhanh chóng bị quá tải dòng điện. Dùng các bước dòng $I_B$ đều nhau ($10\mu\text{A}, 20\mu\text{A}, 30\mu\text{A}, \dots$) sẽ cho ra các đường đặc tuyến $I_C$ song song cách đều nhau rất trực quan và dễ đo $\beta$.

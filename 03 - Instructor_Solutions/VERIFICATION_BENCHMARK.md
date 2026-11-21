@@ -26,16 +26,19 @@ RC Low-Pass Filter: R=10.0k, C=10.0nF
   f_-3dB = 1/(2*pi*RC) = 1591.55 Hz (1.5915 kHz)
 
 ============================================================
-VERIFICATION: BJT BIAS & IV CHARACTERISTICS (2N3904)
+VERIFICATION: BJT I-V CHARACTERISTICS (2N3904)
 ============================================================
-Voltage Divider Bias: Vcc=12.0V, R1=33.0k, R2=10.0k, RC=2.2k, RE=1.0k
-  Thevenin Equivalent: V_th = 2.7907 V, R_th = 7.6744 kOhm
-  DC Q-point:
-    V_BE = 0.6800 V, I_B = 12.513 uA, I_C = 2.0020 mA, I_E = 2.0146 mA
-    V_E  = 2.0146 V, V_B = 2.6946 V, V_C = 7.5955 V, V_CE = 5.5809 V
-    V_CE > 0.2V & V_BC < 0 -> Chế độ Khuếch đại tích cực (Forward Active)
-  Small-Signal Output Resistance:
-    Early Voltage VA = 74.0 V -> r_o = (VA + V_CE)/I_C = 39.751 kOhm
+Input Characteristic Ib(Vbe) [Ebers-Moll Model]:
+  Is = 1.0e-14 A, beta = 160.0, VA = 74.0 V, Vt = 25.85 mV
+  Ib(0.50V) = 0.0157 uA, Ib(0.65V) = 5.203 uA, Ib(0.70V) = 36.00 uA
+  Knee Threshold: Vbe = 0.6669 V (at 10 uA), Vbe = 0.6848 V (at 20 uA)
+
+Output Characteristics Family Ic(Vce, Ib) [Early Effect]:
+  At Ib = 10 uA: Ic(1V) = 1.6216 mA, Ic(5V) = 1.7081 mA, Ic(10V) = 1.8162 mA
+  At Ib = 20 uA: Ic(1V) = 3.2432 mA, Ic(5V) = 3.4162 mA, Ic(10V) = 3.6324 mA
+  Extracted beta at Vce = 5V: beta = 170.81
+  Differential Output Resistance: ro = 46.25 kOhm (Ib = 10 uA)
+  Saturation Mode: Vce < 0.20 - 0.25 V
 ```
 
 **Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
@@ -43,7 +46,6 @@ Voltage Divider Bias: Vcc=12.0V, R1=33.0k, R2=10.0k, RC=2.2k, RE=1.0k
 - `03 - Instructor_Solutions/lab00/rc_transient_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp)
 - `03 - Instructor_Solutions/lab00/rc_ac_bode.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_ac_bode.sp)
 - `03 - Instructor_Solutions/lab00/nmos_test_include.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/nmos_test_include.sp)
-- `03 - Instructor_Solutions/lab00/bjt_bias_op.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_bias_op.sp)
 - `03 - Instructor_Solutions/lab00/bjt_input_curve.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_input_curve.sp)
 - `03 - Instructor_Solutions/lab00/bjt_output_family.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_output_family.sp)
 
