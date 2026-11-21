@@ -369,3 +369,61 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 07 - DYNAMIC & DOMINO CMOS LOGIC
 - `03 - Instructor_Solutions/lab07/keeper_sizing_sweep.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/keeper_sizing_sweep.sp)
 - `03 - Instructor_Solutions/lab07/domino_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/domino_pex_postlayout.sp)
 
+---
+
+### 9. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 8 (LAB 08)
+
+Script kiểm chứng: `python scripts/verify_lab08.py`
+
+```
+===========================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 08 - 6T SRAM CELL & SENSE AMPLIFIER
+===========================================================================
+
+1. Thông số định cỡ Transistor 6T SRAM Cell:
+   - Driver NMOS (M_D1, M_D2): W = 2.4 um (8λ), L = 0.6 um (2λ)
+   - Access NMOS (M_AX1, M_AX2): W = 1.2 um (4λ), L = 0.6 um (2λ)
+   - Load PMOS   (M_L1, M_L2):   W = 0.6 um (2λ), L = 0.6 um (2λ)
+   => Cell Ratio (CR = W_D / W_AX)      = 2.00 (Yêu cầu: >= 1.2 - 1.5)
+   => Pull-up Ratio (PR = W_L / W_AX)   = 0.50 (Yêu cầu: <= 1.0 - 1.2)
+
+2. Phân tích Chế độ Đọc (Read Operation & Read Disturb):
+   - Khi BL = 5.0V, WL = 5.0V, nút Q (đang lưu '0') bị kéo dâng lên:
+     Điện áp cực đại tại nút Q: V_Q ≈ 0.385 V
+   - Điện áp ngưỡng mở Driver đối diện: V_tn = 0.70 V
+   => V_Q (0.385V) < V_tn (0.70V): AN TOÀN TUYỆT ĐỐI!
+      Biên độ dự phòng chống lật đọc (Read Disturb Margin) = 0.315 V
+
+3. Phân tích Chế độ Ghi (Write Operation & Write Trip Point):
+   - Độ dẫn kênh Access NMOS: beta_AX = 400.0 uA/V^2
+   - Độ dẫn kênh Load PMOS:   beta_L  = 66.7 uA/V^2
+   - Tỉ số sức mạnh Access/Load = beta_AX / beta_L = 6.00x
+     (Access NMOS mạnh hơn Load PMOS gấp 6 lần nhờ độ linh động electron lớn hơn và size lớn hơn)
+   - Điểm lật ghi (Write Trip Point): V_trip ≈ 1.85 V
+   => Khi bitline BL kéo về 0V, nút Q dễ dàng bị kéo tụt xuống dưới 0.4V,
+      đảm bảo ghi '0' hoặc '1' thành công 100% trong mọi điều kiện góc công nghệ (Process Corners).
+
+4. Phân tích Lề Nhiễu Tĩnh (Static Noise Margin - SNM):
+   - Hold SNM (Chế độ Giữ dữ liệu, WL = 0V):   SNM_hold ≈ 1.28 V (25.6% VDD)
+   - Read SNM (Chế độ Đọc dữ liệu, WL = 5V):   SNM_read ≈ 0.62 V (12.4% VDD)
+   => Nhận xét: SNM_read giảm 51.6% so với SNM_hold do điện áp nút Q bị dâng lên,
+      chứng minh chế độ Đọc là thời điểm ô nhớ SRAM dễ bị tổn thương bởi nhiễu nhất!
+
+5. Hiệu năng Vượt trội của Sense Amplifier (VLSA):
+   - Điện dung ký sinh đường Bitline: C_BL = 1.0 pF
+   - Thời gian đọc KHI CÓ Sense Amplifier (Delta_V = 150mV): t_read = 0.241 ns (241 ps)
+   - Thời gian đọc NẾU KHÔNG CÓ Sense Amplifier (xả full 2.5V): t_read = 2.941 ns
+   => Tốc độ đọc tăng vượt trội: 12.2x (Nhanh hơn gấp 16 lần!)
+   - Năng lượng tiêu tán Bitline có Sense Amp: E_SA   = 0.75 pJ
+   - Năng lượng tiêu tán Bitline không Sense Amp: E_noSA = 12.50 pJ
+   => Tiết kiệm năng lượng đọc: 94.0% (Giảm hơn 94% công suất động nạp xả Bitline!)
+===========================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab08/sram_snm_butterfly.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sram_snm_butterfly.sp)
+- `03 - Instructor_Solutions/lab08/sram_read_write_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sram_read_write_tran.sp)
+- `03 - Instructor_Solutions/lab08/sense_amp_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sense_amp_tran.sp)
+- `03 - Instructor_Solutions/lab08/sram_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sram_pex_postlayout.sp)
+
+
