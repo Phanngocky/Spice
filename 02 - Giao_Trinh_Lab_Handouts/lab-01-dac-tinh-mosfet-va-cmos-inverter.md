@@ -1,320 +1,388 @@
-# BÀI THỰC HÀNH 01: ĐẶC TÍNH I-V CỦA MOSFET VÀ THIẾT KẾ CMOS INVERTER
+# THỰC HÀNH THIẾT KẾ VLSI — BÀI 1
+# ĐẶC TÍNH I-V CỦA MOSFET VÀ THIẾT KẾ CMOS INVERTER
 
 ---
-**Học phần:** Thực hành Thiết kế VLSI (`5505382`)  
-**Bộ môn:** Điện tử - Viễn thông, Khoa Điện - Điện tử, Trường ĐH Sư phạm Kỹ thuật – ĐHĐN  
-**Thời lượng:** 5 tiết thực hành tại phòng máy (kết hợp tự học Pre-lab & Post-lab)  
+**Bộ môn:** Điện tử - Viễn thông | **Khoa:** Điện - Điện tử  
+**Trường:** Đại học Sư phạm Kỹ thuật – Đại học Đà Nẵng  
+**Thời lượng:** 5 tiết thực hành tại phòng máy (kết hợp tự học Pre-lab & hoàn thiện Post-lab)  
 **Công cụ sử dụng:** Electric VLSI Design System (v9.07+), LTspice XVII / LTspice 2025  
-**Công nghệ chế tạo tham chiếu:** MOSIS SCMOS SUBMICRON C5N 0.5µm ($\lambda = 0.30\,\mu\text{m}$, $V_{DD} = 5.0\,\text{V}$)  
+**Công nghệ tham chiếu:** MOSIS SCMOS SUBMICRON C5N 0.5µm ($\lambda = 0.30\,\mu\text{m}$, 3 Metal layers, $V_{DD} = 5.0\,\text{V}$)  
 ---
 
-## MỤC TIÊU BÀI THỰC HÀNH
+## I. MỤC TIÊU
 
-Sau khi hoàn thành bài thực hành này, người học có khả năng:
-1. **Trích xuất tham số vật lý:** Khảo sát thực nghiệm trên mô phỏng SPICE đặc tuyến $I_{DS}-V_{GS}$ và $I_{DS}-V_{DS}$ của NMOS và PMOS; trích xuất chính xác điện áp ngưỡng ($V_{thn}, V_{thp}$), độ dốc truyền dẫn transconductance ($g_m$), và hệ số điều chế chiều dài kênh ($\lambda$).
-2. **Thiết kế & Tối ưu Schematic Inverter:** Xây dựng sơ đồ nguyên lý CMOS Inverter, xác định tỉ số định kích thước $(W/L)_p / (W/L)_n \approx 3/1$ để cân bằng thời gian chuyển mạch và đạt điện áp ngưỡng chuyển mạch đối xứng $V_M = V_{DD}/2 = 2.50\,\text{V}$.
-3. **Phân tích VTC & Đo đạc Lề nhiễu:** Mô phỏng đường cong truyền đạt điện áp (VTC - Voltage Transfer Curve); xác định các điểm dốc đơn vị $dV_{out}/dV_{in} = -1$ để tính các điện áp vào logic $V_{IL}, V_{IH}$ và lề nhiễu logic $NM_L, NM_H$.
-4. **Đo đạc Động học Quá độ (Transient):** Khảo sát thời gian tăng ($t_r$), thời gian giảm ($t_f$) và trễ truyền lan trung bình ($t_{pd} = (t_{pHL} + t_{pLH})/2$) dưới các mức tải dung khác nhau ($C_L = 10\,\text{fF}, 50\,\text{fF}, 100\,\text{fF}$).
-5. **Thiết kế Mặt nạ Vật lý (Physical Layout):** Vẽ mặt nạ Layout cho Inverter theo luật thiết kế khả thi chế tạo MOSIS SCMOS; thực hiện kiểm tra luật hình học DRC đạt 0 lỗi và đối chiếu LVS đạt trùng khớp sơ đồ 100%.
-6. **Trích xuất Ký sinh (PEX) & Phân tích Post-layout:** Trích xuất tụ ký sinh tiếp giáp ($C_{db}, C_{sb}$) và ký sinh dây dẫn kim loại; đối chiếu dạng sóng và độ trễ giữa Pre-layout và Post-layout.
-7. **Đóng gói IP:** Tạo tế bào chuẩn `INV_X1` kèm Icon View để tái sử dụng làm thư viện chuẩn trong các bài Lab tiếp theo.
-
----
-
-## MA TRẬN KẾ THỪA IP
-
-- **Đầu vào kế thừa:** Bài Lab 00 (Quy trình thiết lập công nghệ `mocmos` trong Electric và liên kết đường dẫn LTspice).
-- **Đầu ra sinh ra (Bàn giao):** Tế bào chuẩn `INV_X1` (Schematic, Icon, Layout, Datasheet VTC/Delay) bàn giao cho Lab 02 (Cổng logic NAND/NOR), Lab 03 (Chuỗi đệm Inverter) và Lab 04 (Bộ tạo xung điều khiển bù cho Transmission Gate).
+Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
+1. **Trích xuất tham số vật lý MOSFET:** Sử dụng LTspice để quét DC họ đặc tuyến $I_{DS}-V_{DS}$ và $I_{DS}-V_{GS}$ của NMOS và PMOS; trích xuất thực nghiệm điện áp ngưỡng ($V_{thn}, V_{thp}$), hệ số dẫn suất transconductance ($K_n', K_p'$), và hệ số điều chế chiều dài kênh ($\lambda$).
+2. **Thiết kế & Tối ưu Schematic Inverter:** Xây dựng sơ đồ nguyên lý CMOS Inverter trên Electric VLSI; định kích thước cân bằng $(W/L)_p / (W/L)_n \approx 3/1$ để đạt điện áp chuyển mạch đối xứng $V_M = V_{DD}/2 = 2.50\,\text{V}$ và cân bằng thời gian chuyển đổi.
+3. **Phân tích VTC & Đo đạc Lề nhiễu:** Mô phỏng đường cong truyền đạt điện áp (VTC); xác định các điểm dốc đơn vị $dV_{out}/dV_{in} = -1$ để tính các mức điện thế logic $V_{IL}, V_{IH}$ và lề nhiễu logic $NM_L, NM_H$.
+4. **Đo đạc Động học Quá độ bằng Lệnh SPICE:** Mô phỏng Transient đáp ứng thời gian thực; sử dụng cú pháp lệnh `.MEAS` để tự động trích xuất thời gian tăng ($t_r$), thời gian giảm ($t_f$) và trễ truyền lan trung bình ($t_{pd}$) với các mức tải dung $C_L = 10\,\text{fF}, 50\,\text{fF}, 100\,\text{fF}$.
+5. **Thiết kế Mặt nạ Vật lý (Physical Layout):** Vẽ Layout hoàn chỉnh cho Inverter tuân thủ luật hình học MOSIS SCMOS ($\lambda = 0.30\,\mu\text{m}$); kiểm tra luật thiết kế DRC đạt 0 lỗi và đối chiếu LVS đạt trùng khớp 100%.
+6. **Trích xuất Ký sinh (PEX) & Phân tích Post-layout:** Trích xuất tụ ký sinh khuếch tán ($C_{db}, C_{sb}$) và điện dung dây dẫn kim loại; lập bảng đối chiếu định lượng sự suy giảm tốc độ giữa Pre-layout và Post-layout.
+7. **Đóng gói Thư viện Chuẩn:** Tạo tế bào chuẩn `INV_X1` kèm Icon View để tái sử dụng làm thư viện cơ sở cho toàn bộ các bài Lab tiếp theo.
 
 ---
 
-## 1. PRE-LAB (CHUẨN BỊ LÝ THUYẾT Ở NHÀ - BẮT BUỘC)
+## II. CÔNG CỤ VÀ THƯ VIỆN MÔ HÌNH
 
-> [!IMPORTANT]
-> Sinh viên phải hoàn thành toàn bộ phần tính toán và vẽ sơ đồ que (Stick Diagram) vào Vở thí nghiệm trước khi vào lớp. Giảng viên kiểm tra và ký xác nhận ở đầu buổi học. Sinh viên không có bài chuẩn bị sẽ không được cấp quyền thực hành trên máy tính.
-
-### 1.1. Tham số công nghệ tham chiếu (MOSIS C5N 0.5µm)
-Cho các thông số vật lý của tiến trình C5N ($V_{DD} = 5.0\,\text{V}, T = 27^\circ\text{C}$):
-- Chiều dài kênh tối thiểu: $L_{min} = 2\lambda = 0.60\,\mu\text{m}$.
-- NMOS: Điện áp ngưỡng $V_{thn0} = +0.70\,\text{V}$; Hệ số dẫn suất $K_n' = \mu_n C_{ox} = 120\,\mu\text{A/V}^2$.
-- PMOS: Điện áp ngưỡng $V_{thp0} = -0.80\,\text{V}$; Hệ số dẫn suất $K_p' = \mu_p C_{ox} = 40\,\mu\text{A/V}^2$.
-
-### 1.2. Nhiệm vụ tính toán lý thuyết
-1. **Tính tỉ số kích thước cân bằng $(W_p/W_n)$:**
-   Để điện áp chuyển mạch đối xứng $V_M = V_{DD}/2 = 2.50\,\text{V}$, hãy chứng minh từ điều kiện dòng $I_{D,sat(n)} = I_{D,sat(p)}$ và tính tỉ số:
-   $$\frac{\beta_p}{\beta_n} = \frac{K_p' (W/L)_p}{K_n' (W/L)_n} \approx 1 \implies \frac{(W/L)_p}{(W/L)_n} = \frac{\mu_n}{\mu_p} \approx \frac{120}{40} = 3.0$$
-   Nếu chọn $L_n = L_p = 0.60\,\mu\text{m}$ ($2\lambda$) và $W_n = 1.20\,\mu\text{m}$ ($4\lambda$), hãy xác định $W_p$.
-2. **Ước lượng điện trở tương đương $R_{on}$ của Transistor:**
-   Sử dụng công thức xấp xỉ điện trở dẫn hiệu dụng trung bình:
-   $$R_{on,n} \approx \frac{1}{K_n' (W/L)_n (V_{DD} - V_{thn})}, \quad R_{on,p} \approx \frac{1}{K_p' (W/L)_p (V_{DD} - |V_{thp}|)}$$
-   Hãy tính giá trị $R_{on,n}$ và $R_{on,p}$ tương ứng với kích thước đã chọn ở trên.
-3. **Ước lượng trễ truyền lan lý thuyết với tải dung $C_L = 50\,\text{fF}$:**
-   Tính trễ cạnh xuống $t_{pHL} \approx 0.69 \times R_{on,n} \times C_L$ và trễ cạnh lên $t_{pLH} \approx 0.69 \times R_{on,p} \times C_L$. Nhận xét về tính đối xứng của hai thời gian trễ này.
-4. **Vẽ Stick Diagram (Sơ đồ que):**
-   Vẽ sơ đồ que của CMOS Inverter lên giấy kẻ ô ly:
-   - Hai đường ray nguồn nằm ngang: Đường ray $V_{DD}$ ở phía trên (Metal 1), đường ray $GND$ ở phía dưới (Metal 1).
-   - Vùng khuếch tán p-diffusion (Active P) bên trên nạp vào N-Well; vùng n-diffusion (Active N) bên dưới trên P-substrate.
-   - Dải Polysilicon liên tục chạy dọc từ trên xuống dưới đóng vai trò cực cổng (Gate) chung nối với ngõ vào $V_{in}$.
-   - Cực má (Drain) của PMOS và NMOS nối chung bằng Metal 1 ra ngõ xuất $V_{out}$.
-   - Đánh dấu đầy đủ các vị trí đặt lỗ tiếp xúc (Contact) nối Metal 1 với Diffusion và Metal 1 với Poly.
+1. **Phần mềm thiết kế vi mạch:**
+   - **Electric VLSI Design System:** Phiên bản 9.07 trở lên (cấu hình công nghệ `mocmos`, đơn vị $\lambda = 0.30\,\mu\text{m}$).
+   - **LTspice:** Phiên bản XVII hoặc 2025 (thiết lập liên kết tự động trong Electric: *Preferences $\to$ Tools $\to$ Spice/CDL*).
+2. **Thư viện mô hình SPICE (PDK):**
+   - Tệp mô hình: `04 - Models_and_Libraries/C5_models.txt` chứa tham số NMOS (Model: `N`) và PMOS (Model: `P`) tiến trình C5N 0.5µm chuẩn Level 3 MOSIS.
 
 ---
 
-## 2. NỘI DUNG THỰC HÀNH TẠI PHÒNG LAB (IN-LAB: EX1 – EX5)
+## III. CƠ SỞ LÝ THUYẾT VÀ NGUYÊN LÝ THIẾT KẾ
 
-```mermaid
-flowchart TD
-    E1["Ex1: Khảo sát I-V của NMOS/PMOS (LTspice)"] --> E2["Ex2: Schematic Inverter & Quét VTC (DC Sweep)"]
-    E2 --> E3["Ex3: Đo trễ quá độ Transient & Đóng gói Icon INV_X1"]
-    E3 --> E4["Ex4: Layout Mặt nạ, Chạy DRC & Đối chiếu LVS (Electric)"]
-    E4 --> E5["Ex5: Trích xuất PEX & So sánh Hiệu năng Pre vs Post Layout"]
+### 1. Mô hình dòng điện của MOSFET
+Trong tiến trình CMOS n-well, dòng điện má-nguồn $I_{DS}$ của NMOS được mô hình hóa theo ba chế độ hoạt động:
+- **Vùng ngưng dẫn (Cut-off):** $V_{GS} < V_{thn}$
+  $$I_{DS} \approx 0$$
+- **Vùng tuyến tính (Linear / Triode):** $V_{GS} \ge V_{thn}$ và $V_{DS} < V_{GS} - V_{thn}$
+  $$I_{DS} = K_n' \left(\frac{W}{L}\right)_n \left[ (V_{GS} - V_{thn}) V_{DS} - \frac{V_{DS}^2}{2} \right] (1 + \lambda V_{DS})$$
+- **Vùng bão hòa (Saturation):** $V_{GS} \ge V_{thn}$ và $V_{DS} \ge V_{GS} - V_{thn}$
+  $$I_{DS} = \frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_{GS} - V_{thn})^2 (1 + \lambda V_{DS})$$
+
+Trong đó:
+- $K_n' = \mu_n C_{ox}$ là hệ số dẫn suất truyền dẫn (Process Transconductance Parameter).
+- $V_{thn}$ là điện áp ngưỡng của NMOS.
+- $\lambda$ là hệ số điều chế chiều dài kênh (Channel Length Modulation).
+- Đối với PMOS, các phương trình tương tự áp dụng với $V_{GS}, V_{DS}, V_{thp}$ đổi cực tính và thay $K_n'$ bằng $K_p' = \mu_p C_{ox}$. Do độ linh động của lỗ trống nhỏ hơn điện tử ($\mu_n \approx 2.5 - 3 \times \mu_p$), nên $K_n' \approx 3 K_p'$.
+
+---
+
+### 2. Đường cong truyền đạt điện áp VTC của CMOS Inverter
+
+Sơ đồ nguyên lý CMOS Inverter gồm 1 PMOS kéo lên nguồn ($V_{DD}$) và 1 NMOS kéo xuống đất ($GND$):
+
+```
+             VDD (5.0V)
+                 │
+             ┌───┴───┐
+             │  PMOS │ (Wp, Lp)
+     In ─────┤       ├─────┬───── Out
+             └───┬───┘     │
+                 │         │
+             ┌───┴───┐     │
+             │  NMOS │     │
+     In ─────┤       ├─────┘   (Wn, Ln)
+             └───┬───┘
+                 │
+                GND (0V)
 ```
 
+Đường cong truyền đạt điện áp $V_{out} = f(V_{in})$ chia thành 5 vùng hoạt động tùy thuộc trạng thái của 2 transistor:
+
+| Vùng | Điện áp vào $V_{in}$ | Trạng thái NMOS | Trạng thái PMOS | Điện áp ra $V_{out}$ |
+| :---: | :---: | :---: | :---: | :---: |
+| **A** | $0 \le V_{in} < V_{thn}$ | Ngưng dẫn (Cut-off) | Tuyến tính (Linear) | $V_{OH} = V_{DD}$ |
+| **B** | $V_{thn} \le V_{in} < V_M$ | Bão hòa (Saturation) | Tuyến tính (Linear) | Giảm chậm |
+| **C** | $V_{in} = V_M \approx V_{DD}/2$ | Bão hòa (Saturation) | Bão hòa (Saturation) | Giảm dốc đứng (Khuếch đại cao) |
+| **D** | $V_M < V_{in} \le V_{DD} - \|V_{thp}\|$ | Tuyến tính (Linear) | Bão hòa (Saturation) | Giảm chậm về mức thấp |
+| **E** | $V_{in} > V_{DD} - \|V_{thp}\|$ | Tuyến tính (Linear) | Ngưng dẫn (Cut-off) | $V_{OL} = 0\,\text{V}$ |
+
+#### a. Điện áp ngưỡng chuyển mạch $V_M$ (Switching Threshold)
+Điểm chuyển mạch $V_M$ được định nghĩa tại vị trí $V_{out} = V_{in} = V_M$. Tại điểm này, cả NMOS và PMOS đều ở vùng bão hòa. Cân bằng phương trình dòng điện:
+$$I_{D,sat(n)} = I_{D,sat(p)} \iff \frac{K_n'}{2}\left(\frac{W}{L}\right)_n (V_M - V_{thn})^2 = \frac{K_p'}{2}\left(\frac{W}{L}\right)_p (V_{DD} - V_M - |V_{thp}|)^2$$
+
+Đặt $r = \frac{K_p' (W/L)_p}{K_n' (W/L)_n}$, ta có biểu thức tính $V_M$:
+$$V_M = \frac{V_{thn} + \sqrt{r} (V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
+
+Để mạch đối xứng lý tưởng $V_M = V_{DD}/2$:
+$$r = 1 \implies \frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} = \frac{\mu_n}{\mu_p} \approx 3.0$$
+
+#### b. Lề nhiễu logic (Noise Margins)
+Lề nhiễu đặc trưng cho khả năng chống nhiễu điện áp của cổng logic:
+- $V_{IL}$ (Điện áp vào mức thấp cực đại): Điểm trên VTC mà tại đó độ dốc $\frac{dV_{out}}{dV_{in}} = -1$ (khi $V_{in}$ thấp).
+- $V_{IH}$ (Điện áp vào mức cao cực tiểu): Điểm trên VTC mà tại đó độ dốc $\frac{dV_{out}}{dV_{in}} = -1$ (khi $V_{in}$ cao).
+- Lề nhiễu mức thấp: $NM_L = V_{IL} - V_{OL} = V_{IL} - 0 = V_{IL}$.
+- Lề nhiễu mức cao: $NM_H = V_{OH} - V_{IH} = V_{DD} - V_{IH}$.
+
 ---
 
-### Ex1 (Cốt lõi): Đo đạc Đặc tính I-V của NMOS và PMOS trên LTspice
+### 3. Động học Quá độ và Phân tích Trễ truyền lan
+Khi có tải dung $C_L$ tại ngõ ra, thời gian chuyển mạch phụ thuộc tốc độ nạp/xả dòng qua kênh dẫn:
+- **Trễ sườn xuống $t_{pHL}$:** Thời gian ngõ ra chuyển từ mức cao xuống mức thấp qua NMOS.
+- **Trễ sườn lên $t_{pLH}$:** Thời gian ngõ ra chuyển từ mức thấp lên mức cao qua PMOS.
+- **Trễ truyền lan trung bình:** $t_{pd} = \frac{t_{pHL} + t_{pLH}}{2}$.
+- **Thời gian sườn tăng $t_r$:** Thời gian $V_{out}$ tăng từ $10\%$ ($0.5\,\text{V}$) lên $90\%$ ($4.5\,\text{V}$).
+- **Thời gian sườn giảm $t_f$:** Thời gian $V_{out}$ giảm từ $90\%$ ($4.5\,\text{V}$) xuống $10\%$ ($0.5\,\text{V}$).
 
-#### A. Mục tiêu
-Thiết lập mạch thử nghiệm SPICE thuần túy để vẽ họ đặc tuyến $I_{DS}-V_{DS}$ và $I_{DS}-V_{GS}$ của MOSFET tiến trình MOSIS C5N; trích xuất thực nghiệm các tham số $V_{th}$, $K'$, và điện áp Early/hệ số điều chế chiều dài kênh $\lambda$.
+Ước lượng qua mô hình điện trở hiệu dụng trung bình $R_{on}$:
+$$t_{pHL} \approx 0.69 \times R_{on,n} \times C_L, \quad t_{pLH} \approx 0.69 \times R_{on,p} \times C_L$$
 
-#### B. Các bước thực hiện
-1. Mở LTspice, tạo mạch mô phỏng transistor NMOS đơn lẻ (`nmos_iv.asc` hoặc viết file `.sp` theo hướng dẫn):
-   - Transistor NMOS: $L = 0.60\,\mu\text{m}$, $W = 1.20\,\mu\text{m}$.
-   - Nguồn áp $V_{DS}$ nối vào cực Drain, nguồn áp $V_{GS}$ nối vào cực Gate; Source và Bulk nối đất ($GND$).
-   - Thêm lệnh gọi thư viện mô hình: `.include C5_models.txt`.
+---
+
+### 4. Quy tắc Thiết kế Hình học MOSIS SCMOS ($\lambda = 0.30\,\mu\text{m}$)
+- **Độ rộng tối thiểu:** Polysilicon $= 2\lambda$ ($0.60\,\mu\text{m}$); Metal 1 $= 3\lambda$ ($0.90\,\mu\text{m}$); Active $= 3\lambda$ ($0.90\,\mu\text{m}$).
+- **Khoảng cách tối thiểu:** Poly – Poly $= 3\lambda$; Metal 1 – Metal 1 $= 3\lambda$; Active – Active $= 3\lambda$.
+- **Khoảng vươn ra (Overhang):** Poly vươn qua mép Active $\ge 2\lambda$ ($0.60\,\mu\text{m}$).
+- **Lỗ tiếp xúc (Contact):** Kích thước cố định $2\lambda \times 2\lambda$ ($0.6\,\mu\text{m} \times 0.6\,\mu\text{m}$); Phần kim loại/Active bao quanh tiếp xúc (Enclosure) $\ge 1\lambda$.
+- **Phân cực chất nền (Taps):** Bắt buộc phải có $N^+$-tap nối N-Well lên $V_{DD}$ và $P^+$-tap nối P-Substrate xuống $GND$ để ngăn chặn hiện tượng kích hoạt Latch-up.
+
+---
+
+### 5. Cú pháp Lệnh Đo đạc Tự động SPICE (.MEASURE)
+Trong LTspice, các thông số trễ và lề nhiễu được đo tự động bằng cách chèn câu lệnh SPICE Directive (nhấn phím tắt `S`):
+```spice
+* Đo trễ sườn xuống tpHL (tính từ điểm 50% Vin đến điểm 50% Vout)
+.MEASURE TRAN tpHL TRIG V(in)=2.5 RISE=1 TARG V(out)=2.5 FALL=1
+
+* Đo trễ sườn lên tpLH
+.MEASURE TRAN tpLH TRIG V(in)=2.5 FALL=1 TARG V(out)=2.5 RISE=1
+
+* Tính trễ trung bình tpd
+.MEASURE TRAN tpd PARAM (tpHL + tpLH)/2
+
+* Đo thời gian tăng trise (10% lên 90%) và thời gian giảm tfall (90% xuống 10%)
+.MEASURE TRAN trise TRIG V(out)=0.5 RISE=1 TARG V(out)=4.5 RISE=1
+.MEASURE TRAN tfall TRIG V(out)=4.5 FALL=1 TARG V(out)=0.5 FALL=1
+```
+> Kết quả đo từ các câu lệnh `.MEAS` được lưu và đọc trực tiếp trong mục **View $\to$ SPICE Error Log** (phím tắt `Ctrl + L`).
+
+---
+
+## IV. CHUẨN BỊ TRƯỚC THỰC HÀNH (PRE-LAB - Ở NHÀ)
+
+> [!IMPORTANT]
+> Toàn bộ phần IV phải được sinh viên chuẩn bị trước vào **Mục VI.a (Phần chuẩn bị)** trong Phiếu báo cáo ở cuối bài này. Giảng viên kiểm tra và ký xác nhận đầu giờ; sinh viên không làm bài chuẩn bị sẽ không được cấp quyền thực hành trên máy tính.
+
+1. **Khảo sát tham số công nghệ:**  
+   Mở tệp `C5_models.txt` tại thư mục `04 - Models_and_Libraries/`. Trích xuất các giá trị tham số sau của NMOS và PMOS:
+   - Điện áp ngưỡng không phân cực đế: `VTO`
+   - Hệ số transconductance: `KP`
+   - Chiều dày lớp oxit cổng: `TOX`
+   - Chiều sâu tiếp giáp: `XJ`
+2. **Tính toán giải tích tỉ số $(W_p/W_n)$:**  
+   Với $V_{DD} = 5.0\,\text{V}$, $V_{thn} = 0.70\,\text{V}$, $|V_{thp}| = 0.80\,\text{V}$, $K_n' = 120\,\mu\text{A/V}^2$, $K_p' = 40\,\mu\text{A/V}^2$:
+   - Tính tỉ số định kích thước $\frac{(W/L)_p}{(W/L)_n}$ chính xác để $V_M = 2.50\,\text{V}$.
+   - Nếu chọn $L_n = L_p = 2\lambda = 0.60\,\mu\text{m}$ và $W_n = 4\lambda = 1.20\,\mu\text{m}$, hãy xác định độ rộng $W_p$ tương ứng.
+3. **Ước lượng điện trở dẫn và thời gian trễ lý thuyết:**  
+   - Tính giá trị điện trở dẫn hiệu dụng $R_{on,n}$ và $R_{on,p}$ theo công thức ở mục III.3.
+   - Ước lượng trễ sườn xuống $t_{pHL}$ và sườn lên $t_{pLH}$ khi kéo tải dung $C_L = 50\,\text{fF}$.
+4. **Vẽ sơ đồ que (Stick Diagram):**  
+   Vẽ sơ đồ que của CMOS Inverter lên giấy kẻ ô ly với quy ước:
+   - Đường ray $V_{DD}$ (trên) và $GND$ (dưới) bằng Metal 1.
+   - Vùng P-Active trong N-Well, vùng N-Active trên P-Substrate.
+   - Dải Poly chạy dọc làm cực cổng chung nối ngõ vào `in`.
+   - Cực Drain chung nối bằng Metal 1 ra ngõ xuất `out`.
+   - Vị trí đầy đủ của các nút tiếp xúc Contact và các tiếp xúc phân cực Substrate/Well Taps.
+5. **Soạn thảo Netlist SPICE:**  
+   Viết trước mã Netlist SPICE cho CMOS Inverter kết hợp nguồn xung vuông $50\,\text{MHz}$ và các câu lệnh `.MEAS` để chuẩn bị chạy mô phỏng.
+
+---
+
+## V. NỘI DUNG THỰC HÀNH TẠI PHÒNG LAB (IN-LAB)
+
+### 1. Khảo sát Đặc tính I-V của NMOS và PMOS trên LTspice
+1. Mở LTspice, tạo mạch thử nghiệm cho transistor NMOS (`nmos_iv.asc`):
+   - Đặt 1 NMOS từ thư viện linh kiện (phím `F2` $\to$ chọn `nmos4`). Đặt kích thước: `L=0.6u`, `W=1.2u`.
+   - Đặt nguồn $V_{DS}$ nối vào cực Drain, nguồn $V_{GS}$ nối vào cực Gate. Cực Source và Bulk nối đất ($GND$).
+   - Thêm câu lệnh gọi thư viện: `.include C5_models.txt`.
 2. **Khảo sát họ đặc tuyến ra $I_{DS}-V_{DS}$:**
-   - Cấu hình mô phỏng quét DC kép (Nested DC Sweep):
+   - Cấu hình quét DC kép:
      ```spice
      .dc VDS 0 5 0.01 VGS 1 5 1
      ```
-   - Nhấn **Run**, thêm trace đo dòng $I(M1)$.
+   - Chạy mô phỏng, thêm trace dòng $I(M1)$.
    - Quan sát 5 đường đặc tuyến tương ứng $V_{GS} = 1\text{V}, 2\text{V}, 3\text{V}, 4\text{V}, 5\text{V}$.
-   - Xác định ranh giới giữa miền tuyến tính (Triode) và miền bão hòa (Saturation) theo điều kiện $V_{DS,sat} = V_{GS} - V_{thn}$.
-   - Từ độ dốc của đoạn bão hòa tại $V_{GS} = 5\,\text{V}$, tính toán hệ số điều chế kênh $\lambda$:
-     $$\lambda = \frac{1}{I_{DS0}} \frac{\Delta I_{DS}}{\Delta V_{DS}}$$
+   - Đặt con trỏ đo (Cursor) tại đoạn bão hòa của đường $V_{GS} = 5.0\,\text{V}$, tính toán hệ số điều chế kênh $\lambda$:
+     $$\lambda = \frac{1}{I_{DS}(V_{DS1})} \times \frac{I_{DS}(V_{DS2}) - I_{DS}(V_{DS1})}{V_{DS2} - V_{DS1}}$$
 3. **Khảo sát đặc tuyến truyền dẫn $I_{DS}-V_{GS}$ và trích xuất điện áp ngưỡng $V_{thn}$:**
-   - Đặt cố định $V_{DS} = 5.0\,\text{V}$ (ép transistor luôn ở miền bão hòa).
-   - Quét $V_{GS}$ từ $0\,\text{V}$ đến $5.0\,\text{V}$ với bước $10\,\text{mV}$:
-     ```spice
-     .dc VGS 0 5 0.01
-     ```
-   - Thêm trace hiển thị căn bậc hai của dòng: $\sqrt{I(M1)}$.
-   - Tìm đoạn tuyến tính của đường $\sqrt{I_{DS}}$, kẻ đường tiếp tuyến ngoại suy cắt trục hoành $V_{GS}$ tại điểm nào thì điểm đó chính là điện áp ngưỡng $V_{thn}$. So sánh với tham số `VTO = 0.70V` trong file mô hình.
-4. Lặp lại tương tự cho PMOS ($W = 3.60\,\mu\text{m}, L = 0.60\,\mu\text{m}$), xác định $V_{thp}$ và so sánh.
+   - Đặt cố định $V_{DS} = 5.0\,\text{V}$. Cấu hình quét: `.dc VGS 0 5 0.01`.
+   - Thêm biểu thức đo căn bậc hai của dòng: `sqrt(I(M1))`.
+   - Kẻ đường tiếp tuyến với đoạn tuyến tính của đồ thị $\sqrt{I_{DS}}$ cắt trục hoành $V_{GS}$ tại điểm nào thì điểm đó chính là $V_{thn}$.
+4. Lặp lại các bước trên cho PMOS ($W = 3.60\,\mu\text{m}, L = 0.60\,\mu\text{m}$, dùng linh kiện `pmos4`), trích xuất $V_{thp}$ và hệ số $\lambda_p$.
 
 ---
 
-### Ex2 (Cốt lõi): Thiết kế Schematic CMOS Inverter và Phân tích VTC
-
-#### A. Mục tiêu
-Thiết kế sơ đồ nguyên lý CMOS Inverter hoàn chỉnh trên Electric VLSI; xuất SPICE Netlist sang LTspice để quét đường cong truyền đạt điện áp (VTC - Voltage Transfer Characteristic); xác định điểm chuyển mạch đối xứng $V_M$ và các lề nhiễu logic.
-
-#### B. Sơ đồ mạch nguyên lý
-- PMOS: $W_p = 3.60\,\mu\text{m} = 12\lambda$, $L_p = 0.60\,\mu\text{m} = 2\lambda$ (Source nối $V_{DD}$, Drain nối $V_{out}$, Gate nối $V_{in}$, Bulk nối $V_{DD}$).
-- NMOS: $W_n = 1.20\,\mu\text{m} = 4\lambda$, $L_n = 0.60\,\mu\text{m} = 2\lambda$ (Source nối $GND$, Drain nối $V_{out}$, Gate nối $V_{in}$, Bulk nối $GND$).
-
-```
-        VDD (5V)
-         │
-     ┌───┴───┐
-     │  PMOS │ (W=3.6u, L=0.6u)
-In ──┤       ├───┬─── Out
-     └───┬───┘   │
-         │       │
-     ┌───┴───┐   │
-     │  NMOS │   │
-In ──┤       ├───┘ (W=1.2u, L=0.6u)
-     └───┬───┘
-         │
-        GND
-```
-
-#### C. Các bước thực hiện
-1. Trong Electric VLSI, mở thư viện `tutorial.jelib` (hoặc tạo thư viện mới `vlsi_standard_cells.jelib`).
-2. Tạo Cell mới: **Name:** `inv_x1`, **View:** `schematic`.
-3. Đặt các linh kiện từ bảng Components:
-   - 1 transistor NMOS, 1 transistor PMOS.
-   - Nhấp đúp vào linh kiện, cài đặt kích thước: NMOS ($W=4, L=2$ theo đơn vị $\lambda$), PMOS ($W=12, L=2$).
-   - Kết nối dây (Wire), gán chân (Export Port):
-     - Chân ngõ vào `in`: gán Port Type là `Input`.
-     - Chân ngõ ra `out`: gán Port Type là `Output`.
-     - Chân nguồn `vdd`: gán Port Type là `Power`.
-     - Chân đất `gnd`: gán Port Type là `Ground`.
-4. Xuất Netlist và chạy mô phỏng quét DC trên LTspice:
-   - Câu lệnh SPICE:
-     ```spice
-     .dc Vin 0 5 0.005
-     ```
-   - Đo đạc đường cong $V_{out} = f(V_{in})$.
-   - Đặt con trỏ đo (Cursor) xác định điện áp chuyển mạch $V_M$ tại vị trí $V_{out} = V_{in}$. Kiểm tra xem $V_M$ có nằm trong dải dung sai mục tiêu $[2.45\,\text{V} - 2.55\,\text{V}]$ không.
-5. **Đo lề nhiễu logic:**
-   - Trong cửa sổ đồ thị LTspice, thêm trace đạo hàm: `d(V(out))/d(V(in))`.
-   - Tìm tọa độ điểm mà độ dốc bằng $-1.00$:
-     - Điểm thứ nhất tại điện thế thấp: xác định điện áp ngõ vào mức thấp cực đại $V_{IL}$.
-     - Điểm thứ hai tại điện thế cao: xác định điện áp ngõ vào mức cao cực tiểu $V_{IH}$.
-   - Tính toán lề nhiễu logic mức thấp và mức cao:
-     $$NM_L = V_{IL} - V_{OL} = V_{IL} - 0\,\text{V} = V_{IL}$$
-     $$NM_H = V_{OH} - V_{IH} = 5\,\text{V} - V_{IH}$$
-   - Đánh giá khả năng chống nhiễu của tế bào `INV_X1`.
-
----
-
-### Ex3 (Trọng tâm bắt buộc): Đo đạc Động học Quá độ (Transient) & Đóng gói Icon
-
-#### A. Mục tiêu
-Khảo sát đáp ứng thời gian thực của Inverter khi có tín hiệu xung vuông kích thích ở đầu vào; đo thời gian tăng $t_r$, thời gian giảm $t_f$, và trễ lan truyền $t_{pHL}, t_{pLH}$ dưới tải dung; đóng gói Cell Icon chuẩn hóa.
-
-#### B. Các bước thực hiện
-1. Thiết lập nguồn kích xung ngõ vào $V_{in}$: Xung vuông từ $0\,\text{V}$ lên $5\,\text{V}$, chu kỳ $20\,\text{ns}$ ($50\,\text{MHz}$), độ rộng xung $10\,\text{ns}$, thời gian sườn tăng/giảm $t_{rise} = t_{fall} = 100\,\text{ps}$.
+### 2. Thiết kế Schematic CMOS Inverter và Phân tích VTC
+1. Mở Electric VLSI, tạo Cell mới: **Name:** `inv_x1`, **View:** `schematic`.
+2. Đặt linh kiện:
+   - 1 PMOS: $W = 12\lambda$ ($3.6\,\mu\text{m}$), $L = 2\lambda$ ($0.6\,\mu\text{m}$).
+   - 1 NMOS: $W = 4\lambda$ ($1.2\,\mu\text{m}$), $L = 2\lambda$ ($0.6\,\mu\text{m}$).
+   - Kết nối dây kim loại và gán nhãn Export chân: `in` (Input), `out` (Output), `vdd` (Power), `gnd` (Ground).
+3. Nhấn `F5` để kiểm tra kết nối mạch logic.
+4. Xuất Netlist SPICE (*Tools $\to$ Simulation (Spice) $\to$ Write Spice Deck*) sang LTspice.
+5. Cấu hình mô phỏng quét DC:
    ```spice
-   Vin in 0 PULSE(0 5 0 100p 100p 9.9n 20n)
+   .dc Vin 0 5 0.005
+   ```
+6. Chạy mô phỏng, hiển thị dạng sóng $V_{out} = f(V_{in})$.
+7. Dùng Cursor xác định điện áp chuyển mạch $V_M$ tại giao điểm $V_{out} = V_{in}$.
+8. Thêm trace đạo hàm `d(V(out))/d(V(in))`. Xác định hai điểm có độ dốc bằng $-1.00$ để suy ra $V_{IL}$ và $V_{IH}$, sau đó tính $NM_L$ và $NM_H$.
+
+---
+
+### 3. Đo đạc Động học Quá độ (Transient) & Đóng gói Icon
+1. Cấu hình nguồn kích xung ngõ vào $V_{in}$:
+   ```spice
+   Vin in 0 PULSE(0 5.0 0 100p 100p 9.9n 20n)
    ```
 2. Đặt tải dung $C_L = 50\,\text{fF}$ tại ngõ ra `out`.
-3. Chạy mô phỏng quá độ trong thời gian $50\,\text{ns}$:
+3. Chèn khối lệnh `.MEAS` đã chuẩn bị ở mục III.5 và cấu hình mô phỏng:
    ```spice
    .tran 1p 50n
    ```
-4. Sử dụng tính năng đo tự động của SPICE (`.measure`) hoặc dùng con trỏ thủ công để xác định:
-   - $t_{pHL}$ (Trễ truyền lan từ Cao xuống Thấp): Khoảng thời gian từ lúc $V_{in}$ đạt $50\%$ ($2.5\,\text{V}$) đến lúc $V_{out}$ hạ xuống $50\%$ ($2.5\,\text{V}$).
-   - $t_{pLH}$ (Trễ truyền lan từ Thấp lên Cao): Khoảng thời gian từ lúc $V_{in}$ hạ xuống $50\%$ ($2.5\,\text{V}$) đến lúc $V_{out}$ tăng lên $50\%$ ($2.5\,\text{V}$).
-   - Trễ truyền lan trung bình: $t_{pd} = \frac{t_{pHL} + t_{pLH}}{2}$.
-   - Thời gian tăng $t_r$ (Rise time): Thời gian $V_{out}$ chuyển từ $10\%$ ($0.5\,\text{V}$) lên $90\%$ ($4.5\,\text{V}$).
-   - Thời gian giảm $t_f$ (Fall time): Thời gian $V_{out}$ hạ từ $90\%$ ($4.5\,\text{V}$) xuống $10\%$ ($0.5\,\text{V}$).
-5. **Khảo sát trễ phụ thuộc tải dung (Load Dependence):**
-   - Quét tải dung $C_L$ qua 3 giá trị: $10\,\text{fF}$, $50\,\text{fF}$, $100\,\text{fF}$ bằng lệnh `.step param CL list 10f 50f 100f`.
-   - Lập đồ thị trễ $t_{pd}$ theo tải dung $C_L$. Nhận xét tính tuyến tính của hàm trễ $t_{pd} = p + g \times h$ (Logical Effort).
-6. **Tạo Icon View trong Electric:**
-   - Trong Electric, vào menu **View $\to$ Make Icon View** cho Cell `inv_x1`.
-   - Chỉnh sửa hình dạng biểu tượng hình tam giác kèm vòng tròn phủ định ở ngõ ra đúng tiêu chuẩn IEEE; bố trí các chân `in` ở bên trái, `out` ở bên phải, `vdd` ở trên đỉnh, `gnd` ở đáy.
+4. Chạy mô phỏng. Mở **SPICE Error Log** (`Ctrl + L`) để đọc trực tiếp các giá trị trễ: $t_{pHL}, t_{pLH}, t_{pd}, t_r, t_f$.
+5. Khảo sát ảnh hưởng của tải dung: Thay đổi lần lượt $C_L = 10\,\text{fF}$ và $100\,\text{fF}$, ghi lại các giá trị trễ tương ứng.
+6. **Đóng gói Icon trong Electric:** Vào menu **View $\to$ Make Icon View**, vẽ biểu tượng cổng NOT chuẩn IEEE với các chân `in` (trái), `out` (phải), `vdd` (trên) và `gnd` (dưới).
 
 ---
 
-### Ex4 (Tiêu chuẩn): Thiết kế Physical Layout, Chạy DRC & Đối chiếu LVS
+### 4. Thiết kế Mask Layout, Chạy DRC & Đối chiếu LVS
+1. Trong Electric, tạo Cell mới: **Name:** `inv_x1`, **View:** `layout`.
+2. Tạo 2 đường ray nguồn Metal 1 nằm ngang có độ rộng tối thiểu $6\lambda$ ($1.8\,\mu\text{m}$): thanh trên gán nhãn `vdd`, thanh dưới gán nhãn `gnd`.
+3. Vẽ vùng N-Well ở nửa trên; đặt vùng P-Active ($W = 12\lambda, L = 2\lambda$) trong N-Well.
+4. Đặt vùng N-Active ($W = 4\lambda, L = 2\lambda$) ở nửa dưới.
+5. Vẽ dải Polysilicon liên tục cắt ngang qua cả hai vùng Active làm cổng chung. Poly phải vươn thừa ra ngoài mép Active tối thiểu $2\lambda$ ($0.6\,\mu\text{m}$). Gán Export port tên `in` tại đầu dải Poly.
+6. Đặt các nút tiếp xúc Contact nối cực Source của PMOS lên `vdd`, cực Source của NMOS xuống `gnd`.
+7. Nối cực Drain của hai transistor lại với nhau bằng Metal 1, tạo Export port tên `out`.
+8. Đặt tiếp xúc $N^+$-tap nối N-Well lên `vdd` và $P^+$-tap nối chất nền xuống `gnd`.
+9. **Kiểm tra luật thiết kế DRC:** Nhấn phím `F5`. Yêu cầu sửa toàn bộ lỗi hình học cho đến khi hệ thống báo: **"0 errors found"**.
+10. **Đối chiếu sơ đồ nguyên lý LVS:** Vào menu **Tools $\to$ NCC $\to$ Schematic and Layout Comparison**. Yêu cầu kết quả đạt: **"Cells are topologically equivalent (MATCH)"**.
 
-#### A. Mục tiêu
-Thiết kế mặt nạ vi mạch (Mask Layout) hoàn chỉnh cho tế bào `INV_X1` bằng công cụ Electric VLSI tuân thủ các quy tắc hình học MOSIS SCMOS; thực hiện kiểm tra DRC (0 vi phạm) và LVS (trùng khớp hoàn toàn với Schematic).
+---
 
-#### B. Quy tắc hình học MOSIS SCMOS cần tuân thủ ($\lambda = 0.30\,\mu\text{m}$)
-- **Độ rộng tối thiểu:** Poly = $2\lambda$ ($0.6\,\mu\text{m}$); Metal 1 = $3\lambda$ ($0.9\,\mu\text{m}$); Active = $3\lambda$ ($0.9\,\mu\text{m}$).
-- **Khoảng cách tối thiểu:** Poly tới Poly = $3\lambda$; Metal 1 tới Metal 1 = $3\lambda$; Active tới Active = $3\lambda$.
-- **Khoảng vươn ra (Overhang):** Poly vươn qua mép Active $\ge 2\lambda$ (chống hiện tượng ngắn mạch do lệch mặt nạ quang khắc).
-- **Lỗ tiếp xúc (Contact):** Kích thước chuẩn cố định $2\lambda \times 2\lambda$; phần kim loại và Active bao quanh Contact (Enclosure) $\ge 1\lambda$.
-- **N-Well:** Khoảng cách từ mép N-Well tới Active N $\ge 6\lambda$; Khoảng cách từ mép N-Well tới Active P bên trong $\ge 3\lambda$.
+### 5. Trích xuất Ký sinh (PEX) & Phân tích Post-layout
+1. Trong cửa sổ Layout của `inv_x1`, vào menu **Tools $\to$ Simulation (Spice) $\to$ Options**, đánh dấu chọn **"Extract Parasitic Capacitances"**.
+2. Xuất Netlist sau trích xuất: **Tools $\to$ Simulation (Spice) $\to$ Write Spice Deck**.
+3. Mở file Netlist vừa sinh ra, kiểm tra sự xuất hiện của các tham số hình học khuếch tán (`AS, AD, PS, PD`) và các tụ ký sinh dây dẫn kim loại.
+4. Chạy mô phỏng quá độ Transient trên LTspice với Netlist Post-layout này dưới cùng điều kiện đo của mục 3 ($C_L = 50\,\text{fF}$).
+5. Đọc các thông số trễ sau đóng gói ($t_{pHL,post}, t_{pLH,post}, t_{pd,post}$) và tính độ suy giảm hiệu năng so với Pre-layout.
+
+---
+
+## VI. BÁO CÁO THỰC HÀNH (MẪU PHIẾU ĐIỀN KHUYẾT CHO SINH VIÊN)
 
 ```
-     ┌───────────────────────────────────────────────┐
-     │  VDD Rail (Metal 1, width = 6 lambda)         │
-     └───┬───────────────────────────────────────┬───┘
-         │ (Contact)                             │ (Well Tap Contact)
-     ┌───┴───────────────┐                   ┌───┴───────────────┐
-     │  P-Diffusion      │                   │  N-Well Tap       │
-     │  W = 12 lambda    │                   │  (N+ Substrate)   │
-     │                   │                   └───────────────────┘
-     └───┬───────────────┘
-         │ (Gate: Poly width = 2 lambda)
-─────────┼────────────────────────────── (In: Poly / Metal 1)
-         │
-     ┌───┴───────────────┐                   ┌───────────────────┐
-     │  N-Diffusion      │                   │  P-Sub Tap        │
-     │  W = 4 lambda     │                   │  (P+ Substrate)   │
-     │                   │                   └───┬───────────────┘
-     └───┬───────────────┘                       │ (Sub Tap Contact)
-         │ (Contact)                             │
-     ┌───┴───────────────────────────────────────┴───┐
-     │  GND Rail (Metal 1, width = 6 lambda)         │
-     └───────────────────────────────────────────────┘
+========================================================================================
+                          BÁO CÁO THỰC HÀNH: BÀI 1
+            ĐẶC TÍNH I-V CỦA MOSFET VÀ THIẾT KẾ CMOS INVERTER
+Họ và Tên: ..................................................... MSSV: .................
+Lớp: ....................................... Nhóm/Bàn: ......... Ngày: .................
+Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: ............................................
+========================================================================================
 ```
 
-#### C. Các bước thực hiện
-1. Tạo Cell mới: **Name:** `inv_x1`, **View:** `layout`.
-2. Tạo hai thanh kim loại Metal 1 nằm ngang chạy suốt chiều rộng tế bào: thanh trên gán nhãn `vdd`, thanh dưới gán nhãn `gnd` (độ rộng tối thiểu $6\lambda$ để đảm bảo mật độ dòng điện, tránh hiện tượng di trú kim loại Electromigration).
-3. Đặt vùng N-Well ở nửa trên; bố trí vùng P-Active kích thước $W=12\lambda, L=2\lambda$ bên trong N-Well.
-4. Bố trí vùng N-Active kích thước $W=4\lambda, L=2\lambda$ ở nửa dưới trên chất nền P.
-5. Vẽ dải Polysilicon dọc cắt qua cả hai vùng Active để tạo kênh dẫn cho PMOS và NMOS. Poly phải vươn thừa ra mép Active tối thiểu $2\lambda$ ở hai đầu.
-6. Đặt các nút tiếp xúc (Metal-1-P-Active-Contact và Metal-1-N-Active-Contact) nối cực Source của PMOS lên đường ray `vdd`, cực Source của NMOS xuống đường ray `gnd`.
-7. Đặt các nút tiếp xúc nối cực Drain của cả hai transistor với nhau bằng Metal 1, tạo chân Export gán nhãn `out`.
-8. Đặt các tiếp xúc phân cực chất nền (Substrate/Well Taps):
-   - Đặt tiếp xúc $N^+$ nối N-Well lên đường ray `vdd` (ngăn hiện tượng Latch-up).
-   - Đặt tiếp xúc $P^+$ nối P-substrate xuống đường ray `gnd` (ngăn hiện tượng Latch-up).
-9. **Kiểm tra luật thiết kế hình học (DRC):**
-   - Phím tắt trong Electric: Nhấn `F5` hoặc chọn menu **Tools $\to$ DRC $\to$ Check Hierarchical**.
-   - Quan sát bảng thông báo: Yêu cầu khắc phục triệt để mọi vệt vi phạm màu đỏ cho đến khi thông báo: **"0 errors found"**.
-10. **Đối chiếu sơ đồ nguyên lý với mặt nạ (LVS):**
-    - Vào menu **Tools $\to$ NCC $\to$ Schematic and Layout Comparison**.
-    - Quan sát kết quả: Hệ thống phải xuất dòng thông báo màu xanh:
-      `Cells 'inv_x1{sch}' and 'inv_x1{lay}' are topologically equivalent (MATCH).`
-    - Nếu LVS báo Mismatch, kiểm tra lại: tên chân Export viết hoa/thường, cực tính Source/Drain, hoặc thiếu Well Tap.
+### a. Phần Chuẩn bị (Pre-lab)
+
+1. **Trích xuất tham số từ `C5_models.txt`:**
+   - NMOS: `VTO` = ................. V ; `KP` = ................. µA/V² ; `TOX` = ................. m
+   - PMOS: `VTO` = ................. V ; `KP` = ................. µA/V² ; `TOX` = ................. m
+
+2. **Tính toán kích thước và trễ lý thuyết ($V_{DD} = 5.0\,\text{V}$):**
+   - Tỉ số kích thước lý thuyết: $\frac{(W/L)_p}{(W/L)_n} =$ ........................
+   - Kích thước lựa chọn: NMOS ($W_n/L_n$) = ................. / ................. ; PMOS ($W_p/L_p$) = ................. / .................
+   - Điện trở dẫn hiệu dụng: $R_{on,n} =$ ........................ $\Omega$ ; $R_{on,p} =$ ........................ $\Omega$
+   - Dự đoán trễ với $C_L = 50\,\text{fF}$: $t_{pHL} =$ ................. ps ; $t_{pLH} =$ ................. ps ; $t_{pd} =$ ................. ps
+
+3. **Sơ đồ que (Stick Diagram):**  
+   *(Vẽ sơ đồ que hoàn chỉnh của CMOS Inverter vào khung dưới đây, chú thích rõ tên các lớp Metal 1, Poly, Active, N-Well, Contact và các Taps)*
+
+   ```
+   ┌──────────────────────────────────────────────────────────────────────────────────┐
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   └──────────────────────────────────────────────────────────────────────────────────┘
+   ```
+
+4. **Câu lệnh SPICE đo trễ (.MEAS) đã soạn:**
+   ```spice
+   ......................................................................................
+   ......................................................................................
+   ......................................................................................
+   ```
 
 ---
 
-### Ex5 (Thử thách nâng cao): Trích xuất Ký sinh (PEX) & Phân tích Post-layout
+### b. Phần Thực hành (In-lab)
 
-#### A. Mục tiêu
-Sử dụng công cụ trích xuất ký sinh (Parasitic Extraction - PEX) của Electric để xuất sơ đồ tương đương chứa toàn bộ điện dung ký sinh vùng khuếch tán ($C_{area}, C_{perim}$) và điện dung chồng lấn tiếp xúc kim loại; chạy mô phỏng quá độ Post-layout và so sánh định lượng với kết quả Pre-layout.
+1. **Kết quả đo đặc tính I-V của MOSFET:**
 
-#### B. Các bước thực hiện
-1. Trong cửa sổ Layout của `inv_x1`, vào menu **Tools $\to$ Simulation (Spice) $\to$ Options**.
-2. Bật tùy chọn trích xuất điện dung ký sinh: Đánh dấu vào mục **"Extract Parasitic Capacitances"** và **"Extract Wire Resistances"** (nếu có).
-3. Xuất Netlist SPICE sau trích xuất: **Tools $\to$ Simulation (Spice) $\to$ Write Spice Deck**.
-4. Mở file `.sp` vừa sinh ra bằng trình soạn thảo văn bản. Quan sát thấy:
-   - Các transistor không còn chỉ có $W, L$ mà được bổ sung các thông số hình học ký sinh chi tiết: `AS` (Area of Source), `AD` (Area of Drain), `PS` (Perimeter of Source), `PD` (Perimeter of Drain).
-   - Xuất hiện thêm các phần tử tụ điện ký sinh nối giữa các nút dây kim loại với chất nền ($GND$).
-5. Chạy mô phỏng quá độ Transient trên LTspice với Netlist Post-layout này dưới cùng điều kiện đo của Ex3 ($C_L = 50\,\text{fF}$).
-6. **Lập bảng đối chiếu Pre-layout vs Post-layout:**
+   | Tham số trích xuất | NMOS ($W=1.2\mu\text{m}, L=0.6\mu\text{m}$) | PMOS ($W=3.6\mu\text{m}, L=0.6\mu\text{m}$) |
+   | :--- | :---: | :---: |
+   | **Điện áp ngưỡng thực nghiệm ($V_{th}$)** | .................... V | .................... V |
+   | **Dòng bão hòa cực đại $I_{DS,max}$ ($V_{GS}=5\text{V}, V_{DS}=5\text{V}$)** | .................... mA | .................... mA |
+   | **Hệ số điều chế kênh $\lambda$** | .................... $\text{V}^{-1}$ | .................... $\text{V}^{-1}$ |
 
-| Đại lượng đo | Mô phỏng Pre-layout (Ex3) | Mô phỏng Post-layout (Ex5) | Độ sai lệch ($\Delta\%$) | Nguyên nhân vật lý chính |
-| :--- | :---: | :---: | :---: | :--- |
-| **Trễ sườn xuống $t_{pHL}$** | ... ps | ... ps | ... % | Thêm điện dung khuếch tán $C_{db,n}$ và dung ký sinh Metal-1 |
-| **Trễ sườn lên $t_{pLH}$** | ... ps | ... ps | ... % | Thêm điện dung khuếch tán $C_{db,p}$ và dung N-Well |
-| **Trễ trung bình $t_{pd}$** | ... ps | ... ps | ... % | Tổng dung nút ngõ ra tăng |
-| **Thời gian tăng $t_r$** | ... ps | ... ps | ... % | Dòng nạp qua PMOS phải gánh thêm tụ ký sinh |
-| **Thời gian giảm $t_f$** | ... ps | ... ps | ... % | Dòng xả qua NMOS phải xả thêm tụ ký sinh |
+   *Vẽ hoặc dán đồ thị đặc tuyến $I_{DS}-V_{DS}$ của NMOS vào khung dưới đây:*
+   ```
+   ┌──────────────────────────────────────────────────────────────────────────────────┐
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   │                                                                                  │
+   └──────────────────────────────────────────────────────────────────────────────────┘
+   ```
 
-7. **Rút ra kết luận thiết kế:** Diện tích khuếch tán cực Drain ($AD, PD$) ảnh hưởng trực tiếp thế nào đến độ trễ? Đề xuất giải pháp layout thu hẹp diện tích cực Drain để giảm thiểu tụ ký sinh (ví dụ: dùng chung cực Drain khi ghép nhiều cổng).
+2. **Kết quả phân tích đường cong truyền đạt VTC:**
+   - Điện áp chuyển mạch đo được: $V_M =$ .................... V (Độ lệch so với $2.5\,\text{V}$: ............. %)
+   - Điện áp vào mức thấp: $V_{IL} =$ .................... V
+   - Điện áp vào mức cao: $V_{IH} =$ .................... V
+   - Lề nhiễu logic mức thấp: $NM_L =$ .................... V
+   - Lề nhiễu logic mức cao: $NM_H =$ .................... V
+
+3. **Kết quả đo trễ quá độ (Transient) Pre-layout:**
+
+   | Tải dung $C_L$ | $t_{pHL}$ (ps) | $t_{pLH}$ (ps) | $t_{pd}$ trung bình (ps) | Thời gian tăng $t_r$ (ps) | Thời gian giảm $t_f$ (ps) |
+   | :---: | :---: | :---: | :---: | :---: | :---: |
+   | **$10\,\text{fF}$** | ................ | ................ | ................ | ................ | ................ |
+   | **$50\,\text{fF}$** | ................ | ................ | ................ | ................ | ................ |
+   | **$100\,\text{fF}$** | ................ | ................ | ................ | ................ | ................ |
+
+   *Nhận xét về mối quan hệ giữa trễ truyền lan $t_{pd}$ và tải dung $C_L$:*  
+   ....................................................................................................................................................  
+   ....................................................................................................................................................
+
+4. **Kết quả Thiết kế Mask Layout và Kiểm chứng Vật lý:**
+   - Kích thước hình học tế bào: Chiều rộng $W =$ ............. $\lambda$ ($.............\,\mu\text{m}$); Chiều cao $H =$ ............. $\lambda$ ($.............\,\mu\text{m}$)
+   - Diện tích tế bào (Area): ........................ $\mu\text{m}^2$
+   - Số lỗi kiểm tra DRC: .................... lỗi
+   - Kết quả đối chiếu LVS: ....................................................................................................................
+
+5. **Bảng Đối chiếu Tổng hợp 3 Chiều (Lý thuyết vs Pre-layout vs Post-layout):**  
+   *(Với tải dung chuẩn $C_L = 50\,\text{fF}$)*
+
+   | Đại lượng kỹ thuật | [1] Lý thuyết tính tay | [2] SPICE Pre-layout | [3] SPICE Post-layout (PEX) | Sai số PEX vs Pre-layout ($\frac{[3]-[2]}{[2]} \times 100\%$) |
+   | :--- | :---: | :---: | :---: | :---: |
+   | **Điện áp $V_M$ (V)** | $2.50\,\text{V}$ | .............. V | .............. V | .............. % |
+   | **Lề nhiễu $NM_L$ (V)** | .............. V | .............. V | .............. V | .............. % |
+   | **Lề nhiễu $NM_H$ (V)** | .............. V | .............. V | .............. V | .............. % |
+   | **Trễ sườn xuống $t_{pHL}$ (ps)** | .............. ps | .............. ps | .............. ps | .............. % |
+   | **Trễ sườn lên $t_{pLH}$ (ps)** | .............. ps | .............. ps | .............. ps | .............. % |
+   | **Trễ trung bình $t_{pd}$ (ps)** | .............. ps | .............. ps | .............. ps | .............. % |
+
+6. **Phân tích và Biện luận Kỹ thuật:**
+   - *Câu hỏi 1: Tại sao thời gian trễ trong mô phỏng Post-layout lại tăng lên so với mô phỏng Pre-layout? Các thành phần ký sinh nào đóng góp chính vào sự gia tăng này?*  
+     ................................................................................................................................................  
+     ................................................................................................................................................  
+     ................................................................................................................................................
+   - *Câu hỏi 2: Nếu trong Layout ta quên đặt tiếp xúc phân cực N-Well Tap lên $V_{DD}$ và Substrate Tap xuống $GND$, vi mạch thực tế sẽ đối mặt với nguy cơ gì? Giải thích cơ chế vật lý.*  
+     ................................................................................................................................................  
+     ................................................................................................................................................  
+     ................................................................................................................................................
+   - *Câu hỏi 3: Nếu một kỹ sư định kích thước $W_p = W_n$, đường cong VTC và thời gian trễ của Inverter sẽ bị biến đổi như thế nào? Trong trường hợp nào thì thiết kế $W_p = W_n$ được chấp nhận?*  
+     ................................................................................................................................................  
+     ................................................................................................................................................  
+     ................................................................................................................................................
 
 ---
 
-## 3. POST-LAB: BÁO CÁO TỔNG KẾT VÀ BẢN ĐẶC TẢ KỸ THUẬT (CELL DATASHEET)
+## VII. RUBRIC ĐÁNH GIÁ (THANG ĐIỂM 10)
 
-Mỗi sinh viên nộp một bản báo cáo định dạng PDF bao gồm:
-1. **Bảng tổng hợp đối chiếu 3 chiều (Three-Way Comparison Table):**
-
-| Thông số kỹ thuật | Lý thuyết tính tay (Pre-lab) | Mô phỏng Pre-layout (In-lab Ex2,3) | Đo đạc Post-layout (In-lab Ex5) |
-| :--- | :---: | :---: | :---: |
-| **Điện áp ngưỡng chuyển mạch $V_M$ (V)** | $2.50\,\text{V}$ | ... V | ... V |
-| **Lề nhiễu mức thấp $NM_L$ (V)** | ... V | ... V | ... V |
-| **Lề nhiễu mức cao $NM_H$ (V)** | ... V | ... V | ... V |
-| **Trễ truyền lan $t_{pHL}$ với $C_L=50\text{fF}$ (ps)** | ... ps | ... ps | ... ps |
-| **Trễ truyền lan $t_{pLH}$ với $C_L=50\text{fF}$ (ps)** | ... ps | ... ps | ... ps |
-| **Diện tích Layout hình học ($W \times H$)** | N/A | N/A | ... $\mu\text{m} \times ... \mu\text{m}$ |
-
-2. **Ảnh chụp minh chứng kiểm chứng:**
-   - Đồ thị VTC có đánh dấu tọa độ $V_M, V_{IL}, V_{IH}$.
-   - Dạng sóng đáp ứng quá độ Transient chồng 2 đường Pre-layout và Post-layout để thấy rõ độ trễ tăng thêm.
-   - Ảnh chụp cửa sổ Layout sạch lỗi DRC (**0 errors**).
-   - Ảnh chụp nhật ký đối chiếu LVS báo trùng khớp (**NCC: Cells are topologically equivalent**).
-3. **Phần giải thích và biện luận kỹ thuật:** Trả lời câu hỏi: *"Tại sao khi thiết kế Layout, việc đặt tiếp xúc phân cực chất nền (Substrate/Well Taps) càng gần transistor càng tốt? Nếu không có các tap này thì vi mạch sẽ đối mặt với nguy cơ gì khi hoạt động?"*
-
----
-
-## 4. CÁC LỖI KỸ THUẬT THƯỜNG GẶP VÀ CÁCH KHẮC PHỤC
-
-> [!WARNING]
-> **Danh mục bẫy lỗi thường gặp trong Lab 01:**
-> 1. **Bẫy lệch cực tính PMOS:** Trong Schematic, nếu quên nối chân Bulk (đế) của PMOS lên đường nguồn `vdd` (để hở hoặc nối nhầm xuống `gnd`), tiếp giáp P-N giữa Source/Drain và Well sẽ bị phân cực thuận, gây ngắn mạch nguồn xuống đất.
-> 2. **Bẫy vi phạm khoảng vươn Poly (DRC Error):** Mép dải Polysilicon chỉ vừa chạm tới mép Active mà không vươn ra đủ $2\lambda$. Khi chế tạo thực tế, sai số dịch mặt nạ quang khắc sẽ làm hở kênh dẫn, biến transistor thành điện trở rò dòng. Luôn đảm bảo Poly nhô ra tối thiểu $2\lambda$ ($0.6\,\mu\text{m}$).
-> 3. **Bẫy thiếu nhãn Port trong LVS (NCC Error):** Vẽ Layout đầy đủ nhưng quên tạo Export Port cho các chân `in`, `out`, `vdd`, `gnd` hoặc đặt tên sai khác kiểu chữ hoa/thường so với Schematic. LVS sẽ báo lỗi không khớp số lượng cổng (Port mismatch).
-> 4. **Bẫy chia bước thời gian quá lớn trong SPICE:** Khi chạy mô phỏng Transient mà xung ngõ vào có sườn dốc $100\,\text{ps}$, nếu để bước tính mặc định của SPICE, đồ thị sẽ bị gãy góc dẫn tới đo trễ sai. Luôn khai báo `Maximum Timestep` trong lệnh `.tran` $\le 1\,\text{ps}$ (ví dụ: `.tran 1p 50n`).
-
----
-
-## 5. RUBRIC CHẤM ĐIỂM BÀI LAB 01 (THANG ĐIỂM 10)
-
-| Tiêu chí | Trọng số | Điểm tối đa | Yêu cầu để đạt điểm tối đa |
-| :--- | :---: | :---: | :--- |
-| **1. Chuẩn bị Pre-lab** | 20% | **2.0 điểm** | Tính đúng $W_p/W_n$, $R_{on}$, ước lượng trễ; Stick Diagram vẽ đầy đủ các lớp và tiếp xúc đúng nguyên lý. |
-| **2. Thực hành I-V & VTC (Ex1, Ex2)** | 30% | **3.0 điểm** | Trích xuất đúng họ đặc tuyến MOSFET; Schematic chuẩn; Đường VTC xác định đúng $V_M \approx 2.5\,\text{V}$ và đo chính xác $NM_L, NM_H$. |
-| **3. Mô phỏng Transient & Icon (Ex3)** | 20% | **2.0 điểm** | Dạng sóng Transient chuẩn xác, đo đủ $t_r, t_f, t_{pHL}, t_{pLH}$; Tạo Icon View `inv_x1` chuẩn IEEE. |
-| **4. Physical Layout, DRC & LVS (Ex4)** | 20% | **2.0 điểm** | Layout chuẩn MOSIS; Kiểm tra DRC đạt 0 lỗi; Đối chiếu LVS báo `MATCH` hoàn hảo tại bàn thực hành. |
-| **5. Trích xuất PEX & Báo cáo Post-lab (Ex5)** | 10% | **1.0 điểm** | Trích xuất thành công Netlist PEX; Đo và đối chiếu định lượng trễ Pre vs Post-layout; Phân tích sắc bén nguyên nhân vật lý. |
-| **TỔNG CỘNG** | **100%** | **10.0 điểm** | Nghiệm thu tại phòng Lab kèm chữ ký xác nhận của Giảng viên. |
+| Tiêu chí | Trọng số | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
+| :--- | :---: | :--- | :--- | :--- | :--- |
+| **1. Chuẩn bị Pre-lab (Mục VI.a)** | **20%** | Tính đúng $W_p/W_n$, $R_{on}$, trễ lý thuyết; Stick diagram chính xác, đủ các lớp và tiếp xúc Taps; chuẩn bị đủ câu lệnh `.MEAS`. | Tính toán đúng các công thức chính; Stick diagram đúng nhưng chưa ghi chú đầy đủ các lớp; có lệnh `.MEAS`. | Tính toán còn sai lệch số học; Stick diagram vẽ sơ sài, thiếu tiếp xúc Taps. | Không chuẩn bị bài trước ở nhà hoặc sao chép bài của bạn. |
+| **2. Đo đạc I-V & Phân tích VTC** | **25%** | Trích xuất chính xác họ đặc tuyến MOSFET ($V_{th}, \lambda$); Schematic chuẩn; Đo đạc VTC chính xác $V_M, V_{IL}, V_{IH}, NM_L, NM_H$. | Trích xuất đúng đặc tuyến; Schematic đúng; Đo được $V_M$ và lề nhiễu nhưng thao tác còn chậm. | Dựng được Schematic; Chạy được VTC nhưng đo đạc lề nhiễu chưa chính xác. | Không hoàn thành mô phỏng hoặc mạch báo lỗi không hội tụ (Convergence Error). |
+| **3. Mô phỏng Transient & Lệnh .MEAS** | **20%** | Dạng sóng Transient chuẩn xác; Sử dụng thành thạo `.MEAS` tự động trích xuất đủ $t_r, t_f, t_{pHL}, t_{pLH}$ ở 3 mức tải; Đóng gói Icon chuẩn. | Đo được các thông số trễ với `.MEAS`; Tạo được Icon nhưng chưa chuẩn hóa vị trí chân. | Đo trễ bằng con trỏ thủ công do chưa chạy được lệnh `.MEAS`; Icon vẽ sơ sài. | Không đo được thông số trễ hoặc không tạo được Icon View. |
+| **4. Physical Layout, DRC & LVS** | **25%** | Layout gọn gàng, tối ưu diện tích; Kiểm tra DRC đạt 0 lỗi; Đối chiếu LVS báo MATCH 100% độc lập tại bàn. | Layout đúng chuẩn; DRC đạt 0 lỗi; LVS match sau 1 lần hướng dẫn sửa lỗi nhãn port. | Layout còn cồng kềnh, vi phạm một vài lỗi DRC nhưng tự sửa được; LVS match. | Vi phạm nhiều lỗi DRC nghiêm trọng; LVS không match; không hoàn thành layout. |
+| **5. Trích xuất PEX & Biện luận Báo cáo** | **10%** | Trích xuất PEX thành công; Hoàn thành bảng đối chiếu 3 chiều; Trả lời sắc bén, chính xác các câu hỏi phân tích vật lý. | Trích xuất PEX thành công; Điền đủ bảng số liệu; Trả lời đúng các câu hỏi bản chất. | Trích xuất được PEX nhưng phần phân tích nguyên nhân sai lệch còn mơ hồ. | Không thực hiện được bước PEX hoặc nộp báo cáo để trống nhiều phần. |
