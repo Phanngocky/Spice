@@ -474,5 +474,53 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 09 - 4-BIT CARRY LOOKAHEAD ADDER (CL
 - `03 - Instructor_Solutions/lab09/clg_unit_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/clg_unit_tran.sp)
 - `03 - Instructor_Solutions/lab09/cla_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/cla_pex_postlayout.sp)
 
+---
+
+### 11. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 10 (LAB 10 - CAPSTONE ALU)
+
+Script kiểm chứng: `python scripts/verify_lab10.py`
+
+```
+===========================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 10 - CAPSTONE 4-BIT REGISTERED ALU
+===========================================================================
+
+1. Kiểm chứng Tập lệnh ALU 4-bit & Cờ Trạng thái (Z, Cout):
+   Lệnh (OP)      A      B   Cin |  OUT[3:0]   Cout   Z  | Kết quả kiểm chứng
+   -------------------------------------------------------------------------
+   ADD (0b00)    5 (0101)  3 (0011)  0  |    8 (1000)    0    0  | PASS - Chu kỳ 1: ADD thường
+   ADD (0b00)   12 (1100)  4 (0100)  0  |    0 (0000)    1    1  | PASS - Chu kỳ 2: ADD tràn (Cout=1, Z=1)
+   AND (0b01)   10 (1010) 12 (1100)  0  |    8 (1000)    0    0  | PASS - Chu kỳ 3: AND thông thường
+   OR  (0b10)   10 (1010)  5 (0101)  0  |   15 (1111)    0    0  | PASS - Chu kỳ 4: OR thông thường
+   XOR (0b11)    9 (1001)  9 (1001)  0  |    0 (0000)    0    1  | PASS - Chu kỳ 5: XOR bằng nhau (Z=1)
+   ADD (0b00)    7 (0111)  8 (1000)  1  |    0 (0000)    1    1  | PASS - Chu kỳ 6: ADD có Cin=1
+   XOR (0b11)   15 (1111)  0 (0000)  0  |   15 (1111)    0    0  | PASS - Chu kỳ 7: XOR khác biệt
+
+2. Phân tích Ngân sách Thời gian (Timing Budget) & Tần số Tối đa f_max:
+   - Trễ Clock-to-Q thanh ghi nguồn (t_c-q):    110.0 ps
+   - Trễ mạch tổ hợp tới hạn (t_comb = CLA4 + MUX4): 295.0 ps (230.0 ps + 65.0 ps)
+   - Thời gian thiết lập thanh ghi đích (t_setup): 75.0 ps
+   - Dung sai lệch pha xung nhịp (t_skew):      40.0 ps
+   => Chu kỳ xung nhịp tối thiểu (Pre-layout):   T_clk_min = 520.0 ps
+   => Tần số xung nhịp tối đa lý thuyết:        f_max = 1.92 GHz (Vượt mốc 1.0 GHz)
+   => Chu kỳ xung nhịp tối thiểu sau PEX:       T_clk_pex ≈ 702.0 ps
+   => Tần số xung nhịp tối đa thực tế sau PEX:  f_max_pex ≈ 1.42 GHz (An toàn ở 1.0 GHz!)
+
+3. Thống kê Phân bổ Phần cứng Vi mạch (Transistor Count Breakdown):
+   - Khối Số học CLA 4-bit:     134 Transistors (37.4%)
+   - Khối Logic 4-bit (AND,OR,XOR):  72 Transistors (20.1%)
+   - Khối Bộ chọn MUX 4:1 4-bit:    64 Transistors (17.9%)
+   - Khối Thanh ghi ngõ ra DFF:      72 Transistors (20.1%)
+   - Khối Cờ trạng thái (Z, Cout):   16 Transistors (4.5%)
+   => TỔNG SỐ TRANSISTOR TOÀN VI MẠCH: 358 Transistors (Quy mô chuẩn cho Capstone)
+===========================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab10/alu_4bit_top_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab10/alu_4bit_top_tran.sp)
+- `03 - Instructor_Solutions/lab10/alu_fmax_timing_sweep.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab10/alu_fmax_timing_sweep.sp)
+- `03 - Instructor_Solutions/lab10/alu_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab10/alu_pex_postlayout.sp)
+
+
 
 
