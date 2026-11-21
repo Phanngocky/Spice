@@ -1,7 +1,7 @@
 # BẢN ĐỐI CHIẾU KIỂM CHỨNG KỸ THUẬT & BENCHMARK DỮ LIỆU
 ## HỌC PHẦN THỰC HÀNH THIẾT KẾ VLSI (5505382)
 
-> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`, `scripts/verify_lab04.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
+> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`, `scripts/verify_lab04.py`, `scripts/verify_lab05.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
 
 ---
 
@@ -211,3 +211,41 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 04 - TRANSMISSION GATE & MUX
 - `03 - Instructor_Solutions/lab04/mux2_tg_logic_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux2_tg_logic_tran.sp)
 - `03 - Instructor_Solutions/lab04/mux4_tg_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux4_tg_tran.sp)
 - `03 - Instructor_Solutions/lab04/mux2_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux2_pex_postlayout.sp)
+
+---
+
+### 6. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 5 (LAB 05)
+
+Script kiểm chứng: `python scripts/verify_lab05.py`
+
+```
+======================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 05 - D-LATCH & D-FLIP-FLOP
+======================================================================
+
+1. Thư viện tế bào cơ sở:
+   Inverter chuẩn (INV_X1): Wn=1.2um, Wp=3.6um, L=0.6um -> tpd ≈ 34.0 ps
+   Cổng truyền chuẩn (TG):  Wn=1.2um, Wp=3.6um, L=0.6um -> tpd ≈ 42.0 ps
+
+2. Mạch chốt D-Latch (TG-based D-Latch):
+   Số lượng transistor: 2 TG (4T) + 3 Inverters (6T) = 10 Transistors (hoặc 8T nếu không đệm ngõ ra)
+   Trễ truyền lan khi trong suốt tpd(D -> Q) = tpd_TG1 + tpd_I1 + tpd_I2
+   tpd(D -> Q) ≈ 42.0 + 34.0 + 34.0 = 110.0 ps
+
+3. Mạch lật D-Flip-Flop Master-Slave kích hoạt sườn dương:
+   Tổng số transistor: 2 D-Latch (2x8T = 16T) + 1 Inverter CLK (2T) = 18 - 20 Transistors
+   Thời gian thiết lập lý thuyết (t_setup) ≈ tpd_TG_M1 + tpd_INV_M1 ≈ 86.0 ps
+   Thời gian giữ lý thuyết (t_hold)       ≈ tpd_INV_CLK - tpd_TG_M1 ≈ -8.0 ps
+   Trễ xung nhịp đến ngõ ra (t_c-q)       ≈ tpd_INV_CLK + tpd_TG_S1 + tpd_INV_S1 ≈ 110.0 ps
+
+4. Giới hạn tần số hoạt động cực đại:
+   Chu kỳ xung nhịp tối thiểu T_min = t_cq + t_setup ≈ 196.0 ps
+   Tần số xung nhịp cực đại f_max ≈ 5.10 GHz (trong điều kiện tải nhẹ 50fF)
+======================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab05/dlatch_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab05/dlatch_tran.sp)
+- `03 - Instructor_Solutions/lab05/dff_ms_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab05/dff_ms_tran.sp)
+- `03 - Instructor_Solutions/lab05/setup_hold_sweep.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab05/setup_hold_sweep.sp)
+- `03 - Instructor_Solutions/lab05/dff_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab05/dff_pex_postlayout.sp)
