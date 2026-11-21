@@ -7,7 +7,7 @@
 
 ### 1. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 0 (LAB 00)
 
-Script kiểm chứng: `python scripts/verify_lab00_lab01.py`
+Script kiểm chứng: `python scripts/verify_lab00_lab01.py` và `python scripts/verify_bjt.py`
 
 ```
 ============================================================
@@ -24,6 +24,18 @@ RC Low-Pass Filter: R=10.0k, C=10.0nF
   V(2.2tau) = 4.4460 V (88.92%)
   V(5tau) = 4.9663 V (99.33%)
   f_-3dB = 1/(2*pi*RC) = 1591.55 Hz (1.5915 kHz)
+
+============================================================
+VERIFICATION: BJT BIAS & IV CHARACTERISTICS (2N3904)
+============================================================
+Voltage Divider Bias: Vcc=12.0V, R1=33.0k, R2=10.0k, RC=2.2k, RE=1.0k
+  Thevenin Equivalent: V_th = 2.7907 V, R_th = 7.6744 kOhm
+  DC Q-point:
+    V_BE = 0.6800 V, I_B = 12.513 uA, I_C = 2.0020 mA, I_E = 2.0146 mA
+    V_E  = 2.0146 V, V_B = 2.6946 V, V_C = 7.5955 V, V_CE = 5.5809 V
+    V_CE > 0.2V & V_BC < 0 -> Chế độ Khuếch đại tích cực (Forward Active)
+  Small-Signal Output Resistance:
+    Early Voltage VA = 74.0 V -> r_o = (VA + V_CE)/I_C = 39.751 kOhm
 ```
 
 **Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
@@ -31,6 +43,9 @@ RC Low-Pass Filter: R=10.0k, C=10.0nF
 - `03 - Instructor_Solutions/lab00/rc_transient_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp)
 - `03 - Instructor_Solutions/lab00/rc_ac_bode.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_ac_bode.sp)
 - `03 - Instructor_Solutions/lab00/nmos_test_include.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/nmos_test_include.sp)
+- `03 - Instructor_Solutions/lab00/bjt_bias_op.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_bias_op.sp)
+- `03 - Instructor_Solutions/lab00/bjt_input_curve.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_input_curve.sp)
+- `03 - Instructor_Solutions/lab00/bjt_output_family.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_output_family.sp)
 
 ---
 
