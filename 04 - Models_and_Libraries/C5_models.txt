@@ -1,0 +1,62 @@
+* ==============================================================================
+* MOSIS / ON Semiconductor C5N 0.5um CMOS Process SPICE Models
+* Technology: SCMOS SUBMICRON (MOSIS rule mocmos), Lambda = 0.30um
+* Nominal Supply Voltage: VDD = 5.0V (or 3.3V)
+* Reference: CMOS Circuit Design, Layout, and Simulation (R. Jacob Baker)
+* Note: Parameters for Level 3 Simulation in LTspice / ngspice / Electric VLSI
+* Status: Standard Reference Parameters (Chưa chạy trích xuất từ wafer thực tế)
+* ==============================================================================
+
+.MODEL N NMOS (
++ LEVEL   = 3
++ VTO     = 0.7000
++ KP      = 120.0E-6
++ GAMMA   = 0.4000
++ PHI     = 0.7000
++ TOX     = 9.5E-9
++ NSUB    = 1.0E17
++ VMAX    = 1.0E5
++ THETA   = 0.0500
++ ETA     = 0.0100
++ KAPPA   = 0.1000
++ RD      = 15.00
++ RS      = 15.00
++ RSH     = 30.00
++ CGSO    = 2.0E-10
++ CGDO    = 2.0E-10
++ CGBO    = 1.0E-10
++ CJ      = 4.0E-4
++ MJ      = 0.5000
++ CJSW    = 3.0E-10
++ MJSW    = 0.3000
++ PB      = 0.8000
++ XJ      = 0.15U
++ LD      = 0.05U
++)
+
+.MODEL P PMOS (
++ LEVEL   = 3
++ VTO     = -0.8000
++ KP      = 40.0E-6
++ GAMMA   = 0.5000
++ PHI     = 0.7000
++ TOX     = 9.5E-9
++ NSUB    = 1.0E17
++ VMAX    = 1.0E5
++ THETA   = 0.1000
++ ETA     = 0.0200
++ KAPPA   = 0.2000
++ RD      = 30.00
++ RS      = 30.00
++ RSH     = 60.00
++ CGSO    = 2.0E-10
++ CGDO    = 2.0E-10
++ CGBO    = 1.0E-10
++ CJ      = 5.0E-4
++ MJ      = 0.5000
++ CJSW    = 3.5E-10
++ MJSW    = 0.3000
++ PB      = 0.8000
++ XJ      = 0.15U
++ LD      = 0.05U
++)

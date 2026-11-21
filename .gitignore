@@ -1,0 +1,17 @@
+# Tài liệu tham khảo bản quyền dung lượng lớn
+SPICE for Power Electronics and Electric Power 2nd ed - M. Rashid, H. Rashid (CRC, 2006) WW.pdf
+
+# Tệp mô phỏng tạm thời của LTspice / ngspice / Electric
+*.raw
+*.log
+*.op.raw
+*.fft.raw
+*.net
+*.bak
+*~
+*.swp
+
+# Tệp tạm hệ thống
+.DS_Store
+Thumbs.db
+desktop.ini
