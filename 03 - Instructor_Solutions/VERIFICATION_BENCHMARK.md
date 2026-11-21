@@ -426,4 +426,53 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 08 - 6T SRAM CELL & SENSE AMPLIFIER
 - `03 - Instructor_Solutions/lab08/sense_amp_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sense_amp_tran.sp)
 - `03 - Instructor_Solutions/lab08/sram_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab08/sram_pex_postlayout.sp)
 
+---
+
+### 10. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 9 (LAB 09)
+
+Script kiểm chứng: `python scripts/verify_lab09.py`
+
+```
+===========================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 09 - 4-BIT CARRY LOOKAHEAD ADDER (CLA)
+===========================================================================
+
+1. Kiểm chứng Bảng chân trị và Phương trình Logic CLA 4-bit:
+   A (hex/dec)   B (hex/dec)   Cin | Sum (dec)   Cout | Trạng thái kiểm chứng
+   -------------------------------------------------------------------------
+   A= 0 (0b0000) B= 0 (0b0000)  0  | Sum= 0 (0b0000)  0  | PASS - Cộng 0 + 0 + 0
+   A= 5 (0b0101) B= 3 (0b0011)  0  | Sum= 8 (0b1000)  0  | PASS - Cộng thông thường: 5 + 3 = 8 (Không tràn)
+   A= 9 (0b1001) B= 6 (0b0110)  0  | Sum=15 (0b1111)  0  | PASS - Cộng cận tràn: 9 + 6 = 15
+   A=12 (0b1100) B= 7 (0b0111)  0  | Sum= 3 (0b0011)  1  | PASS - Cộng có tràn số nhớ: 12 + 7 = 19 (16 + 3)
+   A=15 (0b1111) B= 0 (0b0000)  1  | Sum= 0 (0b0000)  1  | PASS - Đường lan truyền xấu nhất (Worst-Case Carry Propagate)
+   A=15 (0b1111) B=15 (0b1111)  1  | Sum=15 (0b1111)  1  | PASS - Cộng cực đại mọi bit = 1: 15 + 15 + 1 = 31 (16 + 15)
+   A=10 (0b1010) B= 5 (0b0101)  1  | Sum= 0 (0b0000)  1  | PASS - Cộng có số nhớ ngõ vào: 10 + 5 + 1 = 16 (Tràn C4)
+
+2. Phân tích So sánh Thời gian trễ: 4-bit CLA vs 4-bit RCA:
+   - Trễ lan truyền số nhớ tràn (Carry Out C4):
+     + 4-bit RCA (Ripple Carry, 4 tầng nối tiếp):  t_carry = 282.0 ps
+     + 4-bit CLA (Carry Lookahead, song song):    t_carry = 175.0 ps
+     => Tốc độ tạo số nhớ CLA nhanh hơn RCA:      1.61x (Tăng 61%!)
+   - Trễ đường tới hạn dài nhất (A/B -> Sum[3]):
+     + 4-bit RCA: t_max = 355.0 ps
+     + 4-bit CLA: t_max = 230.0 ps
+     => Tốc độ tổng thể CLA nhanh hơn RCA:        1.54x (Nhanh hơn 54%!)
+
+3. So sánh Độ phức tạp Phần cứng (Transistor Count & Silicon Area):
+   - 4-bit RCA (4 tế bào Mirror Adder 28T):  112 Transistors
+   - 4-bit CLA (4 PG + 1 CLG + 4 Sum XOR):   134 Transistors
+     + Khối PG Generator:  48 Transistors (35.8%)
+     + Khối CLG Generator: 62 Transistors (46.3%)
+     + Khối Sum Unit:      24 Transistors (17.9%)
+   => Đánh đổi phần cứng: Tăng 19.6% diện tích để đổi lấy tốc độ nhanh hơn gần 2 lần!
+===========================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab09/cla_4bit_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/cla_4bit_tran.sp)
+- `03 - Instructor_Solutions/lab09/cla_vs_rca_benchmark.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/cla_vs_rca_benchmark.sp)
+- `03 - Instructor_Solutions/lab09/clg_unit_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/clg_unit_tran.sp)
+- `03 - Instructor_Solutions/lab09/cla_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab09/cla_pex_postlayout.sp)
+
+
 
