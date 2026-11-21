@@ -115,7 +115,7 @@ Bằng cách thêm một **Static Inverter** vào ngõ ra của mỗi cổng Dyn
 
 ### 1. Khảo Sát Hiện Tượng Chia Sẻ Điện Tích (`dynamic_charge_sharing.sp`)
 
-*(Mô phỏng LTspice, $V_{DD} = 5.0\,\text{V}$, $C_X = 20\,\text{fF}$, $C_{int} = 14\,\text{fF}$, xung nhịp $50\,\text{MHz}$)*
+(Mô phỏng LTspice, $V_{DD} = 5.0\,\text{V}$, $C_X = 20\,\text{fF}$, $C_{int} = 14\,\text{fF}$, xung nhịp $50\,\text{MHz}$)
 
 | Thông số đo đạc | Không có Keeper (`x_nokp`) | Có Weak PMOS Keeper (`x_kp`) | Nhận xét chuyên môn |
 | :--- | :---: | :---: | :--- |
@@ -128,7 +128,7 @@ Bằng cách thêm một **Static Inverter** vào ngõ ra của mỗi cổng Dyn
 
 ### 2. Mô Phỏng Transient Cổng Domino OR 4-ngõ vào (`domino_4input_tran.sp`)
 
-*(Xung nhịp $f = 100\,\text{MHz}$, chu kỳ $T = 10\,\text{ns}$, sườn xung $t_r = t_f = 0.1\,\text{ns}$, tải $C_L = 30\,\text{fF}$)*
+(Xung nhịp $f = 100\,\text{MHz}$, chu kỳ $T = 10\,\text{ns}$, sườn xung $t_r = t_f = 0.1\,\text{ns}$, tải $C_L = 30\,\text{fF}$)
 
 | Chu kỳ | Trạng thái ($A, B, C, D$) | Điện áp nút động $V(X)$ | Ngõ ra $V(Y)$ | Trễ đánh giá $t_{pd,eval}$ | Trạng thái Logic |
 | :---: | :---: | :---: | :---: | :---: | :---: |

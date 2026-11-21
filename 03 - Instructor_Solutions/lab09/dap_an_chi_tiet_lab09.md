@@ -33,7 +33,7 @@ Xét một bit cộng thứ $i$ bất kỳ với hai ngõ vào $A_i$ và $B_i$:
    $$P_i = A_i \oplus B_i \quad (\text{or } P_i = A_i + B_i)$$
 
    Khi có đúng một bit bằng $1$, nếu có số nhớ $C_i = 1$ đi vào thì số nhớ này sẽ được truyền xuyên qua tầng $i$ để đi tiếp tới tầng $i+1$.  
-   *(Trong thiết kế này, ta chọn $P_i = A_i \oplus B_i$ để tái sử dụng ngay tín hiệu $P_i$ cho việc tạo tổng $S_i = P_i \oplus C_i$, tiết kiệm diện tích silicon).*
+   (Trong thiết kế này, ta chọn $P_i = A_i \oplus B_i$ để tái sử dụng ngay tín hiệu $P_i$ cho việc tạo tổng $S_i = P_i \oplus C_i$, tiết kiệm diện tích silicon).
 
 #### Khai triển đệ quy hệ phương trình Carry Lookahead:
 - Bit số nhớ thứ nhất:
@@ -90,7 +90,7 @@ Mỗi phương trình số nhớ $C_i$ có dạng tổng của các tích (Sum o
 
 ### 1. Bảng Chân Trị và Kiểm Chứng Số Học 4-bit CLA (`cla_4bit_tran.sp`)
 
-*(MOSIS C5N 0.5µm, $V_{DD} = 5.0\,\text{V}$, tải ngõ ra $C_L = 30\,\text{fF}$ cho Sum, $C_{L,C4} = 50\,\text{fF}$)*
+(MOSIS C5N 0.5µm, $V_{DD} = 5.0\,\text{V}$, tải ngõ ra $C_L = 30\,\text{fF}$ cho Sum, $C_{L,C4} = 50\,\text{fF}$)
 
 | Trường hợp | Toán hạng $A[3:0]$ | Toán hạng $B[3:0]$ | $C_0$ | Tổng $Sum[3:0]$ | $C_4$ | Phép tính thực thi | Đánh giá |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :---: |
@@ -105,7 +105,7 @@ Mỗi phương trình số nhớ $C_i$ có dạng tổng của các tích (Sum o
 
 ### 2. Kết Quả Đối Sánh Trực Tiếp 4-bit CLA vs 4-bit RCA (`cla_vs_rca_benchmark.sp`)
 
-*(Đo đạc trong trường hợp xấu nhất: $A = 1111_2, B = 0000_2, C_0$ nhảy từ $0 \to 1$)*
+(Đo đạc trong trường hợp xấu nhất: $A = 1111_2, B = 0000_2, C_0$ nhảy từ $0 \to 1$)
 
 | Thông số đo đạc | 4-bit RCA (Mirror Adder) | 4-bit CLA (Carry Lookahead) | Tỉ số cải thiện (Speedup) |
 | :--- | :---: | :---: | :---: |

@@ -69,7 +69,7 @@ $\implies$ **Kết luận giảng dạy:** Với bộ cộng 1-bit độc lập,
 
 ### 1. Bảng chân trị 8 trạng thái kiểm chứng SPICE (`mirror_adder_1b`)
 
-*(Mô phỏng Transient trên LTspice, nguồn $5.0\,\text{V}$, tải $C_L = 50\,\text{fF}$)*
+(Mô phỏng Transient trên LTspice, nguồn $5.0\,\text{V}$, tải $C_L = 50\,\text{fF}$)
 
 | Khoảng thời gian | $A$ | $B$ | $C_{in}$ | Điện áp $V(sum)$ | Điện áp $V(cout)$ | Kết quả Logic |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -122,7 +122,7 @@ $\implies$ **Kết luận giảng dạy:** Với bộ cộng 1-bit độc lập,
 - **Báo cáo & Tác phong (1.0 điểm):** Phiếu báo cáo đầy đủ, giải thích sâu sắc vai trò của Carry Propagation, tuân thủ nội quy.
 
 ### 2. Câu hỏi vấn đáp gợi ý:
-- **Hỏi:** *Tại sao trong mạch Mirror Adder, việc bố trí transistor nhận tín hiệu $C_{in}$ ở vị trí sát nút ngõ ra $\overline{C_{out}}$ lại giúp giảm trễ đáng kể?*  
+- **Hỏi:** Tại sao trong mạch Mirror Adder, việc bố trí transistor nhận tín hiệu $C_{in}$ ở vị trí sát nút ngõ ra $\overline{C_{out}}$ lại giúp giảm trễ đáng kể?
   **Đáp:** Vì trong bộ cộng nhiều bit, các tín hiệu $A$ và $B$ đến trước $C_{in}$ rất sớm. Nếu transistor $C_{in}$ đặt ở trên cùng sát ngõ ra, các transistor $A$ và $B$ ở phía dưới đã mở sẵn và xả điện tích của các nút nội trung gian xuống đất từ trước. Khi $C_{in}$ đến, dòng xả chỉ cần rút điện tích từ đúng nút ngõ ra mà không phải xả tụ nút nội, giúp giảm trễ $30-40\%$.
 - **Hỏi:** *Tại sao kiến trúc Mirror Adder (28T) lại chiếm ưu thế hơn TG Adder (16T) trong các bộ cộng số học nhiều bit?*  
   **Đáp:** Vì TG Adder không có tầng đệm khuếch đại, tín hiệu $C_{in}$ truyền qua chuỗi cổng truyền sẽ tích lũy trễ theo hàm bậc hai $O(N^2)$ và biên độ xung bị thoái hóa nặng. Trong khi đó, Mirror Adder là cổng logic tĩnh có Inverter đệm tại mỗi tầng, giúp phục hồi biên độ tuyệt đối và duy trì trễ tăng tuyến tính $O(N)$, mang lại độ tin cậy và tốc độ vượt trội khi $N \ge 4$.

@@ -86,7 +86,7 @@ Một cổng logic CMOS tĩnh bất kỳ luôn gồm hai mạng chuyển mạch 
 
   $$W_p = W_{p,inv} = 12\lambda = 3.60\,\mu\text{m}$$
 
-- *(Trường hợp tốt nhất khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở tương đương giảm còn một nửa $R_{eq,P} = R_{on,p0} / 2$, giúp trễ $t_{pLH}$ nhanh gấp đôi).*
+- *Ghi chú:* Trường hợp tốt nhất khi cả hai PMOS cùng dẫn ($A=0, B=0$), điện trở tương đương giảm còn một nửa $R_{eq,P} = R_{on,p0} / 2$, giúp trễ $t_{pLH}$ nhanh gấp đôi.
 
 #### b. Cổng NOR2 ($Y = \overline{A + B}$)
 - **Mạng PUN (2 PMOS nối tiếp):** Để ngõ ra lên mức cao, bắt buộc cả 2 PMOS phải dẫn đồng thời. Do điện trở của PMOS vốn đã lớn gấp 3 lần NMOS (vì $\mu_p \approx \mu_n/3$), việc mắc nối tiếp 2 PMOS đòi hỏi kích thước rất lớn:
@@ -350,7 +350,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 1. **Khảo sát đặc tuyến VTC của cổng NAND2:**
    - Ngưỡng chuyển mạch khi ngõ vào $B = 5\,\text{V}$ cố định, quét $V_A$: $V_M =$ .................... V
    - Ngưỡng chuyển mạch khi nối chung hai ngõ vào $A = B = V_{in}$: $V_M =$ .................... V
-   - *Giải thích tại sao $V_M$ bị dịch chuyển khi cả hai ngõ vào cùng nối chung:*  
+   - **Giải thích tại sao $V_M$ bị dịch chuyển khi cả hai ngõ vào cùng nối chung:**  
      ................................................................................................................................................
 
 2. **Bảng đo trễ quá độ (Transient) Pre-layout của cổng NAND2 ($C_L = 50\,\text{fF}$):**
@@ -361,7 +361,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | **Ca 2 ($B$ chuyển mạch trễ)** | $5.0\,\text{V}$ tĩnh | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
    | **Ca 3 ($A, B$ cùng chuyển mạch)**| Xung $0 \to 5\text{V}$ | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
 
-   *So sánh $t_{pHL}$ giữa Ca 1 và Ca 2: Trường hợp nào chậm hơn? Giải thích nguyên nhân do tụ nút nội $C_{int}$:*  
+   **So sánh $t_{pHL}$ giữa Ca 1 và Ca 2: Trường hợp nào chậm hơn? Giải thích nguyên nhân do tụ nút nội $C_{int}$:**  
    ....................................................................................................................................................  
    ....................................................................................................................................................
 

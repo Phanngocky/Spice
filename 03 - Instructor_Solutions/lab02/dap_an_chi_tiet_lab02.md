@@ -23,7 +23,7 @@ Cổng logic đa ngõ vào phải được định cỡ sao cho trong tình hu�
 
      $$W_p = W_{p,inv} = \mathbf{12\lambda = 3.60\,\mu\text{m}}$$
 
-   - *(Khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở giảm một nửa $R_{eq,P} = R_{on,p0} / 2$, trễ $t_{pLH}$ nhanh gấp đôi).*
+   - (Khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở giảm một nửa $R_{eq,P} = R_{on,p0} / 2$, trễ $t_{pLH}$ nhanh gấp đôi).
 
 2. **Cổng NOR2 ($Y = \overline{A + B}$):**
    - **PDN:** 2 NMOS mắc song song. Tình huống xấu nhất là chỉ có **1 NMOS dẫn**:
@@ -123,7 +123,7 @@ Xét 2 NMOS mắc nối tiếp trong cổng NAND2 với nút nội $X_n$ ở gi�
 - **Báo cáo, so sánh PPA & Tác phong (1.0 điểm):** Lập bảng so sánh PPA đầy đủ, thái độ nghiêm túc.
 
 ### 2. Câu hỏi vấn đáp gợi ý:
-- **Hỏi:** *Tại sao khi đo trễ sườn xuống $t_{pHL}$ của cổng NAND2, việc kích ngõ B lại chậm hơn kích ngõ A?*  
+- **Hỏi:** Tại sao khi đo trễ sườn xuống $t_{pHL}$ của cổng NAND2, việc kích ngõ B lại chậm hơn kích ngõ A?
   **Đáp:** Do hiệu ứng tích lũy điện tích tại nút nội $X_n$. Khi kích ngõ B (ngõ A đã ở mức 1), tụ nút nội $C_{int}$ đã bị nạp lên gần $V_{DD}$. Khi ngõ B chuyển trạng thái, dòng qua transistor dưới phải đồng thời xả cả tụ tải $C_L$ lẫn tụ nút nội $C_{int}$ xuống đất, làm tăng thời gian trễ từ $15-25\%$.
 - **Hỏi:** *Phương pháp đường đi Euler giúp ích gì cho kỹ sư thiết kế mặt nạ Layout vi mạch?*  
   **Đáp:** Giúp xác định thứ tự các dải Polysilicon liên tục cắt qua cả P-Active và N-Active. Nhờ đó, các cực má hoặc cực nguồn kề nhau có thể dùng chung một vùng khuếch tán (Abutment), loại bỏ hoàn toàn các khoảng cách ly cách điện ($3\lambda$), giúp thu nhỏ diện tích cell từ $25-35\%$ và giảm điện dung ký sinh dây nối.

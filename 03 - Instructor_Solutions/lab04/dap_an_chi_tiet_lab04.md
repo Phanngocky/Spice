@@ -85,7 +85,7 @@ $\implies$ **Quy tắc thiết kế sư phạm:** Trễ tăng theo **hàm bậc 
 
 ### 1. Bảng số liệu đo đạc thực nghiệm Pass Transistor vs TG
 
-*(Số liệu mô phỏng Transient trên LTspice, tải dung $C_L = 50\,\text{fF}$, tần số $20\,\text{MHz}$)*
+(Số liệu mô phỏng Transient trên LTspice, tải dung $C_L = 50\,\text{fF}$, tần số $20\,\text{MHz}$)
 
 | Cấu hình khóa dẫn | Mức điện áp cực tiểu $V_{min}$ | Mức điện áp cực đại $V_{max}$ | Biên độ logic đỉnh-đỉnh | Nhận xét tính chất vật lý |
 | :--- | :---: | :---: | :---: | :--- |
@@ -129,5 +129,5 @@ $\implies$ **Quy tắc thiết kế sư phạm:** Trễ tăng theo **hàm bậc 
 ### 2. Câu hỏi vấn đáp gợi ý:
 - **Hỏi:** *Tại sao khi mắc nối tiếp nhiều cổng truyền liên tiếp ($N \ge 4$), thời gian trễ lại tăng theo hàm bậc hai $O(N^2)$ thay vì tuyến tính?*  
   **Đáp:** Vì mỗi cổng truyền đóng vai trò là một khâu $RC$ phân bố (Distributed $RC$ Network) không có tầng đệm khuếch đại. Theo công thức trễ Elmore, tụ điện của cổng thứ $N$ phải được nạp/xả qua tổng trở của toàn bộ $N$ điện trở phía trước nó, dẫn đến tổng trễ tỉ lệ với $\sum_{i=1}^N i = \frac{N(N+1)}{2} = O(N^2)$.
-- **Hỏi:** *Tại sao trong Cổng truyền, cực thân (Bulk) của PMOS luôn phải nối lên $V_{DD}$ mà không được nối vào cực Source hay cực Drain của chính nó?*  
+- **Hỏi:** Tại sao trong Cổng truyền, cực thân (Bulk) của PMOS luôn phải nối lên $V_{DD}$ mà không được nối vào cực Source hay cực Drain của chính nó?
   **Đáp:** Vì tín hiệu tại cực Source và Drain của cổng truyền là tín hiệu hai chiều (Bidirectional) và biến thiên liên tục trong dải $0 \to V_{DD}$. Nếu nối Bulk vào Source/Drain, khi điện áp tại đó tụt xuống mức thấp, mối nối P-N giữa N-Well và các vùng khuếch tán lân cận có thể bị phân cực thuận ($V_{PN} > 0.7\,\text{V}$), dẫn tới dòng rò lớn qua đế hoặc kích hoạt hiện tượng Latch-up gây cháy chip.

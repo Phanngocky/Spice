@@ -134,7 +134,7 @@ Trong một mảng bộ nhớ SRAM thực tế (ví dụ 64 hàng $\times$ 64 c�
 
 ### 1. Bảng Thông Số Định Cỡ Chuẩn Ô Nhớ 6T SRAM (`sram_6t_cell`)
 
-*(MOSIS SCMOS C5N 0.5µm, $\lambda = 0.30\,\mu\text{m}$, $V_{DD} = 5.0\,\text{V}$)*
+(MOSIS SCMOS C5N 0.5µm, $\lambda = 0.30\,\mu\text{m}$, $V_{DD} = 5.0\,\text{V}$)
 
 | Transistor | Ký hiệu | Loại | Chiều rộng $W$ | Chiều dài $L$ | Tỉ lệ $W/\lambda$ | Chức năng kỹ thuật |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -155,7 +155,7 @@ Trong một mảng bộ nhớ SRAM thực tế (ví dụ 64 hàng $\times$ 64 c�
 
 ### 3. Kết Quả Mô Phỏng Chu Trình Đọc/Ghi (`sram_read_write_tran.sp`)
 
-*(Tần số xung nhịp $100\,\text{MHz}$, chu kỳ $10\,\text{ns}$, tải Bitline $C_{BL} = 250\,\text{fF}$)*
+(Tần số xung nhịp $100\,\text{MHz}$, chu kỳ $10\,\text{ns}$, tải Bitline $C_{BL} = 250\,\text{fF}$)
 
 | Thao tác | Khoảng thời gian | Trạng thái $WL$ | Điện áp $BL$ | Điện áp $BLB$ | Điện áp nút $Q$ | Thời gian trễ / Ghi chú |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |

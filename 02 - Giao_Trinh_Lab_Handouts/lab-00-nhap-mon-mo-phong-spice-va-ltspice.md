@@ -213,7 +213,7 @@ $$V_{in}(t) = v_R(t) + v_C(t) = R \cdot i(t) + v_C(t) = R C \frac{dv_C(t)}{dt} +
 
 ![Dạng sóng đáp ứng quá độ nạp và xả tụ điện](images/rc_charge_discharge_waveform.png)
 
-*Hình 0.1b: Đáp ứng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ trong quá trình nạp và xả tụ điện RC.*
+**Hình 0.1b:** Đáp ứng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ trong quá trình nạp và xả tụ điện RC.
 
 > [!IMPORTANT]
 > **Nguyên tắc vàng khi cấu hình nguồn xung vuông mô phỏng nạp - xả trong SPICE:**  
@@ -271,7 +271,7 @@ Q1 coll base 0 Q2N3904
 
 ![Đặc tuyến ngõ vào và họ đặc tuyến ngõ ra BJT](images/bjt_iv_characteristic.png)
 
-*Hình 0.2: (Trái) Đặc tuyến ngõ vào $I_B(V_{BE})$ dẫn hàm mũ; (Phải) Họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$ với vùng bão hòa và độ dốc Early.*
+**Hình 0.2:** (Trái) Đặc tuyến ngõ vào $I_B(V_{BE})$ dẫn hàm mũ; (Phải) Họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$ với vùng bão hòa và độ dốc Early.
 
 1. **Đặc tuyến ngõ vào $I_B - V_{BE}$:**
    - Tiếp giáp Base - Emitter hoạt động như một tiếp giáp $p-n$ phân cực thuận. Theo phương trình Ebers-Moll:
@@ -637,7 +637,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
      * Hằng số thời gian xả đo được (`tau_discharge`): ........................................ $\mu\text{s}$ (Độ lệch: ............. %)
      * Thời gian sườn giảm đo được (`t_fall`): ........................................ $\mu\text{s}$
      * Dòng xả đỉnh cực đại đổi chiều (`I_peak_discharge`): ........................................ mA
-   - *Vẽ hoặc dán dạng sóng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ vào khung dưới đây:*
+   - **Vẽ hoặc dán dạng sóng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ vào khung dưới đây:**
    ```
    ┌──────────────────────────────────────────────────────────────────────────────────┐
    │                                                                                  │
@@ -680,7 +680,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
      * Hệ số $\beta$ đo được tại $V_{CE} = 5.0\,\text{V}$: $\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{10\mu\text{A}} =$ ........................................
      * Dòng $I_C$ tại $V_{CE} = 10.0\,\text{V}$ ứng với $I_B = 10\,\mu\text{A}$: $I_C =$ ........................................ mA
      * Điện trở ngõ ra vi sai trích xuất từ độ dốc: $r_o = \frac{\Delta V_{CE}}{\Delta I_C} =$ ........................................ $\text{k}\Omega$
-   - *Vẽ phác hoặc dán đồ thị họ đặc tuyến ngõ ra $I_C - V_{CE}$ vào khung dưới đây:*
+   - **Vẽ phác hoặc dán đồ thị họ đặc tuyến ngõ ra $I_C - V_{CE}$ vào khung dưới đây:**
    ```
    ┌──────────────────────────────────────────────────────────────────────────────────┐
    │                                                                                  │
@@ -691,10 +691,10 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    ```
 
 7. **Câu hỏi Phân tích & Trả lời ngắn:**
-   - *Câu hỏi 1: Tại sao trong mô phỏng nạp - xả tụ điện, nguồn xung vuông phải có độ rộng mức cao $T_{on} \ge 5\tau$? Nếu đặt $T_{on} = \tau$ thì đồ thị điện áp trên tụ sẽ bị hiện tượng gì?*  
+   - **Câu hỏi 1:** Tại sao trong mô phỏng nạp - xả tụ điện, nguồn xung vuông phải có độ rộng mức cao $T_{on} \ge 5\tau$? Nếu đặt $T_{on} = \tau$ thì đồ thị điện áp trên tụ sẽ bị hiện tượng gì?
      ................................................................................................................................................  
      ................................................................................................................................................
-   - *Câu hỏi 2: Tại sao ở thời điểm bắt đầu nạp ($t=0$) và bắt đầu xả ($t=T_{on}$), dòng điện qua mạch lại đổi chiều đột ngột và đạt giá trị cực đại tức thời $|I_{peak}| = V_0/R$, sau đó giảm dần về 0?*  
+   - **Câu hỏi 2:** Tại sao ở thời điểm bắt đầu nạp ($t=0$) và bắt đầu xả ($t=T_{on}$), dòng điện qua mạch lại đổi chiều đột ngột và đạt giá trị cực đại tức thời $|I_{peak}| = V_0/R$, sau đó giảm dần về 0?
      ................................................................................................................................................  
      ................................................................................................................................................
    - *Câu hỏi 3: Nếu trong mô phỏng quá độ `.TRAN`, ta không khai báo `Maximum Timestep` mà để mặc định, dạng sóng ở những đoạn chuyển mạch xung dốc đứng sẽ gặp hiện tượng gì?*  
@@ -703,7 +703,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    - *Câu hỏi 2: Tại sao khi phân tích đáp ứng tần số `.AC`, ta thường đặt biên độ nguồn AC là `1` (AC 1)? Nếu đặt biên độ là `10` thì đồ thị biên độ có bị thay đổi không?*  
      ................................................................................................................................................  
      ................................................................................................................................................
-   - *Câu hỏi 3: Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý của hai tiếp giáp $p-n$ lúc này là gì?*  
+   - **Câu hỏi 3:** Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý của hai tiếp giáp $p-n$ lúc này là gì?
      ................................................................................................................................................  
      ................................................................................................................................................
 

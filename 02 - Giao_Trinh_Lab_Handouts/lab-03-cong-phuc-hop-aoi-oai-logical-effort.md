@@ -291,7 +291,7 @@ Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus
 <div align="center">
 
 ![Chuỗi đệm Inverter](images/buffer_chain_schematic.png)
-*Hình 3.4: Sơ đồ nguyên lý chuỗi đệm Inverter 3 tầng lái tải nặng $C_L = 1\,\text{pF}$*
+**Hình 3.4:** Sơ đồ nguyên lý chuỗi đệm Inverter 3 tầng lái tải nặng $C_L = 1\,\text{pF}$
 
 </div>
 

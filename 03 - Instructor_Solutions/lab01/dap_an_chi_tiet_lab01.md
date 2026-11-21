@@ -147,7 +147,7 @@ $$0.5 V_{DD} = V_{DD} \cdot e^{-\frac{t_{pHL}}{R_{on} C_L}} \implies e^{\frac{t_
 - **Báo cáo & Tác phong (1.0 điểm):** Báo cáo đầy đủ, trung thực, giữ vệ sinh công nghiệp.
 
 ### 2. Câu hỏi vấn đáp gợi ý:
-- **Hỏi:** *Tại sao bề rộng PMOS phải thiết kế gấp 3 lần NMOS? Nếu thiết kế $W_p = W_n$ thì điều gì xảy ra?*  
+- **Hỏi:** Tại sao bề rộng PMOS phải thiết kế gấp 3 lần NMOS? Nếu thiết kế $W_p = W_n$ thì điều gì xảy ra?
   **Đáp:** Do độ linh động của lỗ trống ($\mu_p \approx 40\,\text{cm}^2/\text{V}\cdot\text{s}$) nhỏ hơn 3 lần electron ($\mu_n \approx 120\,\text{cm}^2/\text{V}\cdot\text{s}$) vì hiện tượng tán xạ mạng tinh thể. Nếu $W_p = W_n$, dòng nạp sẽ yếu hơn 3 lần dòng xả, điểm chuyển mạch $V_M$ sẽ bị tụt sâu xuống $\approx 1.7\,\text{V}$, làm lề nhiễu mức thấp $NM_L$ bị bóp hẹp nghiêm trọng và trễ sườn lên $t_{pLH}$ chậm gấp 3 lần $t_{pHL}$.
 - **Hỏi:** *Tại sao trong Layout bắt buộc phải có N-Well Tap và Substrate Tap?*  
   **Đáp:** Để dập tắt hiện tượng Latch-up. N-Well Tap giữ điện thế N-Well luôn ở mức cao nhất ($5\,\text{V}$), Substrate Tap giữ điện thế đế luôn ở mức thấp nhất ($0\,\text{V}$), ngăn chặn các mối nối P-N phân cực thuận làm kích hoạt cấu trúc Thyristor ký sinh.

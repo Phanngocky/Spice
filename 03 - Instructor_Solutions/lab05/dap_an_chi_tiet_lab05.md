@@ -42,7 +42,7 @@ Bằng cách ghép 2 D-Latch nối tiếp nhau nhưng điều khiển bởi hai 
 
   $$\mathbf{t_{hold} \approx 34 - 42 = -8.0\,\text{ps} \approx 0\,\text{ps}}$$
 
-  *(Trong tế bào chuẩn, $t_{hold}$ lý thuyết thường là số âm nhẹ hoặc bằng 0, nghĩa là dữ liệu $D$ có thể thay đổi ngay lập tức sau khi $CLK$ đạt $50\%$).*
+  (Trong tế bào chuẩn, $t_{hold}$ lý thuyết thường là số âm nhẹ hoặc bằng 0, nghĩa là dữ liệu $D$ có thể thay đổi ngay lập tức sau khi $CLK$ đạt $50\%$).
 
 #### c. Trễ Xung nhịp đến Ngõ ra ($t_{c-q}$ hay $t_{clk-q}$):
 - Khi sườn lên $CLK: 0 \to 1$ xuất hiện, xung nhịp kích hoạt Inverter tạo $\overline{CLK}$, mở cổng truyền $TG_{S1}$ của Slave Latch và truyền dữ liệu $Q_M$ qua Inverter đệm $I_{S2}$ ra ngõ ra $Q$:
@@ -95,7 +95,7 @@ Khi tín hiệu ngõ vào $D$ vi phạm thời gian thiết lập ($t < t_{setup
 ## PHẦN II: ĐÁP ÁN CHI TIẾT VÀ SỐ LIỆU BENCHMARK SPICE
 
 ### 1. Bảng số liệu đo đạc D-Latch (`dlatch_x1`)
-*(Nguồn cấp $V_{DD} = 5.0\,\text{V}$, tải dung $C_L = 50\,\text{fF}$, xung nhịp $25\,\text{MHz}$)*
+(Nguồn cấp $V_{DD} = 5.0\,\text{V}$, tải dung $C_L = 50\,\text{fF}$, xung nhịp $25\,\text{MHz}$)
 
 | Trạng thái hoạt động | Tín hiệu CLK | Ngõ vào D | Dạng sóng ngõ ra Q | Thời gian trễ đo được |
 | :--- | :---: | :---: | :--- | :---: |
@@ -145,7 +145,7 @@ Khi tín hiệu ngõ vào $D$ vi phạm thời gian thiết lập ($t < t_{setup
 - **Báo cáo & Tác phong (1.0 điểm):** Báo cáo đầy đủ bảng số liệu, giải thích sâu sắc hiện tượng Metastability, tuân thủ nội quy.
 
 ### 2. Câu hỏi vấn đáp gợi ý:
-- **Hỏi:** *Tại sao trong mạch chốt D-Latch, Inverter phản hồi ($I_3$) bắt buộc phải thiết kế dạng Weak Inverter (kích thước kênh hẹp hoặc dài)?*  
+- **Hỏi:** Tại sao trong mạch chốt D-Latch, Inverter phản hồi ($I_3$) bắt buộc phải thiết kế dạng Weak Inverter (kích thước kênh hẹp hoặc dài)?
   **Đáp:** Để tránh hiện tượng tranh chấp dòng điện (Drive Contention) tại nút lưu trữ nội $X$. Khi cổng truyền $TG_1$ mở để nạp dữ liệu mới vào nút $X$, nếu Inverter phản hồi $I_3$ quá mạnh (điện trở dẫn nhỏ), nó sẽ cố gắng duy trì điện áp cũ đối kháng lại dòng nạp từ $D$, làm cho điện thế tại nút $X$ bị kẹt ở mức lửng lơ hoặc mất nhiều thời gian để lật trạng thái, làm tăng vọt thời gian thiết lập $t_{setup}$.
-- **Hỏi:** *Điểm gãy 10% (10% Push-out Rule) dùng để định nghĩa thời gian thiết lập $t_{setup}$ có ý nghĩa kỹ thuật gì trong công nghiệp vi mạch?*  
+- **Hỏi:** Điểm gãy 10% (10% Push-out Rule) dùng để định nghĩa thời gian thiết lập $t_{setup}$ có ý nghĩa kỹ thuật gì trong công nghiệp vi mạch?
   **Đáp:** Khi dữ liệu đến quá gần sườn xung nhịp, tụ điện tại nút Master chưa kịp nạp đầy biên độ logic, khiến Slave Latch phải mất nhiều thời gian hơn để khuếch đại phục hồi tín hiệu, dẫn đến trễ Clock-to-Q ($t_{c-q}$) bị phình to ra. Quy tắc 10% Push-out là chuẩn công nghiệp xác định ranh giới an toàn tối thiểu: nếu dữ liệu đến muộn hơn mốc này, trễ $t_{c-q}$ sẽ tăng vọt phi tuyến tính và Flip-Flop đứng trước nguy cơ rơi vào trạng thái bất ổn định (Metastability).

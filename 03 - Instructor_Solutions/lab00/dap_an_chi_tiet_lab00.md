@@ -129,7 +129,7 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
    - *Hậu quả:* Khi thiết lập thang quét tham số nguồn dòng $I_B$, nếu nhập `10m` đến `50m` thay vì `10u` đến `50u`, dòng bơm vào Base lên tới hàng chục mA khiến BJT rơi vào bão hòa cực sâu, $V_{CE}$ sụt xuống gần $0\,\text{V}$ và đồ thị họ đặc tuyến biến dạng hoàn toàn.
 6. **Bẫy đảo thứ tự nguồn trong quét DC Sweep 2 tham số (Nested Sweep):**
    - *Lỗi:* Sinh viên nhập `1st Source: Ib` và `2nd Source: Vce` trong cửa sổ Edit Simulation Command.
-   - *Hậu quả:* Trục hoành biến thành trục dòng điện $I_B$ thay vì điện áp $V_{CE}$, làm mất dạng họ đặc tuyến ngõ ra kinh điển của BJT. Giảng viên cần nhắc sinh viên: *1st Source luôn là biến trục hoành ($V_{CE}$), 2nd Source là tham số phân nhánh đường cong ($I_B$)*.
+   - *Hậu quả:* Trục hoành biến thành trục dòng điện $I_B$ thay vì điện áp $V_{CE}$, làm mất dạng họ đặc tuyến ngõ ra kinh điển của BJT. Giảng viên cần nhắc sinh viên: **1st Source luôn là biến trục hoành ($V_{CE}$), 2nd Source là tham số phân nhánh đường cong ($I_B$)**.
 
 ---
 
@@ -207,12 +207,12 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
 ### 2. Câu hỏi vấn đáp gợi ý:
 - **Câu hỏi 1:** *Tại sao khi đo đáp ứng tần số mạch lọc thông thấp trong SPICE, nguồn xoay chiều luôn được gán biên độ là `AC 1`?*  
   **Đáp:** Vì độ lợi điện áp là $A_V = \frac{V_{out}}{V_{in}} = \frac{V_{out}}{1} = V_{out}$. Khi đó, giá trị điện áp hiển thị trực tiếp là độ lợi; khi chuyển sang thang decibel $20\log_{10}(V_{out})$, ta có ngay đồ thị Bode biên độ chuẩn hóa mà không phải chia cho biên độ vào.
-- **Câu hỏi 2:** *Lệnh `.MEAS` hoạt động như thế nào và tại sao cần thiết hơn việc đọc đồ thị bằng trỏ chuột (Cursor)?*  
+- **Câu hỏi 2:** Lệnh `.MEAS` hoạt động như thế nào và tại sao cần thiết hơn việc đọc đồ thị bằng trỏ chuột (Cursor)?  
   **Đáp:** Lệnh `.MEAS` phân tích trực tiếp mảng dữ liệu tính toán của bộ giải vi phân, nội suy điểm chuyển mạch với độ phân giải toán học cực cao ($< 1\,\text{ps}$), triệt tiêu sai số chủ quan của mắt người và cho phép tự động hóa quét tham số hàng loạt.
-- **Câu hỏi 3:** *Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý lúc này là gì?*  
+- **Câu hỏi 3:** Trong họ đặc tuyến ngõ ra $I_C(V_{CE})$, tại sao ở vùng bão hòa ($V_{CE} < 0.25\,\text{V}$), tỉ số $I_C / I_B$ lại sụt giảm mạnh xuống dưới hệ số khuếch đại $\beta$? Bản chất vật lý lúc này là gì?  
   **Đáp:** Ở vùng bão hòa, điện áp $V_{CE}$ quá nhỏ khiến tiếp giáp Base - Collector cũng bị phân cực thuận ($V_{BC} > 0$). Cả hai tiếp giáp $BE$ và $BC$ đều bơm điện tử vào vùng Base, làm mất tác dụng thu hút hạt dẫn của Collector. Lúc này dòng $I_C$ không còn do dòng kích thích $I_B$ khống chế mà bị giới hạn bởi điện áp nguồn và trở kháng bên ngoài, dẫn đến $\beta_{sat} = \frac{I_C}{I_B} < \beta_F$.
-- **Câu hỏi 4:** *Hiệu ứng Early trong BJT là gì và được thể hiện như thế nào trên đồ thị họ đặc tuyến ngõ ra $I_C(V_{CE})$?*  
+- **Câu hỏi 4:** Hiệu ứng Early trong BJT là gì và được thể hiện như thế nào trên đồ thị họ đặc tuyến ngõ ra $I_C(V_{CE})$?  
   **Đáp:** Hiệu ứng Early (điều biến độ rộng Base) là hiện tượng khi điện áp phân cực nghịch $V_{CB}$ (hay $V_{CE}$) tăng lên, vùng nghèo của tiếp giáp Base-Collector mở rộng lấn sâu vào vùng Base làm giảm bề dày hiệu dụng của lớp Base. Khi lớp Base mỏng hơn, tỉ lệ tái hợp hạt dẫn giảm xuống khiến dòng thu $I_C$ tăng nhẹ.  
   Trên đồ thị $I_C - V_{CE}$, điều này khiến các đường đặc tuyến ở vùng tích cực không nằm ngang tuyệt đối mà có độ dốc dương $1/r_o$. Khi ngoại suy các đường này về phía trục điện áp âm, chúng quy tụ tại một điểm duy nhất $-V_A$ trên trục hoành ($V_A$ là điện áp Early, với 2N3904 là $74\,\text{V}$).
-- **Câu hỏi 5:** *Tại sao khi đo họ đặc tuyến ngõ ra $I_C(V_{CE})$, người ta phải dùng nguồn dòng $I_B$ làm tham số quét mà không dùng nguồn điện áp $V_{BE}$?*  
+- **Câu hỏi 5:** Tại sao khi đo họ đặc tuyến ngõ ra $I_C(V_{CE})$, người ta phải dùng nguồn dòng $I_B$ làm tham số quét mà không dùng nguồn điện áp $V_{BE}$?  
   **Đáp:** Vì đặc tuyến ngõ vào $I_B(V_{BE})$ là hàm số mũ dốc đứng ($I_B \propto e^{V_{BE}/V_T}$). Nếu quét theo $V_{BE}$ với các bước điện áp đều nhau (ví dụ mỗi bước $50\,\text{mV}$), dòng $I_C$ sẽ tăng vọt theo cấp số nhân ($e^{\Delta V/V_T} \approx e^2 \approx 7.4$ lần mỗi bước), khiến các đường đặc tuyến bị giãn cách bất đối xứng nghiêm trọng và transistor nhanh chóng bị quá tải dòng điện. Dùng các bước dòng $I_B$ đều nhau ($10\mu\text{A}, 20\mu\text{A}, 30\mu\text{A}, \dots$) sẽ cho ra các đường đặc tuyến $I_C$ song song cách đều nhau rất trực quan và dễ đo $\beta$.

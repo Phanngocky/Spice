@@ -91,7 +91,7 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 
 ### 1. Bảng Chân Trị và Kết Quả Kiểm Chứng Chuỗi Lệnh Đa Chu Kỳ (`alu_4bit_top_tran.sp`)
 
-*(Xung nhịp $f = 200\,\text{MHz}$, chu kỳ $T = 5.0\,\text{ns}$, sườn xung $0.1\,\text{ns}$, tải ngõ ra $C_L = 30\,\text{fF}$)*
+(Xung nhịp $f = 200\,\text{MHz}$, chu kỳ $T = 5.0\,\text{ns}$, sườn xung $0.1\,\text{ns}$, tải ngõ ra $C_L = 30\,\text{fF}$)
 
 | Chu kỳ | Thời gian | Mã lệnh `OP[1:0]` | Toán hạng $A$ | Toán hạng $B$ | $C_{in}$ | Ngõ ra chốt `OUT[3:0]` | Cờ $C_{out}$ | Cờ $Z$ | Diễn giải chức năng |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |

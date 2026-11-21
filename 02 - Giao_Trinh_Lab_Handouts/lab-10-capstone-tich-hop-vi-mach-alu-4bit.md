@@ -71,7 +71,7 @@ Vi mạch Registered ALU 4-bit nhận vào hai toán hạng nhị phân $A[3:0],
 <div align="center">
 
 ![Mặt bằng Chip và Vòng cấp nguồn Power Ring](images/alu_chip_layout_floorplan.png)
-*Hình 10.2: Sơ đồ phân bố mặt bằng chip (Floorplan) và Vòng cấp nguồn đôi $V_{DD}/GND$*
+**Hình 10.2:** Sơ đồ phân bố mặt bằng chip (Floorplan) và Vòng cấp nguồn đôi $V_{DD}/GND$
 
 </div>
 
