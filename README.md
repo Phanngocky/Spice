@@ -23,9 +23,9 @@ Học phần **Thực hành Thiết kế VLSI** là học phần chuyên ngành 
 D:\tam\Spice\
 ├── 01 - De_Cuong_Hoc_Phan/
 │   └── De_Cuong_Chi_Tiet_TH_Thiet_Ke_VLSI.md  # Đề cương chi tiết học phần, CLO-PLO, Rubric OBE
-├── 02 - Giao_Trinh_Lab_Handouts/             # Tài liệu phát cho sinh viên (Handouts 3 pha)
-│   ├── lab-00-quy-trinh-vlsi-va-electric.md    # Lab 00: Quy trình Full-Custom & Setup Electric/LTspice
-│   ├── lab-01-dac-tinh-mosfet-va-cmos-inverter.md # Lab 01: MOSFET I-V & Inverter VTC/Delay/Layout/PEX
+├── 02 - Giao_Trinh_Lab_Handouts/             # Tài liệu phát cho sinh viên (Handouts 3 pha & Mẫu báo cáo)
+│   ├── lab-00-nhap-mon-mo-phong-spice-va-ltspice.md # Lab 00: Nhập môn Mô phỏng Mạch với SPICE và LTspice
+│   ├── lab-01-dac-tinh-mosfet-va-cmos-inverter.md   # Lab 01: MOSFET I-V & Inverter VTC/Delay/Layout/PEX
 │   ├── lab-02-cong-logic-tinh-nand-nor.md     # Lab 02: Cổng NAND2/NOR2, Sizing (W/L), Euler Path
 │   ├── lab-03-cong-phuc-hop-aoi-oai-logical-effort.md # Lab 03: AOI/OAI & Logical Effort
 │   ├── lab-04-transmission-gate-va-mux.md     # Lab 04: Cổng truyền TG, MUX 2:1 & MUX 4:1
@@ -54,7 +54,7 @@ Sản phẩm xuyên suốt của toàn bộ học phần là: **Xây dựng Thư
 
 | Buổi | Tên bài Lab | Trọng tâm Mức Transistor & Vật lý | IP Tế bào bàn giao |
 | :---: | :--- | :--- | :--- |
-| **01** | **Lab 00** | Quy trình Full-Custom IC, Setup Electric v9.07 & LTspice, Cấu hình công nghệ `mocmos`. | Môi trường chuẩn hóa. |
+| **01** | **Lab 00** | Nhập môn Mô phỏng Mạch với SPICE & LTspice: Netlist, bảng đơn vị, phân tích .OP, .DC, .TRAN, .AC, câu lệnh đo tự động .MEAS, gọi mô hình ngoài C5_models.txt. | Kỹ năng SPICE & Đo lường tự động. |
 | **02** | **Lab 01** | MOSFET I-V ($V_{th}, K', \lambda$), CMOS Inverter VTC, Lề nhiễu, Trễ $t_{pd}$, Layout Inverter, DRC & LVS. | IP `INV_X1` |
 | **03** | **Lab 02** | Cổng logic tĩnh NAND2 & NOR2, Sizing cân bằng điện trở $R_{on}$, Đường Euler tối ưu chia sẻ Diffusion. | IP `NAND2_X1`, `NOR2_X1` |
 | **04** | **Lab 03** | Cổng phức hợp AOI21/OAI21, Phương pháp Logical Effort tối ưu chuỗi đệm Inverter (Buffer Chain). | IP `AOI21_X1`, `BUF_CHAIN` |
