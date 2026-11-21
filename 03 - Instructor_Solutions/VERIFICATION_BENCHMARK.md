@@ -1,7 +1,7 @@
 # BẢN ĐỐI CHIẾU KIỂM CHỨNG KỸ THUẬT & BENCHMARK DỮ LIỆU
 ## HỌC PHẦN THỰC HÀNH THIẾT KẾ VLSI (5505382)
 
-> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
+> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`, `scripts/verify_lab04.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
 
 ---
 
@@ -163,3 +163,51 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 03 - AOI21 & LOGICAL EFFORT
 - `03 - Instructor_Solutions/lab03/logical_effort_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/logical_effort_meas.sp)
 - `03 - Instructor_Solutions/lab03/buffer_chain_opt.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/buffer_chain_opt.sp)
 - `03 - Instructor_Solutions/lab03/aoi21_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab03/aoi21_pex_postlayout.sp)
+
+---
+
+### 5. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 4 (LAB 04)
+
+Script kiểm chứng: `python scripts/verify_lab04.py`
+
+```
+======================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 04 - TRANSMISSION GATE & MUX
+======================================================================
+
+1. Khảo sát Pass Transistor truyền đơn lẻ:
+   a. NMOS truyền mức '1' (Gate=5V, Drain=5V, V_SB = Vout):
+      Vthn_eff (do Body Effect) = 1.369 V (tăng từ 0.70 V)
+      Vout_max (Weak '1') = 3.631 V (suy giảm 1.369 V so với VDD)
+   b. PMOS truyền mức '0' (Gate=0V, Drain=0V, V_BS = Vout):
+      Vout_min (Weak '0') ≈ |Vthp| ≈ 0.80 V - 1.05 V
+   c. Cổng truyền CMOS (TG) kết hợp NMOS // PMOS:
+      Truyền mức '0' qua NMOS (Strong '0'): Vout_min = 0.000 V
+      Truyền mức '1' qua PMOS (Strong '1'): Vout_max = 5.000 V
+      => Đạt biên độ logic toàn dải Rail-to-Rail: 0.0V đến 5.0V
+
+2. Điện trở dẫn tương đương của Cổng truyền (TG):
+   Khi Vin gần 0V:   NMOS dẫn mạnh (Triode), R_TG ≈ 969.0 Ohm
+   Khi Vin gần 5V:   PMOS dẫn mạnh (Triode), R_TG ≈ 992.0 Ohm
+   Khi Vin = 2.5V:   Cả NMOS và PMOS cùng dẫn, R_TG ≈ 490.2 Ohm
+   Điện trở trung bình R_TG,avg ≈ 1000 - 1200 Ohm (tương đối phẳng trên toàn dải)
+
+3. Thời gian trễ quá độ qua Cổng truyền (CL = 50 fF):
+   tpd_TG ≈ 0.69 * R_TG,avg * CL ≈ 39.67 ps
+
+4. So sánh PPA Bộ dồn kênh MUX 2:1:
+   a. TG-based MUX 2:1 (2 TG + 1 Inverter):
+      Số transistor: 2 * 2T + 2T = 6 Transistors
+      Số tầng trễ: 1 TG (tpd ≈ 40 - 55 ps)
+   b. Static CMOS Gate MUX (2 AND + 1 OR = AOI22 + INV):
+      Số transistor: 8T (AOI22) + 2T (INV) = 10 Transistors (hoặc 12T nếu dùng NAND)
+      Số tầng trễ: 2 tầng cổng logic (tpd ≈ 120 - 150 ps)
+   => TG MUX tiết kiệm 40% transistor, giảm diện tích ~38%, nhanh gấp ~2.5 - 3 lần
+======================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab04/tg_transmission_dc_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/tg_transmission_dc_tran.sp)
+- `03 - Instructor_Solutions/lab04/mux2_tg_logic_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux2_tg_logic_tran.sp)
+- `03 - Instructor_Solutions/lab04/mux4_tg_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux4_tg_tran.sp)
+- `03 - Instructor_Solutions/lab04/mux2_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab04/mux2_pex_postlayout.sp)
