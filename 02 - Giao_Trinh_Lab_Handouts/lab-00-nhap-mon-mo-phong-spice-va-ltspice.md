@@ -20,9 +20,10 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
    - **`.DC` (DC Sweep):** Quét điện áp/dòng điện một chiều để khảo sát đặc tuyến truyền đạt.
    - **`.TRAN` (Transient Analysis):** Mô phỏng quá độ đáp ứng theo thời gian thực (Time-domain).
    - **`.AC` (AC Analysis):** Phân tích đáp ứng tần số, vẽ biểu đồ Bode biên độ (dB) và pha.
-5. **Khai thác câu lệnh đo lường tự động (`.MEASURE` / `.MEAS`):** Sử dụng câu lệnh đo lường tự động của SPICE để xuất thông số hằng số thời gian $\tau$, thời gian tăng/giảm, tần số cắt $f_{-3\text{dB}}$ trực tiếp từ nhật ký `SPICE Error Log` mà không cần chấm thủ công bằng mắt.
-6. **Khảo sát đặc tuyến ngõ vào và họ đặc tuyến ngõ ra của Transistor lưỡng cực (BJT):** Nắm vững cú pháp khai báo linh kiện BJT trong SPICE, cấu hình sơ đồ đo testbench cực phát chung (CE), thực hiện quét DC Sweep 1 biến và 2 biến lồng nhau để vẽ đặc tuyến ngõ vào $I_B(V_{BE})$ và họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$, nhận diện rõ 3 vùng làm việc: Ngưng dẫn (Cut-off), Khuếch đại tích cực (Forward Active) và Bão hòa (Saturation), trích xuất hệ số khuếch đại dòng $\beta$ và phân tích ảnh hưởng của điện áp Early $V_A$.
-7. **Khai báo mô hình ngoài (Third-party Models):** Biết cách gọi tệp mô hình bán dẫn bên ngoài (`.include C5_models.txt`) để chuẩn bị cho các bài thiết kế vi mạch CMOS từ Bài 1 trở đi.
+5. **Khai thác câu lệnh đo lường tự động (`.MEASURE` / `.MEAS`):** Sử dụng câu lệnh đo lường tự động của SPICE để xuất thông số hằng số thời gian $\tau$, thời gian tăng/giảm ($t_{rise}, t_{fall}$), điện áp ngưỡng và tần số cắt $f_{-3\text{dB}}$ trực tiếp từ nhật ký `SPICE Error Log` mà không cần chấm thủ công bằng mắt.
+6. **Làm chủ bài mẫu mô phỏng quá trình nạp và xả của tụ điện (RC Transient):** Hiểu rõ phương trình vi phân nạp - xả điện tích, mối quan hệ giữa hằng số thời gian $\tau = RC$ và chu kỳ kích thích của nguồn xung PULSE ($T_{on} \ge 5\tau$), đo đạc dòng điện nạp dương và dòng điện xả âm đổi chiều.
+7. **Khảo sát đặc tuyến ngõ vào và họ đặc tuyến ngõ ra của Transistor lưỡng cực (BJT):** Nắm vững cú pháp khai báo linh kiện BJT trong SPICE, cấu hình sơ đồ đo testbench cực phát chung (CE), thực hiện quét DC Sweep 1 biến và 2 biến lồng nhau để vẽ đặc tuyến ngõ vào $I_B(V_{BE})$ và họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$, nhận diện rõ 3 vùng làm việc: Ngưng dẫn (Cut-off), Khuếch đại tích cực (Forward Active) và Bão hòa (Saturation), trích xuất hệ số khuếch đại dòng $\beta$ và phân tích ảnh hưởng của điện áp Early $V_A$.
+8. **Khai báo mô hình ngoài (Third-party Models):** Biết cách gọi tệp mô hình bán dẫn bên ngoài (`.include C5_models.txt`) để chuẩn bị cho các bài thiết kế vi mạch CMOS từ Bài 1 trở đi.
 
 ---
 
@@ -170,7 +171,54 @@ Lệnh `.MEAS` cho phép trích xuất tự động các tham số đặc trưng
 
 ---
 
-### 7. Khảo sát Transistor Lưỡng cực BJT: Cú pháp SPICE và Đặc tuyến I-V Vào / Ra
+### 7. Khảo sát Mô phỏng Quá trình Nạp và Xả của Tụ điện RC (Bài mẫu Cơ bản)
+
+Quá trình nạp và phóng (xả) điện tích của tụ điện qua điện trở là hiện tượng vật lý nền tảng nhất trong kỹ thuật xung số và vi mạch tích hợp (toàn bộ độ trễ lan truyền của các cổng logic CMOS thực chất là thời gian nạp và xả các tụ điện ký sinh).
+
+#### a. Sơ đồ mạch và Phương trình Vi phân Quá độ
+
+![Sơ đồ nguyên lý mạch nạp và xả tụ điện](images/rc_charge_discharge_schematic.png)
+
+*Hình 0.1a: Sơ đồ nguyên lý mạch nạp và xả tụ điện RC cơ bản.*
+
+Áp dụng định luật Kirchhoff về điện áp cho mạch kín gồm nguồn xung $V_{in}(t)$, điện trở $R$ và tụ điện $C$:
+$$V_{in}(t) = v_R(t) + v_C(t) = R \cdot i(t) + v_C(t) = R C \frac{dv_C(t)}{dt} + v_C(t)$$
+Đại lượng $\tau = R \times C$ được gọi là **Hằng số thời gian (Time Constant)** của mạch RC, đặc trưng cho tốc độ tích lũy và giải phóng năng lượng điện trường trong tụ điện.
+
+1. **Giai đoạn Nạp điện ($0 \le t < T_{on}$, khi $V_{in} = V_0 = 5.0\,\text{V}$, tụ ban đầu chưa nạp $V_C(0) = 0$):**
+   $$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right)$$
+   $$i(t) = C \frac{dv_C(t)}{dt} = \frac{V_0}{R} e^{-\frac{t}{\tau}} > 0 \quad (\text{dòng điện dương nạp vào cực dương của tụ})$$
+   - Tại $t = 0$: Tụ đóng vai trò như ngắn mạch, điện áp $v_C = 0\,\text{V}$, dòng nạp vọt lên giá trị đỉnh cực đại: $I_{peak,charge} = +\frac{V_0}{R} = +\frac{5.0\,\text{V}}{10\,\text{k}\Omega} = +0.50\,\text{mA}$.
+   - Tại $t = \tau = R C$: $v_C(\tau) = V_0 (1 - e^{-1}) \approx 0.63212 \times V_0 = 3.161\,\text{V}$ ($63.2\%$).
+   - Tại $t = 2.2\tau$: Điện áp đạt $88.9\%$ ($4.446\,\text{V}$). Khoảng thời gian để tụ nạp từ $10\%$ ($0.5\,\text{V}$) lên $90\%$ ($4.5\,\text{V}$) chính là **thời gian sườn tăng**: $t_{rise} = 2.2\tau = 220\,\mu\text{s}$.
+   - Tại $t = 5\tau$: $v_C(5\tau) = V_0 (1 - e^{-5}) \approx 0.99326 \times V_0 = 4.966\,\text{V}$ ($99.3\% \approx 100\%$, tụ xem như **nạp đầy hoàn toàn**). Năng lượng tích trữ cực đại: $W_{max} = \frac{1}{2} C V_0^2 = \frac{1}{2} (10\,\text{nF})(5\,\text{V})^2 = 0.125\,\mu\text{J}$.
+
+2. **Giai đoạn Xả điện ($T_{on} \le t < T_{period}$, khi $V_{in}$ sụt về $0\,\text{V}$, đặt $t' = t - T_{on} \ge 0$):**
+   $$v_C(t') = V_0 e^{-\frac{t'}{\tau}}$$
+   $$i(t') = C \frac{dv_C(t')}{dt'} = -\frac{V_0}{R} e^{-\frac{t'}{\tau}} < 0 \quad (\text{dòng điện âm đổi chiều phóng từ tụ về đất})$$
+   - Tại $t' = 0$: Ngay khi nguồn ngắt về $0\,\text{V}$, điện áp trên tụ vẫn giữ nguyên $5.0\,\text{V}$ (do điện áp trên tụ không biến thiên đột ngột), dòng xả lập tức đảo chiều vọt lên mức âm cực đại: $I_{peak,discharge} = -\frac{V_0}{R} = -0.50\,\text{mA}$.
+   - Tại $t' = \tau$: $v_C(\tau) = V_0 e^{-1} \approx 0.36788 \times V_0 = 1.839\,\text{V}$ (còn lại $36.8\%$, đã phóng thích đi $63.2\%$).
+   - Tại $t' = 2.2\tau$: Thời gian sườn giảm từ $90\%$ xuống $10\%$ là $t_{fall} = 2.2\tau = 220\,\mu\text{s}$.
+   - Tại $t' = 5\tau$: $v_C(5\tau) = V_0 e^{-5} \approx 0.00674 \times V_0 = 0.034\,\text{V}$ ($0.7\% \approx 0\,\text{V}$, tụ xem như **xả cạn hoàn toàn**).
+
+#### b. Dạng sóng Đáp ứng Quá độ và Nguyên tắc Cấu hình Nguồn Xung PULSE
+
+![Dạng sóng đáp ứng quá độ nạp và xả tụ điện](images/rc_charge_discharge_waveform.png)
+
+*Hình 0.1b: Đáp ứng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ trong quá trình nạp và xả tụ điện RC.*
+
+> [!IMPORTANT]
+> **Nguyên tắc vàng khi cấu hình nguồn xung vuông mô phỏng nạp - xả trong SPICE:**  
+> Để quan sát trọn vẹn quá trình nạp đầy ($99.3\%$) và xả cạn ($0.7\%$), độ rộng xung mức cao $T_{on}$ và độ rộng xung mức thấp $T_{off}$ bắt buộc phải thỏa mãn:
+> $$T_{on} \ge 5\tau \quad \text{và} \quad T_{period} = T_{on} + T_{off} \ge 10\tau$$
+> Nếu chọn $T_{on} < 5\tau$, tụ điện chưa kịp nạp đầy đã bị chuyển sang giai đoạn xả, làm đỉnh điện áp bị hụt và các phép đo thời gian sẽ sai lệch hoàn toàn. Với $\tau = 100\,\mu\text{s}$, cấu hình chuẩn mực là:
+> ```spice
+> Vin in 0 PULSE(0 5.0 0 10n 10n 500u 1000u)
+> ```
+
+---
+
+### 8. Khảo sát Transistor Lưỡng cực BJT: Cú pháp SPICE và Đặc tuyến I-V Vào / Ra
 
 Transistor lưỡng cực (BJT - *Bipolar Junction Transistor*) là linh kiện bán dẫn 3 cực gồm cực Thu (Collector - C), cực Gốc (Base - B) và cực Phát (Emitter - E). Trong vi mạch tích hợp tương tự (BiCMOS, Analog ICs), BJT đóng vai trò then chốt nhờ độ hỗ dẫn $g_m$ rất cao và khả năng điều khiển dòng điện ngõ ra $I_C$ thông qua dòng kích thích cực gốc $I_B$.
 
@@ -369,29 +417,37 @@ Cho transistor BJT NPN 2N3904 có các thông số mô hình chuẩn SPICE:
 
 ---
 
-### 2. Bài tập 2: Khảo sát Đáp ứng Quá độ `.TRAN` và Đo Hằng số Thời gian $\tau$ của Mạch RC
-1. Thay đổi sơ đồ mạch: Giữ nguyên nguồn $V_1$ và điện trở $R_1 = 10\,\text{k}\Omega$. Thay $R_2$ bằng tụ điện $C_1 = 10\,\text{nF}$ (nhấn phím `C`).
-2. Nhấp chuột phải vào nguồn $V_1$, chọn nút **Advanced**:
-   - Chọn hàm tạo sóng **PULSE**.
-   - Thiết lập các giá trị:
+### 2. Bài tập 2 (Bài mẫu cơ bản): Khảo sát Mô phỏng Quá trình Nạp và Xả của Tụ điện RC
+1. Dựng sơ đồ mạch theo Hình 0.1a: Điện trở $R_1 = 10\,\text{k}\Omega$, tụ điện $C_1 = 10\,\text{nF}$, đặt nhãn ngõ vào là `in`, nhãn ngõ ra trên tụ là `out` ($V_C$).
+2. Cấu hình nguồn xung vuông kích thích nạp - xả trọn vẹn:
+   - Nhấp chuột phải vào nguồn $V_1$, chọn **Advanced**, chọn hàm **PULSE**:
      * `Vinitial [V]`: `0`
      * `Von [V]`: `5`
      * `Tdelay [s]`: `0`
-     * `Trise [s]`: `1n`
-     * `Tfall [s]`: `1n`
-     * `Ton [s]`: `100u`
-     * `Tperiod [s]`: `200u`
-3. Cấu hình mô phỏng thời gian thực (`.TRAN`):
+     * `Trise [s]`: `10n`
+     * `Tfall [s]`: `10n`
+     * `Ton [s]`: `500u` ($= 5\tau$, đảm bảo tụ nạp no điện tích $99.3\%$)
+     * `Tperiod [s]`: `1000u` ($= 10\tau$, đảm bảo tụ xả cạn năng lượng $0.7\%$)
+3. Cấu hình mô phỏng quá độ miền thời gian (`.TRAN`):
    - Vào *Edit Simulation Cmd*, chọn thẻ **Transient**:
-     * `Stop time`: `500u`
+     * `Stop time`: `1000u` (mô phỏng trọn vẹn 1 chu kỳ nạp và xả)
      * `Time to start saving data`: `0`
      * `Maximum Timestep`: `0.1u`
-4. Chèn câu lệnh SPICE Directive (nhấn phím `S`) để đo tự động hằng số thời gian $\tau$ (thời điểm điện áp ngõ ra đạt $63.2\%$ của $5\text{V}$, tức $3.16\,\text{V}$):
+4. Chèn khối câu lệnh đo lường tự động `.MEAS` cho cả 2 giai đoạn (nhấn phím `S`):
    ```spice
-   .meas TRAN tau TRIG V(in)=2.5 RISE=1 TARG V(out)=3.16 RISE=1
+   * --- Giai doan Nap (0 -> 500us) ---
+   .meas TRAN tau_charge TRIG V(in)=2.5 RISE=1 TARG V(out)=3.1606 RISE=1
+   .meas TRAN t_rise TRIG V(out)=0.5 RISE=1 TARG V(out)=4.5 RISE=1
+   .meas TRAN I_peak_charge MAX I(C1)
+   * --- Giai doan Xa (500us -> 1000us) ---
+   .meas TRAN tau_discharge TRIG V(in)=2.5 FALL=1 TARG V(out)=1.8394 FALL=1
+   .meas TRAN t_fall TRIG V(out)=4.5 FALL=1 TARG V(out)=0.5 FALL=1
+   .meas TRAN I_peak_discharge MIN I(C1)
    ```
-5. Nhấn **Run**. Nhấp que đo vào nút `in` và `out`.
-6. Nhấn `Ctrl + L` mở **SPICE Error Log**, đọc giá trị đo `tau`. So sánh với giá trị tính toán lý thuyết $\tau = 100\,\mu\text{s}$.
+5. Nhấn **Run**:
+   - Nhấp que đo vào nút `out` để quan sát đường cong điện áp nạp lên tiệm cận $5.0\,\text{V}$ và xả xuống tiệm cận $0\,\text{V}$.
+   - Nhấp chuột phải vào khung đồ thị, chọn **Add Plot Pane**, đưa que đo nhấp vào thân tụ điện $C_1$ để vẽ dạng sóng dòng điện $i(t)$. Quan sát đỉnh dòng nạp dương $+0.50\,\text{mA}$ và đỉnh dòng xả đổi chiều âm $-0.50\,\text{mA}$.
+6. Mở **SPICE Error Log** (`Ctrl + L`), đọc toàn bộ 6 thông số đo tự động và ghi vào phiếu báo cáo.
 
 ---
 
@@ -504,11 +560,12 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    - Dòng điện qua mạch: $I_{in} =$ ........................................ mA
    - Tổng công suất tiêu tán: $P_{total} =$ ........................................ mW
 
-3. **Tính toán lý thuyết Mạch Lọc Thông Thấp RC ($R = 10\,\text{k}\Omega, C = 10\,\text{nF}$):**
+3. **Tính toán lý thuyết Quá trình Nạp và Xả Tụ điện RC ($R = 10\,\text{k}\Omega, C = 10\,\text{nF}, V_0 = 5.0\text{V}$):**
    - Hằng số thời gian: $\tau = R \times C =$ ........................................ $\mu\text{s}$
-   - Điện áp tại thời điểm $t = \tau$: $V_{out}(\tau) =$ ........................................ V
-   - Điện áp tại thời điểm $t = 5\tau$: $V_{out}(5\tau) =$ ........................................ V
-   - Tần số cắt lý thuyết: $f_{-3\text{dB}} = \frac{1}{2\pi RC} =$ ........................................ Hz (hay .................... kHz)
+   - Giai đoạn Nạp: $I_{peak,charge} =$ .................... mA ; $V_C(\tau) =$ .................... V ($63.2\%$) ; $V_C(5\tau) =$ .................... V ($99.3\%$)
+   - Giai đoạn Xả: $I_{peak,discharge} =$ .................... mA ; $V_C(\tau) =$ .................... V ($36.8\%$) ; $V_C(5\tau) =$ .................... V ($0.7\%$)
+   - Thời gian sườn: $t_{rise} = 2.2\tau =$ .................... $\mu\text{s}$ ; $t_{fall} = 2.2\tau =$ .................... $\mu\text{s}$
+   - Năng lượng tích trữ cực đại: $W_{max} = \frac{1}{2} C V_0^2 =$ ........................................ $\mu\text{J}$
 
 4. **Bản thảo Netlist SPICE viết tay cho Mạch Lọc RC (Nguồn xung PULSE):**
    ```spice
@@ -542,10 +599,16 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    - Điện áp $V_{out}$ khi $V_{in} = 10.0\,\text{V}$: ........................................ V
    - Độ dốc đường đặc tuyến đo được: $\frac{\Delta V_{out}}{\Delta V_{in}} =$ ........................................
 
-3. **Kết quả Phân tích Quá độ `.TRAN` và Đo Hằng số Thời gian $\tau$:**
-   - Giá trị `tau` đo tự động từ lệnh `.MEAS`: ........................................ $\mu\text{s}$
-   - Độ lệch so với lý thuyết $\tau = 100\,\mu\text{s}$: ........................................ %
-   - *Vẽ hoặc dán dạng sóng quá độ nạp-xả của tụ điện vào khung dưới đây:*
+3. **Kết quả Phân tích Quá độ Nạp - Xả Tụ điện RC (Bài mẫu cơ bản):**
+   - **Giai đoạn Nạp điện:**
+     * Hằng số thời gian nạp đo được (`tau_charge`): ........................................ $\mu\text{s}$ (Độ lệch: ............. %)
+     * Thời gian sườn tăng đo được (`t_rise`): ........................................ $\mu\text{s}$
+     * Dòng nạp đỉnh cực đại (`I_peak_charge`): ........................................ mA
+   - **Giai đoạn Xả điện:**
+     * Hằng số thời gian xả đo được (`tau_discharge`): ........................................ $\mu\text{s}$ (Độ lệch: ............. %)
+     * Thời gian sườn giảm đo được (`t_fall`): ........................................ $\mu\text{s}$
+     * Dòng xả đỉnh cực đại đổi chiều (`I_peak_discharge`): ........................................ mA
+   - *Vẽ hoặc dán dạng sóng quá độ điện áp $V_C(t)$ và dòng điện $i(t)$ vào khung dưới đây:*
    ```
    ┌──────────────────────────────────────────────────────────────────────────────────┐
    │                                                                                  │
@@ -599,7 +662,13 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    ```
 
 7. **Câu hỏi Phân tích & Trả lời ngắn:**
-   - *Câu hỏi 1: Nếu trong mô phỏng quá độ `.TRAN`, ta không khai báo `Maximum Timestep` mà để mặc định, dạng sóng ở những đoạn chuyển mạch xung dốc đứng sẽ gặp hiện tượng gì?*  
+   - *Câu hỏi 1: Tại sao trong mô phỏng nạp - xả tụ điện, nguồn xung vuông phải có độ rộng mức cao $T_{on} \ge 5\tau$? Nếu đặt $T_{on} = \tau$ thì đồ thị điện áp trên tụ sẽ bị hiện tượng gì?*  
+     ................................................................................................................................................  
+     ................................................................................................................................................
+   - *Câu hỏi 2: Tại sao ở thời điểm bắt đầu nạp ($t=0$) và bắt đầu xả ($t=T_{on}$), dòng điện qua mạch lại đổi chiều đột ngột và đạt giá trị cực đại tức thời $|I_{peak}| = V_0/R$, sau đó giảm dần về 0?*  
+     ................................................................................................................................................  
+     ................................................................................................................................................
+   - *Câu hỏi 3: Nếu trong mô phỏng quá độ `.TRAN`, ta không khai báo `Maximum Timestep` mà để mặc định, dạng sóng ở những đoạn chuyển mạch xung dốc đứng sẽ gặp hiện tượng gì?*  
      ................................................................................................................................................  
      ................................................................................................................................................
    - *Câu hỏi 2: Tại sao khi phân tích đáp ứng tần số `.AC`, ta thường đặt biên độ nguồn AC là `1` (AC 1)? Nếu đặt biên độ là `10` thì đồ thị biên độ có bị thay đổi không?*  

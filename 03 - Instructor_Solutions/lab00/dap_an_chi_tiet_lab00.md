@@ -41,20 +41,29 @@ Dòng điện qua mạch và công suất tiêu tán toàn phần:
 $$I_{in} = \frac{V_{in}}{R_1 + R_2} = \frac{5.0}{50 \times 10^3} = 0.100\,\text{mA} = 100.0\,\mu\text{A}$$
 $$P_{total} = V_{in} \times I_{in} = 5.0\,\text{V} \times 0.100\,\text{mA} = 0.500\,\text{mW} = 500.0\,\mu\text{W}$$
 
-#### b. Mạch Lọc Thông Thấp RC bậc 1
-Phương trình vi phân nạp điện cho tụ qua điện trở:
-$$R C \frac{dV_{out}(t)}{dt} + V_{out}(t) = V_{in}(t)$$
-Khi đặt điện áp bước nhảy $V_{in}(t) = V_0 \cdot u(t)$ với $V_{out}(0) = 0$:
-$$V_{out}(t) = V_0 \left(1 - e^{-\frac{t}{RC}}\right)$$
-Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 \times 10^{-9}\,\text{F}) = 100.0\,\mu\text{s}$.
-- Tại $t = \tau$: $V_{out}(\tau) = V_0 (1 - e^{-1}) \approx 5.0 \times 0.63212 = 3.1606\,\text{V}$ (ngưỡng chuẩn 63.2%).
-- Tại $t = 2.2\tau$: $V_{out}(2.2\tau) = V_0 (1 - e^{-2.2}) \approx 4.446\,\text{V}$ (dùng trong đo thời gian sườn tăng $10\% \to 90\%$: $t_r = 2.2\tau$).
-- Tại $t = 5\tau$: $V_{out}(5\tau) = V_0 (1 - e^{-5}) \approx 5.0 \times 0.99326 = 4.9663\,\text{V}$ (xem như nạp đầy $100\%$).
-- Hàm truyền đạt miền tần số:
-  $$H(s) = \frac{1}{1 + sRC} \implies H(j\omega) = \frac{1}{1 + j\omega RC}$$
-  Biên độ suy giảm $-3\,\text{dB}$ khi $\omega_c RC = 1$:
-  $$f_{-3\text{dB}} = \frac{1}{2\pi R C} = \frac{1}{2\pi \times 100 \times 10^{-6}} \approx 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$$
-  Góc pha tại tần số cắt: $\phi = -\arctan(\omega_c RC) = -\arctan(1) = -45.0^\circ$.
+#### b. Mạch Nạp và Xả Tụ điện RC Bậc 1 (Bài mẫu Cơ bản)
+Phương trình vi phân quá độ tổng quát của mạch RC:
+$$R C \frac{dv_C(t)}{dt} + v_C(t) = v_{in}(t)$$
+Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 \times 10^{-9}\,\text{F}) = 100.0\,\mu\text{s} = 0.100\,\text{ms}$.
+
+1. **Giai đoạn Nạp điện ($0 \le t < T_{on}$, nguồn cấp $v_{in} = V_0 = 5.0\,\text{V}$, điện áp đầu $v_C(0) = 0$):**
+   $$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right), \quad i(t) = \frac{V_0}{R} e^{-\frac{t}{\tau}} > 0$$
+   - Dòng nạp đỉnh tức thời tại $t = 0$: $I_{peak,charge} = +\frac{V_0}{R} = +\frac{5.0}{10\,\text{k}\Omega} = +0.500\,\text{mA}$ ($+500.0\,\mu\text{A}$).
+   - Tại $t = \tau = 100\,\mu\text{s}$: $v_C(\tau) = V_0 (1 - e^{-1}) \approx 5.0 \times 0.63212 = 3.1606\,\text{V}$ (ngưỡng nạp chuẩn $63.2\%$).
+   - Thời gian sườn tăng $10\% \to 90\%$: $t_{rise} = \tau \ln(9) \approx 2.1972\tau \approx 220.0\,\mu\text{s}$.
+   - Tại $t = 5\tau = 500\,\mu\text{s}$: $v_C(5\tau) = V_0 (1 - e^{-5}) \approx 5.0 \times 0.99326 = 4.9663\,\text{V}$ ($99.3\% \approx 100\%$, tụ nạp đầy).
+   - Năng lượng điện trường tích lũy cực đại: $W_{max} = \frac{1}{2} C V_0^2 = 0.5 \times 10^{-8} \times 25 = 0.125\,\mu\text{J}$.
+
+2. **Giai đoạn Xả điện ($T_{on} \le t < T_{period}$, nguồn ngắt $v_{in} = 0\,\text{V}$, đặt $t' = t - T_{on} \ge 0$):**
+   $$v_C(t') = V_0 e^{-\frac{t'}{\tau}}, \quad i(t') = -\frac{V_0}{R} e^{-\frac{t'}{\tau}} < 0$$
+   - Dòng xả đỉnh tức thời tại $t' = 0$: $I_{peak,discharge} = -\frac{V_0}{R} = -0.500\,\text{mA}$ (dòng âm phóng từ tụ về đất).
+   - Tại $t' = \tau = 100\,\mu\text{s}$: $v_C(\tau) = V_0 e^{-1} \approx 5.0 \times 0.36788 = 1.8394\,\text{V}$ (còn lại $36.8\%$, đã phóng $63.2\%$).
+   - Thời gian sườn giảm $90\% \to 10\%$: $t_{fall} = 2.2\tau = 220.0\,\mu\text{s}$.
+   - Tại $t' = 5\tau = 500\,\mu\text{s}$: $v_C(5\tau) = V_0 e^{-5} \approx 5.0 \times 0.00674 = 0.0337\,\text{V}$ ($0.7\% \approx 0\,\text{V}$, xả cạn hoàn toàn).
+
+3. **Mạch Lọc Thông Thấp RC và Đáp ứng Tần số (.AC):**
+   $$H(j\omega) = \frac{1}{1 + j\omega RC} \implies f_{-3\text{dB}} = \frac{1}{2\pi RC} \approx 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$$
+   Góc pha tại tần số cắt: $\phi = -\arctan(1) = -45.0^\circ$.
 
 #### c. Lý thuyết Giải tích Đặc tuyến I-V của BJT và Mô hình Ebers-Moll
 Đối với transistor BJT NPN:
@@ -112,8 +121,11 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
    - `50f` $\to 50 \times 10^{-15}\,\text{F} = 50\,\text{fF}$.
 2. **Mạch Cầu Phân áp DC:**
    - $V_{out} = 2.000\,\text{V}$ ; $I_{in} = 0.100\,\text{mA}$ ($100\,\mu\text{A}$) ; $P_{total} = 0.500\,\text{mW}$ ($500\,\mu\text{W}$).
-3. **Mạch Lọc RC ($R = 10\,\text{k}\Omega, C = 10\,\text{nF}$):**
-   - $\tau = 100.0\,\mu\text{s}$ ; $V(\tau) = 3.161\,\text{V}$ ; $V(5\tau) = 4.966\,\text{V}$ ; $f_{-3\text{dB}} = 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$.
+3. **Mạch Nạp - Xả Tụ điện RC ($R = 10\,\text{k}\Omega, C = 10\,\text{nF}, V_0 = 5.0\text{V}$):**
+   - Hằng số thời gian $\tau = 100.0\,\mu\text{s}$.
+   - Giai đoạn Nạp: $I_{peak,charge} = +0.500\,\text{mA}$ ($+500\,\mu\text{A}$) ; $V_C(\tau) = 3.161\,\text{V}$ ($63.2\%$) ; $V_C(5\tau) = 4.966\,\text{V}$ ($99.3\%$) ; $t_{rise} = 220.0\,\mu\text{s}$.
+   - Giai đoạn Xả: $I_{peak,discharge} = -0.500\,\text{mA}$ ($-500\,\mu\text{A}$) ; $V_C(\tau) = 1.839\,\text{V}$ ($36.8\%$) ; $V_C(5\tau) = 0.034\,\text{V}$ ($0.7\%$) ; $t_{fall} = 220.0\,\mu\text{s}$.
+   - Năng lượng tích trữ: $W_{max} = 0.125\,\mu\text{J}$ ; Tần số cắt: $f_{-3\text{dB}} = 1.592\,\text{kHz}$.
 4. **Đặc tuyến I-V của BJT 2N3904 ($I_S = 10^{-14}\,\text{A}, \beta = 160, V_A = 74\,\text{V}, V_T = 25.85\,\text{mV}$):**
    - Dòng Base lý thuyết theo Ebers-Moll:
      * $I_B(0.50\text{V}) = 0.0157\,\mu\text{A}$
@@ -138,7 +150,14 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
 | | $I(R1)$ | $0.100\,\text{mA}$ | **$0.1000\,\text{mA}$** | $0.00\%$ |
 | **Quét `.DC` Cơ bản** | $V_{out}$ tại $V_{in}=5\text{V}$ | $2.000\,\text{V}$ | **$2.0000\,\text{V}$** | $0.00\%$ |
 | | Độ dốc $\Delta V_{out}/\Delta V_{in}$ | $0.400$ | **$0.4000$** | $0.00\%$ |
-| **Quá độ `.TRAN`** | Hằng số thời gian $\tau$ | $100.0\,\mu\text{s}$ | **$100.00\,\mu\text{s}$** | $< 0.05\%$ |
+| **Nạp tụ `.TRAN`** | Hằng số thời gian nạp `tau_charge` | $100.0\,\mu\text{s}$ | **$100.00\,\mu\text{s}$** | $< 0.05\%$ |
+| | Thời gian sườn tăng `t_rise` | $220.0\,\mu\text{s}$ | **$219.7\,\mu\text{s}$** | $< 0.2\%$ |
+| | Dòng nạp cực đại `I_peak_charge` | $+0.500\,\text{mA}$ | **$+0.499\,\text{mA}$** | $< 0.2\%$ |
+| | Điện áp nạp sau $5\tau$ | $4.966\,\text{V}$ | **$4.966\,\text{V}$** | $0.00\%$ |
+| **Xả tụ `.TRAN`** | Hằng số thời gian xả `tau_discharge` | $100.0\,\mu\text{s}$ | **$100.00\,\mu\text{s}$** | $< 0.05\%$ |
+| | Thời gian sườn giảm `t_fall` | $220.0\,\mu\text{s}$ | **$219.7\,\mu\text{s}$** | $< 0.2\%$ |
+| | Dòng xả cực đại `I_peak_discharge` | $-0.500\,\text{mA}$ | **$-0.499\,\text{mA}$** | $< 0.2\%$ |
+| | Điện áp xả sau $5\tau$ | $0.034\,\text{V}$ | **$0.034\,\text{V}$** | $0.00\%$ |
 | **Tần số `.AC`** | Độ lợi tại $10\,\text{Hz}$ | $0.00\,\text{dB}$ | **$0.000\,\text{dB}$** | $0.00\%$ |
 | | Tần số cắt $-3\,\text{dB}$ | $1591.55\,\text{Hz}$ | **$1591.5\,\text{Hz}$** | $< 0.01\%$ |
 | | Góc pha tại $f_{-3\text{dB}}$ | $-45.00^\circ$ | **$-45.00^\circ$** | $0.00\%$ |

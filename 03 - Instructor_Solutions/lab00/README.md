@@ -46,7 +46,9 @@
 | **`.OP`** | $I(R1)$ | $0.100\,\text{mA}$ | **$0.10000\,\text{mA}$** | Dòng điện âm nếu đo qua cực âm |
 | **`.DC`** | $V_{out}$ tại $V_{in}=10\text{V}$ | $4.000\,\text{V}$ | **$4.00000\,\text{V}$** | Tuyến tính hoàn hảo |
 | **`.TRAN`** | Hằng số $\tau$ (`tau`) | $100.0\,\mu\text{s}$ | **$99.8 - 100.2\,\mu\text{s}$** | Trích xuất từ `.MEAS` |
-| **`.TRAN`** | Thời gian tăng $t_{rise}$ | $220.0\,\mu\text{s}$ | **$219.5 - 220.5\,\mu\text{s}$** | $t_r \approx 2.2 \tau$ |
+| **`.TRAN`** | Nạp tụ: $V_C(\tau)$ & $I_{peak,charge}$ | $3.161\,	ext{V}, +0.500\,	ext{mA}$ | **$3.161\,	ext{V}, +0.500\,	ext{mA}$** | $63.2\%$ điện áp nguồn |
+| **`.TRAN`** | Xả tụ: $V_C(\tau)$ & $I_{peak,discharge}$ | $1.839\,	ext{V}, -0.500\,	ext{mA}$ | **$1.839\,	ext{V}, -0.500\,	ext{mA}$** | $36.8\%$ điện áp đỉnh |
+| **`.TRAN`** | Thời gian tăng / giảm $t_{rise}, t_{fall}$ | $220.0\,\mu\text{s}$ | **$219.5 - 220.5\,\mu\text{s}$** | $t_r \approx t_f \approx 2.2 \tau$ |
 | **`.AC`** | Độ lợi dải thông $A_{V,0}$ | $1.000$ ($0\,\text{dB}$) | **$0.000\,\text{dB}$** | Tại tần số thấp $10\,\text{Hz}$ |
 | **`.AC`** | Tần số cắt $f_{-3\text{dB}}$ (`f_cut`) | $1.592\,\text{kHz}$ | **$1.591 - 1.593\,\text{kHz}$** | Sai số $< 0.1\%$ |
 | **`.AC`** | Pha tại tần số cắt | $-45.0^\circ$ | **$-44.9^\circ - -45.1^\circ$** | Trục pha bên phải |
@@ -79,6 +81,7 @@
 ### 4. DANH MỤC TỆP SPICE NETLIST THAM CHIẾU
 - [divider_op_dc.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/divider_op_dc.sp): Mạch phân áp DC (.op & .dc).
 - [rc_transient_meas.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp): Mạch lọc RC quá độ (.tran & .meas).
+- [rc_charge_discharge.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_charge_discharge.sp): Khảo sát chi tiết quá trình nạp và xả tụ điện RC cơ bản (.tran & .meas).
 - [rc_ac_bode.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_ac_bode.sp): Mạch lọc RC đáp ứng tần số (.ac Bode).
 - [nmos_test_include.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/nmos_test_include.sp): Kiểm tra mô hình MOSFET ngoài C5N.
 - [bjt_input_curve.sp](file:///d:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_input_curve.sp): Quét DC đặc tuyến ngõ vào $I_B(V_{BE})$.

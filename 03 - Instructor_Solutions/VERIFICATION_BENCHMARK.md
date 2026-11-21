@@ -7,7 +7,7 @@
 
 ### 1. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 0 (LAB 00)
 
-Script kiểm chứng: `python scripts/verify_lab00_lab01.py` và `python scripts/verify_bjt.py`
+Script kiểm chứng: `python scripts/verify_lab00_lab01.py`, `python scripts/verify_rc.py` và `python scripts/verify_bjt.py`
 
 ```
 ============================================================
@@ -18,12 +18,25 @@ Voltage Divider: Vin=5.0V, R1=30.0k, R2=20.0k
   Iin  = 0.1000 mA (100.0 uA)
   Ptotal = 0.5000 mW (500.0 uW)
 
-RC Low-Pass Filter: R=10.0k, C=10.0nF
+RC Transient Charging & Discharging (Basic RC Circuit: R=10k, C=10nF):
   tau = R * C = 100.00 us (0.1000 ms)
-  V(tau) = 3.1606 V (63.21%)
-  V(2.2tau) = 4.4460 V (88.92%)
-  V(5tau) = 4.9663 V (99.33%)
-  f_-3dB = 1/(2*pi*RC) = 1591.55 Hz (1.5915 kHz)
+  Charging (0 <= t <= 500 us):
+    V_C(tau)   = 3.1606 V (63.21% of Vin)
+    V_C(2.2tau)= 4.4460 V (88.92% of Vin)
+    V_C(5tau)  = 4.9663 V (99.33% of Vin ~ Vmax)
+    I_peak_chg = +0.5000 mA (+500.0 uA at t=0+)
+    Rise time  = 220.00 us (10% to 90%)
+  Discharging (500 us <= t <= 1000 us):
+    V_C(tau)   = 1.8394 V (36.79% of Vmax)
+    V_C(2.2tau)= 0.5540 V (11.08% of Vmax)
+    V_C(5tau)  = 0.0337 V (0.67% of Vmax ~ 0V)
+    I_peak_dis = -0.5000 mA (-500.0 uA at t=500u+)
+    Fall time  = 220.00 us (90% to 10%)
+  Energy & Charge:
+    Q_max      = 50.00 nC (at V_C = 5.0V)
+    W_C_max    = 0.1250 uJ (0.5 * C * V^2)
+  AC Low-Pass Frequency Response:
+    f_-3dB     = 1/(2*pi*RC) = 1591.55 Hz (1.5915 kHz)
 
 ============================================================
 VERIFICATION: BJT I-V CHARACTERISTICS (2N3904)
@@ -44,6 +57,7 @@ Output Characteristics Family Ic(Vce, Ib) [Early Effect]:
 **Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
 - `03 - Instructor_Solutions/lab00/divider_op_dc.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/divider_op_dc.sp)
 - `03 - Instructor_Solutions/lab00/rc_transient_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp)
+- `03 - Instructor_Solutions/lab00/rc_charge_discharge.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_charge_discharge.sp)
 - `03 - Instructor_Solutions/lab00/rc_ac_bode.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_ac_bode.sp)
 - `03 - Instructor_Solutions/lab00/nmos_test_include.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/nmos_test_include.sp)
 - `03 - Instructor_Solutions/lab00/bjt_input_curve.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_input_curve.sp)
