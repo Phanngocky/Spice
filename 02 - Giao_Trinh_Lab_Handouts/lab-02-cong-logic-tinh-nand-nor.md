@@ -63,6 +63,15 @@ Một cổng logic CMOS tĩnh bất kỳ luôn gồm hai mạng chuyển mạch 
                     GND                                               GND
 ```
 
+<div align="center">
+
+| Cổng NAND2 (`nand2_x1{sch}`) | Cổng NOR2 (`nor2_x1{sch}`) |
+| :---: | :---: |
+| ![Sơ đồ nguyên lý nand2_x1](images/nand2_schematic.png) | ![Sơ đồ nguyên lý nor2_x1](images/nor2_schematic.png) |
+| *Hình 2.1: Sơ đồ nguyên lý Cell `nand2_x1`* | *Hình 2.2: Sơ đồ nguyên lý Cell `nor2_x1`* |
+
+</div>
+
 ---
 
 ### 2. Định kích thước Transistor theo Điện trở Tương đương $R_{on}$
@@ -151,12 +160,41 @@ Xét chuỗi NMOS của cổng NAND2:
 
 ## V. NỘI DUNG THỰC HÀNH TẠI PHÒNG LAB (IN-LAB)
 
-### 1. Thiết kế Schematic và Phân tích VTC Cổng NAND2 trên LTspice
-1. Mở Electric VLSI, tạo Cell mới: `nand2_x1{sch}`.
-2. Bố trí 2 PMOS song song ($W=12\lambda, L=2\lambda$) và 2 NMOS nối tiếp ($W=8\lambda, L=2\lambda$).
-3. Tạo các chân Export: `A` (Input), `B` (Input), `out` (Output), `vdd` (Power), `gnd` (Ground).
-4. Nhấn `F5` kiểm tra kết nối. Xuất SPICE Netlist sang LTspice.
-5. **Khảo sát đường cong VTC:**
+### 1. Thiết kế Schematic và Phân tích VTC Cổng NAND2 trên Electric & LTspice
+
+![Sơ đồ nguyên lý nand2_x1 trong Electric VLSI](images/nand2_schematic.png)
+
+1. **Khởi tạo Cell mới trong Electric:**
+   - Chọn menu `Cell -> New Cell...` (phím tắt `Ctrl + N`).
+   - Đặt tên Cell: `nand2_x1`, chọn View type: `schematic` $\to$ Cell mới được tạo là `nand2_x1{sch}`.
+2. **Bố trí linh kiện và định kích thước transistor:**
+   - **Mạng PUN (2 PMOS song song):**
+     * Đặt 2 transistor PMOS (`mocmos:P-Transistor`, phím `P`).
+     * Đặt kích thước cho cả 2 PMOS: $W = 12\lambda = 3.60\,\mu\text{m}$, $L = 2\lambda = 0.60\,\mu\text{m}$.
+     * Cực Nguồn (Source) và cực Thân (Bulk) của 2 PMOS nối lên `vdd`.
+     * Cực Máng (Drain) của 2 PMOS nối chập lại với nhau đưa ra nút `out`.
+   - **Mạng PDN (2 NMOS nối tiếp):**
+     * Đặt 2 transistor NMOS (`mocmos:N-Transistor`, phím `N`).
+     * Đặt kích thước cho cả 2 NMOS: $W = 8\lambda = 2.40\,\mu\text{m}$, $L = 2\lambda = 0.60\,\mu\text{m}$.
+     * Cực Máng (Drain) của NMOS trên nối ra nút `out`.
+     * Cực Nguồn (Source) của NMOS trên nối với cực Máng (Drain) của NMOS dưới (tạo nút nội $X_n$).
+     * Cực Nguồn (Source) của NMOS dưới nối xuống `gnd`.
+     * Cực Thân (Bulk) của cả 2 NMOS nối xuống `gnd`.
+   - **Đấu nối cực Cổng (Gate):**
+     * Cực Cổng của PMOS thứ nhất và NMOS thứ nhất nối chung làm ngõ vào `A`.
+     * Cực Cổng của PMOS thứ hai và NMOS thứ hai nối chung làm ngõ vào `B`.
+3. **Gán đầy đủ 5 chân Export (`Ctrl + E`):**
+
+   | Tên chân Export | Hướng (Characteristics) | Vị trí kết nối trên mạch | Chức năng |
+   | :--- | :--- | :--- | :--- |
+   | **`A`** | `Input` | Cực cổng chung $M_{P1}$ và $M_{N1}$ | Tín hiệu logic ngõ vào A |
+   | **`B`** | `Input` | Cực cổng chung $M_{P2}$ và $M_{N2}$ | Tín hiệu logic ngõ vào B |
+   | **`out`** | `Output` | Nút ngõ ra chung ($D_{P1}, D_{P2}, D_{N1}$) | Tín hiệu logic ngõ ra $Y = \overline{A \cdot B}$ |
+   | **`vdd`** | `Power` | Source & Bulk của các PMOS | Cực nguồn $+5.0\,\text{V}$ |
+   | **`gnd`** | `Ground` | Source & Bulk của các NMOS | Đường nối đất chuẩn $0\,\text{V}$ |
+
+4. Nhấn phím `F5` kiểm tra kết nối mạng (Check and Clean). Xuất SPICE Netlist sang LTspice.
+5. **Khảo sát đường cong truyền đạt tĩnh (VTC):**
    - Nối chân $B$ lên nguồn tĩnh $5.0\,\text{V}$ (`Vb B 0 DC 5.0`).
    - Quét điện áp ngõ vào $A$: `.dc Va 0 5 0.005`.
    - Chạy mô phỏng, đo điện áp ngưỡng chuyển mạch $V_M$ tại vị trí $V_{out} = V_A$.
@@ -179,13 +217,49 @@ Xét chuỗi NMOS của cổng NAND2:
 
 ---
 
-### 3. Thiết kế Schematic và Khảo sát Trễ Cổng NOR2
-1. Tạo Cell mới trong Electric: `nor2_x1{sch}`.
-2. Bố trí 2 PMOS nối tiếp ($W = 24\lambda = 7.2\,\mu\text{m}, L = 2\lambda = 0.6\,\mu\text{m}$) và 2 NMOS song song ($W = 4\lambda = 1.2\,\mu\text{m}, L = 2\lambda = 0.6\,\mu\text{m}$).
-3. Gán đầy đủ các chân Export: `A`, `B`, `out`, `vdd`, `gnd`.
-4. Xuất Netlist và mô phỏng Transient trên LTspice với tải dung $C_L = 50\,\text{fF}$.
-5. Khảo sát trễ sườn lên $t_{pLH}$ và sườn xuống trường hợp xấu nhất ($1$ NMOS dẫn) và tốt nhất ($2$ NMOS cùng dẫn).
-6. Đóng gói Cell Icon `nor2_x1{ic}` chuẩn IEEE (ký hiệu cổng NOR 2 ngõ vào).
+### 3. Thiết kế Schematic và Khảo sát Trễ Cổng NOR2 trong Electric VLSI
+
+![Sơ đồ nguyên lý nor2_x1 trong Electric VLSI](images/nor2_schematic.png)
+
+1. **Khởi tạo Cell mới trong Electric:**
+   - Vào menu `Cell -> New Cell...` (phím tắt `Ctrl + N`).
+   - Đặt tên Cell: `nor2_x1`, chọn View type: `schematic` $\to$ Cell mới được tạo có tên đầy đủ là `nor2_x1{sch}`.
+2. **Bố trí 2 PMOS nối tiếp và 2 NMOS song song:**
+   - **Mạng kéo lên (PUN) - 2 PMOS nối tiếp:**
+     * Kéo 2 linh kiện PMOS (`mocmos:P-Transistor`, phím tắt `P`).
+     * Nhấp đúp chuột vào từng PMOS (hoặc nhấn `Ctrl + I`) để đặt kích thước định cỡ:
+       + Bề rộng kênh: **$W = 24\lambda = 7.20\,\mu\text{m}$** (gõ `7.2u`).
+       + Chiều dài kênh: **$L = 2\lambda = 0.60\,\mu\text{m}$** (gõ `0.6u`).
+     * Nối cực Nguồn (Source) của PMOS thứ nhất lên dây nguồn `vdd`.
+     * Nối cực Máng (Drain) của PMOS thứ nhất vào cực Nguồn (Source) của PMOS thứ hai (hình thành nút nội $X_p$).
+     * Nối cực Máng (Drain) của PMOS thứ hai ra nút ngõ ra `out`.
+     * Cực Thân (Bulk) của cả 2 PMOS nối lên `vdd`.
+   - **Mạng kéo xuống (PDN) - 2 NMOS song song:**
+     * Kéo 2 linh kiện NMOS (`mocmos:N-Transistor`, phím tắt `N`).
+     * Nhấp đúp chuột vào từng NMOS (hoặc nhấn `Ctrl + I`) để đặt kích thước định cỡ:
+       + Bề rộng kênh: **$W = 4\lambda = 1.20\,\mu\text{m}$** (gõ `1.2u`).
+       + Chiều dài kênh: **$L = 2\lambda = 0.60\,\mu\text{m}$** (gõ `0.6u`).
+     * Nối chập 2 cực Máng (Drain) của 2 NMOS vào nút ngõ ra `out`.
+     * Nối chập 2 cực Nguồn (Source) của 2 NMOS xuống dây đất `gnd`.
+     * Cực Thân (Bulk) của cả 2 NMOS nối xuống `gnd`.
+   - **Đấu nối cực Cổng (Gate):**
+     * Nối cực Cổng của PMOS thứ nhất và NMOS thứ nhất lại với nhau $\to$ nút ngõ vào `A`.
+     * Nối cực Cổng của PMOS thứ hai và NMOS thứ hai lại với nhau $\to$ nút ngõ vào `B`.
+3. **Gán đầy đủ 5 chân Export (`Ctrl + E`):**
+   - Chọn nút mạng tương ứng, vào menu `Export -> Create Export...` (phím tắt `Ctrl + E`), đặt tên và chọn đặc tính (Export Characteristics):
+
+   | Tên chân Export | Hướng (Characteristics) | Vị trí đấu nối trên mạch | Chức năng chi tiết |
+   | :--- | :--- | :--- | :--- |
+   | **`A`** | `Input` | Cực cổng chung $M_{P1}$ và $M_{N1}$ | Tín hiệu logic ngõ vào A |
+   | **`B`** | `Input` | Cực cổng chung $M_{P2}$ và $M_{N2}$ | Tín hiệu logic ngõ vào B |
+   | **`out`** | `Output` | Nút ngõ ra chung ($D_{P2}, D_{N1}, D_{N2}$) | Tín hiệu logic ngõ ra $Y = \overline{A + B}$ |
+   | **`vdd`** | `Power` | Source & Bulk của các PMOS | Cực nguồn $+5.0\,\text{V}$ |
+   | **`gnd`** | `Ground` | Source & Bulk của các NMOS | Đường nối đất chuẩn $0\,\text{V}$ |
+
+4. Nhấn phím `F5` kiểm tra tính đúng đắn của sơ đồ nguyên lý (bảo đảm **0 errors, 0 warnings**).
+5. Xuất Netlist và mô phỏng Transient trên LTspice với tải dung $C_L = 50\,\text{fF}$.
+6. Khảo sát trễ sườn lên $t_{pLH}$ và sườn xuống trường hợp xấu nhất ($1$ NMOS dẫn) và tốt nhất ($2$ NMOS cùng dẫn).
+7. Đóng gói Cell Icon `nor2_x1{ic}` chuẩn IEEE (ký hiệu cổng NOR 2 ngõ vào).
 
 ---
 
