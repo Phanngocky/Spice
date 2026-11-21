@@ -56,10 +56,14 @@ Bộ cộng Carry Lookahead 4-bit nhận vào hai số nhị phân 4-bit $A[3:0]
 </div>
 
 - **Tầng 1 — Khối sinh cờ (PG Generator):** Gồm 4 tế bào $PG\_CELL$, tính toán độc lập cho từng vị trí bit:
-  $$G_i = A_i \cdot B_i \quad (\text{Cờ Sinh - Generate})$$
-  $$P_i = A_i \oplus B_i \quad (\text{Cờ Truyền - Propagate})$$
+
+  $$G_i = A_i \cdot B_i \quad (\text{Generate Flag})$$
+
+  $$P_i = A_i \oplus B_i \quad (\text{Propagate Flag})$$
+
 - **Tầng 2 — Khối tạo số nhớ sớm (Carry Lookahead Generator - CLG):** Nhận toàn bộ các tín hiệu $P_i, G_i$ và $C_0$, tính toán đồng thời cả 4 bit số nhớ $C_1, C_2, C_3, C_4$ chỉ qua một tầng cổng phức hợp.
 - **Tầng 3 — Khối tạo tổng (Sum Generator):** Gồm 4 cổng XOR tính tổng song song:
+
   $$S_i = P_i \oplus C_i \quad (i = 0, 1, 2, 3)$$
 
 ---
@@ -68,12 +72,19 @@ Bộ cộng Carry Lookahead 4-bit nhận vào hai số nhị phân 4-bit $A[3:0]
 
 Khai triển đệ quy số nhớ từ biểu thức căn bản $C_{i+1} = G_i + P_i C_i$:
 - **Số nhớ thứ nhất:**
+
   $$C_1 = G_0 + P_0 C_0$$
+
 - **Số nhớ thứ hai:**
+
   $$C_2 = G_1 + P_1 G_0 + P_1 P_0 C_0$$
+
 - **Số nhớ thứ ba:**
+
   $$C_3 = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0$$
+
 - **Số nhớ thứ tư (Số nhớ tràn Cout):**
+
   $$C_4 = G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0 + P_3 P_2 P_1 P_0 C_0$$
 
 <div align="center">
@@ -178,7 +189,9 @@ Viết trước khung Netlist SPICE kiểm tra phép cộng trong trường hợ
 
 1. Xuất Netlist SPICE từ Electric VLSI hoặc mở file `03 - Instructor_Solutions/lab09/cla_4bit_tran.sp`.
 2. Thiết lập điều kiện kích thích kiểm tra đường xấu nhất:
-   $$A = 1111_2\,(5.0\,\text{V}), \quad B = 0000_2\,(0.0\,\text{V}), \quad C_0: \text{Xung nhảy từ } 0 \to 1 \text{ tại } 5.0\,\text{ns}$$
+
+   $$A = 1111_2\,(5.0\,\text{V}), \quad B = 0000_2\,(0.0\,\text{V}), \quad C_0: 0 \to 1 \text{ at } 5.0\,\text{ns}$$
+
 3. Chạy phân tích Transient `.tran 0.02n 15n`.
 4. Quan sát dạng sóng ngõ ra $S[3:0]$ chuyển từ $1111_2 \to 0000_2$ và $C_4$ nhảy từ $0 \to 1$.
 5. Xem file Log (`Ctrl + L`) và ghi nhận thời gian trễ lan truyền $t_{pd(C0 \to C4)}$ và trễ đường tới hạn $t_{pd(C0 \to S3)}$.

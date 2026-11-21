@@ -11,11 +11,17 @@
 Khi sử dụng một transistor đơn lẻ làm khóa dẫn (Pass Transistor):
 - Xét transistor NMOS có cực Cổng $V_G = V_{DD}$, cực Máng $V_D = V_{DD}$, và cực Nguồn nối vào tụ tải $C_L$ có điện áp tức thời $V_{out}(t)$.
 - Điều kiện để NMOS duy trì trạng thái dẫn là:
+
   $$V_{GS} \ge V_{thn} \iff V_{DD} - V_{out} \ge V_{thn} \iff V_{out} \le V_{DD} - V_{thn}$$
+
 - Khi tụ nạp điện, điện áp cực Nguồn tăng dần làm điện áp ngược giữa cực Nguồn và cực Thân (nối đất) tăng theo:
+
   $$V_{SB} = V_{out} - V_{Bulk} = V_{out} - 0 = V_{out} > 0$$
+
 - Theo phương trình vật lý bán dẫn của hiệu ứng thân (Body Effect / Back-Gate Bias):
+
   $$V_{thn}(V_{SB}) = V_{th0} + \gamma \left( \sqrt{2\phi_F + V_{SB}} - \sqrt{2\phi_F} \right)$$
+
   Trong đó:
   * $V_{th0} = 0.700\,\text{V}$: Điện áp ngưỡng khi chưa có phân cực thân ($V_{SB} = 0$).
   * $\gamma = \frac{\sqrt{2 q \epsilon_{si} N_A}}{C_{ox}} \approx 0.53\,\text{V}^{1/2}$: Hệ số hiệu ứng thân của tiến trình MOSIS C5N.
@@ -23,11 +29,17 @@ Khi sử dụng một transistor đơn lẻ làm khóa dẫn (Pass Transistor):
 
 #### Giải phương trình điểm cân bằng điện áp đỉnh ngõ ra:
 Điện áp ra cực đại $V_{out,max}$ thỏa mãn hệ phương trình phi tuyến:
+
 $$V_{out,max} = V_{DD} - \left[ V_{th0} + \gamma \left( \sqrt{2\phi_F + V_{out,max}} - \sqrt{2\phi_F} \right) \right]$$
+
 Thay các tham số công nghệ MOSIS C5N ($V_{DD} = 5.0\,\text{V}$):
+
 $$V_{out,max} = 5.0 - \left[ 0.70 + 0.53 \left( \sqrt{0.65 + V_{out,max}} - \sqrt{0.65} \right) \right]$$
+
 $$V_{out,max} + 0.53 \sqrt{0.65 + V_{out,max}} - 4.727 = 0$$
+
 Giải phương trình số cho kết quả chính xác:
+
 $$\mathbf{V_{out,max} \approx 3.631\,\text{V}} \implies \mathbf{V_{thn,eff} \approx 1.369\,\text{V}}$$
 
 > [!IMPORTANT]
@@ -49,6 +61,7 @@ Cổng truyền CMOS ghép song song 1 NMOS ($W_n = 4\lambda = 1.2\,\mu\text{m}$
 
 #### Điện trở dẫn tương đương $R_{TG}$ trên toàn dải:
 $$R_{TG}(V_{in}) = R_{on,n}(V_{in}) \parallel R_{on,p}(V_{in}) = \frac{R_{on,n} \cdot R_{on,p}}{R_{on,n} + R_{on,p}}$$
+
 - Khi $V_{in} \to 0\,\text{V}$: NMOS ở vùng triode ($R_{on,n} \approx 969\,\Omega$), PMOS ngắt ($R_{on,p} \to \infty$) $\implies R_{TG} \approx 969\,\Omega$.
 - Khi $V_{in} \to 5\,\text{V}$: PMOS ở vùng triode ($R_{on,p} \approx 992\,\Omega$), NMOS ngắt ($R_{on,n} \to \infty$) $\implies R_{TG} \approx 992\,\Omega$.
 - Khi $V_{in} \approx 2.5\,\text{V}$: Cả NMOS và PMOS đều cùng dẫn ở vùng bão hòa $\implies R_{TG} \approx 969 \parallel 992 \approx 490\,\Omega$.  
@@ -61,7 +74,9 @@ $\implies$ **Đặc tính phẳng:** Điện trở tương đương dao động 
 Một cạm bẫy thiết kế vi mạch kinh điển: Khi ghép nối tiếp $N$ cổng truyền liên tiếp mà không có cổng đệm Inverter ở giữa (ví dụ trong mạng chuyển mạch Barrel Shifter hoặc mạng định tuyến):
 - Mỗi cổng truyền đóng vai trò là một điện trở dẫn $R_{TG}$ và đóng góp điện dung ký sinh nút khuếch tán $C_{TG}$.
 - Mô hình mạng bậc thang $RC$ phân bố (Elmore Delay Network):
+
   $$t_{pd} = \sum_{i=1}^N R_i \left(\sum_{j=i}^N C_j\right) = R_{TG} C_{TG} \frac{N(N+1)}{2} = \mathbf{O(N^2)}$$
+
 $\implies$ **Quy tắc thiết kế sư phạm:** Trễ tăng theo **hàm bậc hai của số tầng ($N^2$)**. Nếu chuỗi vượt quá **3 đến 4 cổng truyền**, trễ sẽ bùng nổ và sườn xung bị thoái hóa nặng. Trong công nghiệp vi mạch, kỹ sư **bắt buộc phải chèn một bộ đệm Inverter cứ sau mỗi 3 cổng truyền** để cắt đứt chuỗi $RC$ phân bố thành trễ tuyến tính $O(N)$.
 
 ---

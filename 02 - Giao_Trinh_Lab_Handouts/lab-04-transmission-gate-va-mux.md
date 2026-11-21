@@ -59,14 +59,19 @@ Trong thiết kế vi mạch, việc dùng một transistor duy nhất làm khó
 - NMOS dẫn, nạp điện tích vào tụ làm $V_{out}$ tăng dần. Điện áp cực Cổng-Nguồn giảm dần: $V_{GS} = V_G - V_{out} = 5.0\,\text{V} - V_{out}$.
 - Khi $V_{out}$ tăng đến ngưỡng mà $V_{GS} = V_{thn}$, transistor bị **ngắt (Cut-off)**. Dòng nạp ngừng lại.
 - Do đó, điện áp ngõ ra cực đại chỉ đạt được:
+
   $$V_{out,max} = V_{DD} - V_{thn}$$
+
 - **Tác động của Hiệu ứng Phân cực Thân (Body Effect):** Do cực Thân (Bulk) của NMOS nối đất ($0\,\text{V}$) trong khi cực Nguồn (Source) tăng lên $V_{out}$, xuất hiện điện áp ngược $V_{SB} = V_{out} - 0 = V_{out} > 0$. Điện áp ngưỡng tăng theo phương trình:
+
   $$V_{thn}(V_{SB}) = V_{th0} + \gamma \left( \sqrt{2\phi_F + V_{SB}} - \sqrt{2\phi_F} \right)$$
+
   Làm $V_{thn}$ tăng từ $0.70\,\text{V}$ lên $\approx 1.37\,\text{V}$, khiến $V_{out,max}$ tụt xuống chỉ còn $\approx \mathbf{3.63\,\text{V}}$ (thất thoát hơn $1.3\,\text{V}$ so với nguồn cấp $5\,\text{V}$!).
 
 #### b. PMOS truyền mức logic '0' (Weak '0'):
 - Tương tự, khi dùng PMOS xả tụ tải từ $5.0\,\text{V}$ xuống đất ($V_G = 0\,\text{V}, V_D = 0\,\text{V}$), khi $V_{out}$ giảm tới $|V_{thp}|$, hiệu điện thế $|V_{GS}| = V_{out} - 0 = |V_{thp}|$ làm PMOS bị ngắt.
 - Điện áp ngõ ra không thể xuống $0\,\text{V}$ mà dừng lại ở:
+
   $$V_{out,min} = |V_{thp}| \approx \mathbf{0.80 - 1.05\,\text{V}}$$
 
 ---
@@ -91,7 +96,9 @@ Trong thiết kế vi mạch, việc dùng một transistor duy nhất làm khó
 
 #### Đường cong điện trở dẫn $R_{TG}$ phẳng trên toàn dải:
 Điện trở tương đương của cổng truyền là điện trở mắc song song của hai kênh dẫn:
+
 $$R_{TG}(V_{in}) = R_{on,n}(V_{in}) \parallel R_{on,p}(V_{in}) = \frac{R_{on,n} \cdot R_{on,p}}{R_{on,n} + R_{on,p}}$$
+
 - Khi $V_{in} \approx 0\,\text{V}$: $R_{on,n} \approx 969\,\Omega$ (thấp), $R_{on,p}$ rất lớn $\implies R_{TG} \approx 969\,\Omega$.
 - Khi $V_{in} \approx 5\,\text{V}$: $R_{on,p} \approx 992\,\Omega$ (thấp), $R_{on,n}$ rất lớn $\implies R_{TG} \approx 992\,\Omega$.
 - Khi $V_{in} \approx 2.5\,\text{V}$: Cả NMOS và PMOS đều cùng dẫn $\implies R_{TG} \approx 969 \parallel 992 \approx 490\,\Omega$.  
@@ -109,6 +116,7 @@ $\implies$ **Đặc tính phẳng:** Điện trở tương đương $R_{TG}$ dao
 </div>
 
 Bộ dồn kênh MUX 2:1 có chức năng chọn 1 trong 2 luồng dữ liệu ngõ vào ($D_0$ hoặc $D_1$) đưa ra ngõ xuất $Y$ dựa vào tín hiệu điều khiển chọn $S$:
+
 $$Y = \begin{cases} D_0 & \text{khi } S = 0 \\ D_1 & \text{khi } S = 1 \end{cases}$$
 
 #### a. Cấu tạo mạch:
@@ -304,10 +312,10 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 ### a. Phần Chuẩn bị (Pre-lab)
 
 1. **Tính toán lý thuyết sụt giảm điện áp do Body Effect:**
-   - Điện áp ngưỡng $V_{thn}$ khi có phân cực thân ($V_{SB} = 3.6\,\text{V}$): $V_{thn} = $ .................... $\text{V}$ (gốc $0.70\,\text{V}$).
-   - Điện áp đỉnh ra cực đại khi truyền mức '1' qua NMOS: $V_{out,max} = $ .................... $\text{V}$.
-   - Điện áp đáy ra cực tiểu khi truyền mức '0' qua PMOS: $V_{out,min} = $ .................... $\text{V}$.
-   - Điện áp ra cực đại và cực tiểu của Cổng truyền CMOS (TG): $V_{max} = $ ............ $\text{V}$ ; $V_{min} = $ ............ $\text{V}$.
+   - Điện áp ngưỡng $V_{thn}$ khi có phân cực thân ($V_{SB} = 3.6\,\text{V}$): $V_{thn} =$ .................... $\text{V}$ (gốc $0.70\,\text{V}$).
+   - Điện áp đỉnh ra cực đại khi truyền mức '1' qua NMOS: $V_{out,max} =$ .................... $\text{V}$.
+   - Điện áp đáy ra cực tiểu khi truyền mức '0' qua PMOS: $V_{out,min} =$ .................... $\text{V}$.
+   - Điện áp ra cực đại và cực tiểu của Cổng truyền CMOS (TG): $V_{max} =$ ............ $\text{V}$ ; $V_{min} =$ ............ $\text{V}$.
 
 2. **Bảng kích thước hình học Transistor của tế bào `mux2_tg`:**
 
@@ -359,7 +367,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 4. **Kết quả kiểm tra vật lý Layout `mux2_tg`:**
    - Kết quả kiểm tra DRC: `............................................................`
    - Kết quả đối chiếu LVS: `............................................................`
-   - Kích thước Layout: $W = $ ............ $\mu\text{m}$, $H = $ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
+   - Kích thước Layout: $W =$ ............ $\mu\text{m}$, $H =$ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
 
 ---
 

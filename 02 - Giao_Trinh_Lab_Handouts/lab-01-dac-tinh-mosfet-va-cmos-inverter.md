@@ -37,10 +37,15 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 ### 1. Mô hình dòng điện của MOSFET
 Trong tiến trình CMOS n-well, dòng điện má-nguồn $I_{DS}$ của NMOS được mô hình hóa theo ba chế độ hoạt động:
 - **Vùng ngưng dẫn (Cut-off):** $V_{GS} < V_{thn}$
+
   $$I_{DS} \approx 0$$
+
 - **Vùng tuyến tính (Linear / Triode):** $V_{GS} \ge V_{thn}$ và $V_{DS} < V_{GS} - V_{thn}$
+
   $$I_{DS} = K_n' \left(\frac{W}{L}\right)_n \left[ (V_{GS} - V_{thn}) V_{DS} - \frac{V_{DS}^2}{2} \right] (1 + \lambda V_{DS})$$
+
 - **Vùng bão hòa (Saturation):** $V_{GS} \ge V_{thn}$ và $V_{DS} \ge V_{GS} - V_{thn}$
+
   $$I_{DS} = \frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_{GS} - V_{thn})^2 (1 + \lambda V_{DS})$$
 
 Trong đó:
@@ -83,12 +88,15 @@ Sơ đồ nguyên lý CMOS Inverter gồm 1 PMOS kéo lên nguồn ($V_{DD}$) v�
 
 #### a. Điện áp ngưỡng chuyển mạch $V_M$ (Switching Threshold)
 Điểm chuyển mạch $V_M$ được định nghĩa tại vị trí $V_{out} = V_{in} = V_M$. Tại điểm này, cả NMOS và PMOS đều ở vùng bão hòa. Cân bằng phương trình dòng điện:
+
 $$I_{D,sat(n)} = I_{D,sat(p)} \iff \frac{K_n'}{2}\left(\frac{W}{L}\right)_n (V_M - V_{thn})^2 = \frac{K_p'}{2}\left(\frac{W}{L}\right)_p (V_{DD} - V_M - |V_{thp}|)^2$$
 
 Đặt $r = \frac{K_p' (W/L)_p}{K_n' (W/L)_n}$, ta có biểu thức tính $V_M$:
+
 $$V_M = \frac{V_{thn} + \sqrt{r} (V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
 
 Để mạch đối xứng lý tưởng $V_M = V_{DD}/2$:
+
 $$r = 1 \implies \frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} = \frac{\mu_n}{\mu_p} \approx 3.0$$
 
 #### b. Lề nhiễu logic (Noise Margins)
@@ -109,6 +117,7 @@ Khi có tải dung $C_L$ tại ngõ ra, thời gian chuyển mạch phụ thuộ
 - **Thời gian sườn giảm $t_f$:** Thời gian $V_{out}$ giảm từ $90\%$ ($4.5\,\text{V}$) xuống $10\%$ ($0.5\,\text{V}$).
 
 Ước lượng qua mô hình điện trở hiệu dụng trung bình $R_{on}$:
+
 $$t_{pHL} \approx 0.69 \times R_{on,n} \times C_L, \quad t_{pLH} \approx 0.69 \times R_{on,p} \times C_L$$
 
 ---
@@ -187,7 +196,9 @@ Trong LTspice, các thông số trễ và lề nhiễu được đo tự động
    - Chạy mô phỏng, thêm trace dòng $I(M1)$.
    - Quan sát 5 đường đặc tuyến tương ứng $V_{GS} = 1\text{V}, 2\text{V}, 3\text{V}, 4\text{V}, 5\text{V}$.
    - Đặt con trỏ đo (Cursor) tại đoạn bão hòa của đường $V_{GS} = 5.0\,\text{V}$, tính toán hệ số điều chế kênh $\lambda$:
+
      $$\lambda = \frac{1}{I_{DS}(V_{DS1})} \times \frac{I_{DS}(V_{DS2}) - I_{DS}(V_{DS1})}{V_{DS2} - V_{DS1}}$$
+
 3. **Khảo sát đặc tuyến truyền dẫn $I_{DS}-V_{GS}$ và trích xuất điện áp ngưỡng $V_{thn}$:**
    - Đặt cố định $V_{DS} = 5.0\,\text{V}$. Cấu hình quét: `.dc VGS 0 5 0.01`.
    - Thêm biểu thức đo căn bậc hai của dòng: `sqrt(I(M1))`.

@@ -15,7 +15,7 @@ Thư mục này chứa toàn bộ các file netlist SPICE hoàn chỉnh đã đ�
    - Đo trễ truyền qua 1 tầng đơn lẻ của TG Adder ($t_{pd(Cin \to Cout)} \approx 42.5\,\text{ps}$).
 3. **`carry_chain_cascade.sp`**:
    - Mô phỏng chuỗi 4 tầng bộ cộng gợn sóng (4-bit Ripple Carry Adder) trong trường hợp xấu nhất ($A=1111, B=0000, C_{in,0}: 0 \to 1$).
-   - Đo đạc thời gian lan truyền qua từng tầng ($C_1, C_2, C_3, C_{out,3}$) và chứng minh trễ tích lũy tuyến tính $O(N) = 282.0\,\text{ps}$ ($70.5\,\text{ps/tầng}$).
+   - Đo đạc thời gian lan truyền qua từng tầng ($C_1, C_2, C_3, C_{out,3}$) và chứng minh trễ tích lũy tuyến tính $O(N) = 282.0\,\text{ps}$ ($70.5\,\text{ps/stage}$).
 4. **`fa_pex_postlayout.sp`**:
    - Netlist trích xuất ký sinh Post-layout (PEX) của tế bào `mirror_adder_1b` từ mặt nạ Electric VLSI.
 5. **`dap_an_chi_tiet_lab06.md`**:

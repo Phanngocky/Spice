@@ -11,14 +11,23 @@
 
 1. **Tỉ số định kích thước $(W_p/W_n)$:**
    - Để điểm chuyển mạch $V_M = V_{DD}/2 = 2.50\,\text{V}$:
+
      $$\frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_M - V_{thn})^2 = \frac{K_p'}{2} \left(\frac{W}{L}\right)_p (V_{DD} - V_M - |V_{thp}|)^2$$
+
    - Với $V_{thn} = 0.70\,\text{V}$ và $|V_{thp}| = 0.80\,\text{V}$:
+
      $$V_M - V_{thn} = 2.5 - 0.7 = 1.8\,\text{V}$$
+
      $$V_{DD} - V_M - |V_{thp}| = 5.0 - 2.5 - 0.8 = 1.7\,\text{V}$$
+
    - Tỉ số dẫn suất $K_n'/K_p' = 120/40 = 3.0$:
+
      $$\frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} \times \left(\frac{1.8}{1.7}\right)^2 \approx 3.0 \times 1.12 \approx 3.36 \approx 3.0$$
+
    - Khi chọn $L_n = L_p = 0.60\,\mu\text{m}$, $W_n = 1.20\,\mu\text{m}$ ($4\lambda$):
+
      $$W_p = 3.0 \times W_n = 3.60\,\mu\text{m} \quad (12\lambda)$$
+
 2. **Điện trở dẫn hiệu dụng $R_{on}$:**
    - $R_{on,n} \approx \frac{1}{120 \times 10^{-6} \times (1.2/0.6) \times (5.0 - 0.7)} = \frac{1}{240 \times 10^{-6} \times 4.3} \approx 969\,\Omega \approx 0.97\,\text{k}\Omega$.
    - $R_{on,p} \approx \frac{1}{40 \times 10^{-6} \times (3.6/0.6) \times (5.0 - 0.8)} = \frac{1}{240 \times 10^{-6} \times 4.2} \approx 992\,\Omega \approx 0.99\,\text{k}\Omega$.

@@ -73,13 +73,17 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 
 #### a. Ràng buộc Độ ổn định Đọc — Tỉ số Ô nhớ ($CR$):
 Trong pha Đọc, khi đọc nút $Q = 0\,\text{V}$, dòng điện từ $BL$ ($5\,\text{V}$) đổ qua $M_{AX1}$ và $M_{D1}$ xuống đất, tạo thành cầu phân áp làm điện áp nút $Q$ bị dâng lên một khoảng $V_Q$:
+
 $$V_Q \approx \frac{V_{DD} - V_{tn}}{2 \cdot CR}$$
+
 Để ngăn ngừa **hiện tượng phá hủy dữ liệu khi đọc (Read Disturb)**, bắt buộc $V_Q < V_{tn} \approx 0.70\,\text{V}$. Do đó, Driver NMOS phải mạnh hơn Access NMOS:
+
 $$CR = \frac{(W/L)_{driver}}{(W/L)_{access}} = \frac{W_D / L_D}{W_{AX} / L_{AX}} \ge 1.5 - 2.0$$
 
 #### b. Ràng buộc Khả năng Ghi — Tỉ số Kéo lên ($PR$):
 Trong pha Ghi đè '0' vào nút đang lưu '1', Access NMOS ($M_{AX1}$) phải kéo tụt nút $Q$ xuống dưới điện áp lật ghi ($V_{write\_trip} \approx 1.85\,\text{V}$) bất chấp PMOS tải ($M_{L1}$) đang cố bơm dòng giữ mức cao.  
 Để đảm bảo ghi thành công:
+
 $$PR = \frac{(W/L)_{load}}{(W/L)_{access}} = \frac{W_L / L_L}{W_{AX} / L_{AX}} \le 1.0 - 1.2$$
 
 #### Bảng thông số định cỡ tối ưu (Công nghệ MOSIS C5N 0.5µm, $\lambda = 0.30\,\mu\text{m}$):

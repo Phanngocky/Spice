@@ -43,7 +43,9 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 ### 1. Hàm Logic và Bảng Chân Trị Mạch Cộng Toàn Phần 1-bit
 
 Mạch cộng toàn phần 1-bit nhận 3 ngõ vào nhị phân $A, B, C_{in}$ và tạo ra 2 ngõ ra: Tổng $Sum$ và Số nhớ mang đi $C_{out}$:
+
 $$Sum = A \oplus B \oplus C_{in} = A B C_{in} + \bar{A} \bar{B} C_{in} + \bar{A} B \bar{C}_{in} + A \bar{B} \bar{C}_{in}$$
+
 $$C_{out} = A B + B C_{in} + A C_{in} = A B + C_{in}(A + B)$$
 
 | $A$ | $B$ | $C_{in}$ | $Sum$ | $C_{out}$ | Nhận xét tính chất số học |
@@ -72,14 +74,18 @@ Kiến trúc **Mirror Adder** là cấu trúc Full Adder cổng tĩnh phổ bi�
 
 #### a. Khối tạo số nhớ mang đi (Carry Generation Block - $\overline{C_{out}}$):
 Biểu thức bù của số nhớ:
+
 $$\overline{C_{out}} = \overline{A B + C_{in}(A + B)}$$
+
 - **Mạng PDN:** Gồm nhánh $A$ nối tiếp $B$ mắc song song với nhánh $C_{in}$ nối tiếp với cụm $(A \parallel B)$ (4 NMOS).
-- **Mạng PUN:** Đối xứng hoàn hảo qua gương với PDN: Gồm nhánh $A$ song song $B$ mắc nối tiếp với nhánh $C_{in}$ song song với cụm $(A \text{ nối tiếp } B)$ (4 PMOS).
+- **Mạng PUN:** Đối xứng hoàn hảo qua gương với PDN: Gồm nhánh $A$ song song $B$ mắc nối tiếp với nhánh $C_{in}$ song song với cụm nối tiếp ($A$ và $B$) (4 PMOS).
 - Thêm 1 Inverter đệm 2T ở ngõ ra để tạo tín hiệu $C_{out}$ cực mạnh $\implies$ **Tổng cộng: 10 Transistors**.
 
 #### b. Khối tạo tổng (Sum Generation Block - $\overline{Sum}$):
 Nếu triển khai $Sum$ trực tiếp, mạng sẽ cần tới 16–20 transistor. Mirror Adder sử dụng một biến đổi đại số cực kỳ thông minh bằng cách **tái sử dụng tín hiệu bù $\overline{C_{out}}$**:
+
 $$\overline{Sum} = A B C_{in} + \overline{C_{out}} (A + B + C_{in})$$
+
 - Nhánh 1: Ba transistor $A, B, C_{in}$ mắc nối tiếp.
 - Nhánh 2: Transistor nhận $\overline{C_{out}}$ mắc nối tiếp với 3 transistor $(A \parallel B \parallel C_{in})$ mắc song song.
 - Thêm 1 Inverter đệm 2T để tạo tín hiệu $Sum$ hoàn chỉnh $\implies$ **Khối Sum chỉ tốn 14 Transistors**.
@@ -104,16 +110,22 @@ Do đó, trong cả khối Carry và khối Sum:
 
 Để tiết kiệm diện tích tối đa cho các ứng dụng công suất thấp (DSP, IoT), kiến trúc TG Full Adder tách bài toán cộng thành 3 khối ghép nối:
 1. **Khối tạo tín hiệu truyền (Propagate $P$):**
+
    $$P = A \oplus B$$
+
    Hiện thực bằng 1 cổng XOR dùng Cổng truyền CMOS (1 TG + 2 Inverters = 6 Transistors, hoặc 4T).
 2. **Khối tạo Tổng ($Sum$):**
+
    $$Sum = P \oplus C_{in}$$
+
    Hiện thực bằng 1 cổng XOR Cổng truyền thứ hai (4 Transistors).
 3. **Khối tạo Số nhớ ($C_{out}$):**
    Nhận xét tính chất của $C_{out}$:
    - Khi $P = 1$ (tức $A \ne B$): Nếu $A=0, B=1$ hoặc $A=1, B=0$ thì $C_{out} = C_{in}$ (Số nhớ truyền xuyên qua).
    - Khi $P = 0$ (tức $A = B$): Nếu $A=B=0$ thì $C_{out} = 0 = A$; nếu $A=B=1$ thì $C_{out} = 1 = A$.
+
    $$\implies C_{out} = \begin{cases} C_{in} & \text{khi } P = 1 \\ A & \text{khi } P = 0 \end{cases}$$
+
    Hàm này được hiện thực trực tiếp bằng **1 Bộ dồn kênh MUX 2:1 dùng Cổng truyền** (điều khiển bởi tín hiệu chọn $P$, chọn giữa $C_{in}$ và $A$, tốn đúng 4 Transistors).
 - $\implies$ **Tổng số transistor: Chỉ đúng $\mathbf{16 \text{ Transistors}}$!**
 
@@ -287,9 +299,9 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | **Khối Sum** | Inverter đệm $Sum$ | NMOS / PMOS | .................... | .................... |
 
 3. **Dự đoán thời gian trễ lý thuyết ($C_L = 50\,\text{fF}$):**
-   - Trễ đường truyền số nhớ: $t_{pd(Cin \to Cout)} = $ .................... ps.
-   - Trễ tạo tổng từ dữ liệu: $t_{pd(A \to Sum)} = $ .................... ps.
-   - Tỉ số trễ: $\frac{t_{pd(A \to Sum)}}{t_{pd(Cin \to Cout)}} = $ .................... lần.
+   - Trễ đường truyền số nhớ: $t_{pd(Cin \to Cout)} =$ .................... ps.
+   - Trễ tạo tổng từ dữ liệu: $t_{pd(A \to Sum)} =$ .................... ps.
+   - Tỉ số trễ: $\frac{t_{pd(A \to Sum)}}{t_{pd(Cin \to Cout)}} =$ .................... lần.
 
 ---
 
@@ -312,13 +324,13 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | **$t_{pd(A \to Sum)}$** | .................... ps | .................... ps | .................... % |
 
 3. **Kết quả khảo sát Chuỗi 4 bộ cộng gợn sóng (4-bit RCA):**
-   - Tổng thời gian trễ truyền số nhớ từ $C_{in,0} \to C_{out,3}$: $T_{carry,4bit} = $ .................... ps.
-   - Trễ trung bình mỗi tầng gợn sóng: $t_{carry,avg} = \frac{T_{carry,4bit}}{4} = $ .................... ps.
+   - Tổng thời gian trễ truyền số nhớ từ $C_{in,0} \to C_{out,3}$: $T_{carry,4bit} =$ .................... ps.
+   - Trễ trung bình mỗi tầng gợn sóng: $t_{carry,avg} = \frac{T_{carry,4bit}}{4} =$ .................... ps.
 
 4. **Kết quả kiểm tra vật lý Layout `mirror_adder_1b`:**
    - Kết quả kiểm tra DRC: `............................................................`
    - Kết quả đối chiếu LVS: `............................................................`
-   - Kích thước Layout: Chiều rộng $W = $ ............ $\mu\text{m}$, Chiều cao $H = $ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
+   - Kích thước Layout: Chiều rộng $W =$ ............ $\mu\text{m}$, Chiều cao $H =$ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
 
 ---
 

@@ -10,7 +10,9 @@
 
 Trong Bài 6, chúng ta đã nghiên cứu Mạch cộng toàn phần (Full Adder) và bộ cộng gợn sóng (Ripple Carry Adder - RCA):
 - **Nút thắt cổ chai của RCA:** Số nhớ $C_{out,i}$ của tầng thứ $i$ phụ thuộc trực tiếp vào số nhớ $C_{in,i}$ từ tầng $i-1$. Tín hiệu số nhớ phải gợn từng bước tuần tự qua chuỗi $N$ tế bào, dẫn đến thời gian trễ tăng tuyến tính theo kích thước từ dữ liệu:
+
   $$T_{RCA} = O(N)$$
+
   Khi mở rộng lên $32$-bit hay $64$-bit, trễ lan truyền số nhớ chiếm hơn **$85\%$ tổng thời gian trễ** của toàn bộ khối tính toán ALU.
 - **Triết lý đột phá của Carry Lookahead Adder (CLA):**
   * Thay vì đợi số nhớ lan truyền tuần tự qua từng bit, CLA **tính toán trước đồng thời toàn bộ các bit số nhớ ($C_1, C_2, C_3, C_4$)** trực tiếp từ hai toán hạng đầu vào $A[3:0], B[3:0]$ và số nhớ đầu tiên $C_0$.
@@ -22,21 +24,32 @@ Trong Bài 6, chúng ta đã nghiên cứu Mạch cộng toàn phần (Full Adde
 
 Xét một bit cộng thứ $i$ bất kỳ với hai ngõ vào $A_i$ và $B_i$:
 1. **Cờ Sinh số nhớ (Generate - $G_i$):**
+
    $$G_i = A_i \cdot B_i$$
+
    Khi cả hai bit $A_i = B_i = 1$, một số nhớ chắc chắn được sinh ra tại tầng $i$ bất chấp số nhớ ngõ vào $C_i$ bằng $0$ hay $1$.
 2. **Cờ Truyền số nhớ (Propagate - $P_i$):**
-   $$P_i = A_i \oplus B_i \quad (\text{hoặc } P_i = A_i + B_i)$$
+
+   $$P_i = A_i \oplus B_i \quad (\text{or } P_i = A_i + B_i)$$
+
    Khi có đúng một bit bằng $1$, nếu có số nhớ $C_i = 1$ đi vào thì số nhớ này sẽ được truyền xuyên qua tầng $i$ để đi tiếp tới tầng $i+1$.  
    *(Trong thiết kế này, ta chọn $P_i = A_i \oplus B_i$ để tái sử dụng ngay tín hiệu $P_i$ cho việc tạo tổng $S_i = P_i \oplus C_i$, tiết kiệm diện tích silicon).*
 
 #### Khai triển đệ quy hệ phương trình Carry Lookahead:
 - Bit số nhớ thứ nhất:
+
   $$C_1 = G_0 + P_0 C_0$$
+
 - Bit số nhớ thứ hai (thế $C_1$ vào):
+
   $$C_2 = G_1 + P_1 C_1 = G_1 + P_1 (G_0 + P_0 C_0) = G_1 + P_1 G_0 + P_1 P_0 C_0$$
+
 - Bit số nhớ thứ ba (thế $C_2$ vào):
+
   $$C_3 = G_2 + P_2 C_2 = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0$$
+
 - Bit số nhớ thứ tư (thế $C_3$ vào):
+
   $$C_4 = G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0 + P_3 P_2 P_1 P_0 C_0$$
 
 #### Tính toán Tổng Sum:

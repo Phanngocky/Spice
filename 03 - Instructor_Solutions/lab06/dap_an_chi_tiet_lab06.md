@@ -13,7 +13,9 @@ Khi xây dựng bộ cộng $N$-bit dạng gợn sóng (Ripple Carry Adder - RCA
 - Dữ liệu hai toán hạng $A[N-1:0]$ và $B[N-1:0]$ có sẵn tại cùng một thời điểm đầu chu kỳ ($t = 0$).
 - Tuy nhiên, bit số nhớ $C_{in,i}$ của tầng thứ $i$ bắt buộc phải chờ số nhớ $C_{out,i-1}$ của tầng $i-1$ hoàn thành chuyển mạch thì mới bắt đầu tính toán được.
 - Tổng thời gian trễ thực thi của bộ cộng $N$-bit:
+
   $$T_{add} = t_{pd(A,B \to C_{out,0})} + (N - 2) \cdot t_{pd(C_{in} \to C_{out})} + t_{pd(C_{in} \to Sum_{N-1})}$$
+
   Trong đó:
   * $t_{pd(A,B \to C_{out,0})}$: Trễ sinh số nhớ tại tầng đầu tiên ($FA_0$).
   * $t_{pd(C_{in} \to C_{out})}$: **Thời gian lan truyền số nhớ qua một tầng trung gian (Carry Propagation Delay)**.
@@ -39,7 +41,9 @@ Mirror Adder giải quyết triệt để bài toán tối ưu đường tới h
 2. **Cơ chế tái sử dụng $\overline{C_{out}}$ trong Khối Sum (12 MOSFETs):**
    - Biểu thức đại số thông thường: $Sum = A B C_{in} + \bar{A} \bar{B} C_{in} + \bar{A} B \bar{C}_{in} + A \bar{B} \bar{C}_{in}$ (tốn 16-20T).
    - Biến đổi đại số của Mirror Adder:
+
      $$Sum = A B C_{in} + \overline{C_{out}} (A + B + C_{in})$$
+
    - Chứng minh tính tương đương:
      * Khi $A=B=C_{in}=0$: $ABC_{in} = 0, \overline{C_{out}} = 1, (A+B+C_{in})=0 \implies Sum = 0$ (Đúng).
      * Khi có 1 biến bằng 1 (ví dụ $A=1, B=0, C_{in}=0$): $ABC_{in}=0, \overline{C_{out}}=1, (A+B+C_{in})=1 \implies Sum = 1$ (Đúng).

@@ -25,26 +25,37 @@ Bằng cách ghép 2 D-Latch nối tiếp nhau nhưng điều khiển bởi hai 
 #### a. Thời gian thiết lập ($t_{setup}$):
 - **Định nghĩa:** Khoảng thời gian dữ liệu $D$ phải đến và giữ nguyên giá trị trước sườn lên của $CLK$.
 - **Mô hình giải tích:** Để Master Latch chốt giữ thành công, tín hiệu từ $D$ phải đi qua cổng truyền ngõ vào $TG_{M1}$ và nạp/xả tụ điện tại nút nội $X_M$ qua ngưỡng chuyển mạch của Inverter $I_{M1}$:
+
   $$t_{setup} = t_{pd,TG(M1)} + t_{pd,INV(M1)} + t_{margin}$$
+
   Với công nghệ C5N: $t_{pd,TG} \approx 42\,\text{ps}, t_{pd,INV} \approx 34\,\text{ps}$, thêm biên độ an toàn $t_{margin} \approx 10\,\text{ps}$:
+
   $$\mathbf{t_{setup} \approx 86.0\,\text{ps}}$$
 
 #### b. Thời gian giữ ($t_{hold}$):
 - **Định nghĩa:** Khoảng thời gian dữ liệu $D$ phải tiếp tục duy trì sau sườn lên của $CLK$.
 - **Mô hình giải tích:** Sau sườn lên $CLK: 0 \to 1$, xung nhịp $CLK$ phải truyền qua Inverter tạo $\overline{CLK}$ để đóng cổng truyền $TG_{M1}$. Trong thời gian Inverter này đang chuyển mạch ($t_{pd,INV(CLK)}$), $TG_{M1}$ vẫn còn hé mở. Để dữ liệu mới không lọt vào làm hỏng nút $X_M$, dữ liệu $D$ không được phép thay đổi trước khi $TG_{M1}$ ngắt hoàn toàn:
+
   $$t_{hold} = t_{pd,INV(CLK)} - t_{pd,TG(M1)}$$
+
   Do $t_{pd,INV(CLK)} \approx 34\,\text{ps}$ và $t_{pd,TG(M1)} \approx 42\,\text{ps}$:
+
   $$\mathbf{t_{hold} \approx 34 - 42 = -8.0\,\text{ps} \approx 0\,\text{ps}}$$
+
   *(Trong tế bào chuẩn, $t_{hold}$ lý thuyết thường là số âm nhẹ hoặc bằng 0, nghĩa là dữ liệu $D$ có thể thay đổi ngay lập tức sau khi $CLK$ đạt $50\%$).*
 
 #### c. Trễ Xung nhịp đến Ngõ ra ($t_{c-q}$ hay $t_{clk-q}$):
 - Khi sườn lên $CLK: 0 \to 1$ xuất hiện, xung nhịp kích hoạt Inverter tạo $\overline{CLK}$, mở cổng truyền $TG_{S1}$ của Slave Latch và truyền dữ liệu $Q_M$ qua Inverter đệm $I_{S2}$ ra ngõ ra $Q$:
+
   $$t_{c-q} = t_{pd,INV(CLK)} + t_{pd,TG(S1)} + t_{pd,INV(S2)} \approx 34\,\text{ps} + 42\,\text{ps} + 34\,\text{ps} = \mathbf{110.0\,\text{ps}}$$
 
 #### d. Giới hạn tần số xung nhịp cực đại ($f_{max}$):
 Chu kỳ xung nhịp tối thiểu an toàn của một đường tuần tự liên kết Flip-Flop $FF_1 \to \text{Logic} \to FF_2$:
+
 $$T_{clk,min} = t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$$
+
 Khi mạch lặp vòng trực tiếp ($t_{comb} = 0, t_{skew} = 0$):
+
 $$T_{min} = t_{c-q} + t_{setup} \approx 110.0 + 86.0 = 196.0\,\text{ps} \implies \mathbf{f_{max} \approx 5.10\,\text{GHz}}$$
 
 ---
@@ -55,10 +66,14 @@ Khi tín hiệu ngõ vào $D$ vi phạm thời gian thiết lập ($t < t_{setup
 - Cổng truyền $TG_{M1}$ bị ngắt khi nút nội $X_M$ mới chỉ được nạp lửng lơ tại mức điện áp trung gian $V(X_M) \approx V_M \approx V_{DD}/2 = 2.5\,\text{V}$.
 - Khi đó, cặp Inverter nối chéo trong Master Latch ($I_1 - I_3$) rơi vào **điểm cân bằng không bền (Unstable Equilibrium Point)**.
 - Phương trình vi sai điện áp tín hiệu nhỏ:
+
   $$\frac{d\Delta V(t)}{dt} = \frac{A_V - 1}{\tau_{loop}} \Delta V(t) \implies \Delta V(t) = \Delta V_0 \cdot e^{+\frac{t}{\tau_m}}$$
+
   Trong đó $\tau_m = \frac{\tau_{loop}}{A_V - 1}$ là hằng số thời gian giải tỏa bất ổn định, $\Delta V_0$ là độ lệch ban đầu so với điểm $V_M$.
 - Nếu $\Delta V_0 \to 0$ (thời điểm chuyển mạch trùng khớp hoàn hảo với điểm tới hạn), thời gian để Flip-Flop thoát khỏi trạng thái bất ổn định:
+
   $$t_{resolve} = \tau_m \ln\left(\frac{V_{DD}}{\Delta V_0}\right) \to \infty$$
+
   Ngõ ra $Q$ sẽ bị treo lơ lửng ở mức $2.5\,\text{V}$ hoặc dao động số trong một khoảng thời gian dài không xác định, gây sụp đổ toàn bộ hệ thống xử lý số.
 - **Giải pháp công nghiệp:** Sử dụng mạch đồng bộ 2 tầng Flip-Flop (Two-Stage Synchronizer) để giảm xác suất lỗi xuống mức an toàn (Mean Time Between Failures $MTBF > 1000$ năm).
 

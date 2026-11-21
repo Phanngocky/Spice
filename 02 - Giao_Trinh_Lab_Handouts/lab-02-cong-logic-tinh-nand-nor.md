@@ -79,15 +79,22 @@ Một cổng logic CMOS tĩnh bất kỳ luôn gồm hai mạng chuyển mạch 
 
 #### a. Cổng NAND2 ($Y = \overline{A \cdot B}$)
 - **Mạng PDN (2 NMOS nối tiếp):** Khi cả $A=1$ và $B=1$, dòng xả đi qua 2 NMOS mắc nối tiếp. Để điện trở tương đương tổng bằng $R_{on,n0}$ của Inverter chuẩn:
+
   $$R_{eq,N} = R_{on,MN1} + R_{on,MN2} = R_{on,n0} \implies W_n = 2 \times W_{n,inv} = 2 \times 4\lambda = 8\lambda = 2.40\,\mu\text{m}$$
+
 - **Mạng PUN (2 PMOS song song):** Trường hợp xấu nhất xảy ra khi chỉ có **1 PMOS dẫn** (ví dụ $A=0, B=1$ hoặc $A=1, B=0$). Để thời gian sườn lên không chậm hơn Inverter:
+
   $$W_p = W_{p,inv} = 12\lambda = 3.60\,\mu\text{m}$$
+
 - *(Trường hợp tốt nhất khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở tương đương giảm còn một nửa $R_{eq,P} = R_{on,p0} / 2$, giúp trễ $t_{pLH}$ nhanh gấp đôi).*
 
 #### b. Cổng NOR2 ($Y = \overline{A + B}$)
 - **Mạng PUN (2 PMOS nối tiếp):** Để ngõ ra lên mức cao, bắt buộc cả 2 PMOS phải dẫn đồng thời. Do điện trở của PMOS vốn đã lớn gấp 3 lần NMOS (vì $\mu_p \approx \mu_n/3$), việc mắc nối tiếp 2 PMOS đòi hỏi kích thước rất lớn:
+
   $$R_{eq,P} = R_{on,MP1} + R_{on,MP2} = R_{on,p0} \implies W_p = 2 \times W_{p,inv} = 2 \times 12\lambda = 24\lambda = 7.20\,\mu\text{m}$$
+
 - **Mạng PDN (2 NMOS song song):** Trường hợp xấu nhất xảy ra khi chỉ có **1 NMOS dẫn**:
+
   $$W_n = W_{n,inv} = 4\lambda = 1.20\,\mu\text{m}$$
 
 > [!IMPORTANT]

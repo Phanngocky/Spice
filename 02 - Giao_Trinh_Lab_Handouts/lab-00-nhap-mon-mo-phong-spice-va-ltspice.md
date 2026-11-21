@@ -182,20 +182,28 @@ Quá trình nạp và phóng (xả) điện tích của tụ điện qua điện
 *Hình 0.1a: Sơ đồ nguyên lý mạch nạp và xả tụ điện RC cơ bản.*
 
 Áp dụng định luật Kirchhoff về điện áp cho mạch kín gồm nguồn xung $V_{in}(t)$, điện trở $R$ và tụ điện $C$:
+
 $$V_{in}(t) = v_R(t) + v_C(t) = R \cdot i(t) + v_C(t) = R C \frac{dv_C(t)}{dt} + v_C(t)$$
+
 Đại lượng $\tau = R \times C$ được gọi là **Hằng số thời gian (Time Constant)** của mạch RC, đặc trưng cho tốc độ tích lũy và giải phóng năng lượng điện trường trong tụ điện.
 
 1. **Giai đoạn Nạp điện ($0 \le t < T_{on}$, khi $V_{in} = V_0 = 5.0\,\text{V}$, tụ ban đầu chưa nạp $V_C(0) = 0$):**
+
    $$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right)$$
-   $$i(t) = C \frac{dv_C(t)}{dt} = \frac{V_0}{R} e^{-\frac{t}{\tau}} > 0 \quad (\text{dòng điện dương nạp vào cực dương của tụ})$$
+
+   $$i(t) = C \frac{dv_C(t)}{dt} = \frac{V_0}{R} e^{-\frac{t}{\tau}} > 0 \quad (\text{positive charging current})$$
+
    - Tại $t = 0$: Tụ đóng vai trò như ngắn mạch, điện áp $v_C = 0\,\text{V}$, dòng nạp vọt lên giá trị đỉnh cực đại: $I_{peak,charge} = +\frac{V_0}{R} = +\frac{5.0\,\text{V}}{10\,\text{k}\Omega} = +0.50\,\text{mA}$.
    - Tại $t = \tau = R C$: $v_C(\tau) = V_0 (1 - e^{-1}) \approx 0.63212 \times V_0 = 3.161\,\text{V}$ ($63.2\%$).
    - Tại $t = 2.2\tau$: Điện áp đạt $88.9\%$ ($4.446\,\text{V}$). Khoảng thời gian để tụ nạp từ $10\%$ ($0.5\,\text{V}$) lên $90\%$ ($4.5\,\text{V}$) chính là **thời gian sườn tăng**: $t_{rise} = 2.2\tau = 220\,\mu\text{s}$.
    - Tại $t = 5\tau$: $v_C(5\tau) = V_0 (1 - e^{-5}) \approx 0.99326 \times V_0 = 4.966\,\text{V}$ ($99.3\% \approx 100\%$, tụ xem như **nạp đầy hoàn toàn**). Năng lượng tích trữ cực đại: $W_{max} = \frac{1}{2} C V_0^2 = \frac{1}{2} (10\,\text{nF})(5\,\text{V})^2 = 0.125\,\mu\text{J}$.
 
 2. **Giai đoạn Xả điện ($T_{on} \le t < T_{period}$, khi $V_{in}$ sụt về $0\,\text{V}$, đặt $t' = t - T_{on} \ge 0$):**
+
    $$v_C(t') = V_0 e^{-\frac{t'}{\tau}}$$
-   $$i(t') = C \frac{dv_C(t')}{dt'} = -\frac{V_0}{R} e^{-\frac{t'}{\tau}} < 0 \quad (\text{dòng điện âm đổi chiều phóng từ tụ về đất})$$
+
+   $$i(t') = C \frac{dv_C(t')}{dt'} = -\frac{V_0}{R} e^{-\frac{t'}{\tau}} < 0 \quad (\text{negative discharging current})$$
+
    - Tại $t' = 0$: Ngay khi nguồn ngắt về $0\,\text{V}$, điện áp trên tụ vẫn giữ nguyên $5.0\,\text{V}$ (do điện áp trên tụ không biến thiên đột ngột), dòng xả lập tức đảo chiều vọt lên mức âm cực đại: $I_{peak,discharge} = -\frac{V_0}{R} = -0.50\,\text{mA}$.
    - Tại $t' = \tau$: $v_C(\tau) = V_0 e^{-1} \approx 0.36788 \times V_0 = 1.839\,\text{V}$ (còn lại $36.8\%$, đã phóng thích đi $63.2\%$).
    - Tại $t' = 2.2\tau$: Thời gian sườn giảm từ $90\%$ xuống $10\%$ là $t_{fall} = 2.2\tau = 220\,\mu\text{s}$.
@@ -210,7 +218,7 @@ $$V_{in}(t) = v_R(t) + v_C(t) = R \cdot i(t) + v_C(t) = R C \frac{dv_C(t)}{dt} +
 > [!IMPORTANT]
 > **Nguyên tắc vàng khi cấu hình nguồn xung vuông mô phỏng nạp - xả trong SPICE:**  
 > Để quan sát trọn vẹn quá trình nạp đầy ($99.3\%$) và xả cạn ($0.7\%$), độ rộng xung mức cao $T_{on}$ và độ rộng xung mức thấp $T_{off}$ bắt buộc phải thỏa mãn:
-> $$T_{on} \ge 5\tau \quad \text{và} \quad T_{period} = T_{on} + T_{off} \ge 10\tau$$
+> $T_{on} \ge 5\tau \quad \text{and} \quad T_{period} = T_{on} + T_{off} \ge 10\tau$
 > Nếu chọn $T_{on} < 5\tau$, tụ điện chưa kịp nạp đầy đã bị chuyển sang giai đoạn xả, làm đỉnh điện áp bị hụt và các phép đo thời gian sẽ sai lệch hoàn toàn. Với $\tau = 100\,\mu\text{s}$, cấu hình chuẩn mực là:
 > ```spice
 > Vin in 0 PULSE(0 5.0 0 10n 10n 500u 1000u)
@@ -267,7 +275,9 @@ Q1 coll base 0 Q2N3904
 
 1. **Đặc tuyến ngõ vào $I_B - V_{BE}$:**
    - Tiếp giáp Base - Emitter hoạt động như một tiếp giáp $p-n$ phân cực thuận. Theo phương trình Ebers-Moll:
+
      $$I_B \approx \frac{I_S}{\beta} \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$$
+
      (với thế nhiệt $V_T = \frac{k_B T}{q} \approx 25.85\,\text{mV}$ ở $300\,\text{K}$).
    - **Vùng ngưng dẫn:** Khi $V_{BE} < 0.60\,\text{V}$, dòng $I_B \approx 0$.
    - **Ngưỡng mở (Knee Voltage):** Tại $V_{BE,on} \approx 0.65 - 0.70\,\text{V}$, dòng $I_B$ bắt đầu tăng vọt theo hàm số mũ.
@@ -275,10 +285,14 @@ Q1 coll base 0 Q2N3904
 2. **Họ đặc tuyến ngõ ra $I_C - V_{CE}$ (quét theo các mức dòng tham số $I_B$):**
    - **Vùng Bão hòa (Saturation Mode):** $V_{CE} < V_{CE,sat} \approx 0.20 - 0.25\,\text{V}$. Cả hai tiếp giáp $BE$ và $BC$ đều phân cực thuận. Dòng $I_C$ tăng dốc gần như tuyến tính theo $V_{CE}$ và bị khống chế bởi nội trở bão hòa của transistor ($I_C < \beta I_B$).
    - **Vùng Khuếch đại Tích cực (Forward Active Mode):** $V_{CE} \ge 0.25\,\text{V}$. Tiếp giáp $BE$ phân cực thuận, tiếp giáp $BC$ phân cực nghịch. Dòng $I_C$ gần như nằm ngang và tỉ lệ thuận với dòng kích thích ngõ vào $I_B$:
+
      $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
+
      * Hệ số khuếch đại dòng: $\beta = \frac{\Delta I_C}{\Delta I_B} \approx 160$.
      * **Hiệu ứng Early ($V_A = 74\,\text{V}$):** Khi $V_{CE}$ tăng, bề dày vùng nghèo tiếp giáp $BC$ nở rộng lấn vào vùng Base, làm giảm bề dày Base hiệu dụng khiến dòng $I_C$ tăng nhẹ. Ngoại suy các đường đặc tuyến về phía điện áp âm đều quy tụ tại điểm $-V_A$. Điện trở ngõ ra tín hiệu nhỏ:
+
        $$r_o = \left(\frac{\partial I_C}{\partial V_{CE}}\right)^{-1} = \frac{V_A + V_{CE}}{I_C} \approx \frac{V_A}{\beta I_B}$$
+
    - **Vùng Ngưng dẫn (Cut-off Mode):** Khi $I_B = 0\,\mu\text{A}$, transistor ngắt hoàn toàn, dòng rò $I_C \approx 0$.
 
 ---
@@ -316,8 +330,11 @@ Cho mạch cầu phân áp gồm nguồn $V_{in} = 5.0\,\text{V}$, hai điện t
 ```
 
 1. Tính điện áp ngõ ra lý thuyết $V_{out}$:
+
    $$V_{out} = V_{in} \times \frac{R_2}{R_1 + R_2} = ....................................................$$
+
 2. Tính dòng điện $I_{in}$ chảy qua mạch và tổng công suất tiêu tán $P_{total}$:
+
    $$I_{in} = \frac{V_{in}}{R_1 + R_2} = ............................, \quad P_{total} = V_{in} \times I_{in} = ............................$$
 
 ---
@@ -336,15 +353,20 @@ Cho mạch lọc thông thấp $RC$ gồm điện trở $R = 10\,\text{k}\Omega$
 ```
 
 1. **Hằng số thời gian $\tau$ (Tau):**
+
    $$\tau = R \times C = 10\,\text{k}\Omega \times 10\,\text{nF} = ........................................ \quad (\mu\text{s})$$
+
 2. **Quá trình nạp quá độ:** Giả sử ngõ vào là bước nhảy điện áp từ $0\,\text{V}$ lên $V_0 = 5.0\,\text{V}$. Phương trình nạp của tụ điện:
+
    $$V_{out}(t) = V_0 \left(1 - e^{-t/\tau}\right)$$
+
    Tính giá trị điện áp $V_{out}$ tại các thời điểm:
    - Tại $t = \tau$: $V_{out}(\tau) = 5.0 \times (1 - e^{-1}) = ......................................\,\text{V}$ ($63.2\% V_0$)
    - Tại $t = 2.2\tau$ (thời gian tăng từ $10\%$ lên $90\%$): $V_{out}(2.2\tau) = ......................................\,\text{V}$
    - Tại $t = 5\tau$: $V_{out}(5\tau) = 5.0 \times (1 - e^{-5}) = ......................................\,\text{V}$ ($99.3\% V_0$, coi như nạp đầy)
 3. **Tần số cắt $f_{-3\text{dB}}$ (Cut-off Frequency):**
    Hàm truyền miền tần số: $H(s) = \frac{1}{1 + sRC} = \frac{1}{1 + j\omega RC}$.
+
    $$f_{-3\text{dB}} = \frac{1}{2\pi RC} = \frac{1}{2\pi \times 10\,\text{k}\Omega \times 10\,\text{nF}} = ........................................ \quad (\text{Hz})$$
 
 ---
@@ -368,11 +390,14 @@ Cho transistor BJT NPN 2N3904 có các thông số mô hình chuẩn SPICE:
    - Tại $V_{BE} = 0.65\,\text{V}$: $I_B = .................................................... \quad (\mu\text{A})$
    - Tại $V_{BE} = 0.70\,\text{V}$: $I_B = .................................................... \quad (\mu\text{A})$
    - Tính điện áp ngưỡng mở $V_{BE}$ khi $I_B = 10\,\mu\text{A}$ và $I_B = 20\,\mu\text{A}$:
+
      $$V_{BE} = V_T \ln\left( \frac{I_B \times \beta}{I_S} + 1 \right) = .................................................... \quad (\text{V})$$
 
 2. **Khảo sát họ đặc tuyến ngõ ra $I_C(V_{CE}, I_B)$:**
    Trong vùng khuếch đại tích cực, dòng Collector có xét hiệu ứng Early:
+
    $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
+
    Tính giá trị dòng $I_C$ (mA) tại các điểm điện áp $V_{CE}$:
    - **Khi dòng kích thích $I_B = 10\,\mu\text{A}$:**
      * Tại $V_{CE} = 1.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
@@ -384,8 +409,10 @@ Cho transistor BJT NPN 2N3904 có các thông số mô hình chuẩn SPICE:
      * Tại $V_{CE} = 10.0\,\text{V}$: $I_C = .................................................... \quad (\text{mA})$
 
 3. **Tính hệ số khuếch đại vi sai $\beta$ và điện trở ngõ ra $r_o$ tại $V_{CE} = 5.0\,\text{V}$:**
+
    $$\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{20\mu\text{A} - 10\mu\text{A}} = ....................................................$$
-   $$r_o = \frac{V_A}{\beta I_B} \quad (\text{tại } I_B = 10\mu\text{A}) = .................................................... \quad (\text{k}\Omega)$$
+
+   $$r_o = \frac{V_A}{\beta I_B} \quad (\text{at } I_B = 10\mu\text{A}) = .................................................... \quad (\text{k}\Omega)$$
 
 ---
 
@@ -530,7 +557,9 @@ Cho transistor BJT NPN 2N3904 có các thông số mô hình chuẩn SPICE:
    - **Xác định Vùng Bão hòa:** Quan sát đoạn dốc đứng gần gốc tọa độ ($0 < V_{CE} < 0.25\,\text{V}$). Xác định điện áp bão hòa $V_{CE,sat}$.
    - **Xác định Vùng Khuếch đại Tích cực:** Quan sát đoạn nằm ngang phẳng ($V_{CE} \ge 0.25\,\text{V}$).
    - **Tính hệ số khuếch đại dòng $\beta$:** Đọc giá trị $I_C$ tại $V_{CE} = 5.0\,\text{V}$ ứng với $I_B = 10\,\mu\text{A}$ và $I_B = 20\,\mu\text{A}$. Tính:
+
      $$\beta = \frac{I_C(20\mu\text{A}) - I_C(10\mu\text{A})}{20\mu\text{A} - 10\mu\text{A}}$$
+
    - **Quan sát Hiệu ứng Early:** Để ý thấy các đường đặc tuyến ở vùng tích cực không hoàn toàn nằm ngang mà hơi dốc lên khi $V_{CE}$ tăng từ $1\,\text{V}$ lên $10\,\text{V}$ do điện áp Early ($V_A = 74\,\text{V}$). Xác định điện trở ngõ ra vi sai $r_o = \frac{\Delta V_{CE}}{\Delta I_C}$.
 
 ---

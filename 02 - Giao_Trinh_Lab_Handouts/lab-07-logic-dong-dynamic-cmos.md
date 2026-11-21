@@ -75,6 +75,7 @@ Nếu ở chu kỳ trước nút nội $C_{int}$ bị xả về $0\,\text{V}$, s
 $$\Delta V_X = V_{DD} \left(1 - \frac{C_X}{C_X + C_{int}}\right) = V_{DD} \cdot \frac{C_{int}}{C_X + C_{int}}$$
 
 Điện áp nút động $X$ sau khi chia sẻ:
+
 $$V_X' = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
 
 > [!WARNING]
@@ -89,6 +90,7 @@ $$V_X' = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
 - **Khi nút $X = 1 \implies Y = 0$:** Keeper dẫn nhẹ, liên tục bù đắp dòng rò và bơm điện tích giúp nút $X$ giữ chắc chắn mức $5.0\,\text{V}$.
 - **Hiện tượng Tranh chấp Keeper (Keeper Contention):** Khi mạng PDN dẫn để xả nút $X$ về $0$, tại thời điểm ban đầu $Y$ vẫn là $0$ nên Keeper vẫn đang dẫn kéo lên $V_{DD}$. Mạng PDN phải chiến đấu để thắng dòng nạp của Keeper.  
   Vì vậy, Keeper phải được định cỡ cực kỳ nhỏ:
+
   $$W_{kp} \approx 0.10 - 0.15 \times W_{PDN,eq}$$
 
 ---
@@ -176,7 +178,9 @@ Soạn thảo trước khung Netlist SPICE gồm 2 khối mạch: (a) Không có
 
 1. Mở tệp netlist `03 - Instructor_Solutions/lab07/keeper_sizing_sweep.sp`.
 2. Khảo sát 4 giá trị độ rộng kênh dẫn của Keeper:
+
    $$W_{kp} \in \{0.6\,\mu\text{m}, 1.2\,\mu\text{m}, 1.8\,\mu\text{m}, 2.4\,\mu\text{m}\}$$
+
 3. Đo đạc thời gian trễ đánh giá $t_{pd,eval}$ cho từng trường hợp.
 4. Vẽ đồ thị quan hệ giữa $W_{kp}$ và $t_{pd,eval}$; chỉ ra hiện tượng suy giảm hiệu năng do tranh chấp Keeper gây ra.
 

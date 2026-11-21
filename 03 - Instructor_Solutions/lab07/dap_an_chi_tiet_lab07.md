@@ -41,25 +41,36 @@ Giả sử trước pha Evaluate:
 
 **Dẫn xuất toán học bảo toàn điện tích:**
 Tổng điện tích ban đầu:
+
 $$Q_{ban\_dau} = C_X \cdot V_{DD} + C_{int} \cdot 0 = C_X \cdot V_{DD}$$
+
 Khi transistor phía trên mở, điện tích từ $C_X$ phân phối san đều sang $C_{int}$ cho đến khi điện thế hai nút cân bằng:
+
 $$Q_{cuoi} = (C_X + C_{int}) \cdot V_X'$$
+
 Theo định luật bảo toàn điện tích $Q_{ban\_dau} = Q_{cuoi}$:
+
 $$V_X' = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
+
 Độ sụt áp:
+
 $$\Delta V_X = V_{DD} \left(1 - \frac{C_X}{C_X + C_{int}}\right) = V_{DD} \cdot \frac{C_{int}}{C_X + C_{int}}$$
 
 > [!WARNING]
 > **Hậu quả lật sai logic:**  
 > Nếu $C_{int}$ có độ lớn xấp xỉ $C_X$ (ví dụ $C_X = 20\,\text{fF}, C_{int} = 14\,\text{fF}$):  
-> $$V_X' = 5.0 \times \frac{20}{34} = 2.94\,\text{V} \implies \Delta V_X = 2.06\,\text{V}$$  
+> $V_X' = 5.0 \times \frac{20}{34} = 2.94\,\text{V} \implies \Delta V_X = 2.06\,\text{V}$  
 > Ngưỡng chuyển tiếp của Inverter tĩnh là $V_M \approx 2.45\,\text{V}$. Khi có thêm nhiễu nguồn (Power supply bounce) hoặc nhiễu xuyên kênh (Crosstalk), $V_X'$ có thể tụt xuống dưới $V_M$, khiến Inverter hiểu nhầm nút $X$ đã bị xả và lật ngõ ra $Y$ lên $1$ (False Evaluation)!
 
 #### b. Dòng Rò Dưới Ngưỡng và Giới Hạn Tần Số Xung Nhịp Tối Thiểu ($f_{min}$)
 Nút động $X$ trong pha Evaluate khi PDN ngắt là một nút hở. Dòng rò qua các transistor NMOS đang ngắt ($I_{sub}$) và dòng rò phân cực nghịch tiếp giáp p-n ($I_{leak}$) sẽ liên tục rút điện tích của tụ $C_X$:
+
 $$\frac{dV_X}{dt} = -\frac{I_{sub} + I_{leak}}{C_X}$$
+
 Thời gian lưu điện tích tối đa (Maximum Hold Time):
+
 $$t_{hold,max} = \frac{C_X \cdot \Delta V_{allow}}{I_{leak,total}}$$
+
 Nếu chu kỳ xung nhịp $T_{clk} > 2 \cdot t_{hold,max}$ (tức tần số $f < f_{min} \approx 10 - 50\,\text{kHz}$ ở nhiệt độ cao), nút $X$ sẽ tự tiêu tan điện áp dẫn đến mất dữ liệu!
 
 ---
@@ -71,9 +82,13 @@ Nếu chu kỳ xung nhịp $T_{clk} > 2 \cdot t_{hold,max}$ (tức tần số $f
 - **Sự đánh đổi Tranh chấp dòng điện (Keeper Contention):**
   * Trong pha Evaluate, khi mạng PDN muốn xả nút $X$ xuống $0\,\text{V}$, tại thời điểm ban đầu $Y$ vẫn bằng $0$, do đó $M_{kp}$ vẫn đang cố bơm dòng nạp lên $V_{DD}$.
   * Mạng PDN buộc phải "chiến đấu" thắng dòng nạp của Keeper để kéo sụt áp nút $X$ xuống dưới ngưỡng đóng của Inverter:
+
     $$I_{net\_discharge} = I_{PDN} - I_{kp}$$
+
   * **Quy tắc định cỡ vàng:**
+
     $$W_{kp} \approx 0.10 - 0.15 \times W_{PDN,eq}$$
+
     Nếu định cỡ Keeper quá lớn ($W_{kp} > 0.3 W_{PDN}$), thời gian trễ $t_{pd,eval}$ sẽ tăng vọt trên $50\%$, công suất ngắn mạch tăng cao, thậm chí nếu Keeper quá mạnh có thể làm nút $X$ không thể xả xuống mức $0$ (mạch bị tê liệt chức năng logic!).
 
 ---

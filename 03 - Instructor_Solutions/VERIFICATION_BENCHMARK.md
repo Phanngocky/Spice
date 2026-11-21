@@ -553,5 +553,3 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 10 - CAPSTONE 4-BIT REGISTERED ALU
 - `03 - Instructor_Solutions/lab10/alu_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab10/alu_pex_postlayout.sp)
 
 
-
-

@@ -16,15 +16,22 @@ Cổng logic đa ngõ vào phải được định cỡ sao cho trong tình hu�
 
 1. **Cổng NAND2 ($Y = \overline{A \cdot B}$):**
    - **PDN:** 2 NMOS mắc nối tiếp. Khi cả hai cùng dẫn, điện trở tương đương là $R_{on,NA} + R_{on,NB}$. Để tổng điện trở bằng $R_{on,n0}$:
+
      $$R_{eq,N} = 2 \times \left(\frac{R_{\Box,n}}{W_n / L}\right) = \frac{R_{\Box,n}}{W_{n,inv} / L} \implies W_n = 2 \times W_{n,inv} = 2 \times 4\lambda = \mathbf{8\lambda = 2.40\,\mu\text{m}}$$
+
    - **PUN:** 2 PMOS mắc song song. Tình huống xấu nhất là chỉ có **1 PMOS dẫn** (ví dụ $A=0, B=1$ hoặc $A=1, B=0$). Để thời gian sườn lên đạt chuẩn:
+
      $$W_p = W_{p,inv} = \mathbf{12\lambda = 3.60\,\mu\text{m}}$$
+
    - *(Khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở giảm một nửa $R_{eq,P} = R_{on,p0} / 2$, trễ $t_{pLH}$ nhanh gấp đôi).*
 
 2. **Cổng NOR2 ($Y = \overline{A + B}$):**
    - **PDN:** 2 NMOS mắc song song. Tình huống xấu nhất là chỉ có **1 NMOS dẫn**:
+
      $$W_n = W_{n,inv} = \mathbf{4\lambda = 1.20\,\mu\text{m}}$$
+
    - **PUN:** 2 PMOS mắc nối tiếp. Bắt buộc cả hai PMOS phải cùng dẫn để kéo lên nguồn:
+
      $$R_{eq,P} = R_{on,PA} + R_{on,PB} = R_{on,p0} \implies W_p = 2 \times W_{p,inv} = 2 \times 12\lambda = \mathbf{24\lambda = 7.20\,\mu\text{m}}$$
 
 ---
@@ -54,11 +61,15 @@ Xét 2 NMOS mắc nối tiếp trong cổng NAND2 với nút nội $X_n$ ở gi�
 **Phân tích bằng mô hình trễ Elmore:**
 - **Trường hợp A (Ngõ $A$ chuyển $0 \to 1$, ngõ $B=1$ từ trước):**
   Nút $X_n$ đã được xả điện tích xuống $0\,\text{V}$ qua $M_{N2}$ từ trước. Dòng điện qua $M_{N1}$ chỉ cần xả tụ tải $C_L$ tại nút ngõ ra $Out$:
+
   $$t_{pd,A} \approx 0.69 \left[ (R_{on,MN1} + R_{on,MN2}) C_L \right]$$
+
 - **Trường hợp B (Ngõ $B$ chuyển $0 \to 1$, ngõ $A=1$ từ trước):**
   Trước thời điểm chuyển mạch, $A=1$ và $B=0$, ngõ ra đang ở mức $V_{DD} = 5\,\text{V}$. Transistor $M_{N1}$ dẫn, nạp điện tích từ ngõ ra vào nút nội $X_n$ lên điện thế $V(X_n) \approx V_{DD} - V_{thn} \approx 4.3\,\text{V}$.
   Khi $B$ nhảy từ $0 \to 1$, dòng qua $M_{N2}$ phải đồng thời xả cả tụ tải $C_L$ lẫn lượng điện tích tích trữ trên tụ nút nội $C_{int}$:
+
   $$t_{pd,B} \approx 0.69 \left[ (R_{on,MN1} + R_{on,MN2}) C_L + R_{on,MN2} C_{int} \right]$$
+
   $\implies$ **Hệ quả:** $t_{pd,B} > t_{pd,A}$ từ $15\%$ đến $25\%$. Kỹ sư vi mạch luôn nối tín hiệu đến muộn nhất vào chân $A$ (gần ngõ ra nhất) để tối ưu trễ!
 
 ---

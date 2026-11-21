@@ -36,19 +36,27 @@ Trong chu trình hoạt động của SRAM, **thao tác Đọc (Read) là thời
 #### Dẫn xuất giải tích điều kiện ổn định đọc:
 Tại điểm cân bằng dòng điện giữa Access NMOS và Driver NMOS:
 - $M_{AX1}$ hoạt động ở miền bão hòa (Saturation) vì $V_{DS} = V_{BL} - V_Q \approx 5.0 - 0.4 = 4.6\,\text{V} > V_{GS} - V_{tn} = 5.0 - V_Q - 0.70$:
+
   $$I_{AX} = \frac{1}{2} k'_n \left(\frac{W}{L}\right)_{AX} (V_{DD} - V_Q - V_{tn})^2$$
+
 - $M_{D1}$ hoạt động ở miền tuyến tính (Linear / Triode) vì $V_{DS} = V_Q$ rất nhỏ ($< 0.5\,\text{V}$), $V_{GS} = V_{DD}$:
+
   $$I_{D1} = k'_n \left(\frac{W}{L}\right)_{D1} \left[ (V_{DD} - V_{tn}) V_Q - \frac{V_Q^2}{2} \right]$$
+
 - Cân bằng dòng điện $I_{AX} = I_{D1}$ và bỏ qua số hạng bậc hai $V_Q^2 / 2 \approx 0$:
+
   $$\frac{1}{2} \left(\frac{W}{L}\right)_{AX} (V_{DD} - V_{tn})^2 \approx \left(\frac{W}{L}\right)_{D1} (V_{DD} - V_{tn}) V_Q$$
+
   $$V_Q \approx \frac{V_{DD} - V_{tn}}{2 \cdot CR}$$
+
   Trong đó **Cell Ratio ($CR$)** được định nghĩa là:
+
   $$CR = \frac{(W/L)_{driver}}{(W/L)_{access}} = \frac{W_D / L_D}{W_{AX} / L_{AX}}$$
 
 > [!IMPORTANT]
 > **Quy tắc định cỡ vàng cho Độ ổn định Đọc:**  
 > Để đảm bảo $V_Q \le 0.40\,\text{V} < V_{tn} = 0.70\,\text{V}$ trong mọi góc công nghệ (Process Corners), kỹ sư bắt buộc phải thiết kế:  
-> $$CR \ge 1.5 - 2.0$$  
+> $CR \ge 1.5 - 2.0$  
 > Tức là **Driver NMOS phải mạnh hơn Access NMOS ít nhất từ $1.5$ đến $2.0$ lần**!  
 > Trong bài Lab này, ta chọn: $W_D = 8\lambda = 2.4\,\mu\text{m}, W_{AX} = 4\lambda = 1.2\,\mu\text{m} \implies CR = 2.00$.
 
@@ -68,16 +76,21 @@ Tại điểm cân bằng dòng điện giữa Access NMOS và Driver NMOS:
 #### Dẫn xuất giải tích điều kiện Ghi:
 Tại điểm lật $V_Q = V_{trip}$:
 - $M_{AX1}$ hoạt động ở miền tuyến tính (vì $V_{DS} = V_Q \approx 1.8\,\text{V}$, $V_{GS} = V_{DD} = 5.0\,\text{V}$):
+
   $$I_{AX} = k'_n \left(\frac{W}{L}\right)_{AX} \left[ (V_{DD} - V_{tn}) V_{trip} - \frac{V_{trip}^2}{2} \right]$$
+
 - $M_{L1}$ hoạt động ở miền bão hòa (vì $V_{SD} = V_{DD} - V_Q > |V_{tp}|$):
+
   $$I_{L1} = \frac{1}{2} k'_p \left(\frac{W}{L}\right)_{L} (V_{DD} - |V_{tp}|)^2$$
+
 - Định nghĩa **Pull-up Ratio ($PR$)**:
+
   $$PR = \frac{(W/L)_{load}}{(W/L)_{access}} = \frac{W_L / L_L}{W_{AX} / L_{AX}}$$
 
 > [!IMPORTANT]
 > **Quy tắc định cỡ vàng cho Khả năng Ghi:**  
 > Vì độ linh động của electron lớn gấp 3 lần lỗ trống ($\mu_n \approx 3 \mu_p$), nếu chọn $W_L \le W_{AX}$, độ dẫn kênh của Access NMOS sẽ vượt trội hoàn toàn:  
-> $$PR \le 1.0 - 1.2$$  
+> $PR \le 1.0 - 1.2$  
 > Trong bài Lab này, ta chọn: $W_L = 2\lambda = 0.6\,\mu\text{m}, W_{AX} = 4\lambda = 1.2\,\mu\text{m} \implies PR = 0.50$.  
 > Khi đó Access NMOS mạnh hơn Load PMOS tới **$6$ lần**, đảm bảo ghi dữ liệu thành công $100\%$ trong thời gian dưới $200\,\text{ps}$!
 
@@ -102,7 +115,9 @@ Trong một mảng bộ nhớ SRAM thực tế (ví dụ 64 hàng $\times$ 64 c�
 - Cột Bitline nối với cực Máng của 64 Access NMOS cùng với điện dung ký sinh dây kim loại Metal2 kéo dài xuyên suốt chip, tạo ra điện dung tải rất lớn: $C_{BL} \approx 0.5 - 2.0\,\text{pF}$.
 - Trong khi đó, dòng xả qua 1 ô nhớ siêu nhỏ chỉ đạt $I_{cell} \approx 800\,\mu\text{A}$.
 - **Nếu không dùng Sense Amp:** Ô nhớ phải xả điện áp Bitline từ $5.0\,\text{V}$ xuống tận ngưỡng lật $V_M \approx 2.5\,\text{V}$. Thời gian xả mất:
+
   $$t_{read} = \frac{C_{BL} \cdot \Delta V}{I_{cell}} = \frac{1.0\,\text{pF} \times 2.5\,\text{V}}{0.85\,\text{mA}} \approx 2.94\,\text{ns}$$
+
   Đồng thời, mỗi lần nạp/xả Bitline tiêu hao năng lượng cực lớn: $E = C_{BL} V_{DD} \Delta V = 12.5\,\text{pJ}$.
 
 #### Giải pháp Đột phá của Voltage Latch Sense Amplifier (VLSA):

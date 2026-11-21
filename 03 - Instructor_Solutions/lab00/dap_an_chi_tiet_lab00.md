@@ -8,7 +8,9 @@
 
 ### 1. Bản chất Toán học và Thuật toán Giải Mạch của SPICE
 SPICE (Simulation Program with Integrated Circuit Emphasis) giải bài toán mạch điện bằng cách chuyển đổi sơ đồ phần cứng thành hệ phương trình vi phân phi tuyến tính thông qua **Phương pháp Điện áp Nút Cải biên (Modified Nodal Analysis - MNA)**:
+
 $$[\mathbf{G}] \cdot [\mathbf{V}] + [\mathbf{C}] \cdot \left[\frac{d\mathbf{V}}{dt}\right] = [\mathbf{I}]$$
+
 Trong đó:
 - $[\mathbf{G}]$: Ma trận dẫn nạp (Conductance Matrix) đại diện cho các phần tử điện trở, nguồn phụ thuộc.
 - $[\mathbf{C}]$: Ma trận điện dung và điện cảm (Capacitance/Inductance Matrix).
@@ -19,7 +21,9 @@ Trong đó:
 1. **Điểm làm việc tĩnh `.OP` (Operating Point):**
    - Triệt tiêu thành phần đạo hàm: $\frac{d\mathbf{V}}{dt} = 0$ (Tụ điện xem như hở mạch, cuộn cảm xem như ngắn mạch).
    - Giải hệ phương trình đại số phi tuyến bằng **phương pháp lặp Newton-Raphson**:
+
      $$\mathbf{V}^{(k+1)} = \mathbf{V}^{(k)} - \left[\mathbf{J}(\mathbf{V}^{(k)})\right]^{-1} \cdot \mathbf{F}(\mathbf{V}^{(k)})$$
+
    - Điều kiện dừng: Khi sai số dòng điện $\le \text{reltol} \times I + \text{abstol}$ và sai số điện áp $\le \text{reltol} \times V + \text{vntol}$.
 2. **Quét một chiều `.DC` (DC Sweep):**
    - Thực hiện chuỗi các phân tích `.OP` liên tiếp khi một hoặc nhiều nguồn độc lập thay đổi giá trị theo bước quét đã định. Dùng để dựng đặc tuyến tĩnh $I-V$ hoặc hàm truyền đạt $VTC$.
@@ -36,18 +40,26 @@ Trong đó:
 
 #### a. Mạch Cầu Phân áp DC
 Áp dụng định luật Ohm và Kirchhoff:
+
 $$V_{out} = V_{in} \cdot \frac{R_2}{R_1 + R_2} = 5.0 \times \frac{20\,\text{k}\Omega}{30\,\text{k}\Omega + 20\,\text{k}\Omega} = 2.000\,\text{V}$$
+
 Dòng điện qua mạch và công suất tiêu tán toàn phần:
+
 $$I_{in} = \frac{V_{in}}{R_1 + R_2} = \frac{5.0}{50 \times 10^3} = 0.100\,\text{mA} = 100.0\,\mu\text{A}$$
+
 $$P_{total} = V_{in} \times I_{in} = 5.0\,\text{V} \times 0.100\,\text{mA} = 0.500\,\text{mW} = 500.0\,\mu\text{W}$$
 
 #### b. Mạch Nạp và Xả Tụ điện RC Bậc 1 (Bài mẫu Cơ bản)
 Phương trình vi phân quá độ tổng quát của mạch RC:
+
 $$R C \frac{dv_C(t)}{dt} + v_C(t) = v_{in}(t)$$
+
 Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 \times 10^{-9}\,\text{F}) = 100.0\,\mu\text{s} = 0.100\,\text{ms}$.
 
 1. **Giai đoạn Nạp điện ($0 \le t < T_{on}$, nguồn cấp $v_{in} = V_0 = 5.0\,\text{V}$, điện áp đầu $v_C(0) = 0$):**
+
    $$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right), \quad i(t) = \frac{V_0}{R} e^{-\frac{t}{\tau}} > 0$$
+
    - Dòng nạp đỉnh tức thời tại $t = 0$: $I_{peak,charge} = +\frac{V_0}{R} = +\frac{5.0}{10\,\text{k}\Omega} = +0.500\,\text{mA}$ ($+500.0\,\mu\text{A}$).
    - Tại $t = \tau = 100\,\mu\text{s}$: $v_C(\tau) = V_0 (1 - e^{-1}) \approx 5.0 \times 0.63212 = 3.1606\,\text{V}$ (ngưỡng nạp chuẩn $63.2\%$).
    - Thời gian sườn tăng $10\% \to 90\%$: $t_{rise} = \tau \ln(9) \approx 2.1972\tau \approx 220.0\,\mu\text{s}$.
@@ -55,21 +67,27 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
    - Năng lượng điện trường tích lũy cực đại: $W_{max} = \frac{1}{2} C V_0^2 = 0.5 \times 10^{-8} \times 25 = 0.125\,\mu\text{J}$.
 
 2. **Giai đoạn Xả điện ($T_{on} \le t < T_{period}$, nguồn ngắt $v_{in} = 0\,\text{V}$, đặt $t' = t - T_{on} \ge 0$):**
+
    $$v_C(t') = V_0 e^{-\frac{t'}{\tau}}, \quad i(t') = -\frac{V_0}{R} e^{-\frac{t'}{\tau}} < 0$$
+
    - Dòng xả đỉnh tức thời tại $t' = 0$: $I_{peak,discharge} = -\frac{V_0}{R} = -0.500\,\text{mA}$ (dòng âm phóng từ tụ về đất).
    - Tại $t' = \tau = 100\,\mu\text{s}$: $v_C(\tau) = V_0 e^{-1} \approx 5.0 \times 0.36788 = 1.8394\,\text{V}$ (còn lại $36.8\%$, đã phóng $63.2\%$).
    - Thời gian sườn giảm $90\% \to 10\%$: $t_{fall} = 2.2\tau = 220.0\,\mu\text{s}$.
    - Tại $t' = 5\tau = 500\,\mu\text{s}$: $v_C(5\tau) = V_0 e^{-5} \approx 5.0 \times 0.00674 = 0.0337\,\text{V}$ ($0.7\% \approx 0\,\text{V}$, xả cạn hoàn toàn).
 
 3. **Mạch Lọc Thông Thấp RC và Đáp ứng Tần số (.AC):**
+
    $$H(j\omega) = \frac{1}{1 + j\omega RC} \implies f_{-3\text{dB}} = \frac{1}{2\pi RC} \approx 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$$
+
    Góc pha tại tần số cắt: $\phi = -\arctan(1) = -45.0^\circ$.
 
 #### c. Lý thuyết Giải tích Đặc tuyến I-V của BJT và Mô hình Ebers-Moll
 Đối với transistor BJT NPN:
 - **Đặc tuyến ngõ vào $I_B - V_{BE}$:**
   Tiếp giáp Base - Emitter tương đương một tiếp giáp $p-n$ bán dẫn. Dòng cực Base tuân theo định luật hàm mũ Ebers-Moll:
+
   $$I_B(V_{BE}) = \frac{I_S}{\beta} \left( e^{\frac{V_{BE}}{V_T}} - 1 \right)$$
+
   Trong đó thế nhiệt $V_T = \frac{k_B T}{q} \approx 25.85\,\text{mV}$ tại $300\,\text{K}$.
   - Khi $V_{BE} < 0.60\,\text{V}$: $I_B \approx 0$ (vùng ngưng dẫn).
   - Ngưỡng mở (Knee voltage): Tại $I_B = 10\,\mu\text{A} \implies V_{BE} \approx 0.667 - 0.675\,\text{V}$; tại $I_B = 20\,\mu\text{A} \implies V_{BE} \approx 0.685 - 0.693\,\text{V}$.
@@ -77,10 +95,14 @@ Hằng số thời gian $\tau = R \cdot C = (10 \times 10^3\,\Omega) \times (10 
 - **Họ đặc tuyến ngõ ra $I_C - V_{CE}$ (tham số theo $I_B$):**
   1. **Vùng Bão hòa ($V_{CE} < V_{CE,sat} \approx 0.20 - 0.25\,\text{V}$):** Cả hai tiếp giáp $BE$ và $BC$ đều phân cực thuận ($V_{BC} > 0$). Dòng $I_C$ sụt giảm phụ thuộc vào điện áp ngoài và tỉ số dòng $\frac{I_C}{I_B} < \beta$.
   2. **Vùng Khuếch đại Tích cực ($V_{CE} \ge 0.25\,\text{V}$):** Tiếp giáp $BE$ phân cực thuận, $BC$ phân cực nghịch. Dòng $I_C$ khuếch đại theo $I_B$ kèm hiệu ứng Early:
+
      $$I_C = \beta I_B \left( 1 + \frac{V_{CE}}{V_A} \right)$$
+
      * Hệ số khuếch đại dòng: $\beta = \frac{\Delta I_C}{\Delta I_B}$.
      * Độ dốc đường đặc tuyến do điện áp Early ($V_A = 74\,\text{V}$):
+
        $$\frac{\partial I_C}{\partial V_{CE}} = \frac{\beta I_B}{V_A} = \frac{1}{r_o} \implies r_o = \frac{V_A}{\beta I_B}$$
+
        (Tại $I_B = 10\,\mu\text{A} \implies r_o \approx 46.25\,\text{k}\Omega$; tại $I_B = 20\,\mu\text{A} \implies r_o \approx 23.12\,\text{k}\Omega$).
   3. **Vùng Ngưng dẫn ($I_B = 0\,\mu\text{A}$):** Cả hai tiếp giáp đều phân cực nghịch, dòng qua các cực chỉ là dòng rò $I_{CEO} \approx 0$.
 

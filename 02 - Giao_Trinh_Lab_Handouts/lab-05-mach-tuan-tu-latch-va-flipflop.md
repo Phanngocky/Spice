@@ -130,7 +130,8 @@ Trong thiết kế vi mạch số tốc độ cao, tính đúng đắn của Fli
    - Khi $\Delta t$ lớn: $t_{c-q}$ là một hằng số danh định ổn định ($t_{c-q,nominal} \approx 110\,\text{ps}$).
    - Khi $\Delta t$ giảm dần: Nút Master chưa kịp nạp đầy nên Slave phải mất nhiều thời gian hơn để phục hồi biên độ, làm $t_{c-q}$ bắt đầu tăng vọt lên (Hiện tượng sườn dốc - Push-out effect).
    - **Tiêu chuẩn công nghiệp (10% Push-out Rule):** Thời gian thiết lập $t_{setup}$ được định nghĩa chính xác tại điểm mà $t_{c-q}$ tăng thêm đúng **$10\%$** so với giá trị danh định:
-     $$t_{setup} = \Delta t \quad \text{tại đó } t_{c-q}(\Delta t) = 1.10 \times t_{c-q,nominal}$$
+
+     $$t_{setup} = \Delta t \quad \text{where } t_{c-q}(\Delta t) = 1.10 \times t_{c-q,nominal}$$
 
 ---
 
@@ -266,6 +267,7 @@ Trong thiết kế vi mạch số tốc độ cao, tính đúng đắn của Fli
 2. Chạy lại mô phỏng đo $t_{c-q,pex}$ và $t_{setup,pex}$.
 3. So sánh độ tăng trễ do điện dung ký sinh nút lưu trữ nội $Q_M$ và nút ngõ ra $Q$.
 4. Tính toán tần số xung nhịp cực đại an toàn sau đóng gói Layout:
+
    $$f_{max,pex} = \frac{1}{t_{c-q,pex} + t_{setup,pex}}$$
 
 ---
@@ -295,20 +297,20 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | $\uparrow$ (Sườn lên) | 1 | Chuyển sang chốt giữ | Chuyển sang mở | **1** | **Lấy mẫu mức 1** |
 
 2. **Dự đoán các thông số định thời lý thuyết:**
-   - Trễ truyền lan D-Latch khi mở: $t_{pd(D \to Q)} = $ .................... ps.
-   - Thời gian thiết lập lý thuyết: $t_{setup} = $ .................... ps.
-   - Thời gian giữ lý thuyết: $t_{hold} = $ .................... ps.
-   - Trễ Clock-to-Q lý thuyết: $t_{c-q} = $ .................... ps.
-   - Chu kỳ xung nhịp tối thiểu: $T_{min} = $ .................... ps $\implies f_{max} = $ .................... GHz.
+   - Trễ truyền lan D-Latch khi mở: $t_{pd(D \to Q)} =$ .................... ps.
+   - Thời gian thiết lập lý thuyết: $t_{setup} =$ .................... ps.
+   - Thời gian giữ lý thuyết: $t_{hold} =$ .................... ps.
+   - Trễ Clock-to-Q lý thuyết: $t_{c-q} =$ .................... ps.
+   - Chu kỳ xung nhịp tối thiểu: $T_{min} =$ .................... ps $\implies f_{max} =$ .................... GHz.
 
 ---
 
 ### b. Kết quả Đo đạc Thực hành (In-lab & Post-lab)
 
 1. **Kết quả đo đạc D-Latch (`dlatch_x1`):**
-   - Trễ từ $D \to Q$ khi $CLK=5\,\text{V}$ (giai đoạn trong suốt): $t_{pd(D \to Q)} = $ .................... ps.
-   - Biên độ điện áp ngõ ra khi chốt giữ mức 1: $V_{Q,high} = $ .................... V.
-   - Biên độ điện áp ngõ ra khi chốt giữ mức 0: $V_{Q,low} = $ .................... V.
+   - Trễ từ $D \to Q$ khi $CLK=5\,\text{V}$ (giai đoạn trong suốt): $t_{pd(D \to Q)} =$ .................... ps.
+   - Biên độ điện áp ngõ ra khi chốt giữ mức 1: $V_{Q,high} =$ .................... V.
+   - Biên độ điện áp ngõ ra khi chốt giữ mức 0: $V_{Q,low} =$ .................... V.
 
 2. **Kết quả đo đạc Mạch lật Master-Slave DFF (`dff_ms_x1`):**
 
@@ -324,7 +326,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 3. **Kết quả Kiểm tra Vật lý Layout `dff_ms_x1`:**
    - Kết quả kiểm tra DRC: `............................................................`
    - Kết quả đối chiếu LVS: `............................................................`
-   - Kích thước Layout: Chiều rộng $W = $ ............ $\mu\text{m}$, Chiều cao $H = $ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
+   - Kích thước Layout: Chiều rộng $W =$ ............ $\mu\text{m}$, Chiều cao $H =$ ............ $\mu\text{m}$, Diện tích = ............ $\mu\text{m}^2$.
 
 ---
 

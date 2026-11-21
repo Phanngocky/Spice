@@ -10,12 +10,18 @@
 Trong công nghệ MOSIS SCMOS C5N 0.5µm ($t_{ox} = 9.5\,\text{nm}$, $\lambda = 0.30\,\mu\text{m}$, $V_{DD} = 5.0\,\text{V}$), phương trình dòng điện má $I_{DS}$ của NMOS được mô tả qua 3 vùng hoạt động:
 
 1. **Vùng ngắt (Cut-off):** Khi $V_{GS} < V_{thn}$
-   $$I_{DS} \approx 0 \quad (\text{Dòng rò dưới ngưỡng } I_{sub} \propto e^{\frac{V_{GS} - V_{thn}}{n k T / q}})$$
+
+   $$I_{DS} \approx 0 \quad (\text{Subthreshold leakage } I_{sub} \propto e^{\frac{V_{GS} - V_{thn}}{n k T / q}})$$
+
 2. **Vùng tuyến tính / Triode:** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} < V_{GS} - V_{thn}$
+
    $$I_{DS} = \mu_n C_{ox} \frac{W}{L} \left[ (V_{GS} - V_{thn})V_{DS} - \frac{1}{2} V_{DS}^2 \right] (1 + \lambda V_{DS})$$
+
    Điện trở kênh dẫn khi $V_{DS} \to 0$: $r_{ds} = \frac{1}{\mu_n C_{ox} \frac{W}{L} (V_{GS} - V_{thn})}$.
 3. **Vùng bão hòa (Saturation):** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} \ge V_{GS} - V_{thn}$ (kênh dẫn bị nghẽn tại cực má - Pinch-off)
+
    $$I_{DS} = \frac{1}{2} \mu_n C_{ox} \frac{W}{L} (V_{GS} - V_{thn})^2 (1 + \lambda V_{DS})$$
+
    Độ dẫn truyền: $g_m = \frac{\partial I_{DS}}{\partial V_{GS}} = \sqrt{2 \mu_n C_{ox} \frac{W}{L} I_{DS}}$.  
    Trở kháng ngõ ra tín hiệu nhỏ: $r_o = \frac{\partial V_{DS}}{\partial I_{DS}} \approx \frac{1}{\lambda I_{DS}}$.
 
@@ -25,6 +31,7 @@ Trong công nghệ MOSIS SCMOS C5N 0.5µm ($t_{ox} = 9.5\,\text{nm}$, $\lambda =
 
 Đặc tuyến truyền đạt tĩnh (Voltage Transfer Characteristic - VTC) thể hiện mối quan hệ $V_{out} = f(V_{in})$.
 Điểm chuyển mạch $V_M$ (Switching Threshold) được định nghĩa là vị trí điện áp ngõ vào bằng đúng điện áp ngõ ra:
+
 $$V_{in} = V_{out} = V_M$$
 
 **Dẫn xuất toán học:**
@@ -33,28 +40,41 @@ Tại điểm $V_{in} = V_{out} = V_M$, điều kiện bão hòa của cả hai 
 - PMOS: $|V_{DS,p}| = V_{DD} - V_M$, điều kiện $|V_{DS,p}| \ge |V_{GS,p}| - |V_{thp}| \iff V_{DD} - V_M \ge V_{DD} - V_M - |V_{thp}|$ (luôn thỏa mãn vì $|V_{thp}| > 0$).
 
 Do đó, **cả NMOS và PMOS đều hoạt động trong vùng bão hòa**. Cân bằng dòng điện Kirchhoff tại nút ngõ ra $Out$:
+
 $$I_{D,n} = |I_{D,p}| \implies \frac{1}{2} k_n \left(V_M - V_{thn}\right)^2 = \frac{1}{2} k_p \left(V_{DD} - V_M - |V_{thp}|\right)^2$$
+
 Trong đó hệ số dẫn: $k_n = \mu_n C_{ox} \left(\frac{W}{L}\right)_n$ và $k_p = \mu_p C_{ox} \left(\frac{W}{L}\right)_p$.
 
 Lấy căn bậc hai hai vế và đặt $r = \sqrt{\frac{k_p}{k_n}} = \sqrt{\frac{\mu_p (W/L)_p}{\mu_n (W/L)_n}}$:
+
 $$V_M - V_{thn} = r \left(V_{DD} - V_M - |V_{thp}|\right)$$
+
 $$(1 + r) V_M = V_{thn} + r (V_{DD} - |V_{thp}|)$$
+
 $$\implies V_M = \frac{V_{thn} + r (V_{DD} - |V_{thp}|)}{1 + r}$$
 
 #### Chứng minh tỉ số kích thước tối ưu:
 Để Inverter có đặc tính đối xứng hoàn hảo, tối đa hóa biên độ chống nhiễu ($NM_L = NM_H$), ta yêu cầu:
+
 $$V_M = \frac{V_{DD}}{2} = 2.50\,\text{V}$$
+
 - **Trường hợp 1 (Giả thiết sách giáo khoa: $V_{thn} = |V_{thp}|$):**
+
   $$V_M = \frac{V_{DD}}{2} \iff r = 1 \iff k_p = k_n \iff \frac{(W/L)_p}{(W/L)_n} = \frac{\mu_n}{\mu_p} = \frac{120}{40} = \mathbf{3.00}$$
+
 - **Trường hợp 2 (Giải tích chính xác với tham số MOSIS C5N: $V_{thn} = 0.70\,\text{V}, |V_{thp}| = 0.80\,\text{V}$):**
+
   $$2.50 = \frac{0.70 + r(5.0 - 0.80)}{1 + r} = \frac{0.70 + 4.20 r}{1 + r}$$
+
   $$2.50 + 2.50 r = 0.70 + 4.20 r \implies 1.70 r = 1.80 \implies r = \frac{1.80}{1.70} \approx 1.0588$$
+
   $$\implies \frac{k_p}{k_n} = r^2 = 1.0588^2 \approx 1.121$$
-  $$\implies \left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{lý tưởng}} = 1.121 \times \frac{\mu_n}{\mu_p} = 1.121 \times 3.00 = \mathbf{3.36}$$
+
+  $$\implies \left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{ideal}} = 1.121 \times \frac{\mu_n}{\mu_p} = 1.121 \times 3.00 = \mathbf{3.36}$$
 
 > [!TIP]
 > **Điểm mấu chốt sư phạm:** Khi ta chọn tỉ số định cỡ số nguyên chuẩn lưới $\lambda$ là $\frac{W_p}{W_n} = \frac{12\lambda}{4\lambda} = 3.00$ (thay vì $3.36$), điểm chuyển mạch thực tế sẽ hơi dịch nhẹ xuống dưới:
-> $$V_M = \frac{0.70 + 1.0 \times (5.0 - 0.80)}{1 + 1.0} = \frac{0.70 + 4.20}{2} = \mathbf{2.450\,\text{V}}$$
+> $V_M = \frac{0.70 + 1.0 \times (5.0 - 0.80)}{1 + 1.0} = \frac{0.70 + 4.20}{2} = \mathbf{2.450\,\text{V}}$
 > Độ lệch so với $2.50\,\text{V}$ chỉ là $0.05\,\text{V}$ ($2\%$), hoàn toàn chấp nhận được trong tiêu chuẩn thiết kế tế bào chuẩn công nghiệp.
 
 ---
@@ -63,15 +83,20 @@ $$V_M = \frac{V_{DD}}{2} = 2.50\,\text{V}$$
 
 Khi tụ tải $C_L$ được xả từ $V_{DD}$ xuống $0\,\text{V}$ qua transistor NMOS, điểm làm việc của NMOS chuyển dịch từ vùng bão hòa ($V_{out} \in [V_{DD}, V_{DD}-V_{thn}]$) sang vùng tuyến tính ($V_{out} \in [V_{DD}-V_{thn}, 0]$).  
 Điện trở dẫn hiệu dụng $R_{on,n}$ được tính bằng trung bình tích phân:
+
 $$R_{on,n} = \frac{1}{V_{DD}/2} \int_{V_{DD}/2}^{V_{DD}} \frac{V}{I_{DS}(V)} dV \approx \frac{3}{4} \frac{V_{DD}}{I_{D,sat}} \left(1 - \frac{7}{9}\lambda V_{DD}\right)$$
+
 Với các tham số thực nghiệm đo được từ file `C5_models.txt`:
 - NMOS ($W_n = 1.2\,\mu\text{m}, L = 0.6\,\mu\text{m}$): $R_{on,n} \approx \mathbf{969\,\Omega}$.
 - PMOS ($W_p = 3.6\,\mu\text{m}, L = 0.6\,\mu\text{m}$): $R_{on,p} \approx \mathbf{992\,\Omega}$.
 
 **Dẫn xuất hệ số $\ln(2) \approx 0.69$ trong tính trễ:**
 Điện áp xả quá độ qua mạch tương đương $RC$:
+
 $$V_{out}(t) = V_{DD} \cdot e^{-\frac{t}{R_{on} C_L}}$$
+
 Thời gian trễ sườn xuống $t_{pHL}$ được định nghĩa tại điểm $V_{out}(t) = 50\% V_{DD}$:
+
 $$0.5 V_{DD} = V_{DD} \cdot e^{-\frac{t_{pHL}}{R_{on} C_L}} \implies e^{\frac{t_{pHL}}{R_{on} C_L}} = 2 \implies t_{pHL} = R_{on} C_L \ln(2) \approx \mathbf{0.693 \cdot R_{on} C_L}$$
 
 ---

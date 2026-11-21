@@ -25,6 +25,7 @@
    - Điện áp tại $t = \tau$: $V_{out}(\tau) = 5.0 \times (1 - e^{-1}) \approx 5.0 \times 0.63212 = 3.161\,\text{V}$.
    - Điện áp tại $t = 5\tau$: $V_{out}(5\tau) = 5.0 \times (1 - e^{-5}) \approx 5.0 \times 0.99326 = 4.966\,\text{V}$.
    - Tần số cắt lý thuyết:
+
      $$f_{-3\text{dB}} = \frac{1}{2\pi RC} = \frac{1}{2\pi \times 100 \times 10^{-6}} \approx \frac{1}{6.28318 \times 10^{-4}} \approx 1591.55\,\text{Hz} \approx 1.592\,\text{kHz}$$
 
 4. **Đặc tuyến I-V của BJT 2N3904 ($I_S = 10^{-14}\,\text{A}, \beta = 160, V_A = 74\,\text{V}, V_T = 25.85\,\text{mV}$):**

@@ -25,14 +25,18 @@ Mục tiêu: Đảm bảo khả năng kéo dòng của cổng `AOI21_X1` trong t
 
 1. **Mạng kéo xuống (PDN):**
    - Nhánh $A \cdot B$: Dòng xả đi qua 2 NMOS nối tiếp ($M_{NA}, M_{NB}$). Để tổng điện trở bằng $R_{on,n0}$:
+
      $$R_{eq,N} = R_{on,NA} + R_{on,NB} = R_{on,n0} \implies W_{n,A} = W_{n,B} = 2 \times W_{n,inv} = 2 \times 4\lambda = \mathbf{8\lambda = 2.40\,\mu\text{m}}$$
+
    - Nhánh $C$: Dòng xả đi qua 1 NMOS độc lập ($M_{NC}$). Để điện trở bằng $R_{on,n0}$:
+
      $$W_{n,C} = W_{n,inv} = \mathbf{4\lambda = 1.20\,\mu\text{m}}$$
 
 2. **Mạng kéo lên (PUN):**
    - Biểu thức De Morgan: $Y = (\bar{A} + \bar{B}) \cdot \bar{C}$.
    - Tình huống xấu nhất (Worst-Case Pull-Up): Xảy ra khi chỉ có **1 PMOS trong cụm song song dẫn** kết hợp với $M_{PC}$ (ví dụ $A=0, B=1, C=0$ hoặc $A=1, B=0, C=0$). Khi đó, đường dẫn từ $V_{DD}$ xuống $Out$ đi qua đúng 2 PMOS mắc nối tiếp.
    - Để tổng điện trở nhánh kéo lên xấu nhất bằng $R_{on,p0}$:
+
      $$R_{eq,P} = R_{on,P(A/B)} + R_{on,PC} = R_{on,p0} \implies W_{p,A} = W_{p,B} = W_{p,C} = 2 \times W_{p,inv} = 2 \times 12\lambda = \mathbf{24\lambda = 7.20\,\mu\text{m}}$$
 
 ---
@@ -40,10 +44,12 @@ Mục tiêu: Đảm bảo khả năng kéo dòng của cổng `AOI21_X1` trong t
 ### 3. Phương Pháp Logical Effort (Nỗ Lực Logic) & Trễ Ký Sinh
 
 Mô hình trễ tuyến tính chuẩn hóa của Sutherland, Sproull & Harris:
+
 $$d = g \cdot h + p$$
 
 #### a. Tính toán Logical Effort ($g$):
-$$g = \frac{C_{in,\text{cổng}}}{C_{in,\text{inverter}}} \quad (\text{với } C_{in,inv} \propto W_n + W_p = 4\lambda + 12\lambda = 16\lambda)$$
+$$g = \frac{C_{in,\text{gate}}}{C_{in,\text{inverter}}} \quad (\text{with } C_{in,inv} \propto W_n + W_p = 4\lambda + 12\lambda = 16\lambda)$$
+
 - **Ngõ vào A:** $C_{in,A} \propto W_{n,A} + W_{p,A} = 8\lambda + 24\lambda = 32\lambda \implies g_A = \frac{32\lambda}{16\lambda} = \mathbf{2.000} \quad (6/3)$.
 - **Ngõ vào B:** $C_{in,B} \propto W_{n,B} + W_{p,B} = 8\lambda + 24\lambda = 32\lambda \implies g_B = \frac{32\lambda}{16\lambda} = \mathbf{2.000} \quad (6/3)$.
 - **Ngõ vào C:** $C_{in,C} \propto W_{n,C} + W_{p,C} = 4\lambda + 24\lambda = 28\lambda \implies g_C = \frac{28\lambda}{16\lambda} = \mathbf{1.750} \quad (7/4)$.
@@ -54,8 +60,11 @@ $$g = \frac{C_{in,\text{cổng}}}{C_{in,\text{inverter}}} \quad (\text{với } C
 
 #### b. Tính toán Trễ ký sinh ($p$):
 Trễ ký sinh tỉ lệ với tổng điện dung cực má nối vào nút ngõ ra $Out$:
+
 $$C_{out,parasitic} \propto W_{drain}(M_{PC}) + W_{drain}(M_{NA}) + W_{drain}(M_{NC}) = 24\lambda + 8\lambda + 4\lambda = 36\lambda$$
+
 So với Inverter chuẩn có $C_{out,inv} \propto 12\lambda + 4\lambda = 16\lambda$:
+
 $$p_{AOI21} = \frac{36\lambda}{16\lambda} = \mathbf{2.250} \quad (9/4\,\tau)$$
 
 ---
@@ -66,22 +75,34 @@ Xét bài toán truyền tín hiệu từ cổng logic có điện dung ngõ và
 Nếu chèn một chuỗi gồm $N$ Inverter có kích thước tăng dần theo cấp số nhân:
 - Tổng nỗ lực đường dẫn: $F = G \cdot B \cdot H = 1 \cdot 1 \cdot H = H$.
 - Theo bất đẳng thức Cauchy-Schwarz, tổng trễ đạt giá trị cực tiểu khi nỗ lực trên mọi tầng bằng nhau:
+
   $$f_1 = f_2 = \dots = f_N = \hat{f} = H^{1/N}$$
+
 - Tổng thời gian trễ của chuỗi:
+
   $$D(N) = N \cdot \hat{f} + N \cdot p_{inv} = N \left( H^{1/N} + 1 \right) \cdot \tau$$
 
 **Dẫn xuất tìm số tầng tối ưu $N_{opt}$:**
 Coi $N$ là biến số thực liên tục và lấy đạo hàm theo $N$:
+
 $$\frac{dD}{dN} = \left(H^{1/N} + 1\right) + N \cdot \frac{d}{dN}\left(e^{\frac{\ln H}{N}}\right) = H^{1/N} + 1 + N \cdot H^{1/N} \left(-\frac{\ln H}{N^2}\right)$$
+
 $$\frac{dD}{dN} = H^{1/N} + 1 - H^{1/N} \frac{\ln H}{N} = 0$$
+
 Thay $\hat{f} = H^{1/N} \implies \ln \hat{f} = \frac{\ln H}{N}$:
+
 $$\hat{f} + 1 - \hat{f} \ln \hat{f} = 0 \iff \hat{f} (\ln \hat{f} - 1) = 1$$
+
 Giải phương trình siêu việt này bằng phương pháp lặp số:
+
 $$\mathbf{\hat{f} \approx 3.59 \approx 3.6 - 3.7}$$
+
 *(Nếu trễ ký sinh $p=0$, phương trình trở thành $\ln \hat{f} = 1 \implies \hat{f} = e \approx 2.718$).*
 
 **Ứng dụng vào đề bài:** $C_{in} = 20\,\text{fF}, C_L = 1.0\,\text{pF} \implies H = \frac{1000}{20} = 50$:
-$$N_{opt} = \frac{\ln(50)}{\ln(3.59)} \approx \frac{3.912}{1.278} \approx \mathbf{3.06} \implies \text{Chọn } \mathbf{N = 3 \text{ tầng}}$$
+
+$$N_{opt} = \frac{\ln(50)}{\ln(3.59)} \approx \frac{3.912}{1.278} \approx \mathbf{3.06} \implies \text{Select } \mathbf{N = 3 \text{ stages}}$$
+
 Nỗ lực tầng thực tế: $\hat{f} = 50^{1/3} \approx \mathbf{3.684}$.
 
 ---

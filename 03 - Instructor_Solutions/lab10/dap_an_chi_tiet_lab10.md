@@ -26,21 +26,30 @@ $$\text{Reg}_{\text{source}} \xrightarrow{t_{c-q}} \text{CLA\_ADDER\_4B} \xright
 
 #### Dẫn xuất giải tích chu kỳ xung nhịp tối thiểu:
 Để thanh ghi đích chốt dữ liệu chính xác mà không vi phạm thời gian thiết lập (Setup Time Violation):
+
 $$T_{clk} \ge t_{c-q} + t_{comb,max} + t_{setup} + t_{skew} + t_{jitter}$$
+
 Trong đó:
 - $t_{c-q}$: Thời gian trễ từ sườn xung nhịp đến khi ngõ ra thanh ghi nguồn hợp lệ ($110.0\,\text{ps}$).
 - $t_{comb,max}$: Tổng thời gian trễ của mạch tổ hợp giữa hai tầng thanh ghi:
+
   $$t_{comb,max} = t_{CLA4\_max} + t_{MUX4} = 230.0\,\text{ps} + 65.0\,\text{ps} = 295.0\,\text{ps}$$
+
 - $t_{setup}$: Thời gian thiết lập tối thiểu của thanh ghi đích trước khi sườn xung nhịp kế tiếp xuất hiện ($75.0\,\text{ps}$).
 - $t_{skew}$: Độ lệch pha xung nhịp giữa các điểm vật lý khác nhau trên chip do độ dài đường dây phân phối Clock ($40.0\,\text{ps}$).
 - $t_{jitter}$: Độ thăng giáng ngẫu nhiên chu kỳ xung nhịp của bộ dao động nguồn ($15.0\,\text{ps}$).
 
 #### Tính toán tần số cực đại:
 - **Chu kỳ xung nhịp tối thiểu (Pre-layout):**
+
   $$T_{clk,min} = 110.0 + 295.0 + 75.0 + 40.0 = 520.0\,\text{ps}$$
+
   $$f_{max,ideal} = \frac{1}{T_{clk,min}} = \frac{1}{520 \times 10^{-12}\,\text{s}} \approx 1.92\,\text{GHz}$$
+
 - **Chu kỳ xung nhịp thực tế sau Layout PEX (Trễ tăng $\approx 35\%$ do ký sinh):**
+
   $$T_{clk,pex} \approx 520.0 \times 1.35 \approx 702.0\,\text{ps}$$
+
   $$f_{max,pex} = \frac{1}{702 \times 10^{-12}\,\text{s}} \approx 1.42\,\text{GHz}$$
 
 > [!NOTE]
@@ -52,8 +61,11 @@ Trong đó:
 
 Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời tại sườn xung nhịp, dòng điện động tức thời $I(t)$ tăng vọt:
 - Nếu đường cấp nguồn $V_{DD}$ và tiếp đất $GND$ được đi dây mảnh đơn lẻ, điện trở ký sinh của dây kim loại ($R_{wire}$) kết hợp với dòng chuyển mạch lớn sẽ gây ra hiện tượng **sụt áp động $IR\text{-}Drop$**:
+
   $$V_{DD,core} = V_{DD,pad} - I_{peak} \cdot R_{wire}$$
+
   $$\Delta V_{GND} = I_{peak} \cdot R_{ground} \quad (\text{Ground Bounce})$$
+
 - Hậu quả: Điện áp cấp cho các tế bào ở trung tâm chip bị tụt sụt nghiêm trọng, làm giảm mạnh dòng bão hòa $I_{D,sat}$, kéo dài thời gian trễ và có thể gây lỗi chức năng logic.
 - **Giải pháp Thiết kế Vòng Cấp Nguồn Kép (Dual Power Ring):**
   * Bao bọc toàn bộ chu vi chip bằng 2 vòng kim loại siêu rộng: Vòng ngoài $V_{DD}$ và Vòng trong $GND$ sử dụng lớp kim loại dầy **Metal 2 và Metal 1 chập song song**.
@@ -84,7 +96,7 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 | Chu kỳ | Thời gian | Mã lệnh `OP[1:0]` | Toán hạng $A$ | Toán hạng $B$ | $C_{in}$ | Ngõ ra chốt `OUT[3:0]` | Cờ $C_{out}$ | Cờ $Z$ | Diễn giải chức năng |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | **1** | $0 - 5\,\text{ns}$ | `00` (ADD) | `0101` ($5$) | `0011` ($3$) | 0 | **`1000` ($8$)** | **0** | **0** | Phép cộng không tràn |
-| **2** | $5 - 10\,\text{ns}$ | `00` (ADD) | `1100` ($12$) | `0100` ($4$) | 0 | **`0000` ($0$)** | **1** | **1** | $12+4=16 \implies \text{Tràn } C_{out}=1, Z=1$ |
+| **2** | $5 - 10\,\text{ns}$ | `00` (ADD) | `1100` ($12$) | `0100` ($4$) | 0 | **`0000` ($0$)** | **1** | **1** | $12+4=16 \implies \text{Overflow: } C_{out}=1, Z=1$ |
 | **3** | $10 - 15\,\text{ns}$ | `01` (AND) | `1010` ($10$) | `1100` ($12$) | 0 | **`1000` ($8$)** | **0** | **0** | Phép VÀ bitwise ($10 \ \& \ 12 = 8$) |
 | **4** | $15 - 20\,\text{ns}$ | `10` (OR) | `1010` ($10$) | `0101` ($5$) | 0 | **`1111` ($15$)** | **0** | **0** | Phép HOẶC bitwise ($10 \text{ OR } 5 = 15$) |
 | **5** | $20 - 25\,\text{ns}$ | `11` (XOR) | `1001` ($9$) | `1001` ($9$) | 0 | **`0000` ($0$)** | **0** | **1** | Phép XOR 2 toán hạng giống nhau ($Z=1$) |

@@ -48,7 +48,9 @@ Trong thiết kế vi mạch CMOS tĩnh, việc hiện thực một hàm logic p
 Thay vào đó, cấu trúc **Cổng phức hợp AOI21 (And-Or-Invert 2-1)** tích hợp toàn bộ hàm logic vào một tế bào duy nhất:
 - **Mạng kéo xuống (PDN):** Thực hiện hàm logic không đảo $F = (A \cdot B) + C$. Nhánh $A \cdot B$ gồm 2 NMOS mắc nối tiếp ($M_{NA}, M_{NB}$); nhánh này mắc song song với 1 NMOS đơn ($M_{NC}$) đại diện cho biến $C$.
 - **Mạng kéo lên (PUN):** Thực hiện hàm bù bằng luật De Morgan:
+
   $$Y = \overline{(A \cdot B) + C} = \overline{(A \cdot B)} \cdot \bar{C} = (\bar{A} + \bar{B}) \cdot \bar{C}$$
+
   Mạng gồm 2 PMOS mắc song song ($M_{PA} \parallel M_{PB}$), sau đó nối tiếp với 1 PMOS đại diện cho biến $C$ ($M_{PC}$).
 - $\implies$ **Tổng số transistor chỉ còn: 6 transistor (3 PMOS + 3 NMOS)**. Tín hiệu chỉ đi qua **1 tầng chuyển mạch duy nhất**, giúp giảm diện tích mặt nạ $\approx 40\%$ và giảm trễ đáng kể.
 
@@ -67,14 +69,18 @@ Thay vào đó, cấu trúc **Cổng phức hợp AOI21 (And-Or-Invert 2-1)** t�
 
 #### a. Mạng kéo xuống (PDN)
 - **Nhánh $A \cdot B$ (2 NMOS nối tiếp):** Khi cả $A=1, B=1$, dòng xả đi qua 2 NMOS nối tiếp. Để điện trở bằng $R_{on,n0}$:
+
   $$R_{eq} = R_{on,NA} + R_{on,NB} = R_{on,n0} \implies W_{n,A} = W_{n,B} = 2 \times W_{n,inv} = 2 \times 4\lambda = 8\lambda = 2.40\,\mu\text{m}$$
+
 - **Nhánh $C$ (1 NMOS đơn):** Khi chỉ có $C=1$, dòng xả đi qua 1 NMOS độc lập. Để điện trở bằng $R_{on,n0}$:
+
   $$W_{n,C} = W_{n,inv} = 4\lambda = 1.20\,\mu\text{m}$$
 
 #### b. Mạng kéo lên (PUN)
 - Mạng gồm cụm $(M_{PA} \parallel M_{PB})$ mắc nối tiếp với $M_{PC}$.
 - **Trường hợp xấu nhất (Worst-Case):** Xảy ra khi chỉ có **1 PMOS trong nhánh song song dẫn** (ví dụ $A=0, B=1, C=0$ hoặc $A=1, B=0, C=0$). Khi đó, đường dẫn từ $V_{DD}$ xuống $Out$ đi qua đúng 2 PMOS mắc nối tiếp.
 - Do đó, để điện trở tương đương tổng bằng $R_{on,p0}$:
+
   $$R_{eq} = R_{on,P(A/B)} + R_{on,PC} = R_{on,p0} \implies W_{p,A} = W_{p,B} = W_{p,C} = 2 \times W_{p,inv} = 2 \times 12\lambda = 24\lambda = 7.20\,\mu\text{m}$$
 
 > [!NOTE]
@@ -91,24 +97,35 @@ Phương pháp **Logical Effort (Nỗ lực Logic)** là công cụ giải tích
 
 #### a. Mô hình trễ tuyến tính chuẩn hóa
 Thời gian trễ $d$ của một cổng logic được chuẩn hóa theo trễ cơ bản của Inverter không tải $\tau$:
+
 $$d = f + p = g \cdot h + p$$
+
 Trong đó:
 - $p$: **Trễ ký sinh (Parasitic Delay)** do điện dung cực má (Drain capacitance) của chính cổng đó tạo ra tại ngõ ra khi không có tải ngoài ($h=0$).
 - $f = g \cdot h$: **Nỗ lực tầng (Stage Effort)**.
 - $h = \frac{C_{out}}{C_{in}}$: **Nỗ lực điện (Electrical Effort)** hay tỉ số tải dung (Fan-out).
 - $g$: **Nỗ lực logic (Logical Effort)**, biểu thị mức độ "kém hiệu quả" của cổng logic so với Inverter chuẩn trong việc cấp dòng khi có cùng điện dung ngõ vào:
-  $$g = \frac{C_{in,\text{cổng}}}{C_{in,\text{inverter}}}$$
+
+  $$g = \frac{C_{in,\text{gate}}}{C_{in,\text{inverter}}}$$
+
   (với quy ước kích thước cổng đã được định cỡ sao cho có cùng điện trở dẫn $R_{on}$).
 
 #### b. Tính toán Logical Effort cho cổng AOI21
 Với Inverter chuẩn `INV_X1`:
+
 $$C_{in,inv} \propto W_n + W_p = 4\lambda + 12\lambda = 16\lambda$$
+
 Với cổng `AOI21_X1`:
 - **Ngõ vào $A$:** Nối vào $M_{NA}$ ($W_n = 8\lambda$) và $M_{PA}$ ($W_p = 24\lambda$):
+
   $$C_{in,A} \propto 8\lambda + 24\lambda = 32\lambda \implies g_A = \frac{32\lambda}{16\lambda} = \mathbf{2.000} \quad \left(=\frac{6}{3}\right)$$
+
 - **Ngõ vào $B$:** Nối vào $M_{NB}$ ($W_n = 8\lambda$) và $M_{PB}$ ($W_p = 24\lambda$):
+
   $$C_{in,B} \propto 8\lambda + 24\lambda = 32\lambda \implies g_B = \frac{32\lambda}{16\lambda} = \mathbf{2.000} \quad \left(=\frac{6}{3}\right)$$
+
 - **Ngõ vào $C$:** Nối vào $M_{NC}$ ($W_n = 4\lambda$) và $M_{PC}$ ($W_p = 24\lambda$):
+
   $$C_{in,C} \propto 4\lambda + 24\lambda = 28\lambda \implies g_C = \frac{28\lambda}{16\lambda} = \mathbf{1.750} \quad \left(=\frac{7}{4}\right)$$
 
 > [!TIP]
@@ -116,8 +133,11 @@ Với cổng `AOI21_X1`:
 
 #### c. Trễ ký sinh $p$ của AOI21
 Điện dung cực má tại nút ngõ ra $Out$ gồm: Drain của $M_{PC}$ ($24\lambda$), Drain của $M_{NA}$ ($8\lambda$), và Drain của $M_{NC}$ ($4\lambda$):
+
 $$C_{out,parasitic} \propto 24\lambda + 8\lambda + 4\lambda = 36\lambda$$
+
 So với Inverter chuẩn có $C_{out,inv} \propto 12\lambda + 4\lambda = 16\lambda$:
+
 $$p_{AOI21} = \frac{36\lambda}{16\lambda} = \mathbf{2.250} \quad \left(=\frac{9}{4}\tau\right)$$
 
 ---
@@ -137,11 +157,17 @@ Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus
 
 Để cực tiểu hóa thời gian trễ toàn chuỗi, ta chèn một chuỗi gồm $N$ tầng Inverter có kích thước tăng dần theo cấp số nhân:
 1. **Nỗ lực đường dẫn (Path Effort):**
+
    $$F = G \cdot B \cdot H = (1 \times 1 \times \dots) \cdot 1 \cdot H = H = 50$$
+
 2. **Nỗ lực tối ưu trên mỗi tầng ($\hat{f}$):**
+
    $$\hat{f} = F^{1/N} = H^{1/N}$$
+
 3. **Tổng thời gian trễ của chuỗi $N$ tầng:**
+
    $$D = N \cdot \hat{f} + N \cdot p_{inv} = N \left(H^{1/N} + 1\right) \cdot \tau$$
+
 4. **Xác định số tầng tối ưu $N$:**
    Lấy đạo hàm $\frac{\partial D}{\partial N} = 0 \implies \hat{f} \ln \hat{f} - \hat{f} - 1 = 0 \implies \hat{f} \approx 3.59 \approx 3.6$ (hoặc $\approx e \approx 2.718$ khi bỏ qua $p$).
    - Với $H = 50$:
@@ -248,7 +274,9 @@ Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus
 Để đo thực nghiệm Logical Effort theo đúng định nghĩa lý thuyết $d = g \cdot h + p$:
 1. Thiết lập mạch đo với cổng `AOI21_X1` ngõ vào kích $A$ ($B=5\,\text{V}, C=0\,\text{V}$).
 2. Cho quét giá trị tải dung ngõ ra $C_L$ tương ứng với các tỉ số Fan-out:
-   $$h \in \{1, 2, 3, 4\} \quad (\text{với } C_L = h \times C_{in,inv} \approx h \times 20\,\text{fF})$$
+
+   $$h \in \{1, 2, 3, 4\} \quad (\text{with } C_L = h \times C_{in,inv} \approx h \times 20\,\text{fF})$$
+
 3. Ghi lại giá trị trễ trung bình $t_{pd} = \frac{t_{pHL} + t_{pLH}}{2}$ cho từng giá trị $h$.
 4. Vẽ đồ thị thực nghiệm $t_{pd}$ theo $h$.
 5. Dùng phương pháp hồi quy tuyến tính (Linear Regression):
@@ -345,8 +373,8 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | **$M_{NC}$** | PDN (nhánh đơn C) | .................... | .................... | .................... |
 
 3. **Tính toán Logical Effort lý thuyết:**
-   - $g_A = $ .................... ; $g_B = $ .................... ; $g_C = $ ....................
-   - Trễ ký sinh lý thuyết $p = $ ....................
+   - $g_A =$ .................... ; $g_B =$ .................... ; $g_C =$ ....................
+   - Trễ ký sinh lý thuyết $p =$ ....................
    - Giải thích ngắn gọn tại sao ngõ vào C có $g_C$ nhỏ hơn $g_A$: ...................................................................
 
 4. **Tính toán tối ưu chuỗi đệm Inverter ($C_{in} = 20\,\text{fF}, C_L = 1\,\text{pF} \implies H = 50$):**
@@ -381,9 +409,11 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    | **h = 4** | 80 fF | .................... | .................... | .................... |
 
    - Phương trình đường thẳng hồi quy $t_{pd}(h) = (\text{Slope}) \cdot h + (\text{Intercept})$:
+
      $$t_{pd}(h) = \text{....................} \cdot h + \text{....................} \quad (\text{ps})$$
-   - Suy ra nỗ lực logic thực nghiệm: $g_{meas} = $ .................... (Lý thuyết: $2.00$)
-   - Suy ra trễ ký sinh thực nghiệm: $p_{meas} = $ .................... (Lý thuyết: $2.25$)
+
+   - Suy ra nỗ lực logic thực nghiệm: $g_{meas} =$ .................... (Lý thuyết: $2.00$)
+   - Suy ra trễ ký sinh thực nghiệm: $p_{meas} =$ .................... (Lý thuyết: $2.25$)
 
 3. **Kết quả thực nghiệm Tối ưu Chuỗi đệm lái tải $C_L = 1\,\text{pF}$:**
 
@@ -396,7 +426,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 4. **Kết quả Kiểm tra Vật lý Layout cổng AOI21:**
    - Kết quả kiểm tra DRC: `............................................................`
    - Kết quả đối chiếu LVS: `............................................................`
-   - Kích thước Layout: Chiều rộng $W = $ .................... $\mu\text{m}$, Chiều cao $H = $ .................... $\mu\text{m}$, Diện tích = .................... $\mu\text{m}^2$.
+   - Kích thước Layout: Chiều rộng $W =$ .................... $\mu\text{m}$, Chiều cao $H =$ .................... $\mu\text{m}$, Diện tích = .................... $\mu\text{m}^2$.
 
 ---
 
