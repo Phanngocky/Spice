@@ -300,3 +300,72 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 06 - 1-BIT FULL ADDER
 - `03 - Instructor_Solutions/lab06/tg_adder_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab06/tg_adder_tran.sp)
 - `03 - Instructor_Solutions/lab06/carry_chain_cascade.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab06/carry_chain_cascade.sp)
 - `03 - Instructor_Solutions/lab06/fa_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab06/fa_pex_postlayout.sp)
+
+---
+
+### 8. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 7 (LAB 07)
+
+Script kiểm chứng: `python scripts/verify_lab07.py`
+
+```
+===========================================================================
+KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 07 - DYNAMIC & DOMINO CMOS LOGIC
+===========================================================================
+
+1. Chu trình Hoạt động 2 pha (Precharge & Evaluate):
+   - Pha Nạp trước (Precharge - CLK = 0V):
+     + Mp (PMOS W=12λ) DẪN mạnh, Me (Foot NMOS W=8λ) NGẮT.
+     + Nút động X được nạp hoàn toàn lên VDD = 5.00 V.
+     + Ngõ ra bộ đệm tĩnh Domino: Y = NOT(X) = 0.00 V.
+     + M_keeper (PMOS W=2λ) DẪN nhẹ (bị đóng bởi Y = 0V).
+   - Pha Đánh giá (Evaluate - CLK = 5V):
+     + Mp NGẮT, Me DẪN.
+     + Trường hợp A (PDN Dẫn - Có ít nhất 1 ngõ vào = 5V):
+       Nút X xả nhanh xuống GND (0V) qua PDN và Me.
+       Ngõ ra Y lật lên 5.0V. M_keeper ngắt khi Y lên cao.
+     + Trường hợp B (PDN Ngắt - Mọi ngõ vào = 0V):
+       Nút X giữ nguyên mức cao (Floating High).
+       M_keeper tiếp tục dẫn nhẹ, bù đắp dòng rò Ioff và giữ Vx = 5.00 V.
+
+2. Phân tích Hiện tượng Chia sẻ điện tích (Charge Sharing):
+   - Điện dung nút động Cx = 20.0 fF
+   - Điện dung nút nội Cint = 14.0 fF
+   - Điện áp nút X sau chia sẻ (Không có Keeper):
+     Vx' = VDD * [Cx / (Cx + Cint)] = 5.00 * [20.0 / 34.0] = 2.94 V
+     Độ sụt áp: Delta_Vx = 2.06 V (Sụt 41.2%)
+   - Ngưỡng chuyển tiếp của Inverter tĩnh VM ≈ 2.45 V
+   => Vx' (2.94V) > VM (2.45V): Biên độ an toàn dự phòng NM_H = 0.49 V
+      CẢNH BÁO: Nếu có thêm nhiễu ghép (Crosstalk) hoặc dòng rò, cổng INV sẽ lật giả (False Switching)!
+   - Giải pháp Keeper Transistor (M_kp):
+     + Khi có Keeper PMOS (W=2λ): Dòng nạp Ikp bổ sung điện tích tức thời,
+       kéo phục hồi điện áp nút X về lại 5.00 V, triệt tiêu hoàn toàn sụt áp!
+
+3. Tính đơn điệu (Monotonicity) và Khả năng Ghép tầng Domino:
+   - Cổng Dynamic thuần (không có INV):
+     + Trong Precharge, X = 1. Nếu nối thẳng vào tầng Dynamic tiếp theo,
+       tầng sau sẽ xả sớm ngoài ý muốn trước khi tầng trước kịp đánh giá!
+   - Cổng Domino (Dynamic Gate + Static Inverter):
+     + Trong Precharge, ngõ ra Y = NOT(X) = 0V.
+     + Trong Evaluate, Y CHỈ CÓ THỂ CHUYỂN TỪ 0 -> 1 (hoặc giữ nguyên 0).
+     + Chuyển dịch 0 -> 1 là đơn điệu tăng (Monotonically Rising).
+     + Do đó, các transistor nhận tín hiệu ở tầng kế tiếp chỉ có thể từ NGẮT -> DẪN,
+       hoàn toàn ngăn chặn hiện tượng xả sai (Premature Discharge)!
+
+4. So sánh Hiệu năng (PPA) Domino OR4 vs Static CMOS OR4:
+   - Trễ lan truyền đánh giá Domino OR4 (tpd_eval): 78.5 ps
+   - Trễ lan truyền Static CMOS OR4 (tpd_static):   215.0 ps
+   - Tốc độ vượt trội (Speedup factor):              2.74x (Nhanh hơn gấp 2.7 lần!)
+   - Tổng số Transistor: Domino OR4 = 9T | Static CMOS OR4 = 10T
+   - Tải điện dung ngõ vào (Input Capacitance):
+     + Domino OR4: Mỗi ngõ vào chỉ nối tới 1 cổng NMOS (W=4λ) -> Cin = 4*Cox*L
+     + Static OR4: Mỗi ngõ vào nối tới 1 NMOS và 1 PMOS (size lớn) -> Cin ≈ 20*Cox*L
+     => Tải ngõ vào của Domino nhỏ hơn ~5 lần -> Logical Effort g cực thấp!
+===========================================================================
+```
+
+**Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
+- `03 - Instructor_Solutions/lab07/dynamic_charge_sharing.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/dynamic_charge_sharing.sp)
+- `03 - Instructor_Solutions/lab07/domino_4input_tran.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/domino_4input_tran.sp)
+- `03 - Instructor_Solutions/lab07/keeper_sizing_sweep.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/keeper_sizing_sweep.sp)
+- `03 - Instructor_Solutions/lab07/domino_pex_postlayout.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab07/domino_pex_postlayout.sp)
+
