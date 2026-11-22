@@ -7,61 +7,57 @@
 
 ### 1. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 0 (LAB 00)
 
-Script kiểm chứng: `python scripts/verify_lab00_lab01.py`, `python scripts/verify_rc.py` và `python scripts/verify_bjt.py`
+Script kiểm chứng: `python scripts/verify_lab00_new.py`
 
 ```
 ============================================================
-VERIFICATION: LAB 00 (SPICE & LTSPICE INTRO)
+VERIFICATION: LAB 00 (REVISED & ALIGNED)
 ============================================================
-Voltage Divider: Vin=5.0V, R1=30.0k, R2=20.0k
-  Vout = 2.0000 V
-  Iin  = 0.1000 mA (100.0 uA)
-  Ptotal = 0.5000 mW (500.0 uW)
+P1. Units:
+  2.2M   = 2.2 * 10^-3 = 0.0022 (milli)
+  2.2Meg = 2.2 * 10^6  = 2,200,000 (mega)
+  47n    = 47 * 10^-9  = 47 nF / ns / nH
+  30f    = 30 * 10^-15 = 30 fF
 
-RC Transient Charging & Discharging (Basic RC Circuit: R=10k, C=10nF):
-  tau = R * C = 100.00 us (0.1000 ms)
-  Charging (0 <= t <= 500 us):
-    V_C(tau)   = 3.1606 V (63.21% of Vin)
-    V_C(2.2tau)= 4.4460 V (88.92% of Vin)
-    V_C(5tau)  = 4.9663 V (99.33% of Vin ~ Vmax)
-    I_peak_chg = +0.5000 mA (+500.0 uA at t=0+)
-    Rise time  = 220.00 us (10% to 90%)
-  Discharging (500 us <= t <= 1000 us):
-    V_C(tau)   = 1.8394 V (36.79% of Vmax)
-    V_C(2.2tau)= 0.5540 V (11.08% of Vmax)
-    V_C(5tau)  = 0.0337 V (0.67% of Vmax ~ 0V)
-    I_peak_dis = -0.5000 mA (-500.0 uA at t=500u+)
-    Fall time  = 220.00 us (90% to 10%)
-  Energy & Charge:
-    Q_max      = 50.00 nC (at V_C = 5.0V)
-    W_C_max    = 0.1250 uJ (0.5 * C * V^2)
-  AC Low-Pass Frequency Response:
-    f_-3dB     = 1/(2*pi*RC) = 1591.55 Hz (1.5915 kHz)
+P2. Voltage Divider (Vin=5V, R1=12k, R2=18k):
+  Vout    = 3.0000 V (exactly 3.0 V)
+  I       = 0.1667 mA (166.7 uA)
+  P_total = 0.8333 mW (833.3 uW)
+  Slope dVout/dVin = 0.6000
 
-============================================================
-VERIFICATION: BJT I-V CHARACTERISTICS (2N3904)
-============================================================
-Input Characteristic Ib(Vbe) [Ebers-Moll Model]:
-  Is = 1.0e-14 A, beta = 160.0, VA = 74.0 V, Vt = 25.85 mV
-  Ib(0.50V) = 0.0157 uA, Ib(0.65V) = 5.203 uA, Ib(0.70V) = 36.00 uA
-  Knee Threshold: Vbe = 0.6669 V (at 10 uA), Vbe = 0.6848 V (at 20 uA)
+P3. RC Transient (R=20k, C=5nF, Vin=0->5V):
+  tau     = 100.00 us (0.1000 ms)
+  Vc(tau) = 3.1606 V (63.21%)
+  t_50    = 69.3147 us (ln(2)*tau = 0.69315 * tau)
+  t_r     = 219.7225 us (ln(9)*tau = 2.19722 * tau ~ 2.2*tau)
+  t_f     = 219.7225 us (90% to 10%)
+  f_-3dB  = 1591.55 Hz (1.5915 kHz)
+  I_peak_chg = +0.2500 mA (+250.0 uA at t=0+)
+  I_peak_dis = -0.2500 mA (-250.0 uA at t=500u+)
 
-Output Characteristics Family Ic(Vce, Ib) [Early Effect]:
-  At Ib = 10 uA: Ic(1V) = 1.6216 mA, Ic(5V) = 1.7081 mA, Ic(10V) = 1.8162 mA
-  At Ib = 20 uA: Ic(1V) = 3.2432 mA, Ic(5V) = 3.4162 mA, Ic(10V) = 3.6324 mA
-  Extracted beta at Vce = 5V: beta = 170.81
-  Differential Output Resistance: ro = 46.25 kOhm (Ib = 10 uA)
-  Saturation Mode: Vce < 0.20 - 0.25 V
+P5. VLSI Link (Inverter R=1k, CL=50fF):
+  t_50    = 34.658 ps (khớp hoàn hảo với trễ CMOS Inverter ở Lab 1)
+
+Ex0.4. Parameter Sweep Rval (C=5nF):
+  R =  5.0 kOhm -> t_pd =  17.329 us
+  R = 10.0 kOhm -> t_pd =  34.657 us
+  R = 20.0 kOhm -> t_pd =  69.315 us
+  R = 40.0 kOhm -> t_pd = 138.629 us
+  Slope dt_pd/dR = ln(2)*C = 3.4657 ns/kOhm
+
+Ex0.5. NMOS C5N Test (W=1.2u, L=0.6u, VGS=5V, VDS=5V):
+  ID (approx square law) = 2.219 mA
+  ID (SPICE Level 3/BSIM) = 1.35 - 1.45 mA (Velocity Saturation)
 ```
 
 **Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
 - `03 - Instructor_Solutions/lab00/divider_op_dc.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/divider_op_dc.sp)
-- `03 - Instructor_Solutions/lab00/rc_transient_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp)
+- `03 - Instructor_Solutions/lab00/rc_delay.cir`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_delay.cir)
 - `03 - Instructor_Solutions/lab00/rc_charge_discharge.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_charge_discharge.sp)
+- `03 - Instructor_Solutions/lab00/rc_transient_meas.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_transient_meas.sp)
 - `03 - Instructor_Solutions/lab00/rc_ac_bode.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_ac_bode.sp)
+- `03 - Instructor_Solutions/lab00/rc_step_param.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/rc_step_param.sp)
 - `03 - Instructor_Solutions/lab00/nmos_test_include.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/nmos_test_include.sp)
-- `03 - Instructor_Solutions/lab00/bjt_input_curve.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_input_curve.sp)
-- `03 - Instructor_Solutions/lab00/bjt_output_family.sp`: [XEM TỆP](file:///D:/tam/Spice/03%20-%20Instructor_Solutions/lab00/bjt_output_family.sp)
 
 ---
 

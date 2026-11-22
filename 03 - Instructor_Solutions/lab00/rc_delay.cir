@@ -1,0 +1,39 @@
+* ==============================================================================
+* INSTRUCTOR SOLUTION: LAB 00 - EX0.2: RC TRANSIENT CHARGING & DISCHARGING
+* Netlist: rc_delay.cir (Mau chuan tai su dung cho Lab 1 - 10)
+* Circuit: R1 = 20k, C1 = 5nF -> tau = R*C = 100us
+* Pulse Source: Vin in 0 PULSE(0 5.0 0 10n 10n 500u 1000u) AC 1
+* Simulation: .tran 0 1m 0 0.1u
+* Expected Results:
+*   t_pd (50% delay) = ln(2)*tau = 69.315 us
+*   t_r  (10% -> 90%) = ln(9)*tau = 219.72 us (~2.2*tau)
+*   t_f  (90% -> 10%) = 219.72 us
+*   I_peak_charge    = +5.0V / 20k = +0.250 mA (+250 uA)
+*   I_peak_discharge = -5.0V / 20k = -0.250 mA (-250 uA)
+* ==============================================================================
+
+Vin in 0 PULSE(0 5.0 0 10n 10n 500u 1000u) AC 1
+
+R1 in out 20k
+C1 out 0 5n
+
+.tran 0 1m 0 0.1u
+
+* 1. Do tre 50% (Propagation delay t_pd)
+.meas TRAN t_pd TRIG V(in)=2.5 RISE=1 TARG V(out)=2.5 RISE=1
+
+* 2. Do thoi gian tang 10% -> 90% (Rise time t_r)
+.meas TRAN t_r TRIG V(out)=0.5 RISE=1 TARG V(out)=4.5 RISE=1
+
+* 3. Do thoi gian giam 90% -> 10% (Fall time t_f)
+.meas TRAN t_f TRIG V(out)=4.5 FALL=1 TARG V(out)=0.5 FALL=1
+
+* 4. Do dong nap va dong xa cuc dai
+.meas TRAN I_peak_chg MAX I(C1)
+.meas TRAN I_peak_dis MIN I(C1)
+
+* 5. Kiem tra hang so thoi gian tau (63.2% khi nap, 36.8% khi xa)
+.meas TRAN tau_chg TRIG V(in)=2.5 RISE=1 TARG V(out)=3.1606 RISE=1
+.meas TRAN tau_dis TRIG V(in)=2.5 FALL=1 TARG V(out)=1.8394 FALL=1
+
+.end
