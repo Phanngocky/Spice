@@ -12,22 +12,22 @@
 1. **Tỉ số định kích thước $(W_p/W_n)$:**
    - Để điểm chuyển mạch $V_M = V_{DD}/2 = 2,50\,\text{V}$:
 
-     $$\frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_M - V_{thn})^2 = \frac{K_p'}{2} \left(\frac{W}{L}\right)_p (V_{DD} - V_M - |V_{thp}|)^2$$
+$$\frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_M - V_{thn})^2 = \frac{K_p'}{2} \left(\frac{W}{L}\right)_p (V_{DD} - V_M - |V_{thp}|)^2$$
 
    - Với $V_{thn} = 0,70\,\text{V}$ và $|V_{thp}| = 0,80\,\text{V}$:
 
-     $$V_M - V_{thn} = 2,5 - 0,7 = 1,8\,\text{V}$$
+$$V_M - V_{thn} = 2,5 - 0,7 = 1,8\,\text{V}$$
 
-     $$V_{DD} - V_M - |V_{thp}| = 5,0 - 2,5 - 0,8 = 1,7\,\text{V}$$
+$$V_{DD} - V_M - |V_{thp}| = 5,0 - 2,5 - 0,8 = 1,7\,\text{V}$$
 
    - Tỉ số dẫn suất $K_n'/K_p' = 120/40 = 3,0$:
 
-     $$\frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} \times \left(\frac{1,8}{1,7}\right)^2 \approx 3,0 \times 1,1211 \approx \mathbf{3,363}$$
+$$\frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} \times \left(\frac{1,8}{1,7}\right)^2 \approx 3,0 \times 1,1211 \approx \mathbf{3,363}$$
 
    - Do quy tắc lưới thiết kế $\lambda = 0,30\,\mu\text{m}$ yêu cầu kích thước là số nguyên $\lambda$, nên chọn tỉ số nguyên $W_p/W_n = 3,0$ ($W_n = 4\lambda = 1,20\,\mu\text{m}, W_p = 12\lambda = 3,60\,\mu\text{m}$).
    - Với tỉ số này ($r=1,0$), điểm chuyển mạch giải tích là:
 
-     $$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \mathbf{2,450\,\text{V}}$$
+$$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \mathbf{2,450\,\text{V}}$$
 
      (Sai lệch chỉ $0,05\,\text{V}$ hay $2,0\%$ so với mốc $2,50\,\text{V}$).
 

@@ -46,14 +46,16 @@ Trong giảng dạy lý thuyết, mô hình bậc hai (Square-Law Shichman-Hodge
 - Bão hòa: $I_{DS} = \frac{1}{2} K' \frac{W}{L} (V_{GS} - V_{th})^2 (1 + \lambda V_{DS})$
 
 Tuy nhiên, trong mô hình bán dẫn thực tế MOSIS C5N ($L = 0,6\,\mu\text{m}$, thuộc dải dưới micron - Submicron), mô hình Level 3 của SPICE tích hợp thêm các hiệu ứng vật lý phức tạp:
-1. **Suy giảm độ linh động (Mobility Degradation):** Dưới tác động của điện trường dọc cực mạnh vuông góc với mặt oxit cổng, độ linh động của hạt dẫn trong kênh bị suy giảm:
 
-   $$\mu_{eff} = \frac{\mu_0}{1 + \theta (V_{GS} - V_{th})}$$
+**1. Suy giảm độ linh động (Mobility Degradation):** Dưới tác động của điện trường dọc cực mạnh vuông góc với mặt oxit cổng, độ linh động của hạt dẫn trong kênh bị suy giảm:
 
-2. **Vận tốc bão hòa hạt dẫn (Velocity Saturation):** Khi điện trường ngang má-nguồn vượt quá ngưỡng tới hạn $\mathcal{E}_{sat}$, vận tốc hạt dẫn đạt giới hạn tối đa ($v_{sat} \approx 10^7\,\text{cm/s}$ với electron). Hiện tượng này khiến transistor NMOS đi vào bão hòa sớm hơn so với dự đoán của mô hình bậc hai ($V_{DS,sat} < V_{GS} - V_{th}$), và dòng bão hòa phụ thuộc tuyến tính vào $(V_{GS} - V_{th})$ thay vì bậc hai.
-3. **Hiệu ứng thân (Body Effect):** Điện thế phân cực ngược giữa Source và Bulk làm mở rộng vùng nghèo, làm tăng điện áp ngưỡng thực tế:
+$$\mu_{eff} = \frac{\mu_0}{1 + \theta (V_{GS} - V_{th})}$$
 
-   $$V_{th} = V_{th0} + \gamma \left(\sqrt{2\Phi_F + V_{SB}} - \sqrt{2\Phi_F}\right)$$
+**2. Vận tốc bão hòa hạt dẫn (Velocity Saturation):** Khi điện trường ngang má-nguồn vượt quá ngưỡng tới hạn $\mathcal{E}_{sat}$, vận tốc hạt dẫn đạt giới hạn tối đa ($v_{sat} \approx 10^7\,\text{cm/s}$ với electron). Hiện tượng này khiến transistor NMOS đi vào bão hòa sớm hơn so với dự đoán của mô hình bậc hai ($V_{DS,sat} < V_{GS} - V_{th}$), và dòng bão hòa phụ thuộc tuyến tính vào $(V_{GS} - V_{th})$ thay vì bậc hai.
+
+**3. Hiệu ứng thân (Body Effect):** Điện thế phân cực ngược giữa Source và Bulk làm mở rộng vùng nghèo, làm tăng điện áp ngưỡng thực tế:
+
+$$V_{th} = V_{th0} + \gamma \left(\sqrt{2\Phi_F + V_{SB}} - \sqrt{2\Phi_F}\right)$$
 
 Giảng viên cần lưu ý: Dù các hiệu ứng trên làm sai khác dòng điện so với tính tay, nhưng ở nút công nghệ $0,5\,\mu\text{m}$, mô hình bậc hai vẫn là công cụ ước lượng xuất sắc để kiểm tra tính hợp lý của kết quả mô phỏng (trong phạm vi sai lệch chấp nhận được từ 10% đến 20%).
 
@@ -82,18 +84,18 @@ $$V_M = \frac{V_{thn} + \sqrt{r} (V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
   Điều này dẫn đến tỉ số kích thước: $\frac{(W/L)_p}{(W/L)_n} = \frac{K_n'}{K_p'} = \frac{120}{40} = 3,00$.
 - **Trường hợp tiến trình MOSIS C5N thực tế ($V_{thn} = 0,70\,\text{V}, |V_{thp}| = 0,80\,\text{V}$):**
   Nếu chọn $r = 1$ (tỉ số $W_p/W_n = 3,00$):
-  
-  $$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \frac{0,70 + 4,20}{2} = \mathbf{2,450\,\text{V}}$$
-  
+
+$$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \frac{0,70 + 4,20}{2} = \mathbf{2,450\,\text{V}}$$
+
   Độ lệch so với $2,50\,\text{V}$ chỉ là $0,05\,\text{V}$ (sai lệch tương đối $2\%$).
 - **Để đạt chính xác $V_M = 2,500\,\text{V}$:**
-  
-  $$2,50 = \frac{0,70 + \sqrt{r}(5,0 - 0,80)}{1 + \sqrt{r}} \implies 2,50 + 2,50\sqrt{r} = 0,70 + 4,20\sqrt{r}$$
-  
-  $$1,70\sqrt{r} = 1,80 \implies \sqrt{r} = \frac{1,80}{1,70} \approx 1,0588$$
-  
-  $$r = 1,0588^2 \approx 1,1211 \implies \frac{(W/L)_p}{(W/L)_n} = 1,1211 \times 3,00 = \mathbf{3,363}$$
-  
+
+$$2,50 = \frac{0,70 + \sqrt{r}(5,0 - 0,80)}{1 + \sqrt{r}} \implies 2,50 + 2,50\sqrt{r} = 0,70 + 4,20\sqrt{r}$$
+
+$$1,70\sqrt{r} = 1,80 \implies \sqrt{r} = \frac{1,80}{1,70} \approx 1,0588$$
+
+$$r = 1,0588^2 \approx 1,1211 \implies \frac{(W/L)_p}{(W/L)_n} = 1,1211 \times 3,00 = \mathbf{3,363}$$
+
   Với $W_n = 4\lambda = 1,20\,\mu\text{m}$, ta cần $W_p = 3,363 \times 1,20\,\mu\text{m} = 4,036\,\mu\text{m} \approx 13,45\lambda$.
 - **Lý do chọn $W_p = 12\lambda = 3,60\,\mu\text{m}$ trong thực tế:**
   Lưới thiết kế hình học layout của MOSIS C5N có đơn vị $\lambda = 0,30\,\mu\text{m}$. Mọi kích thước hình học bắt buộc phải là số nguyên $\lambda$. Nếu chọn $13\lambda$ ($3,9\,\mu\text{m}$) hoặc $14\lambda$ ($4,2\,\mu\text{m}$) sẽ làm lẻ lưới và phá vỡ cấu trúc đối xứng ô chuẩn. Vì vậy, lựa chọn chuẩn công nghiệp là $W_p = 12\lambda$ và $W_n = 4\lambda$ (tỉ số nguyên $3/1$), chấp nhận dịch chuyển điểm $V_M$ xuống $2,45\,\text{V}$ ($2\%$) nhưng đạt được hiệu quả vượt trội về diện tích và tính mô-đun hóa tế bào chuẩn.
@@ -112,8 +114,8 @@ Hai giá trị này gần như cân bằng đối xứng ($\approx 1,0\,\text{k}
   1. Giai đoạn $5,0\,\text{V} \ge V_{out} \ge 4,3\,\text{V}$ ($V_{DS} \ge V_{GS} - V_{thn}$): NMOS nằm trong vùng **bão hòa**, dòng xả bị chặn ở mức bão hòa $I_{D,sat} \approx 2,22\,\text{mA}$. Điện trở tương đương tức thời tại đầu quá trình là $R_{inst} = 5,0\,\text{V} / 2,22\,\text{mA} \approx 2,25\,\text{k}\Omega$ (cao gấp 2,3 lần so với $R_{on}$).
   2. Giai đoạn $4,3\,\text{V} > V_{out} \ge 2,5\,\text{V}$: NMOS mới chuyển vào vùng **tuyến tính**, dòng xả giảm dần và điện trở kênh dẫn giảm dần về mức $R_{on}$.
 - Khi tích phân chính xác dòng điện theo thời gian:
-  
-  $$t_{pHL} = C_L \int_{2,5\,\text{V}}^{5,0\,\text{V}} \frac{dV_{out}}{I_{DS}(V_{out})} \approx \mathbf{50 - 59\,\text{ps}}$$
+
+$$t_{pHL} = C_L \int_{2,5\,\text{V}}^{5,0\,\text{V}} \frac{dV_{out}}{I_{DS}(V_{out})} \approx \mathbf{50 - 59\,\text{ps}}$$
 
 - Tỉ số giữa trễ thực tế và mô hình $0,69 R_{on} C_L$ là $\frac{59\,\text{ps}}{33,6\,\text{ps}} \approx \mathbf{1,76}$ lần.
 - **Kết luận sư phạm:** Giảng viên cần giải thích rõ cho sinh viên: $R_{on}$ đo tại $V_{DS} \approx 0$ chỉ là điện trở nhỏ nhất của kênh dẫn (ở đáy quá trình). Điện trở hiệu dụng trung bình qua toàn bộ sườn chuyển mạch là $R_{eff} \approx 1,7 \cdot R_{on}$. Do đó, việc trễ mô phỏng SPICE lớn hơn trễ tính tay $0,69 R_{on} C_L$ khoảng 1,5–1,8 lần là phù hợp với bản chất vật lý.
@@ -137,14 +139,25 @@ Khi vẽ Layout, mỗi transistor không chỉ có kênh dẫn mà còn có các
   * Tụ đáy tiếp giáp: $CJ_n \approx 5,6 \times 10^{-4}\,\text{F/m}^2$, $CJ_p \approx 9,4 \times 10^{-4}\,\text{F/m}^2$.
   * Tụ thành bên tiếp giáp: $CJSW_n \approx 5,0 \times 10^{-10}\,\text{F/m}$, $CJSW_p \approx 2,9 \times 10^{-10}\,\text{F/m}$.
 - Tổng tụ ký sinh tại nút ngõ ra $Out$:
-  
-  $$C_{parasitic} = C_{db,n} + C_{db,p} + C_{wire,metal1} \approx 3,7\,\text{fF} + 8,0\,\text{fF} + 8,5 - 11,8\,\text{fF} \approx \mathbf{20 - 23,5\,\text{fF}}$$
+
+$$C_{parasitic} = C_{db,n} + C_{db,p} + C_{wire,metal1} \approx 3,7\,\text{fF} + 8,0\,\text{fF} + 8,5 - 11,8\,\text{fF} \approx \mathbf{20 - 23,5\,\text{fF}}$$
 
 - Khi kéo tải ngoài $C_L = 50\,\text{fF}$, tổng tải hiệu dụng tăng lên:
-  
-  $$C_{L,eff} = 50\,\text{fF} + 23,5\,\text{fF} = \mathbf{73,5\,\text{fF}} \quad (+47\%)$$
+
+$$C_{L,eff} = 50\,\text{fF} + 23,5\,\text{fF} = \mathbf{73,5\,\text{fF}} \quad (+47\%)$$
 
 - Do đó, trễ truyền lan sau trích xuất PEX tăng từ $\sim 50\,\text{ps}$ lên $\sim 75\,\text{ps}$ (tăng tương ứng xấp xỉ $47\%$).
+
+### B6. Đường đi Euler (Euler Path) và Sơ đồ que (Stick Diagram) của Inverter
+- **Thắc mắc sư phạm thường gặp:** *"Tại sao Đề cương chi tiết (Mục VII Rubric) yêu cầu đường đi Euler, trong khi Inverter chỉ có 1 cổng vào?"*
+- **Giải thích của Giảng viên:** 
+  1. Trong thiết kế layout CMOS tiêu chuẩn, nguyên tắc cơ bản là tìm đường đi Euler trên đồ thị mạch để xếp các transistor thành một dải khuếch tán liên tục (Diffusion Sharing / Abutment), tránh bị đứt đoạn dải Active gây lãng phí diện tích và tăng tụ ký sinh.
+  2. Đối với CMOS Inverter, mạch chỉ gồm 1 transistor PMOS và 1 transistor NMOS điều khiển bởi 1 ngõ vào duy nhất (`In`). Đồ thị mạch chỉ có đúng 1 cạnh đơn lập. Do đó, đường đi Euler ở đây là trường hợp **cơ sở suy biến**:
+  
+$$\text{Euler Path: } [In]$$
+  
+  Dải Polysilicon chạy thẳng một đường duy nhất từ trên xuống dưới xuyên qua cả 2 dải khuếch tán.
+  3. Đây là bước đệm sư phạm nền tảng bắt buộc để sinh viên làm quen với sơ đồ que (Stick Diagram), nhận biết các lớp vật liệu và tiếp xúc Taps chống Latch-up trước khi bước sang giải bài toán Euler đa biến phức tạp ở Lab 02 ($A - B$) và Lab 03 ($A - B - C$).
 
 ---
 
@@ -247,17 +260,17 @@ Giảng viên đặt 1 câu hỏi ngẫu nhiên trong Phần E cho từng nhóm,
 
 #### P2. Tính toán giải tích tỉ số $(W_p/W_n)$ và điểm $V_M$ [Suy dẫn]
 1. Tỉ số để $V_M = 2,50\,\text{V}$:
-   
-   $$\sqrt{r} = \frac{V_M - V_{thn}}{V_{DD} - V_M - |V_{thp}|} = \frac{2,50 - 0,70}{5,0 - 2,50 - 0,80} = \frac{1,80}{1,70} \approx 1,0588$$
-   
-   $$r = 1,0588^2 \approx 1,1211 \implies \left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{target}} = 1,1211 \times \frac{K_n'}{K_p'} = 1,1211 \times 3,00 = \mathbf{3,363}$$
+
+$$\sqrt{r} = \frac{V_M - V_{thn}}{V_{DD} - V_M - |V_{thp}|} = \frac{2,50 - 0,70}{5,0 - 2,50 - 0,80} = \frac{1,80}{1,70} \approx 1,0588$$
+
+$$r = 1,0588^2 \approx 1,1211 \implies \left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{target}} = 1,1211 \times \frac{K_n'}{K_p'} = 1,1211 \times 3,00 = \mathbf{3,363}$$
 
 2. Khi chọn $W_n = 4\lambda = 1,2\,\mu\text{m}$ và $W_p = 12\lambda = 3,6\,\mu\text{m}$ ($W_p/W_n = 3,0$):
-   
-   $$r = \frac{40 \times (3,6/0,6)}{120 \times (1,2/0,6)} = \frac{240}{240} = \mathbf{1,0000}$$
-   
-   $$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \frac{4,90}{2} = \mathbf{2,450\,\text{V}}$$
-   
+
+$$r = \frac{40 \times (3,6/0,6)}{120 \times (1,2/0,6)} = \frac{240}{240} = \mathbf{1,0000}$$
+
+$$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \frac{4,90}{2} = \mathbf{2,450\,\text{V}}$$
+
    Độ lệch so với $2,50\,\text{V}$ là: $|2,45 - 2,50| = \mathbf{0,05\,\text{V}}$ ($2,0\%$).
 
 #### P3. Ước lượng điện trở dẫn $R_{on}$ và trễ $0,69 R C$ [Suy dẫn]
@@ -268,6 +281,40 @@ Giảng viên đặt 1 câu hỏi ngẫu nhiên trong Phần E cho từng nhóm,
   * $t_{pLH} \approx 0,693 \times 992\,\Omega \times 50\,\text{fF} = \mathbf{34,37\,\text{ps}}$.
   * $t_{pd} \approx \frac{33,58 + 34,37}{2} = \mathbf{33,98\,\text{ps}} \approx 34\,\text{ps}$.
 - **Dự đoán:** Trễ đo thực tế trong LTspice sẽ *lớn hơn* giá trị này (khoảng 1,5 đến 1,8 lần) vì quá trình nạp xả đi qua vùng bão hòa trước khi tới vùng tuyến tính.
+
+#### P4. Thiết kế sơ đồ que (Stick Diagram) [Kiểm tra]
+- **Đường đi Euler:** $\text{Euler Path: } [In]$ (đường đơn biến).
+- **Tiêu chí chấm sơ đồ que:**
+  1. Vẽ đúng 2 thanh nguồn $V_{DD}$ (trên) và $GND$ (dưới) bằng Metal 1.
+  2. Dải Polysilicon liên tục chạy dọc từ PMOS xuống NMOS làm ngõ vào `in`.
+  3. Dây ngõ ra `out` bằng Metal 1 nối chung 2 cực Drain của PMOS và NMOS.
+  4. Có đầy đủ các dấu tiếp xúc Contact (`X`) từ Metal 1 vào Active và Poly.
+  5. **Bắt buộc:** Có vẽ tiếp xúc $N^+$-tap nối N-Well lên $V_{DD}$ và $P^+$-tap nối P-Substrate xuống $GND$ để phòng ngừa Latch-up.
+
+```text
+       VDD Power Rail (Metal 1)
+   ═════════════════════════════════════
+      │ [Tap]                 │ [Contact]
+   ┌──┴───────┐           ┌───┴───┐
+   │  N-Well  │           │   S   │ P-Active (Wp = 12λ)
+   └──────────┘           ├───┬───┤
+                    In ───┤ G │   │ (Poly)
+                          ├───┴───┤
+                          │   D   │
+                          └───┬───┘
+                              │ [Contact]
+                              ├────────────── Out (Metal 1)
+                              │ [Contact]
+   ┌──────────┐           ┌───┴───┐
+   │  P-Sub   │           │   D   │ N-Active (Wn = 4λ)
+   └──┬───────┘           ├───┬───┤
+      │ [Tap]       In ───┤ G │   │ (Poly)
+   ═══════════════════════├───┴───┤═════
+      GND Power Rail      │   S   │
+      (Metal 1)           └───┬───┘
+                              │ [Contact]
+   ═════════════════════════════════════
+```
 
 #### P5. Khung Netlist hoàn chỉnh
 ```spice
@@ -327,9 +374,9 @@ CL out 0 50fF
 1. **Thiết kế không đối xứng $W_p = W_n = 4\lambda = 1,2\,\mu\text{m}$:**
    - Hệ số dẫn nạp $r = \frac{40 \times (1,2/0,6)}{120 \times (1,2/0,6)} = \frac{1}{3} \approx 0,3333 \implies \sqrt{r} \approx 0,5774$.
    - Điểm chuyển mạch:
-     
-     $$V_M = \frac{0,70 + 0,5774 \times (5,0 - 0,80)}{1 + 0,5774} = \frac{0,70 + 2,425}{1,5774} \approx \mathbf{1,98\,\text{V}}$$
-     
+
+$$V_M = \frac{0,70 + 0,5774 \times (5,0 - 0,80)}{1 + 0,5774} = \frac{0,70 + 2,425}{1,5774} \approx \mathbf{1,98\,\text{V}}$$
+
      Đường cong VTC bị dịch mạnh sang bên trái (về phía 0 V). Lề nhiễu mức thấp $NM_L$ bị sụt giảm nghiêm trọng từ $\sim 1,7\,\text{V}$ xuống chỉ còn $\sim 1,1\,\text{V}$, làm mạch cực kỳ nhạy cảm với nhiễu đất.
    - Trễ sườn lên $t_{pLH}$ bị kéo dài gấp 3 lần ($R_{on,p} \approx 3 \times 992 \approx 3\,\text{k}\Omega \implies t_{pLH} \approx 150\,\text{ps}$), trong khi $t_{pHL}$ giữ nguyên $\approx 50\,\text{ps}$.
    - Thiết kế này chỉ được chấp nhận trong các mạch có tính bất đối xứng tự nhiên (ví dụ mạch giải mã địa chỉ mảng nhớ chỉ xả tức thời, hoặc tế bào nhớ SRAM nơi kích thước nhỏ là ưu tiên hàng đầu).

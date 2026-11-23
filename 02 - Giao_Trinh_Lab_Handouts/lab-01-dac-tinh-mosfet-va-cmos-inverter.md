@@ -35,19 +35,19 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 ### 3.1. Mô hình dòng điện của MOSFET
 Trong tiến trình CMOS n-well trên đế p, dòng điện má-nguồn $I_{DS}$ của transistor NMOS được mô hình hóa theo ba vùng hoạt động chính:
 
-1. **Vùng ngưng dẫn (Cut-off):** Khi $V_{GS} < V_{thn}$
+**1. Vùng ngưng dẫn (Cut-off):** Khi $V_{GS} < V_{thn}$
 
-   $$I_{DS} \approx 0$$
+$$I_{DS} \approx 0$$
 
-   (Trong mô hình Level 3 thực tế tồn tại dòng rò dưới ngưỡng $I_{sub}$ phụ thuộc hàm mũ vào $V_{GS}$).
+(Trong mô hình Level 3 thực tế tồn tại dòng rò dưới ngưỡng $I_{sub}$ phụ thuộc hàm mũ vào $V_{GS}$).
 
-2. **Vùng tuyến tính (Linear / Triode):** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} < V_{GS} - V_{thn}$
+**2. Vùng tuyến tính (Linear / Triode):** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} < V_{GS} - V_{thn}$
 
-   $$I_{DS} = K_n' \left(\frac{W}{L}\right)_n \left[ (V_{GS} - V_{thn}) V_{DS} - \frac{V_{DS}^2}{2} \right] (1 + \lambda V_{DS})$$
+$$I_{DS} = K_n' \left(\frac{W}{L}\right)_n \left[ (V_{GS} - V_{thn}) V_{DS} - \frac{V_{DS}^2}{2} \right] (1 + \lambda V_{DS})$$
 
-3. **Vùng bão hòa (Saturation):** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} \ge V_{GS} - V_{thn}$
+**3. Vùng bão hòa (Saturation):** Khi $V_{GS} \ge V_{thn}$ và $V_{DS} \ge V_{GS} - V_{thn}$
 
-   $$I_{DS} = \frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_{GS} - V_{thn})^2 (1 + \lambda V_{DS})$$
+$$I_{DS} = \frac{K_n'}{2} \left(\frac{W}{L}\right)_n (V_{GS} - V_{thn})^2 (1 + \lambda V_{DS})$$
 
 Trong đó:
 - $K_n' = \mu_n C_{ox}$ là hệ số dẫn suất truyền dẫn của NMOS (tại công nghệ C5N: $K_n' \approx 120\,\mu\text{A/V}^2$).
@@ -100,25 +100,139 @@ $$V_M = \frac{V_{thn} + \sqrt{r}(V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
 > [!TIP]
 > **Mẹo IC (Tỉ số lưới $\lambda$):** Trong công nghệ MOSIS C5N ($V_{DD} = 5,0\,\text{V}$, $V_{thn} = 0,70\,\text{V}$, $|V_{thp}| = 0,80\,\text{V}$), tỉ số cân bằng $r = 1$ cho điểm chuyển mạch $V_M = 2,45\,\text{V}$. Muốn đạt mốc $2,50\,\text{V}$ cần tỉ số khoảng $3,36$. Tuy nhiên, để tuân thủ bước lưới số nguyên $\lambda$, ta chọn chuẩn công nghiệp $W_p = 12\lambda = 3,6\,\mu\text{m}$ và $W_n = 4\lambda = 1,2\,\mu\text{m}$ (tỉ số $3/1$), chấp nhận độ lệch $V_M$ chỉ $2\%$ để đổi lại diện tích và tính mô-đun hóa tối ưu.
 
-### 3.3. Điện trở kênh dẫn hiệu dụng $R_{on}$ và mô hình trễ $RC$
-Khi ngõ ra chuyển mức, transistor nạp hoặc xả tụ tải $C_L$.
+### 3.3. Điện trở kênh dẫn hiệu dụng $R_{on}$ và mô hình trễ Elmore $RC$
+Khi ngõ ra chuyển mức logic, transistor nạp hoặc xả điện dung tải tổng $C_L$. Mạch tương đương quá độ phóng nạp được mô hình hóa bằng mạch Elmore $RC$ bậc một:
+
+```text
+       Quá trình nạp (t_pLH):                  Quá trình xả (t_pHL):
+          VDD (5,0 V)                             out
+              │                                    │
+              \  Công tắc PMOS đóng                \  Công tắc NMOS đóng
+              /  (R_on,p)                          /  (R_on,n)
+              │                                    │
+    out ──────┴─────┐                              ├─────┐
+                    │                              │     │
+                 ┌──┴──┐                        ┌──┴──┐  │
+                 │ CL  │                        │ CL  │  │
+                 └──┬──┘                        └──┬──┘  │
+                    │                              │     │
+                   GND                            GND   GND
+```
+
 - Tại vùng triode sâu ($V_{DS} \to 0$ khi cổng mở sâu):
 
-  $$R_{on,n} = \frac{1}{K_n' \left(\frac{W}{L}\right)_n (V_{DD} - V_{thn})}, \quad R_{on,p} = \frac{1}{K_p' \left(\frac{W}{L}\right)_p (V_{DD} - |V_{thp}|)}$$
+$$R_{on,n} = \frac{1}{K_n' \left(\frac{W}{L}\right)_n (V_{DD} - V_{thn})}, \quad R_{on,p} = \frac{1}{K_p' \left(\frac{W}{L}\right)_p (V_{DD} - |V_{thp}|)}$$
 
 - Ước lượng trễ bậc một Elmore:
 
-  $$t_{pHL} \approx 0,69 \cdot R_{on,n} \cdot C_L, \quad t_{pLH} \approx 0,69 \cdot R_{on,p} \cdot C_L, \quad t_{pd} = \frac{t_{pHL} + t_{pLH}}{2}$$
+$$t_{pHL} \approx 0,69 \cdot R_{on,n} \cdot C_L, \quad t_{pLH} \approx 0,69 \cdot R_{on,p} \cdot C_L, \quad t_{pd} = \frac{t_{pHL} + t_{pLH}}{2}$$
 
 > [!CAUTION]
 > **Giới hạn của mô hình $0,69 \cdot R_{on} \cdot C_L$:** Trong thực tế chuyển mạch từ $V_{DD}$ xuống $V_{DD}/2$, transistor bắt đầu từ vùng bão hòa (dòng dẫn bị giới hạn bởi điện áp pinch-off, điện trở tức thời $V_{DS}/I_{DS}$ cao hơn nhiều so với vùng triode) rồi mới chuyển dần sang vùng tuyến tính. Do đó, thời gian trễ đo thực tế từ mô phỏng SPICE thường cao hơn giá trị ước lượng $0,69 \cdot R_{on} \cdot C_L$ khoảng 1,5 đến 1,8 lần. Đây là đặc tính vật lý tự nhiên của quá trình phóng nạp qua vùng bão hòa; sinh viên cần ghi nhận và phân tích sự khác biệt này.
 
-### 3.4. Quy tắc hình học MOSIS SCMOS và Latch-up
-- Đơn vị chia lưới: $\lambda = 0,30\,\mu\text{m}$. Chiều dài kênh tối thiểu: $L_{min} = 2\lambda = 0,60\,\mu\text{m}$.
-- Độ rộng tối thiểu: Poly $= 2\lambda$ ($0,60\,\mu\text{m}$), Active $= 3\lambda$ ($0,90\,\mu\text{m}$), Metal 1 $= 3\lambda$ ($0,90\,\mu\text{m}$).
-- Poly vươn qua mép Active (Gate Overhang) $\ge 2\lambda$ ($0,60\,\mu\text{m}$).
-- Kích thước lỗ tiếp xúc (Contact) cố định $2\lambda \times 2\lambda$ ($0,6\,\mu\text{m} \times 0,6\,\mu\text{m}$), lớp bao bọc (Enclosure) $\ge 1\lambda$.
-- **Phân cực đế và giếng (Taps):** Bắt buộc phải có $N^+$-tap nối N-Well lên $V_{DD}$ và $P^+$-tap nối P-Substrate xuống $GND$. Nếu thiếu các tiếp xúc này, điện thế nền bị thả nổi làm phân cực thuận các tiếp giáp p-n ký sinh, kích hoạt cặp transistor lưỡng cực ký sinh ($pnp-npn$) tạo thành hiện tượng ngắn mạch **Latch-up** làm cháy vi mạch thật.
+### 3.4. Phương pháp đường đi Euler (Euler Path) và Sơ đồ que (Stick Diagram)
+Trong thiết kế Layout vi mạch CMOS, mục tiêu hàng đầu là **tối thiểu hóa diện tích tế bào (Silicon Area)** và **giảm thiểu điện dung ký sinh khuếch tán ($C_{db}, C_{sb}$)**. Để đạt được điều này, kỹ sư thiết kế sử dụng:
+1. **Kỹ thuật chia sẻ vùng khuếch tán (Diffusion Sharing / Abutment):** Ghép các cực Source hoặc cực Drain của các transistor lân cận vào chung một dải khuếch tán, tránh việc phải chia cắt dải Active thành nhiều đoạn nhỏ cách ly.
+2. **Phương pháp đường đi Euler (Eulerian Path):** Biểu diễn sơ đồ nguyên lý mạch thành đồ thị với các transistor là các cạnh (edges) và các nút mạng là các đỉnh (nodes). Một đường đi Euler là đường đi qua mỗi cạnh (mỗi transistor) đúng một lần. Khi tìm được một thứ tự duyệt biến cổng chung cho cả mạng kéo lên PUN và mạng kéo xuống PDN, ta có thể bố trí các dải Polysilicon thẳng hàng xuyên suốt từ dải P-Active xuống N-Active mà không làm đứt đoạn dải khuếch tán.
+
+**Trường hợp cơ sở của CMOS Inverter (Lab 01):**
+Do tế bào Inverter chỉ có **duy nhất 1 ngõ vào $In$** (gồm 1 PMOS và 1 NMOS), đồ thị mạch chỉ có 1 cạnh đơn lập. Thứ tự đường Euler ở đây là trường hợp suy biến:
+
+$$\text{Euler Path: } [In]$$
+
+Dải Polysilicon ngõ vào $In$ chạy thẳng đứng trực tiếp từ trên xuống dưới, cắt ngang qua dải P-Active (tạo PMOS) và cắt tiếp qua dải N-Active (tạo NMOS). Đây là cấu trúc cơ sở mẫu để sinh viên nắm vững nguyên lý trước khi giải bài toán Euler đa biến ở Lab 02 ($A - B$) và Lab 03 ($A - B - C$).
+
+**Quy ước ký hiệu lớp trong Sơ đồ que (Stick Diagram):**
+- **Metal 1:** Đường nét đôi hoặc màu xanh dương — dùng cho thanh nguồn $V_{DD}$, thanh đất $GND$ và dây tín hiệu ngõ ra.
+- **Polysilicon:** Đường nét liền hoặc màu đỏ — tạo cực cổng và đường dẫn tín hiệu ngõ vào.
+- **P-Active / N-Active:** Dải khuếch tán (vàng / xanh lá) nằm ngang.
+- **Tiếp xúc (Contact):** Dấu nhân `X` kết nối giữa Metal 1 với Active hoặc Poly.
+- **Tiếp xúc giếng/đế (Taps):** Ô tiếp xúc nối N-Well lên $V_{DD}$ ($N^+$-tap) và P-Substrate xuống $GND$ ($P^+$-tap).
+
+```text
+======================= Thanh nguồn VDD (Metal 1) =======================
+       │ [Tap]                                        │ [Contact]
+   ┌───┴───────────────┐                          ┌───┴───┐
+   │ N-Well            │                          │       │ (P-Active)
+   │                   │                          │  S    │
+   │                   │                      ┌───┴───┐   │
+   │                   │                      │ PMOS  │   │
+   │                   │                      └───┬───┘   │
+   │                   │                          │  D    │
+   └───────────────────┘                          └───┬───┘
+                                                      │ [Contact]
+                     Polysilicon (Cực cổng In)       │
+             In ──────────────────────────────────────┼───────────── Out (Metal 1)
+                     (Euler Path: 1 cổng duy nhất)   │
+                                                      │ [Contact]
+   ┌───────────────────┐                          ┌───┴───┐
+   │ P-Substrate       │                          │       │ (N-Active)
+   │                   │                          │  D    │
+   │                   │                      ┌───┴───┐   │
+   │                   │                      │ NMOS  │   │
+   │                   │                      └───┬───┘   │
+   │                   │                          │  S    │
+   │ [Tap]             │                          └───┬───┘
+   └───┬───────────────┘                              │ [Contact]
+======================= Thanh đất GND (Metal 1) =========================
+```
+*Hình 1.1: Sơ đồ que (Stick Diagram) chuẩn của tế bào CMOS Inverter `INV_X1`.*
+
+### 3.5. Quy tắc hình học MOSIS SCMOS và Phòng ngừa Latch-up
+Khi chuyển từ Sơ đồ que sang Mask Layout chi tiết trong phần mềm Electric VLSI, thiết kế phải tuân thủ nghiêm ngặt bộ luật hình học khả tỉ lệ MOSIS SCMOS (Scalable CMOS Design Rules) theo tham số $\lambda = 0,30\,\mu\text{m}$:
+- **Đơn vị chia lưới (Grid):** Lưới thiết kế $1\lambda = 0,30\,\mu\text{m}$. Chiều dài kênh tối thiểu: $L_{min} = 2\lambda = 0,60\,\mu\text{m}$.
+- **Kích thước transistor chuẩn tế bào `INV_X1`:**
+  * Transistor NMOS: $W_n = 4\lambda = 1,20\,\mu\text{m}, L_n = 2\lambda = 0,60\,\mu\text{m}$.
+  * Transistor PMOS: $W_p = 12\lambda = 3,60\,\mu\text{m}, L_p = 2\lambda = 0,60\,\mu\text{m}$ (tỉ số $W_p/W_n = 3/1$).
+- **Độ rộng dây và dải vật liệu:**
+  * Dải Polysilicon tối thiểu $2\lambda = 0,60\,\mu\text{m}$.
+  * Thanh ray nguồn Metal 1 tối thiểu $4\lambda = 1,20\,\mu\text{m}$ (để đảm bảo mật độ dòng electromigration); dây Metal 1 nội bộ tối thiểu $3\lambda = 0,90\,\mu\text{m}$.
+- **Quy tắc biên tiếp giáp và phần vươn (Overhang / Enclosure):**
+  * Phần Poly vươn qua mép khuếch tán (Gate Overhang / Endcap) $\ge 2\lambda = 0,60\,\mu\text{m}$ (chống đoản mạch do lệch mặt nạ).
+  * Lỗ tiếp xúc Contact kích thước cố định $2\lambda \times 2\lambda = 0,60\,\mu\text{m} \times 0,60\,\mu\text{m}$.
+  * Lớp bao quanh tiếp xúc (Contact Enclosure) của Active hoặc Metal 1 $\ge 1\lambda = 0,30\,\mu\text{m}$.
+  * Khoảng cách từ Contact đến ranh giới cổng Poly $\ge 2\lambda = 0,60\,\mu\text{m}$.
+  * Ranh giới giếng N-Well bao quanh vùng P-Active tối thiểu $6\lambda = 1,80\,\mu\text{m}$.
+
+```text
+               ┌──────────────────────────────────────────────┐
+               │         VDD Power Rail (Metal 1, 4λ)         │
+               └──────┬────────────────────────────────┬──────┘
+                      │                                │
+                [N-Well Tap]                      [Source Contact]
+             ┌────────┴────────┐                ┌──────┴──────────────┐
+             │  N-Well (6λ)    │                │  P-Active           │
+             │                 │   Polysilicon  │  (Wp = 12λ = 3.6µm) │
+             │                 │   (2λ = 0.6µm) │                     │
+             │                 │        │       │                     │
+             │                 │  In ───┼───────┤ Gate Channel (2λ)   │
+             │                 │        │       │                     │
+             │                 │        │       │  P-Active           │
+             └─────────────────┘        │       └──────┬──────────────┘
+                                        │              │ [Drain Contact]
+                                        │              │
+                                        │     Out ─────┴───── (Metal 1, 3λ)
+                                        │              │
+                                        │              │ [Drain Contact]
+             ┌─────────────────┐        │       ┌──────┴──────────────┐
+             │  P-Substrate    │        │       │  N-Active           │
+             │                 │        │       │  (Wn = 4λ = 1.2µm)  │
+             │                 │  In ───┼───────┤ Gate Channel (2λ)   │
+             │                 │        │       │                     │
+             │                 │        │       │  N-Active           │
+             │                 │        │       └──────┬──────────────┘
+             │  P-Sub Tap      │   (Gate Overhang      │
+             └────────┬────────┘    >= 2λ = 0.6µm) [Source Contact]
+                      │                                │
+               ┌──────┴────────────────────────────────┴──────┐
+               │         GND Power Rail (Metal 1, 4λ)         │
+               └──────────────────────────────────────────────┘
+```
+*Hình 1.2: Bản vẽ phân bố Mask Layout chuẩn SCMOS của tế bào `INV_X1`.*
+
+- **Phòng ngừa hiện tượng Latch-up:**
+  Trong cấu trúc CMOS n-well, ký sinh hai transistor lưỡng cực: BJT $p-n-p$ (tạo bởi P-Active, N-Well, P-Substrate) và BJT $n-p-n$ (tạo bởi N-Active, P-Substrate, N-Well) mắc nối tiếp thành một mạch khóa bán dẫn SCR (Silicon Controlled Rectifier). Khi có xung đột điện áp hoặc nhiễu, SCR dẫn thông tạo đường đoản mạch giữa $V_{DD}$ và $GND$ với dòng điện cực lớn gây phá hủy chip.  
+  *Biện pháp bắt buộc:* Bố trí tiếp xúc $N^+$-tap nối N-Well cố định lên $V_{DD}$ và tiếp xúc $P^+$-tap nối P-Substrate cố định xuống $GND$ ngay sát các transistor để dẫn thoát dòng rò, triệt tiêu điện áp phân cực kích hoạt Latch-up.
 
 ---
 
@@ -151,7 +265,8 @@ Cho các tham số công nghệ C5N: $V_{DD} = 5,0\,\text{V}$, $V_{thn} = 0,70\,
 3. **Dự đoán:** Khi đo đạc thực tế trên LTspice, thời gian trễ thu được sẽ *lớn hơn* hay *nhỏ hơn* giá trị ước lượng $0,69 \cdot R_{on} \cdot C_L$ này? Nêu lý do ngắn gọn trong 1 câu.
 
 ### P4. Thiết kế sơ đồ que (Stick Diagram)
-Vẽ sơ đồ que của tế bào CMOS Inverter lên giấy kẻ ô ly. Yêu cầu thể hiện rõ:
+Vẽ sơ đồ que của tế bào CMOS Inverter lên giấy kẻ ô ly (dựa trên cấu trúc đường Euler chuẩn tại Hình 1.1 và các quy tắc SCMOS tại Mục 3.5). Yêu cầu thể hiện rõ:
+- **Đường đi Euler:** Xác định chu trình Euler ngõ vào (với Inverter là đường đơn biến $[In]$).
 - Thanh nguồn $V_{DD}$ và thanh đất $GND$ bằng lớp Metal 1.
 - Vùng P-Active trong N-Well (nửa trên) và N-Active trên đế P (nửa dưới).
 - Dải Polysilicon liên tục chạy dọc tạo cực cổng cho cả hai transistor, nối ra cổng `in`.
@@ -205,7 +320,7 @@ Giảng viên kiểm tra trực tiếp P1, P2, P4 và P5 tại bàn thực hành
    - Quan sát 5 đường đặc tuyến tương ứng $V_{GS} = 1\,\text{V}, 2\,\text{V}, 3\,\text{V}, 4\,\text{V}, 5\,\text{V}$.
    - Dùng con trỏ (Cursor) trên đường cong $V_{GS} = 5\,\text{V}$, chọn 2 điểm trong vùng bão hòa ($V_{DS1} = 3,0\,\text{V}$ và $V_{DS2} = 5,0\,\text{V}$) để tính hệ số điều chế kênh $\lambda_n$:
 
-     $$\lambda \approx \frac{\Delta I_{DS}}{I_{DS1} \cdot \Delta V_{DS}}$$
+$$\lambda \approx \frac{\Delta I_{DS}}{I_{DS1} \cdot \Delta V_{DS}}$$
 
 5. **Khảo sát đặc tuyến truyền dẫn $I_{DS}-V_{GS}$ và đo $V_{thn}$:**
    - Cố định $V_{DS} = 5,0\,\text{V}$. Đổi lệnh mô phỏng thành quét đơn: `.dc VGS 0 5 0.01`.
@@ -296,7 +411,7 @@ Giảng viên kiểm tra trực tiếp P1, P2, P4 và P5 tại bàn thực hành
 5. Chạy mô phỏng quá độ Transient, dùng `.meas` đọc các thông số trễ Post-layout: $t_{pHL,post}, t_{pLH,post}, t_{pd,post}$.
 6. Tính toán phần trăm suy giảm tốc độ:
 
-   $$\Delta t_{pd} (\%) = \frac{t_{pd,post} - t_{pd,pre}}{t_{pd,pre}} \times 100\%$$
+$$\Delta t_{pd} (\%) = \frac{t_{pd,post} - t_{pd,pre}}{t_{pd,pre}} \times 100\%$$
 
 **Sản phẩm:** Bảng so sánh 3 chiều: Lý thuyết giải tích | Mô phỏng Pre-layout | Mô phỏng Post-layout (PEX); số phần trăm tăng trễ.  
 **Câu hỏi kiểm tra:** Tụ ký sinh khuếch tán cực má ($C_{db}$) và tụ ký sinh dây kim loại đóng góp xấp xỉ bao nhiêu phần trăm vào sự gia tăng độ trễ ngõ ra?
