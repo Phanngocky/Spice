@@ -63,34 +63,62 @@ Ex0.5. NMOS C5N Test (W=1.2u, L=0.6u, VGS=5V, VDS=5V):
 
 ### 2. KẾT QUẢ KIỂM CHỨNG SỐ HỌC BÀI 1 (LAB 01)
 
+Script kiểm chứng: `python scripts/verify_lab01_new.py`
+
 ```
-============================================================
-VERIFICATION: LAB 01 (MOSFET I-V & CMOS INVERTER)
-============================================================
-MOSFET Parameters (C5N 0.5um):
-  NMOS: W=1.2u, L=0.6u -> beta_n = 240.0 uA/V^2
-  PMOS: W=3.6u, L=0.6u -> beta_p = 240.0 uA/V^2
-  Sizing ratio (Wp/Wn) = 3.00
-  Idsat_n (VGS=5V, VDS=5V) = 2.219 mA
-  Idsat_p (|VGS|=5V, |VDS|=5V) = 2.117 mA
+======================================================================
+VERIFICATION & BENCHMARK REPORT: LAB 01
+Process: MOSIS SCMOS C5N 0.5um (lambda = 0.30um, VDD = 5.0V)
+======================================================================
 
-CMOS Inverter VTC Characteristics:
-  r = sqrt(beta_p/beta_n) = 1.0000
-  Switching Threshold VM = 2.4500 V
-  Numerical VIL = 1.820 V
-  Numerical VIH = 2.780 V
-  Noise Margin Low  NML = 1.820 V
-  Noise Margin High NMH = 2.220 V
+1. MOSFET PARAMETERS & DEVICE SIZING:
+  NMOS: W = 1.20 um, L = 0.60 um -> (W/L)n = 2.00
+        beta_n = Kn' * (W/L)n = 240.0 uA/V^2
+  PMOS: W = 3.60 um, L = 0.60 um -> (W/L)p = 6.00
+        beta_p = Kp' * (W/L)p = 240.0 uA/V^2
+  Tỉ số beta_p / beta_n = 1.0000 (Cân bằng beta)
+  Idsat_n (VGS=5V, VDS=5V) = 2.773 mA (có lambda)
+  Idsat_n (lý thuyết bậc 2 không lambda) = 2.219 mA
+  Idsat_p (|VGS|=5V, |VDS|=5V) = 2.646 mA (có lambda)
 
-Equivalent On-Resistance:
-  Ron_n = 969.0 Ohm (0.969 kOhm)
-  Ron_p = 992.1 Ohm (0.992 kOhm)
+2. SWITCHING THRESHOLD VM:
+  Với tỉ số thiết kế Wp/Wn = 3.0 (beta_p = beta_n, r = 1.0):
+    VM = (0.70 + 1.0 * (5.0 - 0.80)) / 2.0 = 2.4500 V
+    Độ lệch so với VDD/2 = 2.50V: -0.0500 V (lệch 2.00%)
+  Để đạt chính xác VM = 2.5000 V:
+    sqrt(r) cần thiết = (2.5 - 0.7) / (5.0 - 2.5 - 0.8) = 1.0588
+    r = 1.1211 -> (Wp/Lp)/(Wn/Ln) = 3.363
+    Với Wn = 1.20 um -> Wp = 4.036 um = 13.45 lambda
+    -> Do lưới thiết kế lambda = 0.30 um yêu cầu số nguyên lambda,
+       ta chọn Wp = 12 lambda = 3.60 um (tỉ số 3.0) là tối ưu thực tế!
 
-Delay Estimation (CL = 50 fF):
-  tpHL (theoretical) = 33.43 ps
-  tpLH (theoretical) = 34.23 ps
-  tpd  (theoretical) = 33.83 ps
-  tpd (post-layout PEX approx, CL_eff=73.5fF) = 49.73 ps (+47.0%)
+3. VTC & NOISE MARGINS (Mô hình giải tích số):
+  VIL (tại slope = -1, Vin < VM) = 1.655 V
+  VIH (tại slope = -1, Vin > VM) = 2.825 V
+  Lề nhiễu mức thấp NML = VIL - VOL = 1.655 V
+  Lề nhiễu mức cao  NMH = VOH - VIH = 2.175 V
+
+4. ON-RESISTANCE & RC PROPAGATION DELAY:
+  Ron tại VDS -> 0, VGS = 5V:
+    Ron,n = 1 / (240.0u * (5.0 - 0.7)) = 969.0 Ohm
+    Ron,p = 1 / (240.0u * (5.0 - 0.8)) = 992.1 Ohm
+  Ước lượng theo mô hình 0.69 * Ron * CL (với Ron tại VDS≈0):
+    tpHL = 33.58 ps
+    tpLH = 34.37 ps
+    tpd  = 33.98 ps
+  Tích phân số quá trình phóng/nạp thực tế (qua vùng bão hòa + tuyến tính):
+    tpHL (tích phân số) = 49.80 ps
+    tpLH (tích phân số) = 51.91 ps
+    tpd  (tích phân số) = 50.86 ps
+    Tỉ số chênh lệch: tp_num / tp_069 = 1.50 lần (~1.7-1.8 lần)
+
+5. POST-LAYOUT PEX DELAY ANALYSIS:
+  Tải dung ngoài: CL = 50.0 fF
+  Tụ ký sinh cực má (Cdb,n + Cdb,p) + dây dẫn Metal 1: C_par ~ 23.5 fF
+  Tổng tải hiệu dụng sau trích xuất: CL_eff = 73.5 fF (+47.0%)
+  tpHL_post = 73.21 ps
+  tpLH_post = 76.30 ps
+  tpd_post  = 74.75 ps (+47.0% so với Pre-layout)
 ```
 
 **Mã nguồn SPICE đã kiểm tra cú pháp và chạy thử nghiệm:**
