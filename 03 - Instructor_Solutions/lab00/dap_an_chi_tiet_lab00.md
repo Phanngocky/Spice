@@ -135,7 +135,8 @@ Với $R_{on} = 1\,\text{k}\Omega$ và $C_L = 50\,\text{fF}$:
 
 $$t_{50} = 0.69315 \times (1 \times 10^3\,\Omega) \times (50 \times 10^{-15}\,\text{F}) = 3.466 \times 10^{-11}\,\text{s} = \mathbf{34.66\,\text{ps}} \approx \mathbf{34.7\,\text{ps}}$$
 
-*(Giá trị $34.7\,\text{ps}$ này khớp hoàn toàn với kết quả mô phỏng trễ $t_{pHL}, t_{pLH}$ của Inverter C5N ở Lab 1).*
+> [!NOTE]
+> Giá trị $34.66\,\text{ps} \approx 34.7\,\text{ps}$ này tương ứng với ước lượng trễ Elmore bậc một $0.69 \cdot R_{on} \cdot C_L$ của Inverter C5N ở Lab 1.
 
 ---
 

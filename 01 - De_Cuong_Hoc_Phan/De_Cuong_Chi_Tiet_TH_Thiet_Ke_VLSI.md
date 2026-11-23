@@ -72,7 +72,7 @@ flowchart LR
     L05 --> L07["Lab 7-8: Domino, SRAM"]
     L07 --> L09["Lab 9-10: 4-bit ALU / CLA Capstone"]
     
-    subgraph Cell_Flow ["Quy trình Chuẩn hóa mỗi Cell"]
+    subgraph Cell_Flow [Quy trình Chuẩn hóa mỗi Cell]
         direction TB
         C1["Schematic & Sizing (W/L)"] --> C2["Pre-layout SPICE (DC/Tran)"]
         C2 --> C3["Stick Diagram & Mask Layout"]
@@ -116,25 +116,41 @@ Mỗi buổi thực hành được cấu trúc nghiêm ngặt theo **3 pha**:
 
 ## VI. MA TRẬN KẾ THỪA IP XUYÊN SUỐT KHÓA HỌC
 
+```mermaid
+flowchart TD
+    L01["Lab 01: INV_X1, INV_X4<br>(Inverter & Buffer)"]
+    L02["Lab 02: NAND2_X1, NOR2_X1"]
+    L03["Lab 03: AOI21, Buffer Chain"]
+    L04["Lab 04: TG_GATE"]
+    MUX["MUX2_TG / MUX4_TG"]
+    L05["Lab 05: DLATCH / DFF_MS_X1"]
+    L06["Lab 06: FULL_ADDER_1B"]
+    L09["Lab 09: CLA_ADDER_4B"]
+    L10["Lab 10: CAPSTONE 4-BIT REGISTERED ALU<br>(CLA4 + LOGIC + MUX4 + DFF_REG)"]
+
+    L01 --> L02
+    L02 --> L03
+    L01 --> L04
+    L04 --> MUX
+    L01 --> L05
+    L01 --> L06
+    L06 --> L09
+    MUX --> L10
+    L05 --> L10
+    L09 --> L10
+    L01 --> L10
 ```
-Lab 01: INV_X1, INV_X4 (Inverter & Buffer)
-   │
-   ├──────► Lab 02: NAND2_X1, NOR2_X1
-   │           │
-   │           ├──────► Lab 03: AOI21, Buffer Chain
-   │           │
-   ├──────► Lab 04: TG_GATE ────► MUX2_TG ────► MUX4_TG
-   │                                               │
-   ├──────► Lab 05: DLATCH ────► DFF_MS_X1 ────────┤
-   │                                               │
-   ├──────► Lab 06: FULL_ADDER_1B                  │
-   │                   │                           │
-   │                   ▼                           │
-   │            Lab 09: CLA_ADDER_4B               │
-   │                       │                       │
-   │                       ▼                       ▼
-   └────────────────► Lab 10: CAPSTONE 4-BIT REGISTERED ALU
-                              (CLA4 + LOGIC + MUX4 + DFF_REG)
+
+```text
+Sơ đồ dạng phân cấp văn bản thuần:
+Lab 01 (INV_X1, INV_X4)
+  |--+--> Lab 02 (NAND2_X1, NOR2_X1)
+  |  |     |--+--> Lab 03 (AOI21, Buffer Chain)
+  |--+--> Lab 04 (TG_GATE) ---> MUX2_TG / MUX4_TG ------------+
+  |--+--> Lab 05 (DLATCH, DFF_MS_X1) -------------------------+
+  |--+--> Lab 06 (FULL_ADDER_1B) ---> Lab 09 (CLA_ADDER_4B) --+
+  |                                                           |
+  +-----------------------------------------------------------+--> Lab 10 (CAPSTONE 4-BIT ALU)
 ```
 
 ---

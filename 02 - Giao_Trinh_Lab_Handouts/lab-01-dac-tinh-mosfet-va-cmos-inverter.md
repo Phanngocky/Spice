@@ -58,7 +58,7 @@ Trong đó:
 ### 3.2. Đường cong truyền đạt VTC và điện áp chuyển mạch $V_M$
 Sơ đồ nguyên lý CMOS Inverter gồm một transistor PMOS kéo lên nguồn $V_{DD}$ và một transistor NMOS kéo xuống đất $GND$.
 
-```
+```text
              VDD (5,0 V)
                  │
              ┌───┴───┐

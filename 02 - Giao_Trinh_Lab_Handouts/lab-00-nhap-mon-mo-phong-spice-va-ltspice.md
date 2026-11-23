@@ -286,10 +286,10 @@ $$\text{Error (\%)} = \frac{|\text{SPICE} - \text{Theory}|}{\text{Theory}} \time
 
 ## 7. POST-LAB (CÂU HỎI BÁO CÁO TỔNG KẾT)
 
-1. *Tại sao khi mô phỏng nạp - xả tụ điện, bắt buộc phải chọn $T_{on} \ge 5\tau$? Nếu chọn $T_{on} = 2\tau$ thì điện áp đỉnh cực đại trên tụ đạt bao nhiêu vôn so với $V_0 = 5.0\,\text{V}$?*
-2. *Tại sao thời gian trễ 50% lại có biểu thức $t_{50} = \ln(2) \cdot \tau$? Hãy viết 2 dòng suy diễn toán học từ phương trình nạp $v_C(t) = V_0(1 - e^{-t/\tau})$ khi $v_C(t) = 0.5 V_0$.*
-3. *Điền giá trị ước lượng trễ của Inverter ở mục P5 vào bảng "Dự báo trễ VLSI" của nhóm; nêu nhận xét khi so sánh với trễ mô phỏng thực tế tại Lab 1.*
-4. *Nêu 2 lỗi kỹ thuật hoặc cảnh báo bạn đã gặp phải trong buổi thực hành, giải thích rõ nguyên nhân bản chất và giải pháp bạn đã xử lý.*
+1. Tại sao khi mô phỏng nạp - xả tụ điện, bắt buộc phải chọn $T_{on} \ge 5\tau$? Nếu chọn $T_{on} = 2\tau$ thì điện áp đỉnh cực đại trên tụ đạt bao nhiêu vôn so với $V_0 = 5.0\,\text{V}$?
+2. Tại sao thời gian trễ 50% lại có biểu thức $t_{50} = \ln(2) \cdot \tau$? Hãy viết 2 dòng suy diễn toán học từ phương trình nạp $v_C(t) = V_0(1 - e^{-t/\tau})$ khi $v_C(t) = 0.5 V_0$.
+3. Điền giá trị ước lượng trễ của Inverter ở mục P5 vào bảng "Dự báo trễ VLSI" của nhóm; nêu nhận xét khi so sánh với trễ mô phỏng thực tế tại Lab 1.
+4. Nêu 2 lỗi kỹ thuật hoặc cảnh báo bạn đã gặp phải trong buổi thực hành, giải thích rõ nguyên nhân bản chất và giải pháp bạn đã xử lý.
 
 ---
 
