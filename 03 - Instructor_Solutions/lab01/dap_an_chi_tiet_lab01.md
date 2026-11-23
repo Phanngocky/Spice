@@ -51,7 +51,7 @@ Tuy nhiên, trong mô hình bán dẫn thực tế MOSIS C5N ($L = 0,6\,\mu\text
 
 $$\mu_{eff} = \frac{\mu_0}{1 + \theta (V_{GS} - V_{th})}$$
 
-**2. Vận tốc bão hòa hạt dẫn (Velocity Saturation):** Khi điện trường ngang má-nguồn vượt quá ngưỡng tới hạn $\mathcal{E}_{sat}$, vận tốc hạt dẫn đạt giới hạn tối đa ($v_{sat} \approx 10^7\,\text{cm/s}$ với electron). Hiện tượng này khiến transistor NMOS đi vào bão hòa sớm hơn so với dự đoán của mô hình bậc hai ($V_{DS,sat} < V_{GS} - V_{th}$), và dòng bão hòa phụ thuộc tuyến tính vào $(V_{GS} - V_{th})$ thay vì bậc hai.
+**2. Vận tốc bão hòa hạt dẫn (Velocity Saturation):** Khi điện trường ngang kênh dẫn vượt quá ngưỡng tới hạn $\mathcal{E}_{sat}$, vận tốc hạt dẫn đạt giới hạn tối đa ($v_{sat} \approx 10^7\,\text{cm/s}$ với electron). Hiện tượng này khiến transistor NMOS đi vào bão hòa sớm hơn so với dự đoán của mô hình bậc hai ($V_{DS,sat} < V_{GS} - V_{th}$), và dòng bão hòa phụ thuộc tuyến tính vào $(V_{GS} - V_{th})$ thay vì bậc hai.
 
 **3. Hiệu ứng thân (Body Effect):** Điện thế phân cực ngược giữa Source và Bulk làm mở rộng vùng nghèo, làm tăng điện áp ngưỡng thực tế:
 

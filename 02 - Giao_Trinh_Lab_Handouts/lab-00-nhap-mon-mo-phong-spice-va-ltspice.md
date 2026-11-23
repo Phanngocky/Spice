@@ -115,11 +115,11 @@ Mọi cổng logic CMOS khi chuyển mạch đều nạp hoặc xả điện dun
 Với điện áp bước nhảy $V_0$ cấp vào mạch $R$ nối tiếp $C$ (tụ nối đất), hằng số thời gian $\tau = R \cdot C$:
 - **Phương trình điện áp nạp ($0 \le t < T_{on}$):**
 
-  $$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right)$$
+$$v_C(t) = V_0 \left(1 - e^{-\frac{t}{\tau}}\right)$$
 
 - **Phương trình điện áp xả ($T_{on} \le t < T_{period}$, đặt $t' = t - T_{on}$):**
 
-  $$v_C(t') = V_0 e^{-\frac{t'}{\tau}}$$
+$$v_C(t') = V_0 e^{-\frac{t'}{\tau}}$$
 
 - **Dòng điện tức thời cực đại:** Tại thời điểm đổi mức xung ($t=0$ và $t=T_{on}$), dòng điện đạt đỉnh tức thời $I_{peak} = \pm \frac{V_0}{R}$.
 - **Trễ truyền lan 50%:** $t_{50} = t_{pd} = \tau \ln(2) \approx 0.693 \cdot \tau$.
@@ -260,10 +260,10 @@ $t_{50} =$ .................... ps.
 2. Nhấp chuột phải vào linh kiện: đặt tên model là **`N`** (khớp chính xác với tên trong tệp mô hình), chiều dài kênh $L = 0.6\,\mu\text{m}$ (`0.6u`), chiều rộng kênh $W = 1.2\,\mu\text{m}$ (`1.2u`).
 3. Nhấn phím `S`, chèn lệnh liên kết: `.include C5_models.txt`.
 4. Nối nguồn điện áp cố định $V_{DS} = 5.0\,\text{V}$ vào cực má (Drain), $V_{GS} = 5.0\,\text{V}$ vào cực cổng (Gate); cực nguồn (Source) và cực đế (Bulk) nối chung xuống đất `GND`.
-5. Đặt lệnh `.op`, nhấn **Run**. Ghi lại dòng điện cực má $I_D$.
+5. Đặt lệnh `.op`, nhấn **Run**. Ghi lại dòng điện $I_D$.
 6. Mở tệp `C5_models.txt`, tìm các tham số ngưỡng $V_{TO}$ (hoặc `VTH0`) và độ dẫn suất $K'$ (hoặc tích $\mu_0 C_{ox}$). Tính ước lượng dòng bão hòa theo mô hình bậc hai kinh điển:
 
-   $$I_D \approx \frac{1}{2} K_n' \left(\frac{W}{L}\right) (V_{GS} - V_{TH})^2$$
+$$I_D \approx \frac{1}{2} K_n' \left(\frac{W}{L}\right) (V_{GS} - V_{TH})^2$$
 
 7. Mở menu **View $\to$ SPICE Netlist**, chỉ ra dòng khai báo transistor `M1` và dòng lệnh `.include`.
 - **Sản phẩm nghiệm thu:** Ảnh chụp sơ đồ, giá trị dòng $I_D$ đo từ SPICE và giá trị tính ước lượng bậc hai; Nêu 2 nguyên nhân vật lý gây ra sự chênh lệch (chuẩn bị giả thuyết để kiểm chứng tại Lab 1).

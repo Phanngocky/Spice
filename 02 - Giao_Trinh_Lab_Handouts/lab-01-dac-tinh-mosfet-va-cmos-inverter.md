@@ -33,7 +33,7 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 ## 3. CƠ SỞ NGẮN GỌN
 
 ### 3.1. Mô hình dòng điện của MOSFET
-Trong tiến trình CMOS n-well trên đế p, dòng điện má-nguồn $I_{DS}$ của transistor NMOS được mô hình hóa theo ba vùng hoạt động chính:
+Trong tiến trình CMOS n-well trên đế p, dòng điện $I_{DS}$ của transistor NMOS được mô hình hóa theo ba vùng hoạt động chính:
 
 **1. Vùng ngưng dẫn (Cut-off):** Khi $V_{GS} < V_{thn}$
 
