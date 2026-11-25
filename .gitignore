@@ -15,3 +15,6 @@ SPICE for Power Electronics and Electric Power 2nd ed - M. Rashid, H. Rashid (CR
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Junction link for local Windows explorer compatibility
+Teacher's Book/
