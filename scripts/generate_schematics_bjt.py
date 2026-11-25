@@ -193,5 +193,5 @@ def draw_bjt_iv_characteristic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_bjt_testbench_schematic("02 - Giao_Trinh_Lab_Handouts/images/bjt_bias_schematic.png")
-    draw_bjt_iv_characteristic("02 - Giao_Trinh_Lab_Handouts/images/bjt_iv_characteristic.png")
+    draw_bjt_testbench_schematic("02 - Student Workbook/images/bjt_bias_schematic.png")
+    draw_bjt_iv_characteristic("02 - Student Workbook/images/bjt_iv_characteristic.png")

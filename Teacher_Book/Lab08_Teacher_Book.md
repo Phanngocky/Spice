@@ -2,7 +2,7 @@
 # BÀI LAB 08 — TEACHER'S BOOK: THIẾT KẾ Ô NHỚ BÁN DẪN TĨNH (6T SRAM CELL & SENSE AMPLIFIER)
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-08-o-nho-sram-6t-va-sense-amplifier.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-08-o-nho-sram-6t-va-sense-amplifier.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-08-o-nho-sram-6t-va-sense-amplifier.md](../02%20-%20Student%20Workbook/lab-08-o-nho-sram-6t-va-sense-amplifier.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab08/](../03%20-%20Instructor_Solutions/lab08/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -43,8 +43,8 @@ Quy tắc kích thước vàng: $\text{Driver} > \text{Access} > \text{Load}$.
 ```
 
 *Sơ đồ nguyên lý ô nhớ SRAM 6T và Mạch khuếch đại vi sai Sense Amplifier:*
-- [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/sram_6t_cell_schematic.png)
-- [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/sense_amplifier_schematic.png)
+- [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sram_6t_cell_schematic.png)
+- [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sense_amplifier_schematic.png)
 
 ### a. Phân tích ổn định khi đọc (Read Stability & Cell Ratio CR)
 Khi đọc nút $Q = 0\,\text{V}$, đường Bitline $BL$ đã được nạp trước lên $5,0\,\text{V}$. Khi $WL$ bật lên $5,0\,\text{V}$, dòng điện từ $BL$ đổ dồn qua Access Transistor $M_{AX1}$ vào nút $Q$ và thoát xuống GND qua Driver Transistor $M_{D1}$.

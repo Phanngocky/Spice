@@ -129,7 +129,7 @@ def draw_nor2_schematic():
             color='#7b341e', family='monospace')
 
     plt.tight_layout()
-    fig.savefig("02 - Giao_Trinh_Lab_Handouts/images/nor2_schematic.png")
+    fig.savefig("02 - Student Workbook/images/nor2_schematic.png")
     plt.close(fig)
     print("Created nor2_schematic.png successfully.")
 
@@ -250,7 +250,7 @@ def draw_nand2_schematic():
             color='#7b341e', family='monospace')
 
     plt.tight_layout()
-    fig.savefig("02 - Giao_Trinh_Lab_Handouts/images/nand2_schematic.png")
+    fig.savefig("02 - Student Workbook/images/nand2_schematic.png")
     plt.close(fig)
     print("Created nand2_schematic.png successfully.")
 

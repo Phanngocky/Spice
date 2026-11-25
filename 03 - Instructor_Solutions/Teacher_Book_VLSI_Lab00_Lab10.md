@@ -718,8 +718,8 @@ $$V_M = \frac{V_{tn} + \sqrt{r} (V_{DD} - |V_{tp}|)}{1 + \sqrt{r}}$$
 ```
 
 *Sơ đồ nguyên lý và định cỡ tế bào NAND2 và NOR2. Xem chi tiết ảnh đồ họa tại:*
-- [nand2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/nand2_schematic.png)
-- [nor2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/nor2_schematic.png)
+- [nand2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nand2_schematic.png)
+- [nor2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nor2_schematic.png)
 
 ### b. So sánh định lượng PPA giữa NAND2 và NOR2
 | Tiêu chí so sánh | Cổng NAND2 | Cổng NOR2 | Tỉ lệ khác biệt | Ý nghĩa sư phạm |
@@ -782,8 +782,8 @@ Cổng AOI21 thực hiện hàm logic: $Y = \overline{(A \cdot B) + C}$.
 ```
 
 *Sơ đồ nguyên lý tế bào AOI21_X1 và Chuỗi đệm Inverter tối ưu:*
-- [aoi21_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/aoi21_schematic.png)
-- [buffer_chain_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/buffer_chain_schematic.png)
+- [aoi21_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/aoi21_schematic.png)
+- [buffer_chain_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/buffer_chain_schematic.png)
 
 ### Bảng phân tích Logical Effort và Ký sinh của AOI21
 | Ngõ vào | Cấu trúc dẫn điện tương ứng | Chiều rộng kênh $W_n + W_p$ | Logical Effort $g$ | Parasitic Delay $p$ |
@@ -870,7 +870,7 @@ $$g_{TG} = 240 \cdot 10^{-6} \cdot [5,0 - 0,70 - 0,80] = 840\,\mu\text{S} \impli
 ```
 
 *Sơ đồ nguyên lý Cổng truyền CMOS (TG) và Bộ dồn kênh MUX 2:1 (`mux2_tg_schematic.png`).*  
-*Tham khảo chi tiết ảnh đồ họa tại:* [mux2_tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/mux2_tg_schematic.png) và [tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/tg_schematic.png).
+*Tham khảo chi tiết ảnh đồ họa tại:* [mux2_tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mux2_tg_schematic.png) và [tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_schematic.png).
 
 ---
 
@@ -901,8 +901,8 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered D
 ```
 
 *Sơ đồ nguyên lý hoàn chỉnh D-Latch và D-Flip-Flop Master-Slave:*
-- [dlatch_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dlatch_schematic.png)
-- [dff_ms_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dff_ms_schematic.png)
+- [dlatch_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dlatch_schematic.png)
+- [dff_ms_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dff_ms_schematic.png)
 
 ### Bảng trạng thái hoạt động theo pha xung nhịp
 | Trạng thái xung nhịp | Tầng Master | Tầng Slave | Toàn mạch DFF | Ý nghĩa chức năng |
@@ -963,8 +963,8 @@ $$Sum = A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (A + B + C_{in})$$
 ```
 
 *Sơ đồ mạch chi tiết Mirror Adder và Transmission Gate Adder:*
-- [mirror_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/mirror_adder_schematic.png)
-- [tg_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/tg_adder_schematic.png)
+- [mirror_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mirror_adder_schematic.png)
+- [tg_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_adder_schematic.png)
 
 ### Bảng kiểm kê và sửa lỗi Handout về số lượng Transistor
 | Khối chức năng vi mạch | Số Transistor thực tế | Handout cũ ghi nhầm | Phân tích giải phẫu kỹ thuật |
@@ -1025,8 +1025,8 @@ Xét mạch logic động với nút động $X$ có điện dung $C_X$. Giả s
 ```
 
 *Sơ đồ nguyên lý Logic động thuần và Cổng Domino hoàn chỉnh:*
-- [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dynamic_cmos_schematic.png)
-- [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/domino_logic_schematic.png)
+- [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dynamic_cmos_schematic.png)
+- [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/domino_logic_schematic.png)
 
 ---
 
@@ -1063,8 +1063,8 @@ Quy tắc kích thước vàng: $\text{Driver} > \text{Access} > \text{Load}$.
 ```
 
 *Sơ đồ nguyên lý ô nhớ SRAM 6T và Mạch khuếch đại vi sai Sense Amplifier:*
-- [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/sram_6t_cell_schematic.png)
-- [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/sense_amplifier_schematic.png)
+- [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sram_6t_cell_schematic.png)
+- [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sense_amplifier_schematic.png)
 
 ### a. Phân tích ổn định khi đọc (Read Stability & Cell Ratio CR)
 Khi đọc nút $Q = 0\,\text{V}$, đường Bitline $BL$ đã được nạp trước lên $5,0\,\text{V}$. Khi $WL$ bật lên $5,0\,\text{V}$, dòng điện từ $BL$ đổ dồn qua Access Transistor $M_{AX1}$ vào nút $Q$ và thoát xuống GND qua Driver Transistor $M_{D1}$.
@@ -1124,8 +1124,8 @@ Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phả
 ```
 
 *Sơ đồ khối kiến trúc CLA 4-bit và Sơ đồ nguyên lý khối CLG:*
-- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/cla_4bit_architecture.png)
-- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/clg_carry_logic_schematic.png)
+- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/cla_4bit_architecture.png)
+- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/clg_carry_logic_schematic.png)
 
 ### Bảng phân bổ 134 Transistor của tế bào CLA 4-bit chuẩn
 | Khối chức năng | Thành phần logic chi tiết | Số Transistor | Tỉ lệ phần cứng |
@@ -1172,8 +1172,8 @@ Khối ALU hỗ trợ 4 phép toán cơ bản chọn qua 2 bit điều khiển $
 ```
 
 *Sơ đồ kiến trúc vi mạch ALU 4-bit và Bản đồ Floorplan mặt bằng chip:*
-- [alu_4bit_top_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/alu_4bit_top_architecture.png)
-- [alu_chip_layout_floorplan.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/alu_chip_layout_floorplan.png)
+- [alu_4bit_top_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/alu_4bit_top_architecture.png)
+- [alu_chip_layout_floorplan.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/alu_chip_layout_floorplan.png)
 
 ---
 
@@ -1248,4 +1248,4 @@ Nhằm chuyển đổi toàn bộ các nhãn "Chưa kiểm" thành "Đã kiểm 
 5. **Đồng bộ hóa thư viện Layout trong Electric VLSI:**
    Kiểm tra tệp thư viện `lab_vlsi.jelib` trong Electric, xác nhận công nghệ đang chọn là `mocmos` (MOSIS CMOS Submicron, $\lambda = 0,30\,\mu\text{m}$). Kiểm tra luật N-well bao P-active tối thiểu $6\lambda$ và Active bao Contact tối thiểu $1,5\lambda$.
 6. **Lưu trữ và phân quyền:**
-   Tài liệu Giáo trình nội bộ này được lưu trữ độc quyền trong thư mục quản trị `03 - Instructor_Solutions/Teacher_Book_VLSI_Lab01_Lab10.md`. Khi xuất bản tài liệu cho sinh viên, chỉ trích xuất các phần bài tập thực hành trong `02 - Giao_Trinh_Lab_Handouts/` và tuyệt đối loại bỏ các gợi ý giải thích cơ chế, đáp án giải tích và các netlist tham chiếu.
+   Tài liệu Giáo trình nội bộ này được lưu trữ độc quyền trong thư mục quản trị `03 - Instructor_Solutions/Teacher_Book_VLSI_Lab01_Lab10.md`. Khi xuất bản tài liệu cho sinh viên, chỉ trích xuất các phần bài tập thực hành trong `02 - Student Workbook/` và tuyệt đối loại bỏ các gợi ý giải thích cơ chế, đáp án giải tích và các netlist tham chiếu.

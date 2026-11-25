@@ -2,7 +2,7 @@
 # BÀI LAB 10 — TEACHER'S BOOK: CAPSTONE: TÍCH HỢP VI MẠCH 4-BIT REGISTERED ALU & XÁC THỰC VẬT LÝ
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-10-capstone-tich-hop-vi-mach-alu-4bit.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-10-capstone-tich-hop-vi-mach-alu-4bit.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-10-capstone-tich-hop-vi-mach-alu-4bit.md](../02%20-%20Student%20Workbook/lab-10-capstone-tich-hop-vi-mach-alu-4bit.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab10/](../03%20-%20Instructor_Solutions/lab10/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -45,8 +45,8 @@ Khối ALU hỗ trợ 4 phép toán cơ bản chọn qua 2 bit điều khiển $
 ```
 
 *Sơ đồ kiến trúc vi mạch ALU 4-bit và Bản đồ Floorplan mặt bằng chip:*
-- [alu_4bit_top_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/alu_4bit_top_architecture.png)
-- [alu_chip_layout_floorplan.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/alu_chip_layout_floorplan.png)
+- [alu_4bit_top_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/alu_4bit_top_architecture.png)
+- [alu_chip_layout_floorplan.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/alu_chip_layout_floorplan.png)
 
 ---
 

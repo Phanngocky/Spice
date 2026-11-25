@@ -188,5 +188,5 @@ def draw_rc_waveforms(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_rc_schematic("02 - Giao_Trinh_Lab_Handouts/images/rc_charge_discharge_schematic.png")
-    draw_rc_waveforms("02 - Giao_Trinh_Lab_Handouts/images/rc_charge_discharge_waveform.png")
+    draw_rc_schematic("02 - Student Workbook/images/rc_charge_discharge_schematic.png")
+    draw_rc_waveforms("02 - Student Workbook/images/rc_charge_discharge_waveform.png")

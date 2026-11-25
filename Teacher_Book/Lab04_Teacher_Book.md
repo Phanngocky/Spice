@@ -2,7 +2,7 @@
 # BÀI LAB 04 — TEACHER'S BOOK: CỔNG TRUYỀN (TRANSMISSION GATE) VÀ BỘ DỒN KÊNH MUX
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-04-transmission-gate-va-mux.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-04-transmission-gate-va-mux.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-04-transmission-gate-va-mux.md](../02%20-%20Student%20Workbook/lab-04-transmission-gate-va-mux.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab04/](../03%20-%20Instructor_Solutions/lab04/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -70,7 +70,7 @@ $$g_{TG} = 240 \cdot 10^{-6} \cdot [5,0 - 0,70 - 0,80] = 840\,\mu\text{S} \impli
 ```
 
 *Sơ đồ nguyên lý Cổng truyền CMOS (TG) và Bộ dồn kênh MUX 2:1 (`mux2_tg_schematic.png`).*  
-*Tham khảo chi tiết ảnh đồ họa tại:* [mux2_tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/mux2_tg_schematic.png) và [tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/tg_schematic.png).
+*Tham khảo chi tiết ảnh đồ họa tại:* [mux2_tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mux2_tg_schematic.png) và [tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_schematic.png).
 
 ---
 

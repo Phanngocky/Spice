@@ -174,5 +174,5 @@ def draw_domino_logic_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_dynamic_cmos_schematic("02 - Giao_Trinh_Lab_Handouts/images/dynamic_cmos_schematic.png")
-    draw_domino_logic_schematic("02 - Giao_Trinh_Lab_Handouts/images/domino_logic_schematic.png")
+    draw_dynamic_cmos_schematic("02 - Student Workbook/images/dynamic_cmos_schematic.png")
+    draw_domino_logic_schematic("02 - Student Workbook/images/domino_logic_schematic.png")

@@ -136,5 +136,5 @@ def draw_clg_carry_logic_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_cla_4bit_architecture("02 - Giao_Trinh_Lab_Handouts/images/cla_4bit_architecture.png")
-    draw_clg_carry_logic_schematic("02 - Giao_Trinh_Lab_Handouts/images/clg_carry_logic_schematic.png")
+    draw_cla_4bit_architecture("02 - Student Workbook/images/cla_4bit_architecture.png")
+    draw_clg_carry_logic_schematic("02 - Student Workbook/images/clg_carry_logic_schematic.png")

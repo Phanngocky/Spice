@@ -2,7 +2,7 @@
 # BÀI LAB 09 — TEACHER'S BOOK: THIẾT KẾ ĐƯỜNG DỮ LIỆU KHỐI CỘNG NHANH 4-BIT (4-BIT CLA)
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-09-khoi-cong-nhanh-4bit-cla.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-09-khoi-cong-nhanh-4bit-cla.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-09-khoi-cong-nhanh-4bit-cla.md](../02%20-%20Student%20Workbook/lab-09-khoi-cong-nhanh-4bit-cla.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab09/](../03%20-%20Instructor_Solutions/lab09/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -52,8 +52,8 @@
 ```
 
 *Sơ đồ khối kiến trúc CLA 4-bit và Sơ đồ nguyên lý khối CLG:*
-- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/cla_4bit_architecture.png)
-- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/clg_carry_logic_schematic.png)
+- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/cla_4bit_architecture.png)
+- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/clg_carry_logic_schematic.png)
 
 ### Bảng phân bổ 134 Transistor của tế bào CLA 4-bit chuẩn
 | Khối chức năng | Thành phần logic chi tiết | Số Transistor | Tỉ lệ phần cứng |

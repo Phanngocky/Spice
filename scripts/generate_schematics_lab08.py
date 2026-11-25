@@ -194,5 +194,5 @@ def draw_sense_amplifier_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_sram_6t_cell_schematic("02 - Giao_Trinh_Lab_Handouts/images/sram_6t_cell_schematic.png")
-    draw_sense_amplifier_schematic("02 - Giao_Trinh_Lab_Handouts/images/sense_amplifier_schematic.png")
+    draw_sram_6t_cell_schematic("02 - Student Workbook/images/sram_6t_cell_schematic.png")
+    draw_sense_amplifier_schematic("02 - Student Workbook/images/sense_amplifier_schematic.png")

@@ -199,5 +199,5 @@ def draw_tg_adder_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_mirror_adder_schematic("02 - Giao_Trinh_Lab_Handouts/images/mirror_adder_schematic.png")
-    draw_tg_adder_schematic("02 - Giao_Trinh_Lab_Handouts/images/tg_adder_schematic.png")
+    draw_mirror_adder_schematic("02 - Student Workbook/images/mirror_adder_schematic.png")
+    draw_tg_adder_schematic("02 - Student Workbook/images/tg_adder_schematic.png")

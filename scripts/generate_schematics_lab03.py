@@ -189,5 +189,5 @@ def draw_buffer_chain_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_aoi21_schematic("02 - Giao_Trinh_Lab_Handouts/images/aoi21_schematic.png")
-    draw_buffer_chain_schematic("02 - Giao_Trinh_Lab_Handouts/images/buffer_chain_schematic.png")
+    draw_aoi21_schematic("02 - Student Workbook/images/aoi21_schematic.png")
+    draw_buffer_chain_schematic("02 - Student Workbook/images/buffer_chain_schematic.png")

@@ -2,7 +2,7 @@
 # BÀI LAB 01 — TEACHER'S BOOK: ĐẶC TÍNH I-V CỦA MOSFET VÀ THIẾT KẾ CMOS INVERTER
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-01-dac-tinh-mosfet-va-cmos-inverter.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-01-dac-tinh-mosfet-va-cmos-inverter.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-01-dac-tinh-mosfet-va-cmos-inverter.md](../02%20-%20Student%20Workbook/lab-01-dac-tinh-mosfet-va-cmos-inverter.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab01/](../03%20-%20Instructor_Solutions/lab01/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 

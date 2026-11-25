@@ -2,7 +2,7 @@
 # BÀI LAB 06 — TEACHER'S BOOK: THIẾT KẾ MẠCH CỘNG TOÀN PHẦN 1-BIT (1-BIT FULL ADDER)
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-06-mach-cong-toan-phan-full-adder.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-06-mach-cong-toan-phan-full-adder.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-06-mach-cong-toan-phan-full-adder.md](../02%20-%20Student%20Workbook/lab-06-mach-cong-toan-phan-full-adder.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab06/](../03%20-%20Instructor_Solutions/lab06/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -50,8 +50,8 @@ $$Sum = A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (A + B + C_{in})$$
 ```
 
 *Sơ đồ mạch chi tiết Mirror Adder và Transmission Gate Adder:*
-- [mirror_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/mirror_adder_schematic.png)
-- [tg_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/tg_adder_schematic.png)
+- [mirror_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mirror_adder_schematic.png)
+- [tg_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_adder_schematic.png)
 
 ### Bảng kiểm kê và sửa lỗi Handout về số lượng Transistor
 | Khối chức năng vi mạch | Số Transistor thực tế | Handout cũ ghi nhầm | Phân tích giải phẫu kỹ thuật |

@@ -169,5 +169,5 @@ def draw_mux2_tg_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_tg_schematic("02 - Giao_Trinh_Lab_Handouts/images/tg_schematic.png")
-    draw_mux2_tg_schematic("02 - Giao_Trinh_Lab_Handouts/images/mux2_tg_schematic.png")
+    draw_tg_schematic("02 - Student Workbook/images/tg_schematic.png")
+    draw_mux2_tg_schematic("02 - Student Workbook/images/mux2_tg_schematic.png")

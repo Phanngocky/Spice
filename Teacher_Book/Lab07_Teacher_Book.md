@@ -2,7 +2,7 @@
 # BÀI LAB 07 — TEACHER'S BOOK: KỸ THUẬT LOGIC ĐỘNG VÀ LOGIC DOMINO (DYNAMIC & DOMINO CMOS LOGIC)
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-07-logic-dong-dynamic-cmos.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-07-logic-dong-dynamic-cmos.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-07-logic-dong-dynamic-cmos.md](../02%20-%20Student%20Workbook/lab-07-logic-dong-dynamic-cmos.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab07/](../03%20-%20Instructor_Solutions/lab07/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -58,8 +58,8 @@ Xét mạch logic động với nút động $X$ có điện dung $C_X$. Giả s
 ```
 
 *Sơ đồ nguyên lý Logic động thuần và Cổng Domino hoàn chỉnh:*
-- [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dynamic_cmos_schematic.png)
-- [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/domino_logic_schematic.png)
+- [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dynamic_cmos_schematic.png)
+- [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/domino_logic_schematic.png)
 
 ---
 

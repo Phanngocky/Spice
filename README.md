@@ -23,7 +23,7 @@ Học phần **Thực hành Thiết kế VLSI** là học phần chuyên ngành 
 D:\tam\Spice\
 ├── 01 - De_Cuong_Hoc_Phan/
 │   └── De_Cuong_Chi_Tiet_TH_Thiet_Ke_VLSI.md  # Đề cương chi tiết học phần, CLO-PLO, Rubric OBE
-├── 02 - Giao_Trinh_Lab_Handouts/             # Tài liệu phát cho sinh viên (Handouts 3 pha & Mẫu báo cáo)
+├── 02 - Student Workbook/             # Tài liệu phát cho sinh viên (Handouts 3 pha & Mẫu báo cáo)
 │   ├── lab-00-nhap-mon-mo-phong-spice-va-ltspice.md # Lab 00: Nhập môn Mô phỏng Mạch với SPICE và LTspice
 │   ├── lab-01-dac-tinh-mosfet-va-cmos-inverter.md   # Lab 01: MOSFET I-V & Inverter VTC/Delay/Layout/PEX
 │   ├── lab-02-cong-logic-tinh-nand-nor.md     # Lab 02: Cổng NAND2/NOR2, Sizing (W/L), Euler Path

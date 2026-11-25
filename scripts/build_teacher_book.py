@@ -89,7 +89,7 @@ for i in range(1, 11):
 # BÀI LAB {i:02d} — TEACHER'S BOOK: {title}
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [{ho}](../02%20-%20Giao_Trinh_Lab_Handouts/{ho})  
+> **Đi kèm Handout thực hành của sinh viên:** [{ho}](../02%20-%20Student%20Workbook/{ho})  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab{i:02d}/](../03%20-%20Instructor_Solutions/lab{i:02d}/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{{DD}} = 5,0\\,\\text{{V}}, \\lambda = 0,30\\,\\mu\\text{{m}}, L_{{min}} = 0,60\\,\\mu\\text{{m}}$).
 
@@ -148,17 +148,17 @@ readme_content = """# BỘ GIÁO TRÌNH NỘI BỘ DÀNH CHO GIẢNG VIÊN VÀ T
 
 | Bài Lab | Tên bài thực hành | Chương đề cương | Vai trò môn học | Tài liệu Teacher's Book | Handout Sinh viên |
 | :---: | :--- | :---: | :---: | :--- | :--- |
-| **Lab 00** | Nhập môn mô phỏng SPICE & Mạch RC cơ bản | 1, 3 | Bắt buộc (Nhập môn) | [Lab00_Teacher_Book.md](Lab00_Teacher_Book.md) | [lab-00-nhap-mon...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-00-nhap-mon-mo-phong-spice-va-ltspice.md) |
-| **Lab 01** | Đặc tính MOSFET & Thiết kế CMOS Inverter | 2, 3 | Bắt buộc | [Lab01_Teacher_Book.md](Lab01_Teacher_Book.md) | [lab-01-dac-tinh...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-01-dac-tinh-mosfet-va-cmos-inverter.md) |
-| **Lab 02** | Thiết kế Cổng tĩnh NAND2 và NOR2 CMOS | 6 | Bắt buộc | [Lab02_Teacher_Book.md](Lab02_Teacher_Book.md) | [lab-02-cong-logic...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-02-cong-logic-tinh-nand-nor.md) |
-| **Lab 03** | Cổng phức hợp AOI21 & Phương pháp Logical Effort | 3, 6 | Bắt buộc | [Lab03_Teacher_Book.md](Lab03_Teacher_Book.md) | [lab-03-cong-phuc-hop...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-03-cong-phuc-hop-aoi-oai-logical-effort.md) |
-| **Lab 04** | Cổng truyền (Transmission Gate) & MUX 2:1/4:1 | 6 | Tự chọn / Ghép Lab 6 | [Lab04_Teacher_Book.md](Lab04_Teacher_Book.md) | [lab-04-transmission-gate...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-04-transmission-gate-va-mux.md) |
-| **Lab 05** | Mạch tuần tự: D-Latch & D-Flip-Flop Master-Slave | 7 | Bắt buộc | [Lab05_Teacher_Book.md](Lab05_Teacher_Book.md) | [lab-05-mach-tuan-tu...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-05-mach-tuan-tu-latch-va-flipflop.md) |
-| **Lab 06** | Mạch cộng toàn phần 1-bit (1-bit Full Adder) | 6 | Bắt buộc | [Lab06_Teacher_Book.md](Lab06_Teacher_Book.md) | [lab-06-mach-cong...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-06-mach-cong-toan-phan-full-adder.md) |
-| **Lab 07** | Kỹ thuật Logic động (Dynamic CMOS) & Domino | 6 | Nâng cao / Tự chọn | [Lab07_Teacher_Book.md](Lab07_Teacher_Book.md) | [lab-07-logic-dong...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-07-logic-dong-dynamic-cmos.md) |
-| **Lab 08** | Thiết kế Ô nhớ SRAM 6T & Sense Amplifier | Đồ án / Tự chọn | [Lab08_Teacher_Book.md](Lab08_Teacher_Book.md) | [lab-08-o-nho-sram...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-08-o-nho-sram-6t-va-sense-amplifier.md) |
-| **Lab 09** | Khối cộng nhanh 4-bit CLA (Carry Lookahead) | Đồ án / Tự chọn | [Lab09_Teacher_Book.md](Lab09_Teacher_Book.md) | [lab-09-khoi-cong-nhanh...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-09-khoi-cong-nhanh-4bit-cla.md) |
-| **Lab 10** | Capstone: ALU 4-bit tích hợp có thanh ghi | Đồ án (1, 6, 7) | Bắt buộc | [Lab10_Teacher_Book.md](Lab10_Teacher_Book.md) | [lab-10-capstone-alu...md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-10-capstone-tich-hop-vi-mach-alu-4bit.md) |
+| **Lab 00** | Nhập môn mô phỏng SPICE & Mạch RC cơ bản | 1, 3 | Bắt buộc (Nhập môn) | [Lab00_Teacher_Book.md](Lab00_Teacher_Book.md) | [lab-00-nhap-mon...md](../02%20-%20Student%20Workbook/lab-00-nhap-mon-mo-phong-spice-va-ltspice.md) |
+| **Lab 01** | Đặc tính MOSFET & Thiết kế CMOS Inverter | 2, 3 | Bắt buộc | [Lab01_Teacher_Book.md](Lab01_Teacher_Book.md) | [lab-01-dac-tinh...md](../02%20-%20Student%20Workbook/lab-01-dac-tinh-mosfet-va-cmos-inverter.md) |
+| **Lab 02** | Thiết kế Cổng tĩnh NAND2 và NOR2 CMOS | 6 | Bắt buộc | [Lab02_Teacher_Book.md](Lab02_Teacher_Book.md) | [lab-02-cong-logic...md](../02%20-%20Student%20Workbook/lab-02-cong-logic-tinh-nand-nor.md) |
+| **Lab 03** | Cổng phức hợp AOI21 & Phương pháp Logical Effort | 3, 6 | Bắt buộc | [Lab03_Teacher_Book.md](Lab03_Teacher_Book.md) | [lab-03-cong-phuc-hop...md](../02%20-%20Student%20Workbook/lab-03-cong-phuc-hop-aoi-oai-logical-effort.md) |
+| **Lab 04** | Cổng truyền (Transmission Gate) & MUX 2:1/4:1 | 6 | Tự chọn / Ghép Lab 6 | [Lab04_Teacher_Book.md](Lab04_Teacher_Book.md) | [lab-04-transmission-gate...md](../02%20-%20Student%20Workbook/lab-04-transmission-gate-va-mux.md) |
+| **Lab 05** | Mạch tuần tự: D-Latch & D-Flip-Flop Master-Slave | 7 | Bắt buộc | [Lab05_Teacher_Book.md](Lab05_Teacher_Book.md) | [lab-05-mach-tuan-tu...md](../02%20-%20Student%20Workbook/lab-05-mach-tuan-tu-latch-va-flipflop.md) |
+| **Lab 06** | Mạch cộng toàn phần 1-bit (1-bit Full Adder) | 6 | Bắt buộc | [Lab06_Teacher_Book.md](Lab06_Teacher_Book.md) | [lab-06-mach-cong...md](../02%20-%20Student%20Workbook/lab-06-mach-cong-toan-phan-full-adder.md) |
+| **Lab 07** | Kỹ thuật Logic động (Dynamic CMOS) & Domino | 6 | Nâng cao / Tự chọn | [Lab07_Teacher_Book.md](Lab07_Teacher_Book.md) | [lab-07-logic-dong...md](../02%20-%20Student%20Workbook/lab-07-logic-dong-dynamic-cmos.md) |
+| **Lab 08** | Thiết kế Ô nhớ SRAM 6T & Sense Amplifier | Đồ án / Tự chọn | [Lab08_Teacher_Book.md](Lab08_Teacher_Book.md) | [lab-08-o-nho-sram...md](../02%20-%20Student%20Workbook/lab-08-o-nho-sram-6t-va-sense-amplifier.md) |
+| **Lab 09** | Khối cộng nhanh 4-bit CLA (Carry Lookahead) | Đồ án / Tự chọn | [Lab09_Teacher_Book.md](Lab09_Teacher_Book.md) | [lab-09-khoi-cong-nhanh...md](../02%20-%20Student%20Workbook/lab-09-khoi-cong-nhanh-4bit-cla.md) |
+| **Lab 10** | Capstone: ALU 4-bit tích hợp có thanh ghi | Đồ án (1, 6, 7) | Bắt buộc | [Lab10_Teacher_Book.md](Lab10_Teacher_Book.md) | [lab-10-capstone-alu...md](../02%20-%20Student%20Workbook/lab-10-capstone-tich-hop-vi-mach-alu-4bit.md) |
 | **Quản trị** | **Master Errata & Kế hoạch kiểm chứng kỹ thuật** | Toàn khóa | Tài liệu quản trị | [Master_Errata_Va_Ke_Hoach_Kiem_Chung.md](Master_Errata_Va_Ke_Hoach_Kiem_Chung.md) | — |
 
 ---

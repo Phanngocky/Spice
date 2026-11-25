@@ -3,7 +3,7 @@ import re
 
 open_files = [
     '01 - De_Cuong_Hoc_Phan/De_Cuong_Chi_Tiet_TH_Thiet_Ke_VLSI.md',
-    '02 - Giao_Trinh_Lab_Handouts/lab-01-dac-tinh-mosfet-va-cmos-inverter.md',
+    '02 - Student Workbook/lab-01-dac-tinh-mosfet-va-cmos-inverter.md',
     '03 - Instructor_Solutions/lab00/dap_an_chi_tiet_lab00.md',
     '03 - Instructor_Solutions/lab01/dap_an_chi_tiet_lab01.md',
     '03 - Instructor_Solutions/lab02/dap_an_chi_tiet_lab02.md',

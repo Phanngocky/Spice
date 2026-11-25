@@ -214,5 +214,5 @@ def draw_dff_ms_schematic(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_dlatch_schematic("02 - Giao_Trinh_Lab_Handouts/images/dlatch_schematic.png")
-    draw_dff_ms_schematic("02 - Giao_Trinh_Lab_Handouts/images/dff_ms_schematic.png")
+    draw_dlatch_schematic("02 - Student Workbook/images/dlatch_schematic.png")
+    draw_dff_ms_schematic("02 - Student Workbook/images/dff_ms_schematic.png")

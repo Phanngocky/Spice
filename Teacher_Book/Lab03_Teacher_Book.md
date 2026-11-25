@@ -2,7 +2,7 @@
 # BÀI LAB 03 — TEACHER'S BOOK: CỔNG PHỨC HỢP AOI21 VÀ TỐI ƯU TRỄ THEO PHƯƠNG PHÁP LOGICAL EFFORT
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-03-cong-phuc-hop-aoi-oai-logical-effort.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-03-cong-phuc-hop-aoi-oai-logical-effort.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-03-cong-phuc-hop-aoi-oai-logical-effort.md](../02%20-%20Student%20Workbook/lab-03-cong-phuc-hop-aoi-oai-logical-effort.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab03/](../03%20-%20Instructor_Solutions/lab03/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -53,8 +53,8 @@ Cổng AOI21 thực hiện hàm logic: $Y = \overline{(A \cdot B) + C}$.
 ```
 
 *Sơ đồ nguyên lý tế bào AOI21_X1 và Chuỗi đệm Inverter tối ưu:*
-- [aoi21_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/aoi21_schematic.png)
-- [buffer_chain_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/buffer_chain_schematic.png)
+- [aoi21_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/aoi21_schematic.png)
+- [buffer_chain_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/buffer_chain_schematic.png)
 
 ### Bảng phân tích Logical Effort và Ký sinh của AOI21
 | Ngõ vào | Cấu trúc dẫn điện tương ứng | Chiều rộng kênh $W_n + W_p$ | Logical Effort $g$ | Parasitic Delay $p$ |

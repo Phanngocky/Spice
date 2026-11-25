@@ -2,7 +2,7 @@
 # BÀI LAB 02 — TEACHER'S BOOK: THIẾT KẾ CỔNG LOGIC TĨNH NAND2 VÀ NOR2 CMOS
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-02-cong-logic-tinh-nand-nor.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-02-cong-logic-tinh-nand-nor.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-02-cong-logic-tinh-nand-nor.md](../02%20-%20Student%20Workbook/lab-02-cong-logic-tinh-nand-nor.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab02/](../03%20-%20Instructor_Solutions/lab02/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -50,8 +50,8 @@
 ```
 
 *Sơ đồ nguyên lý và định cỡ tế bào NAND2 và NOR2. Xem chi tiết ảnh đồ họa tại:*
-- [nand2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/nand2_schematic.png)
-- [nor2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/nor2_schematic.png)
+- [nand2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nand2_schematic.png)
+- [nor2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nor2_schematic.png)
 
 ### b. So sánh định lượng PPA giữa NAND2 và NOR2
 | Tiêu chí so sánh | Cổng NAND2 | Cổng NOR2 | Tỉ lệ khác biệt | Ý nghĩa sư phạm |

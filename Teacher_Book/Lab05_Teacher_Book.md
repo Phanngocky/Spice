@@ -2,7 +2,7 @@
 # BÀI LAB 05 — TEACHER'S BOOK: MẠCH TUẦN TỰ MỨC TRANSISTOR: D-LATCH VÀ D-FLIP-FLOP MASTER-SLAVE
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
-> **Đi kèm Handout thực hành của sinh viên:** [lab-05-mach-tuan-tu-latch-va-flipflop.md](../02%20-%20Giao_Trinh_Lab_Handouts/lab-05-mach-tuan-tu-latch-va-flipflop.md)  
+> **Đi kèm Handout thực hành của sinh viên:** [lab-05-mach-tuan-tu-latch-va-flipflop.md](../02%20-%20Student%20Workbook/lab-05-mach-tuan-tu-latch-va-flipflop.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab05/](../03%20-%20Instructor_Solutions/lab05/)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
@@ -37,8 +37,8 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered D
 ```
 
 *Sơ đồ nguyên lý hoàn chỉnh D-Latch và D-Flip-Flop Master-Slave:*
-- [dlatch_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dlatch_schematic.png)
-- [dff_ms_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Giao_Trinh_Lab_Handouts/images/dff_ms_schematic.png)
+- [dlatch_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dlatch_schematic.png)
+- [dff_ms_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dff_ms_schematic.png)
 
 ### Bảng trạng thái hoạt động theo pha xung nhịp
 | Trạng thái xung nhịp | Tầng Master | Tầng Slave | Toàn mạch DFF | Ý nghĩa chức năng |

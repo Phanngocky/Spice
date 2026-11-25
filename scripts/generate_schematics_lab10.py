@@ -178,5 +178,5 @@ def draw_alu_chip_layout_floorplan(out_path):
     print(f"Created {out_path} successfully.")
 
 if __name__ == "__main__":
-    draw_alu_4bit_top_architecture("02 - Giao_Trinh_Lab_Handouts/images/alu_4bit_top_architecture.png")
-    draw_alu_chip_layout_floorplan("02 - Giao_Trinh_Lab_Handouts/images/alu_chip_layout_floorplan.png")
+    draw_alu_4bit_top_architecture("02 - Student Workbook/images/alu_4bit_top_architecture.png")
+    draw_alu_chip_layout_floorplan("02 - Student Workbook/images/alu_chip_layout_floorplan.png")
