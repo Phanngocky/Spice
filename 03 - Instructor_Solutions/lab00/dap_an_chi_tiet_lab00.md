@@ -13,7 +13,7 @@ Trong chương trình đào tạo Thiết kế Vi mạch VLSI, sinh viên thư�
 
 **Lab 0 đóng vai trò là "vùng đệm an toàn" (Sandbox & Onboarding Lab):**
 - Tách biệt kỹ năng sử dụng công cụ mô phỏng SPICE khỏi sự phức tạp của vật lý bán dẫn.
-- Sinh viên sử dụng các linh kiện tuyến tính thụ động quen thuộc ($R, C$, nguồn điện) để làm chủ quy trình: *Vẽ sơ đồ $\to$ Xuất Netlist $\to$ Chạy mô phỏng $\to$ Quan sát dạng sóng $\to$ Đo đạc tự động `.meas` $\to$ Kiểm chứng với lý thuyết*.
+- Sinh viên sử dụng các linh kiện tuyến tính thụ động quen thuộc ($R, C$, nguồn điện) để làm chủ quy trình khoa học: *Tính trước $\to$ Dựng sơ đồ $	o$ Xuất Netlist $	o$ Chạy mô phỏng $	o$ Đo đạc tự động `.meas` $	o$ So sánh và giải thích sai lệch*.
 - Mạch RC bậc nhất trong Lab 0 chính là **mô hình tương đương cơ sở** để giải thích toàn bộ động học nạp xả, độ trễ truyền lan ($t_{pd} \approx 0,69 \cdot R_{on} \cdot C_L$) và nỗ lực logic (Logical Effort) xuyên suốt từ Lab 1 đến Lab 10.
 
 ---
@@ -22,13 +22,14 @@ Trong chương trình đào tạo Thiết kế Vi mạch VLSI, sinh viên thư�
 
 | Mục tiêu bài Lab 0 | Chuẩn đầu ra học phần (CLO) | Mức độ nhận thức (Bloom) | Tiêu chí đánh giá cụ thể |
 | :--- | :---: | :---: | :--- |
-| **G0.1:** Hiểu vai trò của SPICE và phương pháp MNA | CLO1 | Mức 2 (Hiểu) | Trình bày được bản chất của Netlist và vai trò của nút đất `0`. |
-| **G0.2:** Dựng sơ đồ, xuất và đọc hiểu cú pháp Netlist | CLO1, CLO2 | Mức 3 (Áp dụng) | Viết đúng cú pháp phần tử, nhận diện đúng tiền tố đơn vị (`m` vs `Meg`). |
-| **G0.3:** Vận hành 4 chế độ phân tích (.op, .dc, .tran, .ac) | CLO2 | Mức 3 (Áp dụng) | Thiết lập đúng lệnh điều khiển mô phỏng cho từng yêu cầu kỹ thuật. |
-| **G0.4:** Trích xuất kết quả bằng câu lệnh đo `.meas` | CLO2 | Mức 3 (Áp dụng) | Viết lệnh `.meas` đo đúng $t_{pd}, t_r, t_f, f_c$ từ nhật ký lỗi `SPICE Error Log`. |
-| **G0.5:** Khảo sát độ nhạy tham số với `.param` và `.step` | CLO2 | Mức 4 (Phân tích) | Quét giá trị điện trở, vẽ đồ thị và tính được độ dốc thực nghiệm. |
-| **G0.6:** Phân tích bản chất vật lý mạch RC & liên hệ CMOS | CLO1, CLO3 | Mức 4 (Phân tích) | Giải thích quy luật $1\tau - 5\tau$, chứng minh $0,69 \cdot RC$ và liên hệ trễ Inverter. |
-| **G0.7:** Tổ chức và đóng gói thư mục dự án chuẩn | CLO4 | Mức 3 (Áp dụng) | Cấu trúc thư mục ngăn nắp, đầy đủ sơ đồ, netlist, log và báo cáo kỹ thuật. |
+| **G0.1:** Đọc hiểu cú pháp Netlist SPICE và giải thuật MNA | CLO1, CLO2 | Mức 2 (Hiểu) | Trình bày được bản chất của Netlist, giải thuật MNA và vai trò của nút đất mốc chuẩn `0`. |
+| **G0.2:** Dựng sơ đồ, xuất netlist và nhận diện tiền tố đơn vị | CLO1, CLO2 | Mức 3 (Áp dụng) | Vẽ đúng sơ đồ, xuất netlist sạch sẽ, nhận diện chuẩn xác bẫy tiền tố (`m` vs `Meg`, `1F` vs `1f`). |
+| **G0.3:** Vận hành 4 chế độ phân tích (.op, .dc, .tran, .ac) | CLO2 | Mức 3 (Áp dụng) | Thiết lập đúng lệnh điều khiển mô phỏng cho từng yêu cầu kỹ thuật (DC, transient, tần số). |
+| **G0.4:** Trích xuất kết quả bằng câu lệnh đo `.meas` tham số hóa | CLO2 | Mức 3 (Áp dụng) | Viết lệnh `.meas` đo đúng $t_{pd}, t_r, t_f, I_{peak}, f_c$ với sai lệch $\le 2,0\%$ so với lý thuyết. |
+| **G0.5:** Khảo sát độ nhạy tham số với `.param` và `.step` | CLO2 | Mức 4 (Phân tích) | Quét giá trị điện trở, vẽ đồ thị thực nghiệm và xác nhận độ dốc $\text{Slope} = \ln(2) \cdot C$. |
+| **G0.6:** Kiểm chéo độc lập hai miền thời gian - tần số | CLO2 | Mức 4 (Phân tích) | Tính tích số $t_r \cdot f_c$ và chứng minh tính bất biến $\frac{\ln(9)}{2\pi} \approx 0,35$. |
+| **G0.7:** Liên kết mô hình MOSFET C5N và giải thích phi tuyến | CLO1, CLO2 | Mức 4 (Phân tích) | Gọi mô hình C5N Level 3, đo dòng $I_D$, giải thích sai lệch so với mô hình bậc hai. |
+| **G0.8:** Tổ chức và đóng gói thư mục dự án chuẩn kỹ thuật | CLO4 | Mức 3 (Áp dụng) | Thư mục `lab00_MSSV_HoTen/` ngăn nắp, đầy đủ sơ đồ, netlist, waveforms, report 3–4 trang. |
 
 ---
 
@@ -47,16 +48,16 @@ Trong đó:
 - $[\mathbf{I}]$: Véc-tơ kích thích từ các nguồn dòng và nguồn áp độc lập.
 
 **Vai trò sinh tử của nút đất `0` (Node 0):**  
-Theo định luật Kirchhoff, điện thế chỉ có ý nghĩa tương đối (hiệu điện thế). Để hệ phương trình MNA có nghiệm duy nhất, ma trận dẫn nạp bắt buộc phải chọn một nút làm mốc thế chuẩn ($0\,\text{V}$). Nếu người vẽ quên đặt cọc nối đất, ma trận $[\mathbf{G}]$ sẽ bị suy biến định thức ($\det[\mathbf{G}] = 0$), SPICE lập tức báo lỗi kinh điển: **`Singular Matrix`** hoặc **`Node is floating`**.
+Theo định luật Kirchhoff, điện thế chỉ có ý nghĩa tương đối (hiệu điện thế). Để hệ phương trình MNA có nghiệm duy nhất, ma trận dẫn nạp bắt buộc phải chọn một nút làm mốc thế chuẩn ($0\,\text{V}$). Nếu người vẽ quên đặt cọc nối đất, ma trận $[\mathbf{G}]$ sẽ bị suy biến định thức ($\det[\mathbf{G}] = 0$), SPICE lập tức báo lỗi: **`Singular Matrix`**, **`Node is floating`** hoặc **`no DC path to ground`**.
 
 ### 2. Mối quan hệ giữa 5 thành phần trong hệ sinh thái SPICE
-Giảng viên cần vẽ lên bảng lưu đồ phân biệt 5 khái niệm mà sinh viên hay nhầm lẫn:
+Giảng viên vẽ lên bảng lưu đồ phân biệt 5 khái niệm mà sinh viên hay nhầm lẫn:
 ```
 +---------------+     Biên dịch      +---------------+     Tham chiếu     +---------------+
 |   SCHEMATIC   | -----------------> |    NETLIST    | <----------------- |     MODEL     |
 | (Bản vẽ đồ họa|                    | (Mã văn bản   |                    | (Mô hình toán |
 |  trực quan)   |                    |  mô tả kết nối|                    |  vật lý linh  |
-+---------------+                    +---------------+                    |  kiện)        |
++---------------+                    +---------------+                    |  kiện PDK)    |
                                              |                            +---------------+
                                              v Nạp vào
                                      +---------------+
@@ -77,7 +78,7 @@ Giảng viên cần vẽ lên bảng lưu đồ phân biệt 5 khái niệm mà 
 | :---: | :--- | :--- | :--- |
 | **`.OP`** | Mạch đang ở trạng thái phân cực nào khi chưa có tín hiệu biến thiên? | Triệt tiêu đạo hàm $\frac{d\mathbf{V}}{dt} = 0$. Tụ hở mạch, cuộn cảm ngắn mạch. Giải hệ phi tuyến bằng **lặp Newton-Raphson**. | Tìm điểm làm việc tĩnh, kiểm tra phân cực transistor, đo dòng rò tĩnh. |
 | **`.DC`** | Ngõ ra biến đổi thế nào khi một nguồn áp vào thay đổi từ từ? | Thực hiện một chuỗi các phân tích `.OP` liên tiếp tại từng bước điện áp ngõ vào được chỉ định. | Khảo sát đường đặc tuyến truyền đạt điện áp $VTC$ ($V_{out} - V_{in}$) của Inverter. |
-| **`.TRAN`** | Điện áp và dòng điện thay đổi theo thời gian thực ra sao khi có xung? | Rời rạc hóa thời gian bằng các phương pháp tích phân số: **Trapezoidal Rule** hoặc **Gear Method**. | Đo thời gian trễ truyền lan $t_{pd}$, thời gian sườn tăng $t_r$, sườn giảm $t_f$. |
+| **`.TRAN`** | Điện áp và dòng điện thay đổi theo thời gian thực ra sao khi có xung? | Rời rạc hóa thời gian bằng các phương pháp tích phân số: **Trapezoidal Rule** hoặc **Gear Method**. Bước cực đại $dT_{max} \le \tau/1000$. | Đo thời gian trễ truyền lan $t_{pd}$, thời gian sườn tăng $t_r$, sườn giảm $t_f$. |
 | **`.AC`** | Mạch khuếch đại hoặc suy giảm tín hiệu ra sao ở các tần số khác nhau? | Tuyến tính hóa mạng phi tuyến quanh điểm tĩnh DC; giải hệ phương trình đại số phức theo tần số góc $\omega$. | Vẽ biểu đồ Bode biên độ và pha; đo tần số cắt $f_{-3\text{dB}}$ và dải thông băng tần. |
 
 ---
@@ -86,14 +87,14 @@ Giảng viên cần vẽ lên bảng lưu đồ phân biệt 5 khái niệm mà 
 
 ### 1. Phương trình vi phân nạp và xả
 Xét mạch $R$ nối tiếp $C$ kích thích bởi nguồn nhảy bậc $V_0 \cdot u(t)$:
-- Theo định luật dòng điện Kirchhoff (KCL) tại nút ngõ ra:
+- Theo định luật Kirchhoff dòng điện (KCL) tại nút ngõ ra:
   $$\frac{v_{in}(t) - v_C(t)}{R} - C \frac{dv_C(t)}{dt} = 0 \implies \frac{dv_C(t)}{dt} + \frac{1}{RC} v_C(t) = \frac{v_{in}(t)}{RC}$$
 
 **Nghiệm quá trình nạp ($0 \le t < T_{on}$, điều kiện đầu $v_C(0) = 0$):**
 $$v_C(t) = V_0 \left(1 - e^{-t/\tau}\right) \quad \text{với } \tau = R \cdot C$$
 
-**Nghiệm quá trình xả ($t \ge T_{on}$, đặt $t' = t - T_{on}$, điều kiện đầu $v_C(0) = V_0$):**
-$$v_C(t') = V_0 e^{-t'/\tau}$$
+**Nghiệm quá trình xả ($t \ge T_{on}$, đặt $t' = t - T_{on}$, điều kiện đầu $v_C(T_{on})$):**
+$$v_C(t') = v_C(T_{on}) \cdot e^{-t'/\tau}$$
 
 ### 2. Năng lượng và Cân bằng nhiệt động học trong mạch RC
 - Điện tích nạp vào tụ: $Q = C \cdot V_0$.
@@ -113,52 +114,70 @@ $$v_C(t') = V_0 e^{-t'/\tau}$$
 | **$0,693 \tau$** | $0,500 V_0$ | $50,0\%$ | Mốc đo độ trễ truyền lan $t_{50\%}$ danh định. |
 | **$1,0 \tau$** | $V_0(1 - e^{-1}) \approx 0,632 V_0$ | **$63,2\%$** | Hằng số thời gian $\tau$ của mạch. |
 | **$2,197 \tau$** | Khoảng cách từ $10\%$ đến $90\%$ | $\Delta = 80\%$ | Thời gian sườn xung tăng $t_r \approx 2,2 \tau$. |
-| **$3,0 \tau$** | $0,950 V_0$ | $95,0\%$ | Điểm chuyển tiếp gần bão hòa. |
-| **$5,0 \tau$** | $V_0(1 - e^{-5}) \approx 0,993 V_0$ | **$99,3\%$** | **Quy ước kỹ thuật xem tụ đã nạp no hoàn toàn.** |
+| **$3,0 \tau$** | $V_0(1 - e^{-3}) \approx 0,950 V_0$ | $95,0\%$ | Điểm chuyển tiếp gần bão hòa. |
+| **$5,0 \tau$** | $V_0(1 - e^{-5}) \approx 0,9933 V_0$ | **$99,33\%$** | **Quy ước kỹ thuật xem tụ đã nạp no hoàn toàn.** |
 
 ---
 
-## 0.6. LIÊN HỆ GIỮA MẠCH RC VÀ ĐỘ TRỄ CỔNG CMOS
+## 0.6. ĐÁP ÁN CHI TIẾT CÂU HỎI PRE-LAB
 
-Trong mạch số CMOS, các transistor hoạt động như các công tắc đóng mở điện tử. Khi ngõ vào của một Inverter chuyển trạng thái:
-1. **Chuyển từ $0 \to 1$ (Kéo xuống - Pull Down):** NMOS dẫn, PMOS ngắt. Tụ tải ký sinh $C_L$ tại ngõ ra phóng điện tích xuống đất qua kênh dẫn NMOS.
-2. **Chuyển từ $1 \to 0$ (Kéo lên - Pull Up):** PMOS dẫn, NMOS ngắt. Nguồn $V_{DD}$ nạp điện cho tụ tải qua kênh dẫn PMOS.
+Dưới đây là lời giải chuẩn xác dùng để chấm bài kiểm tra đầu giờ của sinh viên:
 
-```
-       MẠCH RC THỰC HÀNH                  MÔ HÌNH CMOS TƯƠNG ĐƯƠNG               CỔNG INVERTER THỰC TẾ
-         R (20k)                                    R_on,p                               VDD (5V)
-  Vin --/\/\/\--+-- Vout                    VDD -----/\/\/\---+                         +---+
-                |                                             |                         |Mp | (W=12λ)
-              +---+                                         +---+                       +---+
-              | C | (5nF)                                   |CL | (Tải dung)    Vin ----+---+---- Vout
-              +---+                                         +---+                       |Mn | (W=4λ)
-                |                                             |                         +---+
-               GND                          GND -----/\/\/\---+                           |
-                                                    R_on,n                               GND
-```
+### Câu P1: Đơn vị trong SPICE
+- Nhập `4.7M`: SPICE không phân biệt hoa thường, hiểu chữ `M` là **milli** ($10^{-3}$). Do đó giá trị thực tế là $4,7\,\text{m}\Omega = 0,0047\,\Omega$.
+- Nhập `22uF`: SPICE hiểu tiền tố `u` là **micro** ($10^{-6}$), chữ cái `F` đứng sau bị bỏ qua $\implies 22\,\mu\text{F}$.
+- **Cú pháp chuẩn:**
+  * Muốn khai báo $4,7\,\text{M}\Omega$: Bắt buộc phải gõ `4.7Meg`.
+  * Muốn khai báo $22\,\text{pF}$: Gõ `22p` (hoáu `22pF`).
 
-### Giới hạn của mô hình $0,69 \cdot R_{on} \cdot C_L$
-- Trong mạch RC thụ động (Lab 0), điện trở $R$ là tuyến tính hằng số $\implies$ Trễ đo được khớp chính xác tuyệt đối với $\ln(2) \cdot RC$.
-- Trong cổng CMOS thực tế (Lab 1), kênh dẫn MOSFET là linh kiện phi tuyến. Trong nửa đầu quá trình phóng nạp, transistor hoạt động trong vùng **Bão hòa** (dòng điện gần như không đổi), sau đó mới chuyển sang vùng **Tuyến tính**. Do đó, điện trở kênh dẫn thực tế biến thiên liên tục.
-- Giá trị $0,69 \cdot R_{on} \cdot C_L$ chỉ là **cận dưới xấp xỉ**. Trễ mô phỏng thực tế của Inverter luôn lớn hơn từ $1,5$ đến $1,8$ lần con số này. Giảng viên cần nhấn mạnh điều này để chuẩn bị tâm lý cho sinh viên bước vào Lab 1.
+### Câu P2: Phân tích mạch phân áp DC ($V_{in} = 10,0\,\text{V}, R_1 = 15\,\text{k}\Omega, R_2 = 10\,\text{k}\Omega$)
+- Điện áp tĩnh ngõ ra:
+  $$V_{out} = V_{in} \cdot \frac{R_2}{R_1 + R_2} = 10,0 \cdot \frac{10}{15 + 10} = \mathbf{4,000\,\text{V}}$$
+- Dòng điện tĩnh qua mạch:
+  $$I = \frac{V_{in}}{R_1 + R_2} = \frac{10,0\,\text{V}}{25\,\text{k}\Omega} = \mathbf{0,400\,\text{mA}} = 400\,\mu\text{A}$$
+- Độ dốc đặc tuyến truyền đạt:
+  $$\frac{dV_{out}}{dV_{in}} = \frac{R_2}{R_1 + R_2} = \frac{10}{25} = \mathbf{0,4000}$$
+
+### Câu P3: Mạch quá độ RC ($R = 5\,\text{k}\Omega, C = 10\,\text{nF}, V_0 = 5,0\,\text{V}$)
+- Hằng số thời gian:
+  $$\tau = R \cdot C = 5\,\text{k}\Omega \times 10\,\text{nF} = \mathbf{50,00\,\mu\text{s}}$$
+- Trễ 50%:
+  $$t_{50\%} = \ln(2) \cdot \tau = 0,69315 \times 50\,\mu\text{s} = \mathbf{34,66\,\mu\text{s}}$$
+- Thời gian sườn tăng 10%–90%:
+  $$t_r = \ln(9) \cdot \tau = 2,1972 \times 50\,\mu\text{s} = \mathbf{109,86\,\mu\text{s}} \approx 110\,\mu\text{s}$$
+- Tần số cắt $-3\,\text{dB}$:
+  $$f_c = \frac{1}{2\pi RC} = \frac{1}{2\pi \times 50\,\mu\text{s}} = \mathbf{3183,1\,\text{Hz}} \approx 3,183\,\text{kHz}$$
+
+### Câu P4: Thiết lập nguồn xung PULSE cho mạch Câu P3
+- Để tụ nạp đạt $> 99\%$ (mốc $5\tau$), xung mức cao cần duy trì tối thiểu:
+  $$T_{on} \ge 5\tau = 5 \times 50\,\mu\text{s} = \mathbf{250\,\mu\text{s}}$$
+- Để tụ xả về $< 1\%$ (thêm $5\tau$ ở mức thấp), chu kỳ xung tối thiểu:
+  $$T_{period} \ge 10\tau = 10 \times 50\,\mu\text{s} = \mathbf{500\,\mu\text{s}}$$
+
+### Câu P5: Phân tích độ nhạy tham số
+- Độ trễ truyền lan: $t_{pd} = \ln(2) \cdot R \cdot C$. Vì $t_{pd}$ tỉ lệ thuận bậc nhất với $C$, khi $C' = 2C$ thì trễ **tăng gấp đôi** ($t'_{pd} = 2 t_{pd}$).
+- Tần số cắt: $f_c = \frac{1}{2\pi RC}$. Vì $f_c$ tỉ lệ nghịch với $C$, khi $C' = 2C$ thì tần số cắt **giảm đi một nửa** ($f'_c = f_c / 2$).
+
+### Câu P6: Phác thảo dạng sóng xung hẹp ($T_{on} = 3\tau$)
+- Điện áp đỉnh mà tụ đạt được:
+  $$v_C(3\tau) = V_0 (1 - e^{-3}) = 5,0 \times (1 - 0,04979) = \mathbf{4,751\,\text{V}} \quad (95,02\% \cdot V_0)$$
+- **Nhận xét vật lý:** Tụ **chưa nạp đầy** đến $5,0\,\text{V}$ (vẫn còn thiếu $0,249\,\text{V}$). Xung điện áp trên tụ bị cụt đầu; khi ngắt xung ở $t = 3\tau$, tụ lập tức phóng điện từ mốc $4,751\,\text{V}$ xuống đất.
 
 ---
 
 ## 0.7. HƯỚNG DẪN TỔ CHỨC BUỔI THỰC HÀNH (KỊCH BẢN 135' & 225')
 
-Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp với phòng máy:
+### Kịch bản A: Khung chuẩn 135 phút (Ca 3 tiết tiêu chuẩn — Khung chính)
+- **00–15' (15 phút):** Điểm danh, thu/kiểm tra bài Pre-lab. Hướng dẫn tạo thư mục chuẩn `lab00_MSSV_HoTen/`, chép tệp `C5_models.txt` từ `04 - Models_and_Libraries/`. Giới thiệu giao diện LTspice, cách xuất Netlist và vai trò nút `0`.
+- **15–35' (20 phút):** Giảng viên làm mẫu **Ex0.1** (`ex01_divider.asc`); giải thích `.op`, `.dc` và đối chiếu độ dốc đặc tuyến. Sinh viên thao tác theo và ghi số liệu.
+- **35–75' (40 phút):** **Trọng tâm Ex0.2** (`ex02_rc_tran.asc`): Cấu hình nguồn PULSE ($5\tau / 10\tau$), đặt `dTmax = 0.1u`. Thiết lập khối đo `.meas` tham số hóa. Sinh viên tự đo 5 thông số ($t_{pd}, t_r, t_f, I_{peak,chg}, I_{peak,dis}$). Hướng dẫn giải thích vì sao $|I_{peak,dis}| = 248,3\,\mu\text{A}$ lệch $0,67\%$ so với đỉnh nạp.
+- **75–100' (25 phút):** Hướng dẫn **Ex0.3** (`ex03_rc_ac.asc`): Chạy `.ac dec 20 10 1Meg`, đo tần số cắt $f_c$ và góc pha $-45^\circ$. Yêu cầu sinh viên tính ngay tích số $t_r \cdot f_c \approx 0,35$.
+- **100–120' (20 phút):** Sinh viên tự lập thực hiện **Ex0.4** (`ex04_rc_step.asc`): Đặt `{Rval}`, chạy `.step`, xuất 4 điểm trễ và vẽ đồ thị thực nghiệm $t_{pd} - R$. Xác nhận độ dốc $\text{Slope} \approx 3,466\,\mu\text{s}/\text{k}\Omega$.
+- **120–135' (15 phút):** Giảng viên demo nhanh **Ex0.5** (`ex05_nmos_test.asc`): Gọi model `N` C5N Level 3, giải thích nguyên nhân dòng $I_D \approx 1,4\,\text{mA}$ thấp hơn công thức bậc hai. Hướng dẫn thử nghiệm lỗi có chủ đích (Fault Injection) và giao nhiệm vụ đóng gói báo cáo nộp về nhà.
 
-### Kịch bản A: Khung chuẩn 135 phút (Ca 3 tiết tiêu chuẩn)
-- **00–15' (15 phút):** Điểm danh, phổ biến quy định an toàn, hướng dẫn tạo cấu trúc thư mục `D:\lab_vlsi\lab00\`. Giới thiệu giao diện LTspice, cách chọn linh kiện, ý nghĩa nút đất `0`.
-- **15–35' (20 phút):** Giảng viên chiếu máy chiếu làm mẫu **Ex0.1**; giải thích lệnh `.op`, `.dc` và cách đọc dòng điện. Sinh viên làm theo và ghi số liệu.
-- **35–75' (40 phút):** **Trọng tâm Ex0.2**: Hướng dẫn cấu hình nguồn PULSE, thiết lập `.tran 0 1m 0 0.1u`. Giải thích cú pháp `.meas`. Sinh viên tự đo và kiểm chứng 5 thông số ($t_{pd}, t_r, t_f, I_{peak,chg}, I_{peak,dis}$).
-- **75–100' (25 phút):** Hướng dẫn **Ex0.3**: Cấu hình nguồn AC 1, chạy `.ac dec 20 10 1Meg`. Hướng dẫn sinh viên rê chuột trên biểu đồ Bode tìm điểm $-3\,\text{dB}$ và $-45^\circ$.
-- **100–120' (20 phút):** Sinh viên tự lập thực hiện **Ex0.4**: Thay `{Rval}`, chạy `.step`, trích xuất bảng 4 điểm trễ và vẽ đồ thị thực nghiệm.
-- **120–135' (15 phút):** Giảng viên demo nhanh **Ex0.5**: Gọi thư viện `C5_models.txt`, giải thích dòng $I_D$ thấp hơn công thức bậc hai. Nghiệm thu sản phẩm tại bàn, hướng dẫn đóng gói dự án nộp về nhà.
-
-### Kịch bản B: Khung mở rộng 225 phút (Ca 5 tiết tích hợp)
-- Mở rộng thời gian cho Ex0.2 (60 phút) để sinh viên thử nghiệm thay đổi `dTmax` từ `0.1u` lên `20u` và quan sát sai số trễ tăng vọt.
-- Dành 30 phút cho sinh viên tự thực hành Ex0.5 tại lớp, tự tay viết Netlist và tìm hiểu các tham số $VTO, KP$ trong tệp mô hình `C5_models.txt`.
+### Kịch bản B: Khung mở rộng 225 phút (Ca 5 tiết tích hợp — Tùy chọn)
+- Dành thêm 20 phút cho Ex0.2 để sinh viên thay đổi `dTmax` từ `0.1u` lên `20u` và quan sát sai số trễ tăng vọt.
+- Dành 30 phút cho sinh viên tự tay thực hành Ex0.5 tại lớp, mở tệp `C5_models.txt` tìm hiểu các tham số $VTO, KP, TOX, VMAX, THETA$.
 - Dành 25 phút cuối giờ để kiểm tra vấn đáp từng nhóm sinh viên tại bàn máy.
 
 ---
@@ -167,173 +186,162 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
 
 ### Ex0.1: Phân tích mạch phân áp DC (.op, .dc)
 1. **Kiến thức giảng viên cần giải thích:**
-   - Định luật Kirchhoff dòng điện tại nút `out`: $\frac{V_{in} - V_{out}}{R_1} = \frac{V_{out}}{R_2} \implies V_{out} = V_{in} \frac{R_2}{R_1 + R_2}$.
-   - Khái niệm điểm làm việc tĩnh DC: mạch không có tín hiệu xoay chiều, tụ điện coi như hở mạch hoàn toàn.
+   - Định luật Kirchhoff dòng điện tại nút `out`: $V_{out} = V_{in} \frac{R_2}{R_1 + R_2}$.
+   - Khái niệm điểm làm việc tĩnh DC: Tụ điện coi như hở mạch hoàn toàn.
 2. **Kịch bản hướng dẫn:**
-   - GV chiếu thao tác vẽ schematic, đặt nguồn `voltage`, đặt `GND`.
-   - Lưu ý đặc biệt: Chỉ cho sinh viên xem menu **View $\to$ SPICE Netlist** ngay sau khi vẽ xong sơ đồ để sinh viên hiểu bản chất schematic chỉ là giao diện đồ họa sinh ra netlist.
+   - Hướng dẫn lưu tên tệp đúng quy chuẩn: `ex01_divider.asc`, xuất netlist `ex01_divider.sp`.
+   - Xem menu **View $\to$ SPICE Netlist** để sinh viên thấy rõ các dòng kết nối nút.
 3. **Kết quả tham chiếu:**
-   - Với $V_{in} = 5,0\,\text{V}, R_1 = 12\,\text{k}\Omega, R_2 = 18\,\text{k}\Omega$:
-     * $V(out) = 3,0000\,\text{V}$ (Sai số $0,00\%$).
-     * $I(R1) = 0,1667\,\text{mA} = 166,7\,\mu\text{A}$.
-     * Độ dốc đặc tuyến $\frac{\Delta V_{out}}{\Delta V_{in}} = \frac{18}{30} = 0,6000$.
+   - $V_{in} = 5,0\,\text{V}, R_1 = 12\,\text{k}\Omega, R_2 = 18\,\text{k}\Omega$:
+     * $V(out) = \mathbf{3,0000\,\text{V}}$ (Sai số $0,00\%$).
+     * $I(R_1) = \mathbf{0,1667\,\text{mA}} = 166,7\,\mu\text{A}$.
+     * Độ dốc đặc tuyến $\frac{\Delta V_{out}}{\Delta V_{in}} = \frac{18}{30} = \mathbf{0,6000}$.
 4. **Câu hỏi gợi mở vấn đáp:**
-   - *"Nếu thầy thay đổi nguồn vào thành $10\,\text{V}$, điện áp $V_{out}$ sẽ là bao nhiêu? Công suất tiêu tán toàn mạch tăng gấp mấy lần?"* (Đáp: $6\,\text{V}$; công suất tăng 4 lần vì $P \propto V^2$).
-5. **Lỗi thường gặp:**
-   - Quên đặt nút `GND` $\implies$ Báo lỗi `Singular matrix`.
-   - Nhầm nhãn: Đặt tên linh kiện $R_1$ thành giá trị điện trở.
+   - *"Nếu nguồn vào tăng lên $10\,\text{V}$, điện áp $V_{out}$ bằng bao nhiêu và công suất tiêu tán toàn mạch tăng gấp mấy lần?"* (Đáp: $6,0\,\text{V}$; công suất tăng 4 lần vì $P = V^2 / R$).
 
 ---
 
 ### Ex0.2: Mô phỏng quá độ nạp và xả của mạch RC (.tran, .meas)
 1. **Kiến thức giảng viên cần giải thích:**
-   - Cơ chế nạp xả: Tụ tích trữ điện tích, điện áp trên tụ tỷ lệ với điện tích $q = C \cdot v_C$. Dòng điện qua tụ $i_C = C \frac{dv_C}{dt}$. Vì dòng điện hữu hạn nên $v_C$ không thể biến thiên gián đoạn (nhảy bậc).
-   - Bản chất của các câu lệnh `.meas TRIG ... TARG ...`: Bắt thời điểm tín hiệu vượt qua ngưỡng điện áp xác định.
-2. **Kịch bản hướng dẫn:**
-   - Cho sinh viên tự cấu hình nguồn xung `PULSE(0 5.0 0 10n 10n 500u 1000u)`. Giải thích rõ: $T_{on} = 500\,\mu\text{s} = 5\tau$ để tụ nạp đầy $99,3\%$; $T_{period} = 1000\,\mu\text{s} = 10\tau$ để quan sát đủ cả chu kỳ nạp và xả.
-   - Hướng dẫn mở Error Log (`Ctrl + L`) xem kết quả đo tự động.
+   - Cơ chế nạp xả: Tụ tích trữ điện tích $q = C \cdot v_C$, dòng điện $i_C = C \frac{dv_C}{dt}$. Điện áp không thể thay đổi nhảy bậc vì dòng điện hữu hạn.
+   - Bản chất của câu lệnh `.meas`: Tự động bắt thời điểm giao cắt điện áp.
+2. **Phân tích sâu về đỉnh dòng nạp và dòng xả:**
+   - **Đỉnh dòng nạp ($t = 0^+$):** Điện áp ban đầu trên tụ $v_C(0) = 0\,\text{V}$. Khi xung nhảy lên $5,0\,\text{V}$, toàn bộ $5\,\text{V}$ rơi trên điện trở:
+     $$I_{peak,chg} = +\frac{5,0\,\text{V}}{20\,\text{k}\Omega} = \mathbf{+0,2500\,\text{mA}} = +250,0\,\mu\text{A}$$
+   - **Đỉnh dòng xả ($t = 500\,\mu\text{s}^+$):** Vì thời gian nạp $T_{on} = 500\,\mu\text{s} = 5\tau$, tụ chỉ mới nạp tới:
+     $$v_C(5\tau) = 5,0 \cdot (1 - e^{-5}) = 5,0 \times (1 - 0,006738) = \mathbf{4,9663\,\text{V}} \quad (\text{không phải } 5,0\,\text{V}!)$$
+     Khi nguồn vào nhảy về $0\,\text{V}$, dòng điện phóng ngược từ tụ về đất:
+     $$I_{peak,dis} = \frac{0\,\text{V} - 4,9663\,\text{V}}{20\,\text{k}\Omega} = \mathbf{-0,2483\,\text{mA}} = -248,32\,\mu\text{A}$$
+     Độ lệch so với $-250\,\mu\text{A}$ là $\frac{250 - 248,32}{250} \approx \mathbf{0,67\%}$.
+   - **Ý nghĩa sư phạm:** Đây là cơ hội vàng để rèn luyện thói quen *"tính trước, đo sau, giải thích sai lệch"*. Sinh viên đo ra $-248,3\,\mu\text{A}$ không phải do SPICE đo sai, mà là do bản chất tụ chỉ nạp được $99,33\%$ sau $5\tau$!
 3. **Kết quả tham chiếu:**
    - $\tau = 20\,\text{k}\Omega \times 5\,\text{nF} = 100,0\,\mu\text{s}$.
-   - Trễ 50%: $t_{pd} = \ln(2) \cdot \tau = \mathbf{69,315\,\mu\text{s}}$ (SPICE đo được: $69,31 - 69,33\,\mu\text{s}$, sai lệch $< 0,05\%$).
-   - Sườn tăng 10%–90%: $t_r = \ln(9) \cdot \tau = \mathbf{219,72\,\mu\text{s}} \approx 2,2\tau$ (SPICE đo được: $219,5 - 220,0\,\mu\text{s}$).
-   - Đỉnh dòng nạp: $I_{peak,chg} = +\frac{5,0\,\text{V}}{20\,\text{k}\Omega} = \mathbf{+0,2500\,\text{mA}}$.
-   - Đỉnh dòng xả: $I_{peak,dis} = -\frac{5,0\,\text{V}}{20\,\text{k}\Omega} = \mathbf{-0,2500\,\text{mA}}$.
-4. **Câu hỏi gợi mở vấn đáp:**
-   - *"Tại sao tại thời điểm $t = 0^+$, dòng nạp lại vọt lên cực đại ngay lập tức trong khi điện áp trên tụ vẫn bằng 0V?"* (Đáp: Tại $t=0^+$, tụ chưa tích điện xem như ngắn mạch, toàn bộ $5\,\text{V}$ đặt lên điện trở $R$).
-5. **Lỗi thường gặp:**
-   - Quên tham số `0.1u` trong lệnh `.tran 0 1m 0 0.1u` $\implies$ Đồ thị bị gãy khúc, lệnh `.meas` báo lỗi `Measurement FAIL`.
-   - Đặt tụ ngược cực $\implies$ Dòng nạp hiển thị dấu âm, dòng xả hiển thị dấu dương.
+   - Trễ 50%: $t_{pd} = \ln(2) \cdot \tau = \mathbf{69,315\,\mu\text{s}}$ (SPICE đo được: $69,32\,\mu\text{s}$, sai lệch $< 0,05\%$).
+   - Sườn tăng 10%–90%: $t_r = \ln(9) \cdot \tau = \mathbf{219,72\,\mu\text{s}}$ (SPICE đo được: $219,7\,\mu\text{s}$).
+   - Sườn giảm 90%–10%: $t_f = \ln(9) \cdot \tau = \mathbf{219,72\,\mu\text{s}}$ (SPICE đo được: $219,7\,\mu\text{s}$).
 
 ---
 
-### Ex0.3: Phân tích đáp ứng tần số AC và biểu đồ Bode (.ac)
+### Ex0.3: Phân tích đáp ứng tần số AC và Biểu đồ Bode (.ac)
 1. **Kiến thức giảng viên cần giải thích:**
    - Mạch RC là bộ lọc thông thấp bậc một (First-Order Low-Pass Filter).
-   - Hàm truyền đạt phức:
+   - Hàm truyền đạt:
      $$H(j\omega) = \frac{1}{1 + j\omega RC} \implies |H(j\omega)| = \frac{1}{\sqrt{1 + (\omega RC)^2}}, \quad \angle H(j\omega) = -\arctan(\omega RC)$$
-   - Tại tần số cắt $\omega_c = \frac{1}{RC} \implies f_c = \frac{1}{2\pi RC}$:
-     $$|H(j\omega_c)| = \frac{1}{\sqrt{2}} \approx 0,707 \implies 20\log_{10}(0,707) \approx -3,01\,\text{dB}$$
-     $$\angle H(j\omega_c) = -\arctan(1) = -45^\circ$$
-2. **Kịch bản hướng dẫn:**
-   - Nhắc sinh viên: Chế độ `.ac` yêu cầu nguồn phải có thuộc tính `AC 1`.
-   - Hướng dẫn đọc biểu đồ Bode: Trục tung bên trái là biên độ ($0\,\text{dB}$ ở tần số thấp, suy giảm $-20\,\text{dB/decade}$ ở tần số cao); trục tung bên phải là góc pha ($0^\circ$ ở tần số thấp, $-45^\circ$ tại $f_c$, tiến về $-90^\circ$ ở tần số cao).
-3. **Kết quả tham chiếu:**
-   - $f_c = \frac{1}{2\pi \times 100\,\mu\text{s}} \approx \mathbf{1591,55\,\text{Hz}} \approx \mathbf{1,592\,\text{kHz}}$.
-   - SPICE đo tự động: $f_c \approx 1591 - 1593\,\text{Hz}$ (Sai lệch $< 0,1\%$).
-   - Góc pha đo được tại $f_c$: $-44,9^\circ \text{ đến } -45,1^\circ$.
-4. **Câu hỏi gợi mở vấn đáp:**
-   - *"Nếu tăng tụ điện $C$ lên 10 lần, tần số cắt của mạch sẽ dịch sang trái hay sang phải trên biểu đồ Bode?"* (Đáp: Tần số cắt giảm 10 lần, đường đặc tuyến dịch sang trái, băng thông mạch bị thu hẹp).
+   - Tại tần số cắt $f_c = \frac{1}{2\pi RC} = \frac{1}{2\pi \times 100\,\mu\text{s}} = \mathbf{1591,55\,\text{Hz}} \approx 1,592\,\text{kHz}$:
+     $$|H(j\omega_c)| = \frac{1}{\sqrt{2}} \approx -3,01\,\text{dB}, \quad \angle H(j\omega_c) = -45^\circ$$
+2. **Kiểm chéo hai miền độc lập (Time vs Frequency Cross-Check):**
+   - Giảng viên yêu cầu sinh viên lấy số đo sườn tăng $t_r$ ở Ex0.2 và tần số cắt $f_c$ ở Ex0.3 nhân với nhau:
+     $$t_r \cdot f_c = (\ln(9) \cdot RC) \cdot \left(\frac{1}{2\pi RC}\right) = \frac{\ln(9)}{2\pi} = \frac{2,1972}{6,2832} \approx \mathbf{0,3497} \approx \mathbf{0,35}$$
+   - Thay số đo thực tế: $t_r = 219,72\,\mu\text{s}, f_c = 1591,55\,\text{Hz}$:
+     $$219,72 \times 10^{-6}\,\text{s} \times 1591,55\,\text{s}^{-1} = \mathbf{0,3497}$$
+   - Khẳng định tính nhất quán vật lý tuyệt đối của hai phân tích hoàn toàn độc lập trong SPICE.
 
 ---
 
 ### Ex0.4: Khảo sát tham số với `.param` và `.step`
 1. **Kiến thức giảng viên cần giải thích:**
-   - Trong thiết kế mạch vi mô, các thông số nhiệt độ, điện áp nguồn và kích thước transistor luôn biến động. Lệnh `.step` là công cụ khảo sát độ nhạy (Sensitivity Analysis) và khảo sát góc công nghệ (Process Corners).
-   - Quy luật trễ Elmore: $t_{pd} = \ln(2) \cdot C \cdot R$. Vì $C$ không đổi ($5\,\text{nF}$), trễ $t_{pd}$ là hàm bậc nhất của $R$ với hệ số góc $\text{Slope} = \ln(2) \cdot C$.
-2. **Kịch bản hướng dẫn:**
-   - Nhắc sinh viên kiểm tra cú pháp `{Rval}` trên sơ đồ.
-   - Hướng dẫn dùng menu ngữ cảnh trong Error Log để kích hoạt công cụ vẽ đồ thị tự động **Plot .step'ed .meas data**.
-3. **Kết quả tham chiếu:**
-   - $R = 5\,\text{k}\Omega \implies t_{pd} = 17,33\,\mu\text{s}$
-   - $R = 10\,\text{k}\Omega \implies t_{pd} = 34,66\,\mu\text{s}$
-   - $R = 20\,\text{k}\Omega \implies t_{pd} = 69,32\,\mu\text{s}$
-   - $R = 40\,\text{k}\Omega \implies t_{pd} = 138,63\,\mu\text{s}$
-   - Độ dốc thực nghiệm:
-     $$\text{Slope} = \frac{138,63 - 17,33}{40 - 5} = \frac{121,30\,\mu\text{s}}{35\,\text{k}\Omega} = \mathbf{3,4657\,\text{ns}/\text{k}\Omega}$$
-   - Kiểm chéo với lý thuyết: $\ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = \mathbf{3,4657 \times 10^{-9}\,\text{s}/\Omega} \implies$ Khớp hoàn hảo $100\%$.
+   - Quy luật trễ Elmore trong mạch RC: $t_{pd} = \ln(2) \cdot C \cdot R$.
+   - Trễ $t_{pd}$ biến thiên tuyến tính theo $R$ với hệ số góc:
+     $$\text{Slope} = \ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = 3,4657 \times 10^{-9}\,\text{s}/\Omega = \mathbf{3,4657\,\mu\text{s}/\text{k}\Omega}$$
+   - **Lưu ý kiểm tra đơn vị:** Không được nhầm lẫn giữa $\text{ns}/\text{k}\Omega$ và $\mu\text{s}/\text{k}\Omega$. Với mỗi $1\,\text{k}\Omega$ tăng thêm, trễ tăng thêm $3,466\,\mu\text{s}$.
+2. **Kết quả tham chiếu:**
+   - $R = 5\,\text{k}\Omega \implies t_{pd} = \mathbf{17,33\,\mu\text{s}}$
+   - $R = 10\,\text{k}\Omega \implies t_{pd} = \mathbf{34,66\,\mu\text{s}}$
+   - $R = 20\,\text{k}\Omega \implies t_{pd} = \mathbf{69,32\,\mu\text{s}}$
+   - $R = 40\,\text{k}\Omega \implies t_{pd} = \mathbf{138,63\,\mu\text{s}}$
+   - Độ dốc thực nghiệm từ đồ thị:
+     $$\frac{\Delta t_{pd}}{\Delta R} = \frac{138,63 - 17,33}{40 - 5} = \frac{121,30\,\mu\text{s}}{35\,\text{k}\Omega} = \mathbf{3,4657\,\mu\text{s}/\text{k}\Omega}$$
 
 ---
 
-### Ex0.5: Giới thiệu mô hình MOSFET công nghệ C5N
+### Ex0.5: Giới thiệu mô hình MOSFET công nghệ C5N Level 3
 1. **Kiến thức giảng viên cần giải thích:**
-   - MOSFET là linh kiện 4 cực: Cực má (Drain), Cực cổng (Gate), Cực nguồn (Source), Cực thân (Bulk/Substrate).
-   - Tệp `.model` chứa các tham số vật lý bán dẫn thực tế trích xuất từ xưởng đúc chip (MOSIS).
-   - Mô hình Shichman-Hodges bậc hai bỏ qua hiệu ứng hạt dẫn kênh ngắn:
-     $$I_{D,sat} = \frac{1}{2} K'_n \left(\frac{W}{L}\right) (V_{GS} - V_{tn})^2 = \frac{1}{2} (120\,\mu\text{A/V}^2) \left(\frac{1,2}{0,6}\right) (5,0 - 0,7)^2 \approx \mathbf{2,219\,\text{mA}}$$
-   - Trong công nghệ C5N ($L = 0,6\,\mu\text{m}$), hiệu ứng **bão hòa vận tốc (Velocity Saturation)** làm electron đạt vận tốc giới hạn $v_{sat} \approx 10^7\,\text{cm/s}$, ghìm dòng điện thực tế xuống chỉ còn $\approx \mathbf{1,35 - 1,45\,\text{mA}}$.
-2. **Kịch bản hướng dẫn:**
-   - GV chiếu cách gõ `.include C5_models.txt`. Lưu ý tệp mô hình phải nằm chung thư mục với tệp mạch vẽ.
-   - Yêu cầu sinh viên xem Netlist để thấy rõ cú pháp khai báo transistor:
-     `M1 drain gate source bulk N W=1.2u L=0.6u`
-3. **Kết quả tham chiếu:**
-   - Dòng điện cực má mô phỏng: $I_D \approx 1,40\,\text{mA}$.
-   - Sai lệch so với công thức bậc hai: Thấp hơn $\approx 37\%$.
+   - Transistor NMOS trong tệp `04 - Models_and_Libraries/C5_models.txt` được khai báo là model **`N`**, chuẩn mô hình **`LEVEL = 3`**.
+   - Các tham số vật lý chính trích xuất từ wafer C5N:
+     * Điện áp ngưỡng: $VTO = 0,7000\,\text{V}$.
+     * Tham số độ dẫn: $KP = 120,0\,\mu\text{A/V}^2$.
+     * Bề dày lớp oxit cổng: $TOX = 9,5\,\text{nm}$.
+     * Vận tốc bão hòa hạt dẫn: $VMAX = 1,0 \times 10^5\,\text{m/s}$.
+     * Hệ số suy giảm độ linh động: $THETA = 0,0500\,\text{V}^{-1}$.
+2. **So sánh mô hình bậc hai và SPICE Level 3:**
+   - **Mô hình bậc hai Shichman-Hodges (tính tay):**
+     $$I_{D,sat} = \frac{1}{2} K'_n \left(\frac{W}{L}\right) (V_{GS} - V_{tn})^2 = \frac{1}{2} (120\,\mu\text{A/V}^2) \left(\frac{1,2\,\mu\text{m}}{0,6\,\mu\text{m}}\right) (5,0 - 0,7)^2 = \mathbf{2,219\,\text{mA}}$$
+   - **Kết quả mô phỏng SPICE Level 3:**
+     $$I_D \approx \mathbf{1,35 - 1,45\,\text{mA}} \quad (\text{thường đạt } \approx 1,40\,\text{mA})$$
+   - **Phân tích sai lệch ($\,\sim 37\%$):**
+     * Trong transistor kênh ngắn ($L = 0,6\,\mu\text{m}$), điện trường dọc $E = V_{DS}/L \approx 83\,\text{kV/cm}$ vượt quá điện trường tới hạn $E_{crit} \approx 10\,\text{kV/cm}$, làm các electron đạt vận tốc giới hạn $v_{sat} \approx 10^7\,\text{cm/s}$ (**Bão hòa vận tốc - Velocity Saturation**).
+     * Điện trường vuông góc mạnh từ cực cổng ép các electron va chạm liên tục với mặt phân cách Si-SiO2, làm giảm độ linh động thực tế $\mu_{eff}$ (**Suy giảm độ linh động - Mobility Degradation**).
+     * Hai hiện tượng này ghìm dòng điện thực tế xuống thấp hơn đáng kể so với dự đoán của công thức bậc hai lý tưởng.
 
 ---
 
 ## 0.9. BẢNG KẾT QUẢ MÔ PHỎNG THAM CHIẾU (BENCHMARK RESULTS)
 
-Bảng số liệu chuẩn dùng để đối chiếu khi chấm bài thực hành của sinh viên:
+Bảng số liệu chuẩn dùng để chấm bài và nghiệm thu sản phẩm thực hành của sinh viên:
 
 | Bài | Thông số đo | Biểu thức lý thuyết | Giá trị Lý thuyết | Kết quả SPICE `.meas` | Sai lệch tương đối | Đánh giá nghiệm thu |
 | :---: | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Đạt tuyệt đối |
-| **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | $0,00\%$ | Dòng từ in sang out |
+| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Tuyệt đối chính xác |
+| **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | $0,00\%$ | Dòng chảy từ `in` sang `out` |
 | **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính hoàn hảo |
-| **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05\%$ | Chuẩn $\le 2,0\%$ |
-| **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
-| **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
+| **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05\%$ | Chuẩn sai số $\le 2,0\%$ |
+| **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn sai số $\le 2,0\%$ |
+| **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn sai số $\le 2,0\%$ |
 | **Ex0.2** | Đỉnh dòng nạp | $+V_0 / R$ | $+0,2500\,\text{mA}$ | **$+0,2500\,\text{mA}$** | $0,00\%$ | Xuất hiện tại $t = 0^+$ |
-| **Ex0.2** | Đỉnh dòng xả | $-V_0 / R$ | $-0,2500\,\text{mA}$ | **$-0,2500\,\text{mA}$** | $0,00\%$ | Đảo chiều tại $t = 500\,\mu\text{s}^+$ |
+| **Ex0.2** | Đỉnh dòng xả | $-v_C(5\tau) / R$ | $-0,2483\,\text{mA}$ | **$-0,2483\,\text{mA}$** | $< 0,05\%$ | Lệch $0,67\%$ so với đỉnh nạp |
 | **Ex0.3** | Độ lợi dải thông | $A_{V,0}$ | $1,000$ ($0\,\text{dB}$) | **$0,000\,\text{dB}$** | $0,00\%$ | Đo tại $10\,\text{Hz}$ |
-| **Ex0.3** | Tần số cắt $f_c$ | $\frac{1}{2\pi RC}$ | $1591,55\,\text{Hz}$ | **$1592\,\text{Hz}$** | $< 0,10\%$ | Điểm biên độ $-3\,\text{dB}$ |
-| **Ex0.3** | Góc pha tại $f_c$ | $-\arctan(1)$ | $-45,0^\circ$ | **$-45,0^\circ$** | $< 0,10\%$ | Đọc trên trục bên phải |
+| **Ex0.3** | Tần số cắt $f_c$ | $\frac{1}{2\pi RC}$ | $1591,55\,\text{Hz}$ | **$1592\,\text{Hz}$** | $< 0,10\%$ | Điểm suy giảm $-3,01\,\text{dB}$ |
+| **Ex0.3** | Góc pha tại $f_c$ | $-\arctan(1)$ | $-45,0^\circ$ | **$-45,0^\circ$** | $< 0,10\%$ | Đọc trên trục pha bên phải |
+| **Ex0.3** | Kiểm chéo $t_r \cdot f_c$ | $\frac{\ln(9)}{2\pi}$ | $0,3497$ | **$0,3497$** | $0,00\%$ | Tích số bất biến hai miền |
 | **Ex0.4** | $t_{pd}$ ($R=5\text{k}$) | $\ln(2) \cdot 5\text{k} \cdot C$ | $17,329\,\mu\text{s}$ | **$17,33\,\mu\text{s}$** | $0,00\%$ | Bước quét 1 |
 | **Ex0.4** | $t_{pd}$ ($R=10\text{k}$) | $\ln(2) \cdot 10\text{k} \cdot C$ | $34,657\,\mu\text{s}$ | **$34,66\,\mu\text{s}$** | $0,00\%$ | Bước quét 2 |
 | **Ex0.4** | $t_{pd}$ ($R=20\text{k}$) | $\ln(2) \cdot 20\text{k} \cdot C$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $0,00\%$ | Bước quét 3 |
 | **Ex0.4** | $t_{pd}$ ($R=40\text{k}$) | $\ln(2) \cdot 40\text{k} \cdot C$ | $138,629\,\mu\text{s}$ | **$138,63\,\mu\text{s}$** | $0,00\%$ | Bước quét 4 |
-| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\text{ns/k}\Omega$ | **$3,466\,\text{ns/k}\Omega$** | $< 0,05\%$ | Trùng khớp tuyệt đối |
-| **Ex0.5** | Dòng $I_D$ NMOS | Shichman-Hodges | $\sim 2,22\,\text{mA}$ | **$1,35 - 1,45\,\text{mA}$** | $\sim 37\%$ | Bão hòa vận tốc hạt dẫn |
+| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\mu\text{s/k}\Omega$ | **$3,466\,\mu\text{s/k}\Omega$** | $< 0,05\%$ | Trùng khớp lý thuyết |
+| **Ex0.5** | Dòng $I_D$ NMOS | Shichman-Hodges | $\approx 2,22\,\text{mA}$ | **$1,35 - 1,45\,\text{mA}$** | $\approx 37\%$ | Bão hòa vận tốc hạt dẫn |
 
 ---
 
-## 0.10. CÂU HỎI MỞ RỘNG VÀ ĐÁP ÁN GỢI Ý
+## 0.10. KỊCH BẢN SOCRATIC DEBUGGING KHI THỰC HIỆN THỬ NGHIỆM LỖI CHỦ ĐÍCH
 
-1. **Câu hỏi:** *"Nếu trong phân tích quá độ `.tran`, ta đặt $T_{on} = 2\tau$ thay vì $5\tau$ thì điều gì sẽ xảy ra với các phép đo trễ và thời gian sườn?"*  
-   - *Đáp án gợi ý:* Sau $2\tau$, điện áp tụ chỉ nạp được $V_0(1 - e^{-2}) \approx 86,5\% \cdot V_0$ ($4,32\,\text{V}$). Tụ chưa nạp no đã bị xả sớm, làm điện áp đỉnh bị sụt mất $13,5\%$. Hệ quả: phép đo sườn tăng $t_r$ ($10\% \to 90\%$) sẽ bị hỏng hoàn toàn vì điện áp không bao giờ chạm tới mốc $90\%$ ($4,5\,\text{V}$).
-2. **Câu hỏi:** *"Tại sao trong mạch RC, tích giữa thời gian sườn tăng $t_r$ và tần số cắt $f_c$ lại là một hằng số không đổi xấp xỉ $0,35$?"*  
-   - *Đáp án gợi ý:* Ta có $t_r = \ln(9) \cdot RC \approx 2,1972 \cdot RC$ và $f_c = \frac{1}{2\pi RC}$. Nhân hai vế:
-     $$t_r \cdot f_c = (2,1972 \cdot RC) \cdot \left(\frac{1}{2\pi RC}\right) = \frac{2,1972}{2\pi} \approx \mathbf{0,3497} \approx \mathbf{0,35}$$
-     Đây là quy tắc kinh điển áp dụng cho mọi hệ thống tuyến tính bậc một để ước lượng băng thông từ thời gian sườn tăng.
-3. **Câu hỏi:** *"Trong mạch vi mạch thực tế, tụ điện $C_L$ ở ngõ ra một cổng logic đến từ những nguồn nào?"*  
-   - *Đáp án gợi ý:* Đến từ 3 thành phần chính: (1) Tụ cực má khuếch tán ($C_{db}$) của chính cổng đó; (2) Tụ dây nối kim loại (Interconnect capacitance $C_{wire}$); (3) Tụ cực cổng ngõ vào ($C_{gate}$) của các cổng logic tầng kế tiếp mà nó phải lái.
+Khi hướng dẫn sinh viên thực hiện yêu cầu **Deliberate Fault Injection**, giảng viên sử dụng các câu hỏi gợi mở:
 
----
-
-## 0.11. BẢNG HƯỚNG DẪN XỬ LÝ LỖI THEO PHƯƠNG PHÁP GỢI MỞ (SOCRATIC DEBUGGING)
-
-Khi sinh viên gặp lỗi, giảng viên **không sửa hộ** mà đặt các câu hỏi dẫn dắt để sinh viên tự tìm ra nguyên nhân:
-
-| Hiện tượng lỗi trên màn hình | Nguyên nhân cốt lõi | Câu hỏi gợi mở giảng viên đặt cho sinh viên |
-| :--- | :--- | :--- |
-| Báo lỗi **`Singular Matrix`** hoặc **`Node is floating`** | Mạch chưa có nút đất tham chiếu `0`. | *"Em kiểm tra xem mạch điện của em đã có điểm mốc điện thế chuẩn chưa? SPICE tính điện áp so với nút nào?"* |
-| Báo lỗi **`Unknown Subcircuit / Model not found`** | Sai tên model trong Netlist hoặc thiếu đường dẫn `.include`. | *"Tên model em gán cho transistor trên sơ đồ có khớp chính xác từng ký tự với tên ghi trong tệp thư viện C5_models.txt không?"* |
-| Kết quả phân tích DC ra điện áp xấp xỉ $0\,\text{V}$ | Nhầm lẫn tiền tố `10M` thành $10\,\text{M}\Omega$. | *"Em xem lại bảng đơn vị SPICE: chữ M hoa đứng một mình biểu diễn giá trị gì? Muốn viết Mega em phải viết chữ gì?"* |
-| Lệnh `.step` chạy xong nhưng 4 đường đồ thị trùng khít | Quên đặt ngoặc nhọn `{}` quanh tên biến tham số. | *"Linh kiện trên sơ đồ làm sao biết giá trị của nó là một biến số thay đổi chứ không phải là một chuỗi ký tự cố định?"* |
-| Dòng điện nạp của tụ hiển thị giá trị âm | Đặt ngược chiều chân cực tính của tụ điện. | *"SPICE quy ước chiều dòng điện chạy qua linh kiện hai cực như thế nào? Cực dương của tụ em đang nối đi đâu?"* |
-| Dạng sóng bị gãy góc, lệnh `.meas` báo **`FAIL`** | Bước thời gian cực đại `dTmax` quá lớn so với sườn xung. | *"Thời gian sườn xung của em là bao nhiêu nanosecond? Bước lấy mẫu của máy tính có đủ mịn để bắt được sườn dốc đó không?"* |
+| Thử nghiệm lỗi có chủ đích | Thông báo lỗi thực tế của LTspice | Câu hỏi gợi mở giảng viên đặt cho sinh viên | Bài học kỹ thuật thu được |
+| :--- | :--- | :--- | :--- |
+| **Xóa cọc đất GND tại Ex0.1** | *`Singular matrix: check nodes out and in`* hoặc *`no DC path to ground`* | *"Hệ phương trình MNA giải điện áp so với mốc nào? Nếu thiếu mốc chuẩn 0V thì có tìm được nghiệm duy nhất không?"* | Hiểu bản chất toán học của nút đất chuẩn `0` trong giải thuật MNA. |
+| **Gõ nhầm giá trị `10M` tại Ex0.1** | Điện áp ngõ ra tụt xuống gần $0\,\text{V}$, dòng điện vọt lên bất thường. | *"Chữ M đứng một mình trong SPICE mang ý nghĩa gì? Muốn viết Mega phải dùng cú pháp nào?"* | Khắc sâu bẫy tiền tố không phân biệt hoa thường của SPICE. |
+| **Quên đặt dấu `{}` quanh biến `Rval` ở Ex0.4** | *`Can't resolve .param Rval`* hoặc 4 đường đồ thị đè khít lên nhau. | *"Làm sao LTspice phân biệt được 'Rval' là một giá trị chuỗi cố định hay là một biến số cần quét?"* | Nắm vững quy tắc khai báo biến tham số trong LTspice. |
+| **Xoay ngược cực tính tụ điện ở Ex0.2** | Đồ thị dòng nạp hiển thị giá trị âm, dòng xả hiển thị dương. | *"SPICE quy ước chiều dòng điện chảy qua linh kiện hai cực như thế nào? Cực dương đang nối vào đâu?"* | Hiểu thứ tự nút trong Netlist quyết định dấu của dòng điện. |
+| **Đặt tên model `NMOS` thay vì `N` ở Ex0.5** | *`Unknown model: NMOS - ignored`* hoặc *`Can't find definition of model NMOS`* | *"Tên model trên sơ đồ của em có khớp chính xác từng ký tự với dòng .MODEL trong C5_models.txt không?"* | Rèn luyện tính kỷ luật khi liên kết thư viện PDK chuẩn. |
 
 ---
 
-## 0.12. BỘ HÌNH ẢNH KỸ THUẬT MINH HỌA CHI TIẾT (10 HÌNH KỸ THUẬT)
+## 0.11. BỘ HÌNH ẢNH KỸ THUẬT MINH HỌA CHI TIẾT (10 HÌNH KỸ THUẬT)
 
 ### Hình 0.1: Lưu đồ quy trình mô phỏng SPICE chuẩn công nghiệp
 ```mermaid
 flowchart TD
-    A["Ý tưởng thiết kế mạch"] --> B["Vẽ sơ đồ Schematic\n(LTspice GUI)"]
-    B --> C["Trích xuất Netlist\n(Tệp văn bản thuần .cir/.sp)"]
-    D["Thư viện mô hình PDK\n(C5_models.txt)"] --> E["Bộ giải thuật toán MNA\n(SPICE Simulator Engine)"]
+    A["Ý tưởng thiết kế mạch"] --> B["Vẽ sơ đồ Schematic
+(LTspice GUI: ex01 - ex05)"]
+    B --> C["Trích xuất Netlist
+(Tệp văn bản thuần .sp/.cir)"]
+    D["Thư viện mô hình PDK
+(C5_models.txt Level 3)"] --> E["Bộ giải thuật toán MNA
+(SPICE Simulator Engine)"]
     C --> E
-    F["Thiết lập phân tích:\n.OP, .DC, .TRAN, .AC"] --> E
-    E --> G["Cửa sổ hiển thị dạng sóng\n(Waveform Viewer)"]
-    E --> H["Trích xuất số đo tự động\n(SPICE Error Log: .meas)"]
-    G --> I{"Kiểm chứng lý thuyết\nSai lệch <= 2%?"}
+    F["Thiết lập phân tích:
+.OP, .DC, .TRAN, .AC"] --> E
+    E --> G["Cửa sổ hiển thị dạng sóng
+(Waveform Viewer)"]
+    E --> H["Trích xuất số đo tự động
+(SPICE Error Log: .meas)"]
+    G --> I{"Kiểm chứng lý thuyết
+Sai lệch <= 2%?"}
     H --> I
-    I -- Đạt --> J["Đóng gói thư mục dự án"]
+    I -- Đạt --> J["Đóng gói dự án lab00_MSSV_HoTen/"]
     I -- Không đạt --> K["Rà soát lỗi: Netlist, Bước thời gian dTmax"]
     K --> B
 ```
-*Mô tả sư phạm:* Hình 0.1 làm rõ vị trí của Netlist và Model trong bộ giải MNA; nhấn mạnh vòng lặp kiểm chứng kỹ thuật trước khi đóng gói sản phẩm.
 
 ---
 
@@ -351,7 +359,6 @@ flowchart TD
              |
             GND (Nút 0)
 ```
-*Mô tả sư phạm:* Phân tích định luật Ohm và phân chia điện thế; xác định rõ 3 nút điện: `in` (nút 5V), `out` (nút 3V), `0` (nút đất chuẩn).
 
 ---
 
@@ -368,7 +375,6 @@ flowchart TD
 |                                    | .end                                   |
 +------------------------------------+----------------------------------------+
 ```
-*Mô tả sư phạm:* Giúp sinh viên xóa bỏ sự mơ hồ giữa giao diện đồ họa và bản chất văn bản thuần của Netlist; hiểu rằng SPICE chỉ đọc các dòng text mô tả kết nối nút.
 
 ---
 
@@ -384,7 +390,6 @@ flowchart TD
    |                                   |
   GND (0)                             GND (0)
 ```
-*Mô tả sư phạm:* Xác định các tham số nguồn xung kích thích; giải thích vì sao cần $T_{on} = 5\tau = 500\,\mu\text{s}$ để tụ nạp đầy.
 
 ---
 
@@ -393,17 +398,16 @@ flowchart TD
   Điện áp (V)
    5.0V +-----------------------------+ - - - - - - - - - - - - - + V_0
         |         . - - ' '           |                           |
-   4.5V | - - - -/- - - - - - - - - - | - - - - - - - - - - - - - | 90%
+   4.5V | - - - -/- - - - - - - - - - | - - - - - - - - - - - - - | 90% (4.5V)
         |       /                     | \                         |
-   3.16V| - - -/- - - - - - - - - - - | - \ - - - - - - - - - - - | 63.2% (1 tau)
+  3.16V | - - -/- - - - - - - - - - - | - \ - - - - - - - - - - - | 63.2% (1 tau)
    2.5V | - - / - - - - - - - - - - - | - - \ - - - - - - - - - - | 50% (t_50 = 0.69 tau)
         |    /                        |      \                    |
-   0.5V | - / - - - - - - - - - - - - | - - - -\- - - - - - - - - | 10%
+   0.5V | - / - - - - - - - - - - - - | - - - -\- - - - - - - - - | 10% (0.5V)
     0V  +--+----+---------+-----------+---------+-----------------+
         0  t10  t50      1tau        5tau      10tau             Thời gian (t)
            |<-- t_r ----->|                     |<-- t_f ------>|
 ```
-*Mô tả sư phạm:* Đánh dấu trực quan các mốc $1\tau$ ($63,2\%$), $5\tau$ ($99,3\%$), trễ $t_{50\%}$ và thời gian sườn xung $t_r, t_f$.
 
 ---
 
@@ -418,7 +422,6 @@ flowchart TD
          +--------------------+---------> Tần số              +--------------------+-----> Tần số
          10 Hz               1.59 kHz   100 kHz               10 Hz               1.59 kHz 100 kHz
 ```
-*Mô tả sư phạm:* Minh họa đặc tính lọc thông thấp; chỉ rõ điểm tần số cắt $f_c$ tương ứng biên độ $-3\,\text{dB}$ và độ dịch pha $-45^\circ$.
 
 ---
 
@@ -434,9 +437,8 @@ flowchart TD
     0V +-+-----+-----+------+-------> t           17 | * (5k, 17.3us)
          |     |     |      |                        +---+------+------+------+-----> R (kOhm)
        tpd1  tpd2   tpd3   tpd4                          5k    10k    20k    40k
-                                                     Độ dốc Slope = ln(2)*C = 3.466 ns/kOhm
+                                                      Độ dốc Slope = ln(2)*C = 3.466 us/kOhm
 ```
-*Mô tả sư phạm:* Thấy rõ họ đường cong nạp xả biến đổi theo $R$; chứng minh bằng thực nghiệm quan hệ tuyến tính hoàn hảo giữa độ trễ và giá trị điện trở.
 
 ---
 
@@ -459,10 +461,8 @@ flowchart TD
        ^     ^      ^      ^      ^    ^     ^        ^
       Tên   Cực D  Cực G  Cực S  Cực B Tên Chiều    Chiều
      Linh                             Model rộng    dài kênh
-     kiện                             trong kênh
-                                      PDK
+     kiện                             PDK   kênh
 ```
-*Mô tả sư phạm:* Giải phẫu 4 cực của transistor MOSFET và ánh xạ chính xác vào từng trường tham số của dòng lệnh khai báo Netlist.
 
 ---
 
@@ -480,7 +480,6 @@ flowchart TD
                                                     Ron,n                                GND
   (Khảo sát mạch tuyến tính)            (Mô hình hóa kênh dẫn)              (Vi mạch tích hợp thực tế)
 ```
-*Mô tả sư phạm:* Hình ảnh mang tính triết lý sư phạm cao nhất bài: Nối liền mạch kiến thức giải tích mạch tuyến tính ở Lab 0 với kiến thức thiết kế vi mạch CMOS ở Lab 1.
 
 ---
 
@@ -505,28 +504,32 @@ flowchart TD
 |   step  max_val      at_time                                                            |
 |      1  0.000250000  1.00000e-08               <-- Đỉnh dòng nạp: +250.0 uA             |
 |                                                                                         |
+| Measurement: i_peak_dis                                                                 |
+|   step  min_val      at_time                                                            |
+|      1 -0.000248324  5.00010e-04               <-- Đỉnh dòng xả: -248.32 uA             |
+|                                                                                         |
 | Total transient steps: 14208, Points: 14208, Iterations: 28416                          |
 | Simulation completed successfully in 0.047 seconds.                                     |
 +-----------------------------------------------------------------------------------------+
 ```
-*Mô tả sư phạm:* Minh họa thực tế giao diện Error Log trong LTspice; hướng dẫn sinh viên vị trí đọc từng số liệu và cách kiểm tra thông báo hoàn thành của chương trình.
 
 ---
 
-## 0.13. RUBRIC ĐÁNH GIÁ KỸ THUẬT VÀ PHÂN QUYỀN ĐIỂM SỐ (THANG 10)
+## 0.12. RUBRIC ĐÁNH GIÁ KỸ THUẬT VÀ PHÂN QUYỀN ĐIỂM SỐ (THANG 10)
 
-| Tiêu chuẩn đánh giá | Trọng số | Mức Xuất sắc (90% - 100%) | Mức Đạt chuẩn (70% - 85%) | Mức Cần cố gắng (< 70%) |
+| Tiêu chuẩn đánh giá | Trọng số & CLO | Mức Xuất sắc (90% - 100%) | Mức Đạt chuẩn (70% - 85%) | Mức Cần cố gắng (< 70%) |
 | :--- | :---: | :--- | :--- | :--- |
-| **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **4.0 đ** | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2\%$. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5\%$. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
-| **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **2.0 đ** | Thiết lập đúng biến `{Rval}`, quét đúng 4 bước, vẽ được đồ thị thực nghiệm và tính đúng độ dốc. Gọi model C5N đo được dòng $I_D$. | Chạy được lệnh `.step` nhưng chưa vẽ được đồ thị độ dốc; gọi được model C5N. | Quên ngoặc nhọn `{}` làm kết quả quét bị sai; không liên kết được thư viện C5N. |
-| **Hiểu bản chất qua câu hỏi tư duy** | **2.0 đ** | Trả lời sắc bén, chính xác bản chất vật lý của các câu hỏi tư duy (vai trò nút đất, hằng số $\tau$, ý nghĩa $5\tau$, sụt giảm biên độ AC). | Trả lời được các câu hỏi cơ bản nhưng phần giải thích bản chất vật lý còn mơ hồ. | Không trả lời được câu hỏi hoặc chỉ chép lại công thức mà không hiểu ý nghĩa. |
-| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **2.0 đ** | Thư mục dự án tổ chức hoàn hảo đúng cấu trúc; sơ đồ và Netlist đầy đủ; báo cáo trung thực, có ghi nhận lỗi và cách sửa. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
+| **Chuẩn bị Pre-lab đầu giờ** | **1.5 đ**<br>*(CLO1)* | Giải đúng hoàn toàn 6 câu Pre-lab; hiểu thấu đáo đơn vị SPICE, phân áp và động học nạp xả. | Giải đúng từ 4 đến 5 câu; có sai sót nhỏ về đơn vị hoặc chưa tính hết câu xung hẹp. | Dưới 4 câu hoặc không nộp bài chuẩn bị Pre-lab. |
+| **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **3.5 đ**<br>*(CLO2)* | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2\%$; thực hiện đúng kiểm chéo $t_r \cdot f_c$. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5\%$. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
+| **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **2.0 đ**<br>*(CLO2)* | Thiết lập đúng biến `{Rval}`, quét đúng 4 bước, vẽ được đồ thị thực nghiệm và xác nhận độ dốc $3,466\,\mu\text{s}/\text{k}\Omega$. Gọi model C5N Level 3 đo được dòng $I_D$. | Chạy được lệnh `.step` nhưng chưa vẽ được đồ thị độ dốc; gọi được model C5N. | Quên ngoặc nhọn `{}` làm kết quả quét bị sai; không liên kết được thư viện C5N. |
+| **Dự đoán – Đo đạc – Giải thích sai lệch** | **1.5 đ**<br>*(CLO1, CLO2)* | Thể hiện tư duy phân tích sâu sắc: giải thích đúng nguyên nhân dòng xả $-248,3\,\mu\text{A}$ lệch $0,67\%$ và dòng NMOS giảm $37\%$ do bão hòa vận tốc hạt dẫn. | Nêu được số đo nhưng phần giải thích cơ chế vật lý còn sơ sài. | Không đối chiếu giữa lý thuyết và mô phỏng; chép lại số liệu mà không hiểu bản chất. |
+| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **1.5 đ**<br>*(CLO4)* | Thư mục dự án tổ chức hoàn hảo (5 sơ đồ, 5 netlist, waveforms, C5_models.txt); báo cáo 3–4 trang trung thực, thực hiện nghiêm túc thử nghiệm lỗi có chủ đích. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài hoặc thiếu phần thử nghiệm lỗi. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
 
 ---
 
-## 0.14. LIÊN KẾT CHUYỂN TIẾP KIẾN THỨC VỚI BÀI 1 (LAB 1 PREVIEW)
+## 0.13. LIÊN KẾT CHUYỂN TIẾP KIẾN THỨC VỚI BÀI 1 (LAB 1 PREVIEW)
 
 Trước khi kết thúc buổi thực hành Lab 0, giảng viên dành 5 phút chuyển tiếp tư duy cho sinh viên:
 1. **Từ mạch RC sang CMOS Inverter:** Nhắc lại công thức trễ $t_{pd} \approx 0,69 \cdot RC$. Trong Lab 1, sinh viên sẽ thay điện trở $R$ bằng kênh dẫn của 2 transistor NMOS và PMOS ghép lại để tạo thành cổng đảo logic đầu tiên.
 2. **Từ nguồn xung lý tưởng sang dạng sóng thực tế:** Trong Lab 1, sinh viên sẽ quan sát thấy sườn xung ngõ vào và ngõ ra không còn là các đường thẳng lý tưởng nữa mà bị uốn cong do điện dung cực cổng và cực má của transistor.
-3. **Sẵn sàng môi trường làm việc:** Khẳng định với sinh viên rằng thư mục `lab_vlsi/` và tệp `C5_models.txt` mà các em vừa cấu hình thành công hôm nay sẽ là nền tảng dùng chung cho toàn bộ 10 bài Lab thực hành tiếp theo!
+3. **Sẵn sàng môi trường làm việc:** Khẳng định với sinh viên rằng thư mục `lab00_MSSV_HoTen/` và tệp `C5_models.txt` mà các em vừa cấu hình thành công hôm nay sẽ là nền tảng dùng chung cho toàn bộ 10 bài Lab thực hành tiếp theo!\n
