@@ -612,8 +612,8 @@ Trước khi kết thúc buổi thực hành Lab 0, giảng viên dành 5 phút 
 ## 1.2 Bản chất vật lý & Giải thích chuyên sâu cho giảng viên
 ### a. Phân biệt rõ hai ký hiệu $\lambda$
 Ngay đầu buổi học, giảng viên phải viết lên bảng hai định nghĩa tách biệt hoàn toàn để tránh nhầm lẫn:
-- $\lambda_{kênh}$ ($\text{V}^{-1}$): Hệ số điều chế chiều dài kênh trong phương trình dòng điện SPICE $I_{DS} = I_{DS0}(1 + \lambda_{kênh} V_{DS})$.
-- $\lambda_{lưới}$ ($\mu\text{m}$): Đơn vị chiều dài cơ sở của lưới layout theo luật Mead-Conway SCMOS ($\lambda = 0,30\,\mu\text{m}$ trong tiến trình $0,5\,\mu\text{m}$).
+- $\lambda_{CLM}$ ($\text{V}^{-1}$): Hệ số điều chế chiều dài kênh trong phương trình dòng điện SPICE $I_{DS} = I_{DS0}(1 + \lambda_{CLM} V_{DS})$.
+- $\lambda_{DR}$ ($\mu\text{m}$): Đơn vị chiều dài cơ sở của lưới layout theo luật Mead-Conway SCMOS ($\lambda_{DR} = 0,30\,\mu\text{m}$ trong tiến trình $0,5\,\mu\text{m}$).
 
 ### b. Suy dẫn điểm chuyển mạch $V_M$
 Tại điểm chuyển mạch $V_{in} = V_{out} = V_M$, cả hai transistor NMOS và PMOS đều cùng ở trạng thái bão hòa:
