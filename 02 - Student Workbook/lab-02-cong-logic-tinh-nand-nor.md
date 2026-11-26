@@ -4,413 +4,463 @@
 ---
 **Bộ môn:** Điện tử - Viễn thông | **Khoa:** Điện - Điện tử  
 **Trường:** Đại học Sư phạm Kỹ thuật – Đại học Đà Nẵng  
-**Thời lượng:** 5 tiết thực hành tại phòng máy (kết hợp tự học Pre-lab & hoàn thiện Post-lab)  
+**Thời lượng:** 135 phút (3 tiết tiêu chuẩn trên phòng máy) + Tự học Pre-lab & Hoàn thiện Post-lab  
 **Công cụ sử dụng:** Electric VLSI Design System (v9.07+), LTspice XVII / LTspice 2025  
-**Công nghệ tham chiếu:** MOSIS SCMOS SUBMICRON C5N 0.5µm ($\lambda = 0.30\,\mu\text{m}$, 3 Metal layers, $V_{DD} = 5.0\,\text{V}$)  
+**Công nghệ tham chiếu:** MOSIS SCMOS SUBMICRON C5N 0.5µm ($\lambda_{DR} = 0,30\,\mu\text{m}$, 3 Metal layers, $V_{DD} = 5,0\,\text{V}$)  
+**Thư mục làm việc chuẩn:** `D:\lab_vlsi\lab02_MSSV_HoTen\`  
 ---
 
-## I. MỤC TIÊU
+## 1. MỤC TIÊU BÀI THỰC HÀNH
 
 Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
-1. **Nắm vững nguyên lý đối ngẫu (Duality Principle):** Hiểu rõ mối liên hệ topo học giữa mạng kéo lên (PUN) và mạng kéo xuống (PDN) trong cấu trúc logic CMOS tĩnh chuẩn; phân tích hàm truyền đạt logic của cổng NAND2 và NOR2.
-2. **Định kích thước Transistor theo điện trở tương đương ($R_{on}$):** Tính toán chính xác độ rộng kênh $(W/L)$ cho các transistor mắc nối tiếp và song song, bảo đảm khả năng kéo dòng của cổng NAND2 và NOR2 tương đương với Inverter chuẩn `INV_X1` đã thiết kế ở Bài 1.
-3. **Áp dụng Phương pháp Đường đi Euler (Euler Path):** Tìm đường đi Euler chung trên đồ thị mạch để bố trí dải Polysilicon liên tục; thực hiện kỹ thuật chia sẻ vùng khuếch tán (Diffusion Sharing/Abutment), triệt tiêu các khoảng ngắt khuếch tán nhằm tối ưu diện tích và giảm thiểu điện dung ký sinh.
-4. **Phân tích Trễ phụ thuộc Vector ngõ vào (Input-Pattern Dependent Delay):** Khảo sát thực nghiệm thời gian trễ $t_{pHL}$ và $t_{pLH}$ khi các ngõ vào chuyển mạch đồng thời hoặc lệch pha; phân tích ảnh hưởng của điện dung nút nội trung gian (Internal Node Capacitance) trong chuỗi NMOS nối tiếp.
-5. **Thiết kế Mặt nạ Vật lý (Physical Layout):** Vẽ Layout hoàn chỉnh cho `NAND2_X1` và `NOR2_X1` trên Electric VLSI; kiểm tra luật hình học DRC đạt 0 lỗi và đối chiếu LVS đạt trùng khớp sơ đồ 100%.
-6. **Trích xuất Ký sinh (PEX) & Đánh giá PPA:** Trích xuất Netlist ký sinh sau Layout; đo đạc độ suy giảm tốc độ Post-layout; lập bảng so sánh toàn diện về Công suất – Hiệu năng – Diện tích (PPA) giữa NAND2 và NOR2 để giải thích tại sao cổng NAND luôn được ưu tiên tuyệt đối trong công nghiệp vi mạch bán dẫn.
-7. **Đóng gói Thư viện Chuẩn:** Tạo tế bào chuẩn `NAND2_X1` và `NOR2_X1` kèm Icon View để bàn giao cho Bài 3 (Cổng phức hợp AOI/OAI) và Bài 6 (Bộ cộng 1-bit Full Adder).
+1. **Nắm vững nguyên lý đối ngẫu (Duality Principle):** Hiểu rõ mối liên hệ topo học giữa mạng kéo lên (PUN) dùng PMOS và mạng kéo xuống (PDN) dùng NMOS trong cấu trúc logic CMOS tĩnh chuẩn; phân tích hàm truyền đạt logic và bảng chân lý của cổng NAND2 và NOR2 (CLO1).
+2. **Thành thạo phương pháp định kích thước theo trường hợp xấu nhất (Worst-Case Sizing):** Tính toán chính xác độ rộng kênh $(W/L)$ cho các transistor mắc nối tiếp và song song, bảo đảm điện trở tương đương tổng $R_{eq,N} \approx R_{on,n0} \approx 969\,\Omega$ và $R_{eq,P} \approx R_{on,p0} \approx 992\,\Omega$ tương đương với Inverter chuẩn `INV_X1` đã thiết kế ở Bài 1 (CLO1).
+3. **Áp dụng Phương pháp Đường đi Euler (Euler Path):** Tìm đường đi Euler chung trên đồ thị mạch để bố trí dải Polysilicon liên tục; thực hiện kỹ thuật chia sẻ vùng khuếch tán (Diffusion Abutment), loại bỏ khoảng ngắt khuếch tán nhằm thu nhỏ diện tích và triệt tiêu điện dung ký sinh cực má (CLO4).
+4. **Khảo sát Trễ phụ thuộc Vector ngõ vào (Input-Pattern Dependent Delay):** Đo đạc thực nghiệm thời gian trễ $t_{pHL}$ và $t_{pLH}$ ở 3 kịch bản chuyển mạch (ngõ vào A chuyển mạch, ngõ vào B chuyển mạch, và cả hai cùng chuyển mạch); quan sát và lý giải cơ chế tích lũy điện tích tại nút nội ($X_n$) ở hai mức tải dung $C_L = 10\,\text{fF}$ và $C_L = 50\,\text{fF}$ (CLO2).
+5. **Thiết kế Mặt nạ Vật lý (Physical Layout):** Thiết kế Layout hoàn chỉnh cho ô tế bào `nand2_x1` trên Electric VLSI; áp dụng chuẩn xác luật hình học DRC đạt 0 lỗi và đối chiếu LVS (NCC) đạt trùng khớp sơ đồ 100% (CLO4).
+6. **Đánh giá So sánh Toàn diện Diện tích & Hiệu năng:** Đo đạc trích xuất ký sinh (PEX); đối sánh định lượng các chỉ số $\sum W$, diện tích layout, điện dung ngõ vào $C_{in}$ và độ trễ giữa NAND2 và NOR2; giải thích sâu sắc bản chất vật lý vì sao cổng NAND luôn là khối cơ sở chủ đạo trong thư viện tế bào chuẩn công nghiệp (CLO2, CLO4).
+7. **Đóng gói Thư viện Chuẩn:** Tạo tế bào chuẩn `nand2_x1` và `nor2_x1` kèm Icon View chuẩn IEEE để bàn giao làm linh kiện thành phần cho Bài 3 (Cổng phức hợp AOI/OAI) và Bài 6 (Bộ cộng 1-bit Full Adder) (CLO4).
 
 ---
 
-## II. CÔNG CỤ VÀ THƯ VIỆN MÔ HÌNH
+## 2. KẾ THỪA VÀ SẢN PHẨM BÀN GIAO
 
-1. **Phần mềm thiết kế:**
-   - **Electric VLSI Design System:** Phiên bản 9.07 trở lên (công nghệ `mocmos`, $\lambda = 0.30\,\mu\text{m}$).
-   - **LTspice:** Phiên bản XVII hoặc 2025.
-2. **Thư viện mô hình SPICE:**
-   - Tệp thư viện tham chiếu: `04 - Models_and_Libraries/C5_models.txt` (NMOS: `N`, PMOS: `P`).
-3. **IP kế thừa từ Bài 1:**
-   - Tế bào chuẩn `INV_X1` ($W_n = 4\lambda = 1.2\,\mu\text{m}, W_p = 12\lambda = 3.6\,\mu\text{m}, L = 2\lambda = 0.6\,\mu\text{m}$, điện trở dẫn chuẩn $R_{on,n0} \approx 969\,\Omega, R_{on,p0} \approx 992\,\Omega$).
+### 2.1 Kế thừa từ Bài 0 và Bài 1
+- **Thư viện mô hình MOSFET:** Tệp mô hình MOSIS C5N Level 3 [C5_models.txt](file:///d:/tam/VLSI_Spice/04%20-%20Models_and_Libraries/C5_models.txt) ($V_{DD} = 5,0\,\text{V}, V_{tn0} = 0,70\,\text{V}, |V_{tp0}| = 0,80\,\text{V}, K'_n = 120\,\mu\text{A/V}^2, K'_p = 40\,\mu\text{A/V}^2$).
+- **Tế bào chuẩn Inverter cơ sở (`INV_X1`):** $W_n = 4\lambda_{DR} = 1,20\,\mu\text{m}$, $W_p = 12\lambda_{DR} = 3,60\,\mu\text{m}$, $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$, điện trở dẫn danh định $R_{on,n0} \approx 969\,\Omega, R_{on,p0} \approx 992\,\Omega$.
+- **Kỹ năng thiết kế & Kiểm chứng:** Thao tác vẽ Schematic, đóng gói Icon, tạo Layout, kiểm tra DRC, NCC LVS và trích xuất PEX trong Electric VLSI kết hợp mô phỏng LTspice.
+
+### 2.2 Sản phẩm bàn giao sau buổi thực hành
+1. **Thư viện Electric:** `D:\lab_vlsi\lab02_MSSV_HoTen\lab02_MSSV.jelib` chứa đủ các cell:
+   - `nand2_x1{sch}`: Sơ đồ nguyên lý cổng NAND2 2 ngõ vào.
+   - `nand2_x1{ic}`: Icon ký hiệu cổng NAND2 chuẩn IEEE.
+   - `nand2_x1{lay}`: Mặt nạ Layout cổng NAND2 đạt 0 lỗi DRC và 100% LVS MATCH.
+   - `nor2_x1{sch}`: Sơ đồ nguyên lý cổng NOR2 2 ngõ vào.
+   - `nor2_x1{ic}`: Icon ký hiệu cổng NOR2 chuẩn IEEE.
+2. **Tập tin Netlist mô phỏng SPICE:**
+   - `nand2_vtc.sp`: Phân tích DC quét VTC và điểm ngưỡng $V_M$.
+   - `nand2_tran.sp`: Đo trễ quá độ 3 kịch bản và khảo sát nút nội $X_n$.
+   - `nor2_tran.sp`: Đo trễ quá độ cổng NOR2 với ngõ vào tĩnh nối đất $0\,\text{V}$.
+3. **Báo cáo thực hành cá nhân:** Điền đầy đủ các bảng số liệu đo, biểu đồ phân tích và câu hỏi thảo luận chuyên sâu.
 
 ---
 
-## III. CƠ SỞ LÝ THUYẾT VÀ NGUYÊN LÝ THIẾT KẾ
+## 3. CƠ SỞ LÝ THUYẾT NGẮN GỌN
 
-### 1. Kiến trúc Cổng Logic Tĩnh NAND2 và NOR2
-Một cổng logic CMOS tĩnh bất kỳ luôn gồm hai mạng chuyển mạch đối ngẫu bù trừ nhau:
-- **Mạng kéo lên (Pull-Up Network - PUN):** Gồm các PMOS nối giữa nguồn $V_{DD}$ và ngõ ra $Out$, dẫn điện khi ngõ ra đạt mức logic '1'.
-- **Mạng kéo xuống (Pull-Down Network - PDN):** Gồm các NMOS nối giữa ngõ ra $Out$ và đất $GND$, dẫn điện khi ngõ ra đạt mức logic '0'.
+### 3.1 Cấu trúc Cổng Logic Tĩnh NAND2 và NOR2
+Một cổng logic CMOS tĩnh chuẩn gồm hai mạng chuyển mạch đối ngẫu bù trừ nhau:
+- **Mạng kéo lên (Pull-Up Network - PUN):** Gồm các PMOS mắc giữa nguồn $V_{DD}$ và ngõ ra $Out$, dẫn điện khi biểu thức hàm logic ngõ ra đạt mức '1'.
+- **Mạng kéo xuống (Pull-Down Network - PDN):** Gồm các NMOS mắc giữa ngõ ra $Out$ và đất $GND$, dẫn điện khi biểu thức hàm bù $\bar{Y}$ thỏa mãn (ngõ ra ở mức '0').
+
+Theo định lý De Morgan:
+- Với cổng NAND2 ($Y = \overline{A \cdot B}$): Mạng PDN gồm 2 NMOS mắc nối tiếp ($A \cdot B$); mạng PUN đối ngẫu gồm 2 PMOS mắc song song ($A + B$).
+- Với cổng NOR2 ($Y = \overline{A + B}$): Mạng PDN gồm 2 NMOS mắc song song ($A + B$); mạng PUN đối ngẫu gồm 2 PMOS mắc nối tiếp ($A \cdot B$).
 
 ```
              CỔNG NAND2 (Y = !(A * B))                      CỔNG NOR2 (Y = !(A + B))
                     VDD (5V)                                      VDD (5V)
                  ┌─────┴─────┐                                       │
                  │           │                                   ┌───┴───┐
-             ┌───┴───┐   ┌───┴───┐                               │  MP1  │ (A)
+             ┌───┴───┐   ┌───┴───┐                               │  MP1  │ (A, 24λ)
              │  MP1  │   │  MP2  │                               └───┬───┘
-         A ──┤ (Wp)  │ B─┤ (Wp)  │                                   │ (Nút nội Xp)
+         A ──┤ (12λ) │ B─┤ (12λ) │                                   │ (Nút nội Xp)
              └───┬───┘   └───┬───┘                               ┌───┴───┐
-                 └─────┬─────┘                                   │  MP2  │ (B)
+                 └─────┬─────┘                                   │  MP2  │ (B, 24λ)
                        ├──────────── Out                         └───┬───┘
                  ┌─────┴─────┐                                       ├──────────── Out
-                 │  MN1 (Wn) │ (A)                               ┌───┴───┐
+                 │  MN1 (8λ) │ (A)                               ┌───┴───┐
                  └───┬───────┘                               ┌───┴───┐   ┌───┴───┐
                      │ (Nút nội Xn)                          │  MN1  │   │  MN2  │
-                 ┌───┴───────┐                           A ──┤ (Wn)  │ B─┤ (Wn)  │
-                 │  MN2 (Wn) │ (B)                           └───┬───┘   └───┬───┘
+                 ┌───┴───────┐                           A ──┤ (4λ)  │ B─┤ (4λ)  │
+                 │  MN2 (8λ) │ (B)                           └───┬───┘   └───┬───┘
                  └───┬───────┘                                   └─────┬─────┘
                      │                                                 │
                     GND                                               GND
 ```
 
-<div align="center">
-
-| Cổng NAND2 (`nand2_x1{sch}`) | Cổng NOR2 (`nor2_x1{sch}`) |
-| :---: | :---: |
-| ![Sơ đồ nguyên lý nand2_x1](images/nand2_schematic.png) | ![Sơ đồ nguyên lý nor2_x1](images/nor2_schematic.png) |
-| *Hình 2.1: Sơ đồ nguyên lý Cell `nand2_x1`* | *Hình 2.2: Sơ đồ nguyên lý Cell `nor2_x1`* |
-
-</div>
+*Sơ đồ nguyên lý chuẩn của tế bào NAND2 và NOR2. Xem chi tiết hình ảnh đồ họa tại:*
+- [nand2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nand2_schematic.png)
+- [nor2_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/nor2_schematic.png)
 
 ---
 
-### 2. Định kích thước Transistor theo Điện trở Tương đương $R_{on}$
-Để cổng logic đa ngõ vào có khả năng kéo dòng và tốc độ chuyển mạch cân bằng với Inverter chuẩn `INV_X1`, ta định kích thước theo **trường hợp xấu nhất (Worst-Case Analysis)**:
+### 3.2 Phương pháp Định kích thước theo Trường hợp xấu nhất (Worst-Case Sizing)
+Để các cổng logic đa ngõ vào có khả năng tải dòng và thời gian trễ không bị suy thoái so với Inverter chuẩn `INV_X1`, ta áp dụng nguyên tắc tương đương điện trở dẫn:
 
 #### a. Cổng NAND2 ($Y = \overline{A \cdot B}$)
-- **Mạng PDN (2 NMOS nối tiếp):** Khi cả $A=1$ và $B=1$, dòng xả đi qua 2 NMOS mắc nối tiếp. Để điện trở tương đương tổng bằng $R_{on,n0}$ của Inverter chuẩn:
-
-  $$R_{eq,N} = R_{on,MN1} + R_{on,MN2} = R_{on,n0} \implies W_n = 2 \times W_{n,inv} = 2 \times 4\lambda = 8\lambda = 2.40\,\mu\text{m}$$
-
-- **Mạng PUN (2 PMOS song song):** Trường hợp xấu nhất xảy ra khi chỉ có **1 PMOS dẫn** (ví dụ $A=0, B=1$ hoặc $A=1, B=0$). Để thời gian sườn lên không chậm hơn Inverter:
-
-  $$W_p = W_{p,inv} = 12\lambda = 3.60\,\mu\text{m}$$
-
-- *Ghi chú:* Trường hợp tốt nhất khi cả hai PMOS cùng dẫn ($A=0, B=0$), điện trở tương đương giảm còn một nửa $R_{eq,P} = R_{on,p0} / 2$, giúp trễ $t_{pLH}$ nhanh gấp đôi.
+- **Mạng PDN (2 NMOS nối tiếp):** Khi cả $A=1$ và $B=1$, dòng xả đi qua 2 NMOS nối tiếp. Để tổng điện trở tương đương bằng $R_{on,n0}$ của Inverter chuẩn ($969\,\Omega$):
+  $$R_{eq,N} = R_{on,NA} + R_{on,NB} = 2 \times \left(\frac{R_{\Box,n}}{W_n / L}\right) = \frac{R_{\Box,n}}{W_{n,inv} / L} \implies W_n = 2 \times W_{n,inv} = 2 \times 4\lambda_{DR} = \mathbf{8\lambda_{DR} = 2,40\,\mu\text{m}}$$
+- **Mạng PUN (2 PMOS song song):** Tình huống xấu nhất xảy ra khi chỉ có **1 PMOS dẫn** (ví dụ $A=0, B=1$ hoặc $A=1, B=0$). Để trễ sườn lên đạt chuẩn:
+  $$W_p = W_{p,inv} = \mathbf{12\lambda_{DR} = 3,60\,\mu\text{m}}$$
+  *(Khi cả hai PMOS cùng dẫn $A=0, B=0$, điện trở tương đương giảm còn một nửa $R_{eq,P} = R_{on,p0}/2 \approx 496\,\Omega$, trễ $t_{pLH}$ nhanh gấp đôi).*
 
 #### b. Cổng NOR2 ($Y = \overline{A + B}$)
-- **Mạng PUN (2 PMOS nối tiếp):** Để ngõ ra lên mức cao, bắt buộc cả 2 PMOS phải dẫn đồng thời. Do điện trở của PMOS vốn đã lớn gấp 3 lần NMOS (vì $\mu_p \approx \mu_n/3$), việc mắc nối tiếp 2 PMOS đòi hỏi kích thước rất lớn:
+- **Mạng PDN (2 NMOS song song):** Tình huống xấu nhất khi chỉ có **1 NMOS dẫn**:
+  $$W_n = W_{n,inv} = \mathbf{4\lambda_{DR} = 1,20\,\mu\text{m}}$$
+- **Mạng PUN (2 PMOS nối tiếp):** Bắt buộc cả 2 PMOS phải cùng dẫn để kéo lên nguồn $V_{DD}$. Do độ linh động lỗ trống yếu hơn electron 3 lần ($\mu_p \approx \mu_n / 3$), việc mắc nối tiếp 2 PMOS đòi hỏi mỗi transistor phải rộng gấp đôi PMOS chuẩn:
+  $$R_{eq,P} = R_{on,PA} + R_{on,PB} = 2 \times \left(\frac{R_{\Box,p}}{W_p / L}\right) = R_{on,p0} \implies W_p = 2 \times W_{p,inv} = 2 \times 12\lambda_{DR} = \mathbf{24\lambda_{DR} = 7,20\,\mu\text{m}}$$
 
-  $$R_{eq,P} = R_{on,MP1} + R_{on,MP2} = R_{on,p0} \implies W_p = 2 \times W_{p,inv} = 2 \times 12\lambda = 24\lambda = 7.20\,\mu\text{m}$$
-
-- **Mạng PDN (2 NMOS song song):** Trường hợp xấu nhất xảy ra khi chỉ có **1 NMOS dẫn**:
-
-  $$W_n = W_{n,inv} = 4\lambda = 1.20\,\mu\text{m}$$
-
-> [!IMPORTANT]
-> **Hệ quả PPA quan trọng:**  
-> Trong cổng NOR2, transistor PMOS phải có bề rộng lên tới $W_p = 24\lambda = 7.2\,\mu\text{m}$ (gấp đôi PMOS của NAND2). Điều này làm tăng vọt diện tích tế bào và điện dung ngõ vào ($C_{in} = C_{ox}(W_n L + W_p L)$), khiến cổng lái phía trước bị tải nặng. Do đó, trong thiết kế vi mạch số, **cổng NAND luôn nhỏ hơn, nhanh hơn và tiết kiệm năng lượng hơn cổng NOR**.
+> [!NOTE]
+> **Điểm mấu chốt về trễ lý thuyết:**  
+> Khi được định cỡ theo nguyên tắc trên, cả NAND2 và NOR2 đều có điện trở kéo xấu nhất bằng đúng Inverter chuẩn ($R_{eq,N} \approx 969\,\Omega, R_{eq,P} \approx 992\,\Omega$). Do đó, ở cùng một tải dung ngoài cố định $C_L = 50\,\text{fF}$, trễ lý thuyết $t_{pd,worst} = 0,69 \cdot R_{eq} \cdot C_L \approx 33,8\,\text{ps}$ của NAND2 và NOR2 **hoàn toàn bằng nhau**!
 
 ---
 
-### 3. Phương pháp Đường đi Euler và Tối ưu Hóa Sơ đồ que (Stick Diagram)
-Khi vẽ Layout cho cổng logic có nhiều transistor, nếu bố trí các cực khuếch tán (Active) ngẫu nhiên, ta sẽ phải cắt rời các vùng Active và nối dây kim loại Metal 1 phức tạp, gây lãng phí diện tích và tăng điện dung ký sinh.
+### 3.3 Bản chất Vật lý So sánh PPA giữa NAND và NOR
+Nếu trễ lý thuyết tại tải cố định bằng nhau, tại sao trong công nghiệp vi mạch, **cổng NAND luôn được ưu tiên tuyệt đối so với cổng NOR**?
 
-**Phương pháp đường đi Euler (Euler Path Method):**
-1. Lập đồ thị mạng PUN và PDN: Mỗi transistor là một cạnh nối giữa hai nút điện thế.
-2. Tìm một đường đi qua tất cả các cạnh đúng một lần (**Euler Path**) sao cho thứ tự các biến cổng (ví dụ: $A - B$ hoặc $B - A$) trên mạng PUN **trùng khớp hoàn toàn** với thứ tự trên mạng PDN.
-3. Khi thứ tự cổng trùng nhau, ta có thể đặt một dải Polysilicon thẳng đứng liên tục cắt qua cả P-Active và N-Active.
-4. Các transistor nằm cạnh nhau có chung chân (ví dụ: cực má nối chung ra $Out$) sẽ được **nối liền vùng khuếch tán (Abutment)** mà không cần khoảng cách cách ly giữa hai vùng Active ($3\lambda$), tiết kiệm đáng kể diện tích tế bào.
+1. **Tổng bề rộng kênh và Diện tích Silicon:**
+   - NAND2: $\sum W = 2(8\lambda) + 2(12\lambda) = 40\lambda_{DR} = 12,0\,\mu\text{m}$.
+   - NOR2: $\sum W = 2(4\lambda) + 2(24\lambda) = 56\lambda_{DR} = 16,8\,\mu\text{m}$.
+   - Cổng NOR2 có tổng chiều rộng cổng lớn hơn **$+40,0\%$**, dẫn tới diện tích Layout lớn hơn từ $40\%$ đến $50\%$.
+2. **Điện dung ngõ vào ($C_{in}$) và Tải đối với tầng trước:**
+   - Điện dung cổng ngõ vào: $C_{in} = C_{ox} L (W_n + W_p)$.
+   - $\text{INV\_X1}$: $(4 + 12)\lambda = 16\lambda_{DR} \cdot C_{ox} L$ (quy ước $1,0 \times C_{in,inv}$).
+   - NAND2: $(8 + 12)\lambda = 20\lambda_{DR} \cdot C_{ox} L = 1,25 \times C_{in,inv}$ (Logical Effort $g = 5/4 = 1,25$).
+   - NOR2: $(4 + 24)\lambda = 28\lambda_{DR} \cdot C_{ox} L = 1,75 \times C_{in,inv}$ (Logical Effort $g = 7/4 = 1,75$).
+   - Cổng NOR2 làm tầng trước phải lái tải dung nặng hơn **$+40,0\%$**, làm chậm tốc độ của toàn bộ đường truyền tín hiệu phía trước!
+3. **Hiệu ứng thân (Body Effect) trên PMOS nối tiếp của NOR2:**
+   - Trong chuỗi PMOS của NOR2, transistor $M_{PB}$ có cực nguồn nối vào nút nội $X_p$ (thay vì nối lên $V_{DD}$). Khi điện thế nút $X_p < V_{DD}$, điện áp nguồn-thân $V_{SB} > 0$ làm tăng điện áp ngưỡng $|V_{thp}|$ từ $0,80\,\text{V}$ lên $\approx 1,1 - 1,2\,\text{V}$, làm suy giảm đáng kể dòng nạp và tăng trễ sườn lên thực tế.
+4. **Điện dung ký sinh cực má tại nút ngõ ra:**
+   - Vì $W_p = 24\lambda_{DR}$, diện tích vùng khuếch tán cực má của NOR2 rất lớn, làm điện dung ký sinh nút ngõ ra tăng vọt, khiến trễ sau trích xuất Layout (PEX) của NOR2 suy thoái nặng nề hơn NAND2.
+
+---
+
+### 3.4 Hiệu ứng Nút nội ($X_n$) và Trễ phụ thuộc Vector Chuyển mạch
+Xét chuỗi 2 NMOS nối tiếp của cổng NAND2 với nút nội trung gian $X_n$:
+- Điện dung ký sinh tại nút nội: $C_{int} = C_{db,MN2} + C_{sb,MN1} \approx 3 - 5\,\text{fF}$.
 
 ```
-                  SƠ ĐỒ QUE (STICK DIAGRAM) TỐI ƯU CHO CỔNG NAND2
+                 Out (CL)
+                    |
+              +-----+-----+
+              |    MN1    | (Chân A: gần ngõ ra nhất)
+              +-----+-----+
+                    |
+                 Xn (Cint ~ 5 fF)
+                    |
+              +-----+-----+
+              |    MN2    | (Chân B: gần đất nhất)
+              +-----+-----+
+                    |
+                   GND
+```
+
+**Phân tích bằng mô hình trễ Elmore:**
+- **Kịch bản 1 (Ca 1: Ngõ $A$ chuyển $0 \to 1$, ngõ $B = 5,0\,\text{V}$ static):**  
+  Vì $B=1$ từ trước, $M_{N2}$ đã mở sẵn, nút $X_n$ đã được xả sạch điện tích về $0\,\text{V}$. Khi $A$ nhảy lên $1$, dòng qua $M_{N1}$ chỉ cần xả một mình tụ tải ngõ ra $C_L$:
+  $$t_{pd,Ca1} \approx 0,69 \cdot (R_{on,MN1} + R_{on,MN2}) \cdot C_L$$
+- **Kịch bản 2 (Ca 2: Ngõ $B$ chuyển $0 \to 1$, ngõ $A = 5,0\,\text{V}$ static):**  
+  Trước thời điểm chuyển mạch ($A=1, B=0$), ngõ ra đang ở mức cao $5,0\,\text{V}$. Transistor $M_{N1}$ dẫn, nạp điện tích từ ngõ ra vào nút nội $X_n$ lên điện áp:
+  $$V(X_n) = V_{DD} - V_{thn}(V_X) \approx 3,7 - 3,9\,\text{V} \quad \text{(có xét hiệu ứng thân)}$$
+  Khi $B$ nhảy lên $1$, transistor $M_{NB}$ phải xả đồng thời cả tụ tải $C_L$ lẫn lượng điện tích tích trữ trên tụ nút nội $C_{int}$:
+  $$t_{pd,Ca2} \approx 0,69 \cdot \left[ (R_{on,MN1} + R_{on,MN2}) C_L + R_{on,MN2} C_{int} \right]$$
+  $$\Delta t_{pHL} = t_{pd,Ca2} - t_{pd,Ca1} \approx 0,69 \cdot R_{on,MN2} \cdot C_{int}$$
+
+> [!IMPORTANT]
+> **Quy luật phụ thuộc tải dung ngõ ra:**  
+> - Với tải lớn $C_L = 50\,\text{fF}$, độ trễ tăng thêm do nút nội chỉ chiếm tỉ lệ nhỏ: $\Delta t / t \approx 0,5 \cdot C_{int} / C_L \approx 5\%$.
+> - Với tải nhỏ $C_L = 10\,\text{fF}$, độ trễ tăng thêm chiếm tới **$20\% - 25\%$**!  
+> **Quy tắc thiết kế vàng trong VLSI:** Tín hiệu đến muộn nhất trên đường tới hạn (Critical Path) luôn phải được nối vào chân cổng gần ngõ ra nhất ($A$) để tận dụng việc nút nội đã được xả điện tích từ trước!
+
+---
+
+### 3.5 Phương pháp Đường đi Euler và Bố trí Mặt nạ Layout Liền mạch
+Khi thiết kế Layout cho tế bào logic nhiều transistor, nếu sắp xếp ngẫu nhiên các vùng Active, ta sẽ phải cắt rời dải khuếch tán, tạo nhiều khoảng cách ly ($3\lambda_{DR}$) và tốn nhiều dây nối kim loại Metal 1, làm tăng diện tích và điện dung ký sinh.
+
+**Các bước tối ưu bằng Phương pháp Đường đi Euler:**
+1. Lập đồ thị mạng PUN và PDN: Mỗi transistor là một cạnh nối giữa hai nút điện thế.
+2. Tìm chu trình hoặc đường đi Euler (đi qua mỗi cạnh đúng 1 lần) sao cho **thứ tự các biến cổng trên PUN trùng khớp hoàn toàn với thứ tự trên PDN**: thứ tự tối ưu là **$A - B$** (hoặc $B - A$).
+3. Đặt các dải Polysilicon thẳng đứng liên tục cắt qua cả dải P-Active và N-Active.
+4. **Kỹ thuật chia sẻ vùng khuếch tán (Abutment):**
+   - Các transistor cạnh nhau có chung nút điện thế (cực má chung nối ra $Out$) được nối liền trong một dải khuếch tán duy nhất, loại bỏ việc cắt dải.
+   - Nút nội $X_n$ giữa 2 NMOS được hình thành tự nhiên bên trong dải N-Active mà không cần bất kỳ contact hay kim loại nào!
+
+```
+                  SƠ ĐỒ QUE (STICK DIAGRAM) TỐI ƯU CHO CỔNG NAND2_X1
      VDD ───────────────────────────────────────────────────────────── (Metal 1)
                   │ (Contact)                      │ (Contact)
              ┌────┴────────────────────────────────┴────┐
              │            P-Diffusion (Active)          │  (N-Well)
              └────┬──────────────────┬──────────────────┘
                   │ (Gate A)         │ (Gate B)
-     In_A ────────┼──────────────────┼────────────────────────
-                  │                  │ (Gate B)
-     In_B ────────┼──────────────────┼────────────────────────
-                  │ (Gate A)         │
+                  │                  │
+     In_A ────────┼                  │                  (Poly A)
+                  │                  │
+     In_B ────────┼──────────────────┼                  (Poly B)
+                  │                  │
+                  │ (Gate A)         │ (Gate B)
              ┌────┴──────────────────┴──────────────────┐
-             │            N-Diffusion (Active)          │  (P-Substrate)
+             │   (Drain: Out)      (Xn)     (Source: GND)│  N-Diffusion
              └────┬─────────────────────────────────────┘
-                  │ (Contact)
-     GND ───────────────────────────────────────────────────────────── (Metal 1)
+                  │ (Contact)                      │ (Contact)
+                 Out                              GND (Metal 1)
 ```
 
----
-
-### 4. Hiệu ứng Nút nội và Trễ phụ thuộc Vector ngõ vào
-Xét chuỗi NMOS của cổng NAND2:
-- Transistor $M_{N1}$ (nối với $Out$) và $M_{N2}$ (nối với $GND$) tiếp xúc với nhau tại **nút nội $X_n$**. Nút này có điện dung ký sinh $C_{int} = C_{db,MN2} + C_{sb,MN1}$.
-- **Trường hợp 1 (Ngõ vào $A$ chuyển mạch trễ hơn $B$):** Giả sử $B=1$ từ trước. Nút $X_n$ đã được xả điện tích xuống $0\,\text{V}$ qua $M_{N2}$. Khi $A$ nhảy từ $0 \to 1$, dòng xả chỉ cần rút điện tích từ tải dung $C_L$ tại nút ngõ ra $Out$ qua 2 transistor.
-- **Trường hợp 2 (Ngõ vào $B$ chuyển mạch trễ hơn $A$):** Giả sử $A=1$ từ trước, $B=0$. Ngõ ra đang ở mức $5\,\text{V}$, làm tụ $C_{int}$ tại nút nội nạp lên điện thế xấp xỉ $V_{DD} - V_{thn} \approx 4.3\,\text{V}$. Khi $B$ nhảy từ $0 \to 1$, dòng qua $M_{N2}$ phải đồng thời xả cả tụ tải $C_L$ lẫn tụ nút nội $C_{int}$ xuống đất.  
-  $\implies$ **Thời gian trễ $t_{pHL}$ khi $B$ chuyển đổi chậm hơn khi $A$ chuyển đổi từ $10\%$ đến $25\%$.**
+> [!WARNING]
+> **Luật khoảng cách hình học DRC quan trọng:**  
+> - Tại vùng có Contact kim loại ở giữa hai dải Poly (như cực má chung của PMOS nối ra `out`): khoảng cách giữa 2 dải Poly tối thiểu phải là:
+>   $$\text{Khoảng cách} \ge 2\lambda_{DR} \text{ (Poly đến Contact)} + 2\lambda_{DR} \text{ (Bề rộng Contact)} + 2\lambda_{DR} \text{ (Contact đến Poly)} = \mathbf{6\lambda_{DR} = 1,80\,\mu\text{m}}$$
+> - Tại vùng khuếch tán liền không có Contact (nút nội $X_n$ giữa 2 NMOS): khoảng cách giữa 2 dải Poly chỉ cần thỏa mãn luật cách ly Poly tối thiểu: $\ge 3\lambda_{DR} = 0,90\,\mu\text{m}$.  
+> **Sinh viên tuyệt đối không được đặt khoảng cách giữa 2 dải Poly là $3\lambda_{DR}$ tại nơi có đặt Contact ngõ ra, vì sẽ gây lỗi chạm DRC ngay lập tức!**
 
 ---
 
-## IV. CHUẨN BỊ TRƯỚC THỰC HÀNH (PRE-LAB - Ở NHÀ)
+## 4. CÂU HỎI CHUẨN BỊ TRƯỚC KHI ĐẾN LỚP (PRE-LAB)
 
 > [!IMPORTANT]
-> Toàn bộ phần chuẩn bị phải được sinh viên ghi chép đầy đủ vào **Mục VI.a (Phần chuẩn bị)** trong Phiếu báo cáo trước khi vào lớp.
+> Toàn bộ nội dung chuẩn bị Pre-lab phải được sinh viên tính toán và vẽ hoàn chỉnh vào vở hoặc Phiếu báo cáo trước khi bước vào phòng thực hành. Cán bộ hướng dẫn sẽ kiểm tra và ký xác nhận ở 15 phút đầu giờ.
 
-1. **Tính toán kích thước Transistor:**
-   - Dựa vào tỉ số định kích thước ở mục III.2, ghi lại kích thước hình học $(W/L)$ theo đơn vị $\lambda$ và $\mu\text{m}$ cho 4 transistor của `NAND2_X1` và 4 transistor của `NOR2_X1`.
-   - Tính điện trở dẫn tương đương trường hợp xấu nhất: $R_{eq,N}$ và $R_{eq,P}$ của cả hai cổng.
-2. **Ước lượng thời gian trễ lý thuyết ($C_L = 50\,\text{fF}$):**
-   - Tính trễ sườn xuống $t_{pHL}$ và sườn lên xấu nhất $t_{pLH,worst}$ cho cổng NAND2.
-   - Tính trễ sườn lên $t_{pLH}$ và sườn xuống xấu nhất $t_{pHL,worst}$ cho cổng NOR2.
-   - Tính trễ trung bình $t_{pd,worst}$ cho mỗi cổng.
-3. **Đồ thị Euler và Sơ đồ que (Stick Diagram):**
-   - Vẽ đồ thị mạch (Graph) cho PUN và PDN của cổng NAND2; chỉ ra chu trình Euler với thứ tự cổng Poly $A - B$.
-   - Vẽ sơ đồ que Stick Diagram của cổng `NAND2_X1` lên giấy ô ly, đánh dấu rõ vị trí chia sẻ cực má chung nối ra chân `out`.
-   - Lặp lại vẽ sơ đồ que Stick Diagram cho cổng `NOR2_X1`.
-4. **Chuẩn bị kịch bản đo đạc SPICE (.MEAS):**
-   Soạn sẵn các câu lệnh `.MEAS` đo $t_{pHL}$ và $t_{pLH}$ tương ứng với hai kịch bản kích thích:
-   - Ca A: Ngõ vào $B = 1$ cố định, ngõ vào $A$ cấp xung vuông $0 \to 5\text{V}$.
-   - Ca B: Ngõ vào $A = 1$ cố định, ngõ vào $B$ cấp xung vuông $0 \to 5\text{V}$.
+### Câu hỏi 1: Tính toán Tham số Kích thước và Điện trở Kéo
+1. Điền các công thức và giá trị tính toán cho bảng kích thước của cổng NAND2 và NOR2:
+   - Chiều dài kênh cho mọi transistor: $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
+   - Kích thước $(W/L)$ theo $\lambda_{DR}$ và theo $\mu\text{m}$ cho 4 transistor của `nand2_x1` và 4 transistor của `nor2_x1`.
+   - Tính điện trở dẫn hiệu dụng trường hợp xấu nhất: $R_{eq,N}$ và $R_{eq,P}$.
+2. Tính tổng chiều rộng kênh $\sum W$ của mỗi cổng và tỉ lệ chênh lệch $\frac{\sum W_{NOR2} - \sum W_{NAND2}}{\sum W_{NAND2}} \times 100\%$.
+3. Tính điện dung ngõ vào tương đối $C_{in}$ cho từng chân ngõ vào (theo tỉ số với $C_{in,inv}$) và suy ra hệ số Logical Effort $g$ của mỗi cổng.
+
+### Câu hỏi 2: Ước lượng Thời gian Trễ Lý thuyết ($C_L = 50\,\text{fF}$ và $C_L = 10\,\text{fF}$)
+1. Áp dụng công thức trễ $t_{pd} = \ln(2) \cdot R_{eq} \cdot C_L \approx 0,693 \cdot R_{eq} \cdot C_L$:
+   - Với NAND2: Tính $t_{pHL}$, $t_{pLH,worst}$ (1 PMOS dẫn), $t_{pLH,best}$ (2 PMOS cùng dẫn) và $t_{pd,worst}$ tại $C_L = 50\,\text{fF}$.
+   - Với NOR2: Tính $t_{pLH}$, $t_{pHL,worst}$ (1 NMOS dẫn), $t_{pHL,best}$ (2 NMOS cùng dẫn) và $t_{pd,worst}$ tại $C_L = 50\,\text{fF}$.
+2. So sánh $t_{pd,worst}$ giữa NAND2 và NOR2 tại tải $50\,\text{fF}$ và giải thích ý nghĩa của kết quả so sánh.
+3. Dự đoán độ tăng trễ $\Delta t_{pHL}$ của NAND2 khi kích ngõ B so với kích ngõ A theo mô hình Elmore với $C_{int} \approx 5\,\text{fF}$ ở hai mức tải: $C_L = 50\,\text{fF}$ và $C_L = 10\,\text{fF}$.
+
+### Câu hỏi 3: Đồ thị Euler và Bản vẽ Stick Diagram
+1. Vẽ đồ thị mạng PUN và PDN cho cổng NAND2 và NOR2.
+2. Tìm chu trình Euler chung và ghi lại thứ tự các dải Polysilicon tối ưu.
+3. Vẽ phác thảo sơ đồ que Stick Diagram hoàn chỉnh cho tế bào `nand2_x1` trên giấy ô ly (thể hiện rõ đường ray $V_{DD}, GND$, dải P-Active, N-Active, 2 dải Poly, tiếp xúc Contact và nhãn chân).
+
+### Câu hỏi 4: Soạn thảo Kịch bản Đo đạc SPICE
+Viết các khối lệnh kích thích nguồn và câu lệnh `.MEAS` trong LTspice cho 3 kịch bản:
+- **Cổng NAND2 ($Y = \overline{A \cdot B}$):**
+  - Ca 1: Ngõ $B = 5,0\,\text{V}$ static, ngõ $A$ phát xung $0 \to 5\text{V}$.
+  - Ca 2: Ngõ $A = 5,0\,\text{V}$ static, ngõ $B$ phát xung $0 \to 5\text{V}$.
+  - Ca 3: Cả hai ngõ $A$ và $B$ phát xung đồng thời ($A = B$).
+- **Cổng NOR2 ($Y = \overline{A + B}$):**
+  - Ca 1: Ngõ $B = 0,0\,\text{V}$ static, ngõ $A$ phát xung $0 \to 5\text{V}$. *(Giải thích vì sao ngõ tĩnh của NOR2 phải là $0\,\text{V}$ mà không phải $5\,\text{V}$)*.
+  - Ca 2: Ngõ $A = 0,0\,\text{V}$ static, ngõ $B$ phát xung $0 \to 5\text{V}$.
+  - Ca 3: Cả hai ngõ $A$ và $B$ phát xung đồng thời ($A = B$).
 
 ---
 
-## V. NỘI DUNG THỰC HÀNH TẠI PHÒNG LAB (IN-LAB)
+## 5. KẾ HOẠCH PHÂN BỔ THỜI LƯỢNG IN-LAB (135 PHÚT)
 
-### 1. Thiết kế Schematic và Phân tích VTC Cổng NAND2 trên Electric & LTspice
+| Mốc thời gian | Thời lượng | Nội dung thực hiện chính | Sản phẩm nghiệm thu tại chỗ |
+| :---: | :---: | :--- | :--- |
+| **00 – 15'** | 15 phút | Điểm danh, kiểm tra Pre-lab tại bàn máy, thống nhất quy định an toàn và thư mục làm việc. | Chữ ký xác nhận Pre-lab vào Phiếu báo cáo. |
+| **15 – 45'** | 30 phút | **Ex2.1:** Dựng Schematic `nand2_x1{sch}`, gán Export, xuất SPICE quét VTC và đo ngưỡng $V_M$ (1 ngõ vs 2 ngõ). | Đo đúng $V_M$; sơ đồ sạch 0 warning F5. |
+| **45 – 75'** | 30 phút | **Ex2.2:** Mô phỏng quá độ Transient cổng NAND2, đo trễ 3 kịch bản ở 2 mức tải $C_L = 50\,\text{fF}$ và $10\,\text{fF}$. | Đọc đủ $t_{pHL}, t_{pLH}$ bằng `.MEAS`, ghi số liệu. |
+| **75 – 100'** | 25 phút | **Ex2.3:** Dựng Schematic `nor2_x1{sch}`, mô phỏng đo trễ sườn lên/sườn xuống trường hợp xấu nhất/tốt nhất. | Sơ đồ NOR2 chuẩn $W_p = 24\lambda$, đo đủ số liệu. |
+| **100 – 125'** | 25 phút | **Ex2.4:** Thiết kế Layout `nand2_x1{lay}`, kiểm tra DRC đạt 0 lỗi, chạy NCC LVS đạt "MATCH 100%". | Cửa sổ NCC thông báo so khớp hoàn hảo. |
+| **125 – 135'** | 10 phút | Nghiệm thu sản phẩm tại bàn, ký sổ thực hành, lưu trữ dữ liệu và dọn dẹp vệ sinh phòng máy. | Chữ ký nghiệm thu In-lab của Giảng viên. |
+
+---
+
+## 6. NỘI DUNG THỰC HÀNH TẠI LỚP (IN-LAB)
+
+### 6.1 Bài tập Ex2.1: Thiết kế Schematic và Khảo sát Đặc tuyến VTC Cổng NAND2
 
 ![Sơ đồ nguyên lý nand2_x1 trong Electric VLSI](images/nand2_schematic.png)
 
-1. **Khởi tạo Cell mới trong Electric:**
-   - Chọn menu `Cell -> New Cell...` (phím tắt `Ctrl + N`).
-   - Đặt tên Cell: `nand2_x1`, chọn View type: `schematic` $\to$ Cell mới được tạo là `nand2_x1{sch}`.
-2. **Bố trí linh kiện và định kích thước transistor:**
-   - **Mạng PUN (2 PMOS song song):**
-     * Đặt 2 transistor PMOS (`mocmos:P-Transistor`, phím `P`).
-     * Đặt kích thước cho cả 2 PMOS: $W = 12\lambda = 3.60\,\mu\text{m}$, $L = 2\lambda = 0.60\,\mu\text{m}$.
-     * Cực Nguồn (Source) và cực Thân (Bulk) của 2 PMOS nối lên `vdd`.
-     * Cực Máng (Drain) của 2 PMOS nối chập lại với nhau đưa ra nút `out`.
-   - **Mạng PDN (2 NMOS nối tiếp):**
-     * Đặt 2 transistor NMOS (`mocmos:N-Transistor`, phím `N`).
-     * Đặt kích thước cho cả 2 NMOS: $W = 8\lambda = 2.40\,\mu\text{m}$, $L = 2\lambda = 0.60\,\mu\text{m}$.
-     * Cực Máng (Drain) của NMOS trên nối ra nút `out`.
-     * Cực Nguồn (Source) của NMOS trên nối với cực Máng (Drain) của NMOS dưới (tạo nút nội $X_n$).
-     * Cực Nguồn (Source) của NMOS dưới nối xuống `gnd`.
-     * Cực Thân (Bulk) của cả 2 NMOS nối xuống `gnd`.
-   - **Đấu nối cực Cổng (Gate):**
-     * Cực Cổng của PMOS thứ nhất và NMOS thứ nhất nối chung làm ngõ vào `A`.
-     * Cực Cổng của PMOS thứ hai và NMOS thứ hai nối chung làm ngõ vào `B`.
-3. **Gán đầy đủ 5 chân Export (`Ctrl + E`):**
-
-   | Tên chân Export | Hướng (Characteristics) | Vị trí kết nối trên mạch | Chức năng |
-   | :--- | :--- | :--- | :--- |
-   | **`A`** | `Input` | Cực cổng chung $M_{P1}$ và $M_{N1}$ | Tín hiệu logic ngõ vào A |
-   | **`B`** | `Input` | Cực cổng chung $M_{P2}$ và $M_{N2}$ | Tín hiệu logic ngõ vào B |
-   | **`out`** | `Output` | Nút ngõ ra chung ($D_{P1}, D_{P2}, D_{N1}$) | Tín hiệu logic ngõ ra $Y = \overline{A \cdot B}$ |
-   | **`vdd`** | `Power` | Source & Bulk của các PMOS | Cực nguồn $+5.0\,\text{V}$ |
-   | **`gnd`** | `Ground` | Source & Bulk của các NMOS | Đường nối đất chuẩn $0\,\text{V}$ |
-
-4. Nhấn phím `F5` kiểm tra kết nối mạng (Check and Clean). Xuất SPICE Netlist sang LTspice.
-5. **Khảo sát đường cong truyền đạt tĩnh (VTC):**
-   - Nối chân $B$ lên nguồn tĩnh $5.0\,\text{V}$ (`Vb B 0 DC 5.0`).
-   - Quét điện áp ngõ vào $A$: `.dc Va 0 5 0.005`.
-   - Chạy mô phỏng, đo điện áp ngưỡng chuyển mạch $V_M$ tại vị trí $V_{out} = V_A$.
-   - Lặp lại quét khi nối chung hai ngõ vào $A = B = V_{in}$ (cả hai transistor cùng chuyển mạch đồng thời). So sánh độ dời của điểm $V_M$.
+1. **Khởi tạo Cell Schematic:**
+   - Trong Electric VLSI, mở thư viện `lab02_MSSV.jelib`.
+   - Chọn menu `Cell -> New Cell...` (`Ctrl + N`), đặt tên `nand2_x1`, chọn kiểu `schematic`.
+2. **Bố trí linh kiện và gán kích thước chuẩn:**
+   - Đặt 2 PMOS (`mocmos:P-Transistor`): $W = 12\lambda_{DR} = 3,60\,\mu\text{m}$, $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
+   - Đặt 2 NMOS (`mocmos:N-Transistor`): $W = 8\lambda_{DR} = 2,40\,\mu\text{m}$, $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
+   - Đấu nối mạch theo đúng sơ đồ nguyên lý:
+     * Nguồn và Thân của cả 2 PMOS nối lên `vdd`.
+     * Cực má của cả 2 PMOS nối chập ra ngõ ra `out`.
+     * Cực má của $M_{N1}$ nối ra ngõ ra `out`; cực nguồn nối với cực má của $M_{N2}$ (nút nội $X_n$).
+     * Cực nguồn và Thân của $M_{N2}$ nối xuống đất `gnd`. Thân của $M_{N1}$ cũng nối xuống `gnd`.
+     * Cực cổng $M_{P1}$ và $M_{N1}$ nối chung làm ngõ vào `A`.
+     * Cực cổng $M_{P2}$ và $M_{N2}$ nối chung làm ngõ vào `B`.
+3. **Tạo 5 chân Export chuẩn (`Ctrl + E`):**
+   - Chân `A` (Input), chân `B` (Input), chân `out` (Output), chân `vdd` (Power), chân `gnd` (Ground).
+4. Nhấn phím `F5` kiểm tra mạch (yêu cầu **0 errors, 0 warnings**).
+5. Đóng gói Cell Icon `nand2_x1{ic}` theo chuẩn ký hiệu cổng NAND 2 ngõ vào IEEE.
+6. **Mô phỏng DC VTC trên LTspice (`nand2_vtc.sp`):**
+   - **Trường hợp 1 ngõ vào quét:** Cấp nguồn DC tĩnh $5,0\,\text{V}$ cho ngõ $B$ (`Vb B 0 DC 5.0`). Quét điện áp ngõ $A$ từ $0 \to 5\,\text{V}$ với bước $5\,\text{mV}$: `.dc Va 0 5 0.005`.
+   - Đo điện áp ngưỡng chuyển mạch $V_M$ tại giao điểm $V(out) = V(A)$.
+   - **Trường hợp 2 ngõ vào quét đồng thời:** Nối chung $A = B = V_{in}$ và quét $V_{in}$ từ $0 \to 5\,\text{V}$.
+   - Ghi lại độ dịch chuyển của điểm $V_M$ và giải thích nguyên nhân vật lý vào phiếu báo cáo.
 
 ---
 
-### 2. Đo đạc Trễ Quá độ và Hiệu ứng Nút nội trên Cổng NAND2
-1. Thiết lập nguồn xung vuông $50\,\text{MHz}$ cho ngõ vào chuyển mạch và nguồn DC cho ngõ vào giữ mức cao. Tải dung ngõ ra: $C_L = 50\,\text{fF}$.
-2. **Kịch bản 1 (Ngõ vào $A$ chuyển mạch, $B = 5\,\text{V}$ cố định):**
-   - Chạy mô phỏng quá độ: `.tran 1p 50n`.
-   - Dùng lệnh `.MEAS` đọc trễ sườn xuống $t_{pHL(A)}$ và trễ sườn lên $t_{pLH(A)}$.
-3. **Kịch bản 2 (Ngõ vào $B$ chuyển mạch, $A = 5\,\text{V}$ cố định):**
-   - Chạy mô phỏng quá độ `.tran 1p 50n`.
-   - Dùng lệnh `.MEAS` đọc trễ sườn xuống $t_{pHL(B)}$ và trễ sườn lên $t_{pLH(B)}$.
-4. **Kịch bản 3 (Cả $A$ và $B$ cùng chuyển mạch đồng thời $0 \to 5\,\text{V}$):**
-   - Đọc trễ sườn lên trường hợp tốt nhất $t_{pLH(AB)}$ khi cả hai PMOS cùng dẫn song song.
-   - So sánh $t_{pLH(AB)}$ với $t_{pLH(A)}$ để kiểm chứng lý thuyết $R_{eq}$ giảm một nửa.
-5. Đóng gói Cell Icon `nand2_x1{ic}` chuẩn IEEE (ký hiệu cổng NAND 2 ngõ vào).
+### 6.2 Bài tập Ex2.2: Khảo sát Trễ Quá độ và Hiệu ứng Nút nội trên NAND2
+1. Thiết lập nguồn xung vuông tần số $50\,\text{MHz}$ (`PULSE(0 5.0 0 100p 100p 9.9n 20n)`) và cấu hình mô phỏng quá độ: `.tran 1p 40n`.
+2. **Khảo sát tại mức tải tiêu chuẩn $C_L = 50\,\text{fF}$:**
+   - **Ca 1 (Ngõ vào $A$ chuyển mạch, $B = 5,0\,\text{V}$ static):**
+     Sử dụng lệnh `.meas` đo trễ sườn xuống $t_{pHL(A)}$ và trễ sườn lên $t_{pLH(A)}$.
+   - **Ca 2 (Ngõ vào $B$ chuyển mạch, $A = 5,0\,\text{V}$ static):**
+     Đo trễ sườn xuống $t_{pHL(B)}$ và trễ sườn lên $t_{pLH(B)}$.
+   - **Ca 3 (Cả 2 ngõ vào $A, B$ cùng chuyển mạch đồng thời $0 \to 5\,\text{V}$):**
+     Đo trễ sườn lên trường hợp tốt nhất $t_{pLH(AB)}$ khi cả hai PMOS cùng dẫn song song.
+3. **Khảo sát tại mức tải nhỏ $C_L = 10\,\text{fF}$:**
+   - Thay đổi giá trị tụ tải thành $C_L = 10\,\text{fF}$ và chạy lại kịch bản Ca 1 và Ca 2.
+   - So sánh tỉ lệ tăng trễ sườn xuống:
+     $$\Delta\% = \frac{t_{pHL(Ca2)} - t_{pHL(Ca1)}}{t_{pHL(Ca1)}} \times 100\%$$
+   - Ghi nhận xem ở mức tải nào hiệu ứng nút nội $X_n$ làm chậm mạch rõ nét nhất.
 
 ---
 
-### 3. Thiết kế Schematic và Khảo sát Trễ Cổng NOR2 trong Electric VLSI
+### 6.3 Bài tập Ex2.3: Thiết kế Schematic và Khảo sát Trễ Cổng NOR2
 
 ![Sơ đồ nguyên lý nor2_x1 trong Electric VLSI](images/nor2_schematic.png)
 
-1. **Khởi tạo Cell mới trong Electric:**
-   - Vào menu `Cell -> New Cell...` (phím tắt `Ctrl + N`).
-   - Đặt tên Cell: `nor2_x1`, chọn View type: `schematic` $\to$ Cell mới được tạo có tên đầy đủ là `nor2_x1{sch}`.
+1. **Khởi tạo Cell Schematic:**
+   - Trong Electric VLSI, tạo cell mới `nor2_x1{sch}`.
 2. **Bố trí 2 PMOS nối tiếp và 2 NMOS song song:**
-   - **Mạng kéo lên (PUN) - 2 PMOS nối tiếp:**
-     * Kéo 2 linh kiện PMOS (`mocmos:P-Transistor`, phím tắt `P`).
-     * Nhấp đúp chuột vào từng PMOS (hoặc nhấn `Ctrl + I`) để đặt kích thước định cỡ:
-       + Bề rộng kênh: **$W = 24\lambda = 7.20\,\mu\text{m}$** (gõ `7.2u`).
-       + Chiều dài kênh: **$L = 2\lambda = 0.60\,\mu\text{m}$** (gõ `0.6u`).
-     * Nối cực Nguồn (Source) của PMOS thứ nhất lên dây nguồn `vdd`.
-     * Nối cực Máng (Drain) của PMOS thứ nhất vào cực Nguồn (Source) của PMOS thứ hai (hình thành nút nội $X_p$).
-     * Nối cực Máng (Drain) của PMOS thứ hai ra nút ngõ ra `out`.
-     * Cực Thân (Bulk) của cả 2 PMOS nối lên `vdd`.
-   - **Mạng kéo xuống (PDN) - 2 NMOS song song:**
-     * Kéo 2 linh kiện NMOS (`mocmos:N-Transistor`, phím tắt `N`).
-     * Nhấp đúp chuột vào từng NMOS (hoặc nhấn `Ctrl + I`) để đặt kích thước định cỡ:
-       + Bề rộng kênh: **$W = 4\lambda = 1.20\,\mu\text{m}$** (gõ `1.2u`).
-       + Chiều dài kênh: **$L = 2\lambda = 0.60\,\mu\text{m}$** (gõ `0.6u`).
-     * Nối chập 2 cực Máng (Drain) của 2 NMOS vào nút ngõ ra `out`.
-     * Nối chập 2 cực Nguồn (Source) của 2 NMOS xuống dây đất `gnd`.
-     * Cực Thân (Bulk) của cả 2 NMOS nối xuống `gnd`.
-   - **Đấu nối cực Cổng (Gate):**
-     * Nối cực Cổng của PMOS thứ nhất và NMOS thứ nhất lại với nhau $\to$ nút ngõ vào `A`.
-     * Nối cực Cổng của PMOS thứ hai và NMOS thứ hai lại với nhau $\to$ nút ngõ vào `B`.
-3. **Gán đầy đủ 5 chân Export (`Ctrl + E`):**
-   - Chọn nút mạng tương ứng, vào menu `Export -> Create Export...` (phím tắt `Ctrl + E`), đặt tên và chọn đặc tính (Export Characteristics):
-
-   | Tên chân Export | Hướng (Characteristics) | Vị trí đấu nối trên mạch | Chức năng chi tiết |
-   | :--- | :--- | :--- | :--- |
-   | **`A`** | `Input` | Cực cổng chung $M_{P1}$ và $M_{N1}$ | Tín hiệu logic ngõ vào A |
-   | **`B`** | `Input` | Cực cổng chung $M_{P2}$ và $M_{N2}$ | Tín hiệu logic ngõ vào B |
-   | **`out`** | `Output` | Nút ngõ ra chung ($D_{P2}, D_{N1}, D_{N2}$) | Tín hiệu logic ngõ ra $Y = \overline{A + B}$ |
-   | **`vdd`** | `Power` | Source & Bulk của các PMOS | Cực nguồn $+5.0\,\text{V}$ |
-   | **`gnd`** | `Ground` | Source & Bulk của các NMOS | Đường nối đất chuẩn $0\,\text{V}$ |
-
-4. Nhấn phím `F5` kiểm tra tính đúng đắn của sơ đồ nguyên lý (bảo đảm **0 errors, 0 warnings**).
-5. Xuất Netlist và mô phỏng Transient trên LTspice với tải dung $C_L = 50\,\text{fF}$.
-6. Khảo sát trễ sườn lên $t_{pLH}$ và sườn xuống trường hợp xấu nhất ($1$ NMOS dẫn) và tốt nhất ($2$ NMOS cùng dẫn).
-7. Đóng gói Cell Icon `nor2_x1{ic}` chuẩn IEEE (ký hiệu cổng NOR 2 ngõ vào).
+   - Đặt 2 PMOS: kích thước kênh **$W = 24\lambda_{DR} = 7,20\,\mu\text{m}$**, $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
+   - Đặt 2 NMOS: kích thước kênh **$W = 4\lambda_{DR} = 1,20\,\mu\text{m}$**, $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
+   - Đấu nối 2 PMOS nối tiếp giữa `vdd` và `out` (tạo nút nội $X_p$).
+   - Đấu nối 2 NMOS song song giữa `out` và `gnd`.
+   - Gán 5 chân Export chuẩn: `A`, `B`, `out`, `vdd`, `gnd`.
+3. Nhấn `F5` kiểm tra đạt 0 errors, 0 warnings. Đóng gói Cell Icon `nor2_x1{ic}`.
+4. **Mô phỏng đo trễ quá độ trên LTspice (`nor2_tran.sp`):**
+   - Đặt tải ngõ ra $C_L = 50\,\text{fF}$.
+   - **Ca 1 (Ngõ vào $A$ chuyển mạch, $B = 0,0\,\text{V}$ static):** Đo trễ sườn lên $t_{pLH(A)}$ và trễ sườn xuống $t_{pHL(A)}$ (trường hợp 1 NMOS dẫn).
+   - **Ca 2 (Ngõ vào $B$ chuyển mạch, $A = 0,0\,\text{V}$ static):** Đo trễ sườn lên $t_{pLH(B)}$ và trễ sườn xuống $t_{pHL(B)}$.
+   - **Ca 3 (Cả 2 ngõ vào $A, B$ cùng chuyển mạch đồng thời):** Đo trễ sườn xuống trường hợp tốt nhất $t_{pHL(AB)}$ khi cả hai NMOS cùng dẫn song song kéo điện áp về đất.
 
 ---
 
-### 4. Thiết kế Mask Layout, Chạy DRC & LVS cho Cổng NAND2
-1. Trong Electric, tạo Cell Layout: `nand2_x1{lay}`.
-2. Tạo hai đường ray nguồn Metal 1 nằm ngang `vdd` và `gnd` (độ rộng $\ge 6\lambda$).
-3. Bố trí vùng N-Well ở nửa trên; đặt vùng P-Active liên tục.
-4. Bố trí vùng N-Active liên tục ở nửa dưới.
-5. Vẽ 2 dải Polysilicon song song thẳng đứng cắt qua cả P-Active và N-Active tương ứng với hai ngõ vào $A$ và $B$ (khoảng cách giữa 2 dải Poly $\ge 3\lambda$).
-6. **Thực hiện kỹ thuật chia sẻ vùng khuếch tán (Abutment):**
-   - Cực má chung của 2 PMOS nối liền nhau và nối với cực má của NMOS trên bằng Metal 1 ra chân `out`.
-   - Cực nguồn của 2 PMOS nối lên `vdd`.
-   - Cực Source của NMOS dưới nối xuống `gnd`. Cực nối giữa 2 NMOS là nút nội tự nhiên trong dải khuếch tán, không cần tiếp xúc ra ngoài.
-7. Đặt tiếp xúc phân cực $N^+$-tap lên `vdd` và $P^+$-tap xuống `gnd`.
-8. Nhấn `F5` chạy kiểm tra DRC. Sửa toàn bộ lỗi hình học đạt **0 errors found**.
-9. Vào *Tools $\to$ NCC $\to$ Schematic and Layout Comparison*. Kiểm tra kết quả LVS đạt **"MATCH"**.
+### 6.4 Bài tập Ex2.4: Thiết kế Mask Layout và Chạy DRC & LVS cho Cổng NAND2
+1. Trong Electric VLSI, tạo cell mới kiểu layout: `nand2_x1{lay}`.
+2. Bố trí hai đường ray nguồn Metal 1 nằm ngang `vdd` (ở đỉnh) và `gnd` (ở đáy) với bề rộng $\ge 6\lambda_{DR} = 1,80\,\mu\text{m}$, khoảng cách chiều cao ô chuẩn $H_{cell} = 40\lambda_{DR} = 12,0\,\mu\text{m}$.
+3. Đặt dải P-Active liên tục ở nửa trên ô chuẩn (bề rộng $12\lambda_{DR}$) nằm gọn trong vùng N-Well.
+4. Đặt dải N-Active liên tục ở nửa dưới ô chuẩn (bề rộng $8\lambda_{DR}$).
+5. **Vẽ 2 dải Polysilicon thẳng đứng tương ứng ngõ vào A và B:**
+   - **Khoảng cách hình học:** Đặt khoảng cách giữa 2 dải Poly tại cực má chung là **$6\lambda_{DR} = 1,80\,\mu\text{m}$** (để đủ không gian đặt Contact và duy trì khoảng cách ly $2\lambda_{DR}$ tới mỗi dải Poly).
+6. **Thực hiện kỹ thuật Abutment:**
+   - Đặt Contact tại cực má giữa 2 PMOS, nối bằng Metal 1 sang cực má của NMOS trên ra chân `out`.
+   - Đặt Contact tại 2 đầu ngoài của dải P-Active nối lên ray nguồn `vdd`.
+   - Nút nội $X_n$ giữa 2 NMOS nằm liền mạch trong dải N-Active, không đặt Contact. Cực nguồn ngoài cùng của NMOS dưới đặt Contact nối xuống `gnd`.
+7. Đặt tiếp xúc phân cực phiến: $N^+$-Well Tap nối lên `vdd` và $P^+$-Substrate Tap nối xuống `gnd`.
+8. Gán đầy đủ 5 nhãn chân Export trên lớp kim loại tương ứng (`A`, `B`, `out`, `vdd`, `gnd`).
+9. Nhấn phím `F5` kiểm tra DRC. Khắc phục toàn bộ các lỗi hình học để đạt **0 errors found**.
+10. Chạy công cụ NCC LVS (*Tools -> NCC -> Schematic and Layout Comparison*). Đối chiếu cell `nand2_x1{lay}` với `nand2_x1{sch}`. Xác nhận kết quả hiển thị thông báo **"MATCH 100%"**.
 
 ---
 
-### 5. Trích xuất Ký sinh PEX & So sánh PPA giữa NAND2 và NOR2
-1. Bật tùy chọn trích xuất tụ ký sinh trong Electric, xuất file Netlist Post-layout cho `nand2_x1`.
-2. Chạy mô phỏng Transient Post-layout với $C_L = 50\,\text{fF}$.
-3. Đo đạc độ suy giảm tốc độ giữa Pre-layout và Post-layout do tụ ký sinh nút nội $C_{int}$ và tụ cực má $C_{db}$.
-4. So sánh diện tích mặt nạ hình học ($W \times H$) của Layout `NAND2_X1` so với Layout `NOR2_X1`.
+## 7. HƯỚNG DẪN HOÀN THIỆN SAU BUỔI HỌC (POST-LAB)
 
----
+### 7.1 Hoàn thiện Layout Cổng NOR2 & Trích xuất Ký sinh PEX
+1. **Thiết kế Layout `nor2_x1{lay}`:**
+   - Bố trí 2 PMOS nối tiếp ở hàng P-Active ($W_p = 24\lambda_{DR}$) và 2 NMOS song song ở hàng N-Active ($W_n = 4\lambda_{DR}$).
+   - Chạy kiểm tra DRC đạt 0 lỗi và chạy NCC LVS đạt "MATCH 100%".
+2. **Trích xuất ký sinh PEX & Đo đạc Post-layout:**
+   - Bật tùy chọn trích xuất tụ ký sinh trong Electric, xuất file Netlist Post-layout cho cả `nand2_x1` và `nor2_x1`.
+   - Chạy mô phỏng quá độ tại $C_L = 50\,\text{fF}$ và đo đạc độ tăng trễ hậu thiết kế (Post-layout vs Pre-layout).
 
-## VI. BÁO CÁO THỰC HÀNH (MẪU PHIẾU ĐIỀN KHUYẾT CHO SINH VIÊN)
+### 7.2 Bảng So sánh Toàn diện Diện tích & Hiệu năng giữa NAND2 và NOR2
 
+Sinh viên hoàn thành bảng tổng hợp sau vào Báo cáo kỹ thuật:
+
+| Tiêu chí so sánh | Cổng NAND2 (`nand2_x1`) | Cổng NOR2 (`nor2_x1`) | Tỉ lệ khác biệt (NOR2 so với NAND2) | Nhận xét phân tích |
+| :--- | :---: | :---: | :---: | :--- |
+| **Tổng bề rộng kênh $\sum W$** | $40\lambda_{DR}$ ($12,0\,\mu\text{m}$) | $56\lambda_{DR}$ ($16,8\,\mu\text{m}$) | $+40,0\%$ | NOR2 tốn diện tích silicon hơn |
+| **Điện dung ngõ vào Pin A ($C_{in}$)** | $20\lambda_{DR} \cdot C'$ | $28\lambda_{DR} \cdot C'$ | $+40,0\%$ | NOR2 nặng tải hơn cho tầng trước |
+| **Hệ số Logical Effort ($g$)** | $1,250$ ($5/4$) | $1,750$ ($7/4$) | $+40,0\%$ | NAND2 tối ưu hơn trên đường truyền |
+| **Diện tích Layout ($W \times H$)** | `..............` $\mu\text{m}^2$ | `..............` $\mu\text{m}^2$ | `..............` $\%$ | So sánh kích thước mặt nạ thực tế |
+| **Trễ trung bình Pre-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $\%$ | Tại tải ngoài $C_L = 50\,\text{fF}$ |
+| **Trễ trung bình Post-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $\%$ | Sau khi trích xuất ký sinh PEX |
+| **Độ tăng trễ Post-layout ($\Delta t_{pd}$)** | `..............` $\%$ | `..............` $\%$ | `..............` | Ảnh hưởng của tụ ký sinh cực má |
+
+### 7.3 Câu hỏi Phân tích Chuyên sâu Post-lab
+1. **Ưu thế của cổng NAND trong công nghiệp:**  
+   Dựa vào các chỉ số $\sum W$, $C_{in}$, và trễ Post-layout, hãy giải thích cặn kẽ tại sao trong quy trình thiết kế mạch tích hợp chuyên dụng (ASIC flow), các kỹ sư tổng hợp luận lý (Logic Synthesis) luôn tìm cách tối ưu mạch về dạng lưới cổng NAND thay vì cổng NOR?
+2. **Vai trò của Kỹ thuật Chia sẻ Khuếch tán (Abutment):**  
+   Kỹ thuật Abutment giúp cải thiện những thông số vật lý nào của tế bào vi mạch? Nếu sinh viên không nối liền dải Active mà cắt rời 2 transistor ra thì diện tích và điện dung ký sinh tại nút ngõ ra sẽ tăng lên ra sao?
+3. **Thách thức khi mở rộng cổng logic lên nhiều ngõ vào (NAND4):**  
+   Nếu phải thiết kế cổng NAND 4 ngõ vào (NAND4):
+   - Kích thước chiều rộng kênh $W_n$ của 4 NMOS mắc nối tiếp sẽ bằng bao nhiêu $\lambda_{DR}$ để giữ nguyên khả năng kéo dòng?
+   - Tại sao trong thiết kế CMOS tĩnh, người ta luôn khuyến cáo **không nên mắc nối tiếp quá 4 transistor** trong một cổng logic? Hãy giải thích dựa trên mô hình trễ Elmore và hiệu ứng thân (Body Effect).
+
+### 7.4 Cấu trúc Thư mục Nộp bài Chuẩn (`lab02_MSSV_HoTen/`)
 ```
-========================================================================================
-                          BÁO CÁO THỰC HÀNH: BÀI 2
-                 THIẾT KẾ CỔNG LOGIC TĨNH NAND2 VÀ NOR2 CMOS
-Họ và Tên: ..................................................... MSSV: .................
-Lớp: ....................................... Nhóm/Bàn: ......... Ngày: .................
-Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: ............................................
-========================================================================================
+lab02_MSSV_HoTen/
+│
+├── schematics/             # Các tệp mô phỏng schematic (.asc)
+│   ├── nand2_vtc.asc
+│   ├── nand2_tran.asc
+│   └── nor2_tran.asc
+│
+├── netlists/               # Các tệp Netlist SPICE (.sp)
+│   ├── nand2_vtc.sp
+│   ├── nand2_tran.sp
+│   ├── nor2_tran.sp
+│   └── nand2_pex.sp
+│
+├── waveforms/              # Ảnh chụp dạng sóng và kết quả đo
+│   ├── nand2_vtc_plot.png
+│   ├── nand2_tran_50fF.png
+│   ├── nand2_tran_10fF.png
+│   ├── nor2_tran_plot.png
+│   ├── nand2_drc_clean.png
+│   └── nand2_ncc_match.png
+│
+├── lab02_MSSV.jelib        # Thư viện Electric chứa nand2_x1 (sch, ic, lay) và nor2_x1
+├── C5_models.txt           # Thư viện mô hình công nghệ
+└── Bao_Cao_Lab02_MSSV.pdf  # Báo cáo kỹ thuật tổng kết (từ 3 đến 4 trang)
 ```
 
-### a. Phần Chuẩn bị (Pre-lab)
+---
 
-1. **Bảng kích thước transistor định cỡ lý thuyết:**
+## 8. BẢNG KIỂM CHỨNG VÀ ĐỐI CHUẨN KỸ THUẬT (BENCHMARK)
 
-   | Cổng logic | Transistor | Vai trò | Kích thước $(W/L)$ theo $\lambda$ | Kích thước $(W/L)$ theo $\mu\text{m}$ | Điện trở dẫn hiệu dụng $R_{on}$ ($\Omega$) |
-   | :--- | :---: | :---: | :---: | :---: | :---: |
-   | **NAND2** | $M_{N1}, M_{N2}$ | PDN (nối tiếp) | .................... | .................... | $R_{on,N1} = R_{on,N2} =$ .................... |
-   | **NAND2** | $M_{P1}, M_{P2}$ | PUN (song song) | .................... | .................... | $R_{on,P1} = R_{on,P2} =$ .................... |
-   | **NOR2** | $M_{N1}, M_{N2}$ | PDN (song song) | .................... | .................... | $R_{on,N1} = R_{on,N2} =$ .................... |
-   | **NOR2** | $M_{P1}, M_{P2}$ | PUN (nối tiếp) | .................... | .................... | $R_{on,P1} = R_{on,P2} =$ .................... |
+Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả trước khi nộp sản phẩm:
 
-2. **Dự đoán thời gian trễ lý thuyết ($C_L = 50\,\text{fF}$):**
-   - **Cổng NAND2:**
-     * Trễ sườn xuống: $t_{pHL} = 0.69 \times R_{eq,N} \times C_L =$ ........................................ ps
-     * Trễ sườn lên xấu nhất (1 PMOS dẫn): $t_{pLH,worst} = 0.69 \times R_{eq,P} \times C_L =$ ........................................ ps
-     * Trễ sườn lên tốt nhất (2 PMOS dẫn): $t_{pLH,best} = 0.69 \times (R_{eq,P}/2) \times C_L =$ ........................................ ps
-   - **Cổng NOR2:**
-     * Trễ sườn lên: $t_{pLH} = 0.69 \times R_{eq,P} \times C_L =$ ........................................ ps
-     * Trễ sườn xuống xấu nhất (1 NMOS dẫn): $t_{pHL,worst} = 0.69 \times R_{eq,N} \times C_L =$ ........................................ ps
-     * Trễ sườn xuống tốt nhất (2 NMOS dẫn): $t_{pHL,best} = 0.69 \times (R_{eq,N}/2) \times C_L =$ ........................................ ps
-
-3. **Sơ đồ que Stick Diagram của cổng `NAND2_X1` (Tối ưu đường Euler $A-B$):**  
-   *(Vẽ sơ đồ que vào khung dưới đây, chú thích rõ dải khuếch tán liên tục, cổng Poly A và B, cực má chung Out)*
-
-   ```
-   ┌──────────────────────────────────────────────────────────────────────────────────┐
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   │                                                                                  │
-   └──────────────────────────────────────────────────────────────────────────────────┘
-   ```
+| STT | Hạng mục kiểm tra kỹ thuật | Tiêu chí đạt chuẩn | Trạng thái (Đạt / Chưa đạt) |
+| :---: | :--- | :--- | :---: |
+| 1 | **Schematic NAND2 & NOR2** | 0 lỗi DRC kết nối mạng; gán đủ 5 Export; Icon chuẩn IEEE. | `[        ]` |
+| 2 | **Ngưỡng chuyển mạch $V_M$ NAND2** | Quét 1 ngõ: $2,42 - 2,52\,\text{V}$; Quét 2 ngõ chung: dời lên $2,65 - 2,78\,\text{V}$. | `[        ]` |
+| 3 | **Trễ quá độ Pre-layout ($C_L = 50\,\text{fF}$)** | $t_{pHL}, t_{pLH}$ trường hợp xấu nhất nằm trong dải $45 - 65\,\text{ps}$. | `[        ]` |
+| 4 | **Hiệu ứng nút nội $X_n$ ở $C_L = 10\,\text{fF}$** | Trễ $t_{pHL}$ khi kích ngõ B chậm hơn ngõ A từ $15\%$ đến $25\%$. | `[        ]` |
+| 5 | **Mặt nạ Layout NAND2** | Chiều cao $40\lambda_{DR}$; ray nguồn $\ge 6\lambda_{DR}$; khoảng cách Poly $\ge 6\lambda_{DR}$ qua Contact. | `[        ]` |
+| 6 | **DRC & LVS NAND2** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** hoàn hảo. | `[        ]` |
+| 7 | **Báo cáo & Phân tích PPA** | Điền đủ các bảng số liệu, giải thích rõ cơ chế vật lý chênh lệch giữa NAND và NOR. | `[        ]` |
 
 ---
 
-### b. Phần Thực hành (In-lab)
+## 9. HƯỚNG DẪN TỰ CHẨN ĐOÁN LỖI THƯỜNG GẶP
 
-1. **Khảo sát đặc tuyến VTC của cổng NAND2:**
-   - Ngưỡng chuyển mạch khi ngõ vào $B = 5\,\text{V}$ cố định, quét $V_A$: $V_M =$ .................... V
-   - Ngưỡng chuyển mạch khi nối chung hai ngõ vào $A = B = V_{in}$: $V_M =$ .................... V
-   - **Giải thích tại sao $V_M$ bị dịch chuyển khi cả hai ngõ vào cùng nối chung:**  
-     ................................................................................................................................................
-
-2. **Bảng đo trễ quá độ (Transient) Pre-layout của cổng NAND2 ($C_L = 50\,\text{fF}$):**
-
-   | Kịch bản kích thích | Ngõ vào $A$ | Ngõ vào $B$ | $t_{pHL}$ (ps) | $t_{pLH}$ (ps) | $t_{pd}$ trung bình (ps) |
-   | :--- | :---: | :---: | :---: | :---: | :---: |
-   | **Ca 1 ($A$ chuyển mạch trễ)** | Xung $0 \to 5\text{V}$ | $5.0\,\text{V}$ tĩnh | ................ | ................ | ................ |
-   | **Ca 2 ($B$ chuyển mạch trễ)** | $5.0\,\text{V}$ tĩnh | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
-   | **Ca 3 ($A, B$ cùng chuyển mạch)**| Xung $0 \to 5\text{V}$ | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
-
-   **So sánh $t_{pHL}$ giữa Ca 1 và Ca 2: Trường hợp nào chậm hơn? Giải thích nguyên nhân do tụ nút nội $C_{int}$:**  
-   ....................................................................................................................................................  
-   ....................................................................................................................................................
-
-3. **Bảng đo trễ quá độ (Transient) Pre-layout của cổng NOR2 ($C_L = 50\,\text{fF}$):**
-
-   | Kịch bản kích thích | Ngõ vào $A$ | Ngõ vào $B$ | $t_{pLH}$ (ps) | $t_{pHL}$ (ps) | $t_{pd}$ trung bình (ps) |
-   | :--- | :---: | :---: | :---: | :---: | :---: |
-   | **Ca 1 ($A$ chuyển mạch trễ)** | Xung $0 \to 5\text{V}$ | $0.0\,\text{V}$ tĩnh | ................ | ................ | ................ |
-   | **Ca 2 ($B$ chuyển mạch trễ)** | $0.0\,\text{V}$ tĩnh | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
-   | **Ca 3 ($A, B$ cùng chuyển mạch)**| Xung $0 \to 5\text{V}$ | Xung $0 \to 5\text{V}$ | ................ | ................ | ................ |
-
-4. **Kết quả Thiết kế Mask Layout và Đối chiếu Vật lý Cổng NAND2:**
-   - Kích thước tế bào: Chiều rộng $W =$ ............. $\lambda$ ($.............\,\mu\text{m}$); Chiều cao $H =$ ............. $\lambda$ ($.............\,\mu\text{m}$)
-   - Diện tích Layout: ........................ $\mu\text{m}^2$
-   - Số lỗi DRC: .................... lỗi
-   - Kết quả đối chiếu LVS: ....................................................................................................................
-
-5. **Bảng So sánh Đối chiếu Toàn diện PPA giữa NAND2 và NOR2:**
-
-   | Tiêu chí so sánh | Cổng NAND2_X1 | Cổng NOR2_X1 | Tỉ số so sánh ($\frac{\text{NOR2}}{\text{NAND2}}$) | Đánh giá ưu thế |
-   | :--- | :---: | :---: | :---: | :---: |
-   | **Tổng bề rộng kênh $\sum W$** | $12.0\,\mu\text{m}$ | $16.8\,\mu\text{m}$ | $+40.0\%$ | NAND2 nhỏ hơn |
-   | **Điện dung ngõ vào Pin A ($C_{in}$)** | $6.0\,\mu\text{m} \times C_{ox}$ | $8.4\,\mu\text{m} \times C_{ox}$ | $+40.0\%$ | NAND2 ít tải hơn |
-   | **Diện tích Layout hình học ($W \times H$)** | .............. $\mu\text{m}^2$ | .............. $\mu\text{m}^2$ | .............. % | .............................. |
-   | **Trễ trung bình Pre-layout ($t_{pd}$)** | .............. ps | .............. ps | .............. % | .............................. |
-   | **Trễ trung bình Post-layout (PEX)** | .............. ps | .............. ps | .............. % | .............................. |
-
-6. **Phân tích và Biện luận Kỹ thuật:**
-   - *Câu hỏi 1: Dựa vào bảng số liệu trên, hãy giải thích tại sao trong thiết kế ASIC/SoC thực tế, các kỹ sư thường tìm cách chuyển đổi biểu thức logic về dạng cổng NAND thay vì cổng NOR?*  
-     ................................................................................................................................................  
-     ................................................................................................................................................  
-     ................................................................................................................................................
-   - *Câu hỏi 2: Kỹ thuật chia sẻ vùng khuếch tán (Abutment) giúp cải thiện những thông số nào của tế bào vi mạch? Nếu không dùng kỹ thuật này thì diện tích và điện dung ký sinh nút ngõ ra sẽ bị ảnh hưởng ra sao?*  
-     ................................................................................................................................................  
-     ................................................................................................................................................  
-     ................................................................................................................................................
-   - *Câu hỏi 3: Nếu phải thiết kế cổng NAND 4 ngõ vào (NAND4), chiều rộng kênh của 4 NMOS mắc nối tiếp sẽ bằng bao nhiêu? Việc mắc nối tiếp quá nhiều transistor ($\ge 4$) trong logic CMOS tĩnh sẽ dẫn đến nhược điểm nghiêm trọng gì về mặt hiệu năng?*  
-     ................................................................................................................................................  
-     ................................................................................................................................................  
-     ................................................................................................................................................
+1. **Lỗi DRC vi phạm khoảng cách Poly-to-Poly trên Layout:**
+   - *Hiện tượng:* Electric báo lỗi vi phạm khoảng cách tối thiểu giữa 2 dải Polysilicon.
+   - *Nguyên nhân:* Sinh viên áp dụng máy móc quy tắc khoảng cách cách ly $3\lambda_{DR}$ vào vị trí có đặt Contact kim loại ngõ ra `out`.
+   - *Khắc phục:* Tại vị trí có Contact chia sẻ cực má, khoảng cách hai dải Poly bắt buộc phải $\ge 6\lambda_{DR} = 1,80\,\mu\text{m}$ (Rule 3.2.b).
+2. **Mạch NOR2 không chuyển trạng thái (ngõ ra luôn bị kẹp ở mức 0V):**
+   - *Hiện tượng:* Khi mô phỏng quá độ cổng NOR2, ngõ ra $Out$ luôn bằng $0\,\text{V}$ phẳng lỳ.
+   - *Nguyên nhân:* Sinh viên sao chép kịch bản của NAND2 sang, cấp nguồn DC tĩnh $5,0\,\text{V}$ cho ngõ vào không chuyển mạch. Với cổng NOR2, chỉ cần 1 ngõ vào bằng $1$ là NMOS tương ứng mở, dìm ngõ ra xuống đất!
+   - *Khắc phục:* Đấu ngõ vào tĩnh của NOR2 xuống đất $0,0\,\text{V}$ (`0.0V DC`).
+3. **Công cụ NCC báo "MISMATCH" khi chạy LVS:**
+   - *Hiện tượng:* Báo lỗi bất tương đồng giữa Schematic và Layout.
+   - *Nguyên nhân:* Đặt sai tên nhãn chân Export (chú ý phân biệt chữ hoa/chữ thường như `A`, `B`, `out`); hoặc nối nhầm cực nguồn của PMOS với cực má.
+   - *Khắc phục:* Mở cửa sổ thông báo chi tiết của NCC, xem thành phần transistor nào bị đánh dấu `Unmatched`, sửa lại nối dây trên Layout.
+4. **Không quan sát thấy sự chênh lệch trễ do nút nội $X_n$ trên NAND2:**
+   - *Hiện tượng:* Đo $t_{pHL}$ khi kích ngõ A và ngõ B cho kết quả gần như y hệt nhau (chênh lệch $< 2\%$).
+   - *Nguyên nhân:* Sinh viên chỉ mô phỏng ở tải dung quá lớn ($C_L = 50\,\text{fF}$ hoặc $100\,\text{fF}$), khiến thành phần trễ xả tải ngoài lấn át hoàn toàn trễ xả nút nội.
+   - *Khắc phục:* Giảm tải dung xuống $C_L = 10\,\text{fF}$ hoặc $5\,\text{fF}$ để thấy rõ mức chênh lệch $15\% - 25\%$.
 
 ---
 
-## VII. RUBRIC ĐÁNH GIÁ (THANG ĐIỂM 10)
+## 10. RUBRIC ĐÁNH GIÁ (THANG ĐIỂM 10)
 
-| Tiêu chí | Trọng số | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
-| :--- | :---: | :--- | :--- | :--- | :--- |
-| **1. Chuẩn bị Pre-lab (Mục VI.a)** | **20%** | Tính đúng $100\%$ kích thước $W/L$, điện trở $R_{eq}$, trễ lý thuyết; Stick diagram vẽ đúng đường Euler và chia sẻ cực má chung. | Tính toán đúng các công thức chính; Stick diagram đúng nguyên lý nhưng chưa ghi rõ các lớp. | Tính toán còn sai lệch số học; Stick diagram vẽ sơ sài, thiếu tiếp xúc Taps. | Không chuẩn bị bài trước ở nhà hoặc sao chép bài của bạn. |
-| **2. Phân tích VTC & Đo trễ NAND2** | **25%** | Đo đúng VTC và ngưỡng $V_M$; Dùng thành thạo `.MEAS` khảo sát đủ 3 kịch bản chuyển mạch; Đo chính xác độ lệch trễ nút nội $C_{int}$. | Đo được VTC; Chạy được mô phỏng quá độ nhưng thao tác câu lệnh `.MEAS` còn chậm. | Đo trễ bằng con trỏ thủ công do chưa thiết lập được lệnh `.MEAS`. | Không hoàn thành mô phỏng hoặc mạch báo lỗi cú pháp SPICE. |
-| **3. Khảo sát Cổng NOR2 & So sánh** | **20%** | Xây dựng Schematic NOR2 chuẩn kích thước; Đo đủ trễ các ca sườn lên/xuống; Điền đúng bảng so sánh PPA giữa NAND và NOR. | Dựng được NOR2; Đo được trễ trường hợp xấu nhất; Lập được bảng so sánh PPA. | Dựng được mạch NOR2 nhưng kích thước $W_p$ chưa đúng yêu cầu; So sánh sơ sài. | Không hoàn thành mạch NOR2. |
-| **4. Physical Layout, DRC & LVS** | **25%** | Layout NAND2 gọn gàng, chia sẻ khuếch tán triệt để; Kiểm tra DRC đạt 0 lỗi; Đối chiếu LVS báo MATCH 100% độc lập. | Layout đạt chuẩn, 0 lỗi DRC; LVS match sau 1 lần chỉnh sửa nhỏ về nhãn cổng. | Layout còn cồng kềnh, vi phạm một vài lỗi khoảng cách DRC nhưng tự sửa được. | Vi phạm nhiều lỗi DRC nghiêm trọng; LVS không match; không hoàn thành layout. |
-| **5. Trích xuất PEX & Biện luận Báo cáo** | **10%** | Trích xuất PEX thành công; Hoàn thiện bảng số liệu 3 chiều; Trả lời xuất sắc 3 câu hỏi phân tích bản chất vật lý vi mạch. | Trích xuất PEX thành công; Điền đủ bảng số liệu; Trả lời đúng các câu hỏi lý thuyết. | Trích xuất được PEX nhưng phần giải thích nguyên nhân ưu thế của NAND còn mơ hồ. | Không thực hiện được bước PEX hoặc nộp báo cáo để trống nhiều phần. |
+| Tiêu chí đánh giá | Trọng số | Chuẩn đầu ra | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
+| :--- | :---: | :---: | :--- | :--- | :--- | :--- |
+| **1. Chuẩn bị Pre-lab** | **20%** | CLO1 | Tính toán chính xác $100\%$ kích thước $W/L$, điện trở $R_{on}$, trễ lý thuyết; vẽ đúng đồ thị Euler và sơ đồ que Stick Diagram có chú thích lớp. | Tính đúng các công thức chính; sơ đồ que đúng cấu trúc nhưng chú thích chưa đầy đủ. | Tính toán còn sai lệch số học; sơ đồ que sơ sài, thiếu tiếp xúc Taps. | Không làm Pre-lab hoặc sao chép bài người khác. |
+| **2. Schematic & VTC NAND2** | **20%** | CLO2 | Dựng Schematic chuẩn kích thước, 0 lỗi F5; đo chính xác $V_M$ ca 1 ngõ và 2 ngõ nối chung; giải thích đúng bản chất dời ngưỡng. | Dựng đúng mạch; đo được $V_M$; giải thích bản chất còn đôi chỗ chưa rõ. | Dựng được mạch nhưng thao tác đo $V_M$ chậm, cần trợ giúp. | Không dựng được mạch hoặc sơ đồ báo lỗi cú pháp. |
+| **3. Đo trễ & Hiệu ứng nút nội** | **20%** | CLO2 | Sử dụng thành thạo câu lệnh `.MEAS` khảo sát đủ 3 kịch bản; đo đạc và chỉ rõ độ lệch trễ nút nội ở cả 2 mức tải $50\,\text{fF}$ và $10\,\text{fF}$. | Đo đủ 3 kịch bản trễ ở $50\,\text{fF}$; quan sát được hiệu ứng nút nội. | Đo trễ thủ công bằng con trỏ do chưa viết được câu lệnh `.MEAS`. | Không đo được trễ hoặc số liệu sai lệch nghiêm trọng. |
+| **4. Schematic & Đo trễ NOR2** | **15%** | CLO2 | Dựng đúng NOR2 ($W_p = 24\lambda$); thiết lập đúng nguồn tĩnh $0\,\text{V}$; đo đủ trễ trường hợp xấu nhất và tốt nhất. | Dựng đúng NOR2; đo được trễ trường hợp xấu nhất. | Dựng được mạch nhưng nhầm lẫn kích thước hoặc đấu nhầm nguồn tĩnh. | Không hoàn thành mạch NOR2. |
+| **5. Physical Layout, DRC & LVS** | **15%** | CLO4 | Layout NAND2 gọn gàng, chia sẻ khuếch tán triệt để, khoảng cách Poly $\ge 6\lambda$; 0 lỗi DRC; LVS MATCH 100% độc lập. | Layout đúng chuẩn, 0 lỗi DRC; LVS match sau 1 lần chỉnh sửa nhỏ nhãn chân. | Layout cồng kềnh, vi phạm một vài lỗi DRC khoảng cách nhưng tự sửa được. | Vi phạm nhiều lỗi DRC nghiêm trọng; LVS không match; bỏ dở layout. |
+| **6. Báo cáo, Đối sánh & Vấn đáp** | **10%** | CLO1, CLO4 | Bảng so sánh PPA hoàn chỉnh; trả lời xuất sắc 3 câu hỏi biện luận chuyên sâu và câu hỏi vấn đáp tại bàn của giảng viên. | Điền đủ số liệu; trả lời đúng các câu hỏi lý thuyết chính. | Báo cáo hoàn thành nhưng phần phân tích ưu thế của NAND còn sơ sài. | Báo cáo để trống nhiều phần; không trả lời được vấn đáp. |
+
+---
+
+## 11. TÀI LIỆU THAM KHẢO
+
+1. **Giáo trình chính:** J. M. Rabaey, A. Chandrakasan, B. Nikolić, *Digital Integrated Circuits: A Design Perspective*, 2nd ed., Prentice Hall, 2003 (Chương 6: Designing Combinational Logic Gates in CMOS).
+2. **Sách tham khảo chuẩn:** N. H. E. Weste, D. M. Harris, *CMOS VLSI Design: A Circuits and Systems Perspective*, 4th ed., Addison-Wesley, 2011 (Chương 2: MOS Transistor Theory; Chương 9: Combinational Circuit Design).
+3. **Thư viện mô hình:** MOSIS SCMOS Submicron C5N 0.5µm Model Parameters ([C5_models.txt](file:///d:/tam/VLSI_Spice/04%20-%20Models_and_Libraries/C5_models.txt)).
+4. **Tài liệu công cụ:** Electric VLSI Design System User Manual, Version 9.07+, Static Free Software.
