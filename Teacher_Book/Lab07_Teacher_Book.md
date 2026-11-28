@@ -1,283 +1,106 @@
 # GIÁO TRÌNH NỘI BỘ DÀNH CHO GIẢNG VIÊN VÀ TRỢ GIẢNG
-# BÀI LAB 07 — TEACHER'S BOOK: KỸ THUẬT LOGIC ĐỘNG VÀ LOGIC DOMINO (DYNAMIC & DOMINO CMOS LOGIC)
+# BÀI LAB 07 — TEACHER'S BOOK: KỸ THUẬT LOGIC ĐỘNG VÀ LOGIC DOMINO
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
 > **Đi kèm Handout thực hành của sinh viên:** [lab-07-logic-dong-dynamic-cmos.md](../02%20-%20Student%20Workbook/lab-07-logic-dong-dynamic-cmos.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab07/](../03%20-%20Instructor_Solutions/lab07/)  
+> **Script kiểm chứng số liệu:** [verify_lab07_new.py](../scripts/verify_lab07_new.py)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
 ---
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
-# 7. LAB 7 — LOGIC ĐỘNG (DYNAMIC CMOS) VÀ DOMINO (CHƯƠNG 6)
-
-## 7.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu chu trình hoạt động 2 pha: Pha nạp trước (Precharge - $\text{CLK}=0$) và Pha đánh giá (Evaluate - $\text{CLK}=1$).
-2. Nắm vững bản chất hiện tượng chia sẻ điện tích (Charge Sharing) tại các nút nội và điều kiện gây lật giả logic.
-3. Hiểu cơ chế hoạt động và kích thước của transistor bù rò (Keeper): cuộc giằng co giữa Keeper và PDN.
-4. Nắm chắc tính chất đơn điệu (Monotonicity) của logic động và giải thích được vì sao bắt buộc phải có cổng Inverter tĩnh giữa các tầng Domino.
+### 7.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
+1. **Ưu thế thực sự của Dynamic/Domino CMOS nằm ở $\Sigma W$ và $C_{in}$, không phải chỉ ở số lượng transistor:** Domino OR4 có $9\text{T}$ (so với $10\text{T}$ của Static OR4 = NOR4+INV), nhưng tổng bề rộng giảm từ $224\lambda$ xuống $\mathbf{62-64\lambda}$ và điện dung mỗi ngõ vào $C_{in}$ giảm từ $52\lambda$ xuống **$4\lambda$** ($13\times$!).
+2. **Điều kiện xảy ra Charge Sharing:** Cổng Domino OR4 có Foot NMOS **không thể** có chia sẻ điện tích trong pha Evaluate vì nút `n_eval` nối thẳng đất qua $M_{eval}$. Phải dùng mạch **2 NMOS nối tiếp** (tạo nút nội cô lập giữa `Mn_top` và `Mn_bot`).
+3. **Đính chính Low-skew Inverter & Giới hạn công thức Charge Sharing:** Inverter đệm $16\lambda/8\lambda$ ($W_p/W_n = 2$) có $V_M \approx \mathbf{2,273\,\text{V}} < 2,45\,\text{V}$ nên là **Low-skew** (bản cũ gọi nhầm là High-skew và dùng $V_M=2,45\,\text{V}$). Công thức cân bằng $V_X' = V_{DD} \frac{C_X}{C_X + C_{int}}$ chỉ đúng khi $V_X' \le V_G - V_{thn} \approx 3,79\,\text{V}$ (C5N).
+4. **Đánh đổi Keeper (Trade-off) & Luật hình học:** Không vẽ được layout với $W_{kp}=2\lambda$ (vi phạm bề rộng Active tối thiểu $3\lambda$ của SCMOS); thực tế dùng $W_{kp}=3\lambda - 4\lambda$ với $L_{kp}=4\lambda - 8\lambda$. Trong Ex7.3, bắt buộc đo **cả 2 đại lượng** ($t_{pd,eval}$ và $V_{X,min}$) để thấy sự đánh đổi.
 
 ---
 
-## 7.2 Phân tích hiện tượng chia sẻ điện tích (Charge Sharing)
-Xét mạch logic động với nút động $X$ có điện dung $C_X$. Giả sử bên trong mạng PDN có một nút nội trung gian $C_{int}$ ban đầu mang điện tích $0\,\text{V}$.
-- Trong pha Evaluate, nếu ngõ vào làm thông các transistor phía trên nút nội nhưng transistor phía dưới ngắt:
-- Điện tích ban đầu $Q = C_X \cdot V_{DD}$ sẽ tái phân bố giữa $C_X$ và $C_{int}$.
-- Điện áp sụt giảm tức thời trên nút $X$:
-  $$V'_X = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
-- **Minh họa bằng số:** Với $C_X = 20\,\text{fF}$ và $C_{int} = 14\,\text{fF}$:
-  $$V'_X = 5,0 \cdot \frac{20}{20 + 14} \approx \mathbf{2,94\,\text{V}}$$
-- **Lề an toàn đối với cổng Inverter tĩnh phía sau:**
-  Vì ngưỡng chuyển mạch của Inverter tĩnh là $V_M \approx 2,45\,\text{V}$, điện áp $V'_X = 2,94\,\text{V} > 2,45\,\text{V}$. Do đó lề nhiễu mức cao còn lại:
-  $$NM_H = 2,94 - 2,45 = \mathbf{0,49\,\text{V}}$$
-  Nếu có thêm nhiễu xuyên âm (Crosstalk) hoặc dòng rò dưới ngưỡng (Subthreshold leakage), $V'_X$ sẽ tụt qua $2,45\,\text{V}$, làm ngõ ra Inverter lật lên $1$ giả tạo!
+### 7.2 Phân tích Vật lý Chi tiết (Theo `verify_lab07_new.py`)
 
-```
-                    DOMINO CMOS LOGIC GATE
-                          VDD (5.0V)
-                              |
-                     +--------+--------+
-                     |                 |
-                [PMOS Precharge]  [PMOS Keeper] (W=2λ)
-                 (Gate: CLK)      (Gate: Y)
-                     |                 |
-                     +--------+--------+
-                              |
-                            (Nút X)---------------+
-                              |                   |
-                        +-----+-----+             |
-                        |    PDN    |         +---+---+
-                        | Logic NMOS|         |Static |
-                        +-----+-----+         |Invert.|---- Out (Y)
-                              |               +---+---+
-                        [NMOS Foot] (W=8λ)
-                         (Gate: CLK)
-                              |
-                             GND
-```
+#### a. Ngưỡng chuyển mạch $V_M$ của Inverter $16\lambda/8\lambda$
+$$r = \sqrt{\frac{K'_p (W_p/L_p)}{K'_n (W_n/L_n)}} = \sqrt{\frac{40 \cdot 8}{120 \cdot 4}} = \sqrt{0,6667} = 0,8165$$
+$$V_M = \frac{V_{tn0} + r(V_{DD} - |V_{tp0}|)}{1 + r} = \frac{0,70 + 0,8165 \cdot (5,0 - 0,80)}{1 + 0,8165} = \mathbf{2,273\,\text{V}}$$
+- Với bài toán Pre-lab ($C_X = 20\,\text{fF}, C_{int} = 14\,\text{fF}$):
+  $$V_X' = 5,0 \cdot \frac{20}{20 + 14} = \mathbf{2,941\,\text{V}}, \quad \Delta V_X = \mathbf{2,059\,\text{V}}$$
+  $$NM_H = 2,941 - 2,273 = \mathbf{0,668\,\text{V}}$$
+  Điều kiện lật giả ($V_X' \le 2,273\,\text{V}$): $C_{int} \ge \mathbf{1,20 \cdot C_X}$.
 
-*Sơ đồ nguyên lý Logic động thuần và Cổng Domino hoàn chỉnh:*
-- [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dynamic_cmos_schematic.png)
-- [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/domino_logic_schematic.png)
+#### b. Giới hạn vật lý của Transistor trên (`Mn_top`)
+Do `Mn_top` nạp $C_{int}$ theo kiểu source-follower, nó tự ngắt khi $V_{int} = V_{DD} - V_{thn}(V_{int}) \approx 3,787\,\text{V}$ (C5N).
+- Công thức cân bằng hoàn toàn chỉ đúng khi $\frac{C_{int}}{C_X + C_{int}} \ge \frac{5,0 - 3,787}{5,0} = \mathbf{0,243}$ (hoặc $0,27$ với $\gamma=0,53$).
+- Ở bài Pre-lab ($\frac{14}{34} = 0,412 \ge 0,243$), công thức cân bằng hoàn toàn hợp lệ.
+- Ngược lại, nếu $C_{int}/C_X = 0,1$ ($C_{int}=2\,\text{fF}, C_X=20\,\text{fF}$), công thức cân bằng cho $\Delta V = 0,455\,\text{V}$, nhưng giới hạn vật lý cho $\Delta V \le 3,79 \cdot 0,1 = \mathbf{0,379\,\text{V}}$.
+
+#### c. Tỉ số dòng Keeper / PDN đơn ở $V_X = 2,5\,\text{V}$
+- Một nhánh PDN đơn ($4\lambda$ nối tiếp foot $8\lambda$, $R_{eq} \approx 969 + 485 = 1\,454\,\Omega$) có dòng xấp xỉ $I_{PDN} \approx \frac{2,5}{1454} \approx \mathbf{1,72\,\text{mA}}$.
+- Keeper PMOS ($L=2\lambda$, ở $V_G=0, V_{SD}=2,5\text{V}$):
+  * $W_{kp} = 2\lambda$: $I_{kp} \approx 0,30\,\text{mA}$ ($17\%$ $I_{PDN}$)
+  * $W_{kp} = 4\lambda$: $I_{kp} \approx 0,59\,\text{mA}$ ($34\%$ $I_{PDN}$)
+  * $W_{kp} = 6\lambda$: $I_{kp} \approx 0,89\,\text{mA}$ ($51\%$ $I_{PDN}$)
+  * $W_{kp} = 8\lambda$: $I_{kp} \approx 1,18\,\text{mA}$ ($69\%$ $I_{PDN}$ $\implies$ nguy cơ cao PDN không thắng nổi Keeper, `.meas` báo `FAILED`!).
 
 ---
 
+## PHẦN II: KỊCH BẢN GIẢNG DẠY, ĐÁP ÁN CHI TIẾT & SỐ LIỆU ĐỐI CHUẨN
+
+### 7.3 Kế hoạch Buổi học 135 Phút & Điều phối Phòng máy
+- **00–10':** Cổng kiểm tra Pre-lab. Rà nhanh $V_M = 2,27\,\text{V}$ và sơ đồ mạch thử 2-NMOS.
+- **10–35' (Ex7.1):** Sinh viên chạy mạch thử 2-NMOS nối tiếp trên LTspice (dùng khung từ Handout, không trỏ vào thư mục `03 - Instructor_Solutions`). Kiểm tra độ sụt áp trên `x_nokp` vs `x_kp`.
+- **35–55' (Ex7.2):** Dựng nhanh `domino_or4_x1{sch}` ($9\text{T}$, nhớ nối `clk` vào cả $M_{pre}$ và $M_{eval}$) và chạy kiểm tra 6 tổ hợp.
+- **55–85' (Ex7.3):** Quét `.step param Wkp LIST 0.6u 1.2u 1.8u 2.4u` đo đồng thời $t_{pd,eval}$ và $V_{X,min}$. Hướng dẫn sinh viên cách xử lý nếu ở `2.4u` lệnh `.meas` báo `FAILED`.
+- **85–105' (Ex7.4):** Mô phỏng 2 cổng Dynamic nối trực tiếp vs có Inverter đệm (Domino) để chứng kiến lỗi xả sớm ở `X2`.
+- **105–125' (Ex7.5):** Chạy so sánh PPA giữa Domino OR4 và Static OR4 (`NOR4 + INV`) dùng `.meas INTEG`.
+- **125–135':** Tổng kết và nghiệm thu tại bàn.
 
 ---
 
-## PHẦN II: KỊCH BẢN GIẢNG DẠY, ĐÁP ÁN CHI TIẾT & SỐ LIỆU ĐỐI CHUẨN SPICE BENCHMARK
+### 7.4 Đáp án Chi tiết Pre-lab & Bảng Đối Chuẩn
 
-# TÀI LIỆU GIẢNG DẠY VÀ ĐÁP ÁN CHI TIẾT: BÀI 7 (LAB 07)
-# KỸ THUẬT LOGIC ĐỘNG VÀ LOGIC DOMINO (DYNAMIC & DOMINO CMOS LOGIC)
-*(Tài liệu chuyên môn dành riêng cho Giảng viên & Trợ giảng — Bộ môn ĐTVT, Trường ĐH SPKT – ĐHĐN)*
+1. **Pre-lab Câu 1:** $V_M = 2,273\,\text{V}$ (Low-skew); $V_X' = 2,941\,\text{V}$; $\Delta V_X = 2,059\,\text{V}$; $NM_H = 0,668\,\text{V}$; $C_{int} \ge 1,20\,C_X$; với $C_{int}/C_X=0,1$: công thức cho $0,455\,\text{V}$, thực tế giới hạn $\le 0,379\,\text{V}$.
+2. **Pre-lab Câu 2:** Khi không có Inverter, trong pha Precharge $X_1 = 5\,\text{V}$ làm PDN của cổng Dynamic 2 bật sẵn; sang pha Evaluate cả 2 cổng xả cùng lúc, cổng 2 bị xả mất điện tích của `X2` trước khi `X1` kịp xuống dưới $V_{thn}$.
+3. **Pre-lab Câu 3 & 4:** Như khung Netlist trong `Ex7.1` và bảng tỉ số dòng Mục 7.2c ($0,17; 0,34; 0,51; 0,69$).
 
----
+**Bảng Đối chuẩn Kỹ thuật Tham chiếu (MOSIS C5N):**
 
-## PHẦN I: CƠ SỞ LÝ THUYẾT & NGUYÊN LÝ GIẢNG DẠY DÀNH CHO GIẢNG VIÊN
-
-### 1. Bản Chất Vật Lý và Cơ Chế Hoạt Động 2 Pha Của Logic Động (Dynamic CMOS)
-
-Trong thiết kế vi mạch hiệu năng cực cao (như các khối số học ALU, bộ giải mã thanh ghi Register File, bộ cộng CLA trong vi xử lý GHz), logic tĩnh CMOS chuẩn (Static CMOS) bộc lộ hạn chế lớn về diện tích và tốc độ:
-- Cổng tĩnh CMOS $N$ ngõ vào đòi hỏi $2N$ transistor ($N$ NMOS và $N$ PMOS). Mạng PUN bằng PMOS có độ linh động lỗ trống thấp ($\mu_p \approx \frac{1}{3} \mu_n$), do đó kích thước PMOS buộc phải gấp $2 - 3$ lần NMOS để cân bằng sườn lên/xuống, tạo ra tải điện dung ngõ vào ($C_{in}$) rất lớn.
-- **Dynamic CMOS giải quyết triệt để vấn đề này:**
-  * Thay toàn bộ mạng PUN cồng kềnh bằng **duy nhất 1 PMOS nạp trước ($M_{pre}$)** điều khiển bởi xung nhịp $CLK$.
-  * Giữ lại mạng kéo xuống PDN ($N$ NMOS) và thêm 1 Foot NMOS ($M_{eval}$) nối đất.
-  * Tổng số transistor giảm chỉ còn **$N + 2$** (tiết kiệm hơn $50\%$ diện tích silicon).
-  * Tải ngõ vào $C_{in}$ giảm $2\times$ đến $3\times$ vì mỗi ngõ vào logic chỉ còn nối với đúng 1 cực cổng NMOS!
-  * **Nỗ lực logic (Logical Effort $g$):** Với cổng OR 4-ngõ vào, Static NOR4 có $g = \frac{2 \times 4 + 1}{3} = 3.0$; trong khi Domino OR4 có $g \approx \frac{5}{6} \approx 0.83$ (nhẹ tải gấp **$3.6$ lần**!).
-
-#### Chu trình chuyển mạch 2 pha:
-1. **Pha Nạp trước (Precharge Phase - $CLK = 0$):**
-   - $M_{pre}$ (PMOS) BẬT, $M_{eval}$ (Foot NMOS) TẮT.
-   - Nút động $X$ được nạp đầy lên mức $V_{DD} = 5.0\,\text{V}$.
-   - Chân Foot NMOS ngắt hoàn toàn đường xả xuống đất, ngăn chặn dòng ngắn mạch (Short-circuit current) bất chấp trạng thái của các ngõ vào logic.
-2. **Pha Đánh giá (Evaluate Phase - $CLK = 1$):**
-   - $M_{pre}$ TẮT, $M_{eval}$ BẬT.
-   - Nút động $X$ trở thành một nút "lơ lửng" (Floating node), chỉ giữ điện áp bằng điện tích tích lũy trên tụ điện ký sinh $C_X$.
-   - Nếu mạng PDN dẫn (có đường thông đất): $C_X$ xả điện tích nhanh chóng về $0\,\text{V}$ qua PDN và $M_{eval}$.
-   - Nếu mạng PDN ngắt: $C_X$ giữ nguyên điện tích mức cao $V_{DD}$ (Floating High).
+| Hạng mục | Giá trị kỳ vọng | Ghi chú |
+| :--- | :---: | :--- |
+| $V_M$ (Inverter $16\lambda/8\lambda$) | $2,27\,\text{V}$ | Low-skew |
+| $V_{X,min}$ (Ex7.1, không Keeper) | $\approx 2,85 - 3,05\,\text{V}$ | Tụ $C_X=20\text{fF}, C_{int}=14\text{fF}$ |
+| Domino OR4: $\Sigma W$ / $C_{in}$ | $62 - 64\lambda$ / $4\lambda$ | $9\text{T}$ |
+| Static OR4: $\Sigma W$ / $C_{in}$ | $224\lambda$ / $52\lambda$ | $10\text{T}$ (`NOR4 + INV`) |
 
 ---
 
-### 2. Các Thách Thức Vật Lý & Hiện Tượng Ký Sinh Trong Dynamic Logic
+### 7.5 Kịch bản Gỡ lỗi Socratic cho Giảng viên
 
-#### a. Hiện tượng Chia sẻ Điện tích (Charge Sharing Analysis)
-Khi mạng PDN có các cấu trúc transistor nối tiếp hoặc phân nhánh, tồn tại các điện dung ký sinh tại nút nội $C_{int}$.
-Giả sử trước pha Evaluate:
-- Nút động $X$ đã nạp lên $V_X(0) = V_{DD} = 5.0\,\text{V}$.
-- Nút nội $C_{int}$ bị xả về $0\,\text{V}$ ở chu kỳ trước đó ($V_{int}(0) = 0\,\text{V}$).
-- Trong pha Evaluate ($CLK = 1$), ngõ vào điều khiển transistor phía trên dẫn, nhưng transistor phía dưới ngắt (về lý thuyết mạng PDN không thông đất, nút $X$ phải giữ mức $1$).
-
-**Dẫn xuất toán học bảo toàn điện tích:**
-Tổng điện tích ban đầu:
-
-$$Q_{ban\_dau} = C_X \cdot V_{DD} + C_{int} \cdot 0 = C_X \cdot V_{DD}$$
-
-Khi transistor phía trên mở, điện tích từ $C_X$ phân phối san đều sang $C_{int}$ cho đến khi điện thế hai nút cân bằng:
-
-$$Q_{cuoi} = (C_X + C_{int}) \cdot V_X'$$
-
-Theo định luật bảo toàn điện tích $Q_{ban\_dau} = Q_{cuoi}$:
-
-$$V_X' = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
-
-Độ sụt áp:
-
-$$\Delta V_X = V_{DD} \left(1 - \frac{C_X}{C_X + C_{int}}\right) = V_{DD} \cdot \frac{C_{int}}{C_X + C_{int}}$$
-
-> [!WARNING]
-> **Hậu quả lật sai logic:**  
-> Nếu $C_{int}$ có độ lớn xấp xỉ $C_X$ (ví dụ $C_X = 20\,\text{fF}, C_{int} = 14\,\text{fF}$):  
-> $V_X' = 5.0 \times \frac{20}{34} = 2.94\,\text{V} \implies \Delta V_X = 2.06\,\text{V}$  
-> Ngưỡng chuyển tiếp của Inverter tĩnh là $V_M \approx 2.45\,\text{V}$. Khi có thêm nhiễu nguồn (Power supply bounce) hoặc nhiễu xuyên kênh (Crosstalk), $V_X'$ có thể tụt xuống dưới $V_M$, khiến Inverter hiểu nhầm nút $X$ đã bị xả và lật ngõ ra $Y$ lên $1$ (False Evaluation)!
-
-#### b. Dòng Rò Dưới Ngưỡng và Giới Hạn Tần Số Xung Nhịp Tối Thiểu ($f_{min}$)
-Nút động $X$ trong pha Evaluate khi PDN ngắt là một nút hở. Dòng rò qua các transistor NMOS đang ngắt ($I_{sub}$) và dòng rò phân cực nghịch tiếp giáp p-n ($I_{leak}$) sẽ liên tục rút điện tích của tụ $C_X$:
-
-$$\frac{dV_X}{dt} = -\frac{I_{sub} + I_{leak}}{C_X}$$
-
-Thời gian lưu điện tích tối đa (Maximum Hold Time):
-
-$$t_{hold,max} = \frac{C_X \cdot \Delta V_{allow}}{I_{leak,total}}$$
-
-Nếu chu kỳ xung nhịp $T_{clk} > 2 \cdot t_{hold,max}$ (tức tần số $f < f_{min} \approx 10 - 50\,\text{kHz}$ ở nhiệt độ cao), nút $X$ sẽ tự tiêu tan điện áp dẫn đến mất dữ liệu!
+1. **Sinh viên báo: *"Thầy ơi, ở `Wkp = 2.4u` ($8\lambda$), lệnh `.meas t_pd_eval` của em bị `FAILED` luôn rồi!"***
+   - *Gợi ý Socratic:* "Em mở dạng sóng `V(x)` và `V(y)` tại lần chạy thứ 4 đó lên xem! Nút `V(x)` có kéo xuống được dưới ngưỡng $2,27\,\text{V}$ không, hay bị Keeper PMOS ghìm ở trên cao?" $\implies$ Sinh viên hiểu giới hạn tranh chấp của Keeper.
+2. **Sinh viên thắc mắc: *"Em thử chạy Charge Sharing trên cổng Domino OR4 trong Ex7.2 mà chẳng thấy nút `x` bị sụt áp gì cả!"***
+   - *Gợi ý Socratic:* "Trong mạch OR4 có 4 NMOS mắc song song xuống nút `n_eval`, còn dưới `n_eval` là `M_eval` nối đất. Khi vào pha Evaluate ($CLK = 5\,\text{V}$), điện áp của `n_eval` bằng mấy? Có còn nút nội nào bị cô lập để tích điện hay chia sẻ điện tích không?" $\implies$ Sinh viên nhận ra điều kiện cần của Charge Sharing là nút nội cô lập giữa 2 transistor nối tiếp.
 
 ---
 
-### 3. Vai Trò Của Keeper Transistor & Kỹ Thuật Định Cỡ (Sizing Trade-off)
-
-Để khắc phục hiện tượng Charge Sharing và Dòng rò, ta mắc thêm một transistor **Keeper PMOS ($M_{kp}$)** song song với $M_{pre}$, điều khiển hồi tiếp từ ngõ ra $Y$ của Inverter tĩnh.
-- Khi $X = 1 \implies Y = 0 \implies M_{kp}$ DẪN, cấp dòng $I_{kp}$ liên tục bù đắp dòng rò và đưa $V_X$ trở lại mức $V_{DD}$ tuyệt đối. Mạch chuyển từ **Dynamic** thành **Pseudo-Static (tựa tĩnh)**, cho phép dừng xung nhịp ($f_{min} = 0$).
-- **Sự đánh đổi Tranh chấp dòng điện (Keeper Contention):**
-  * Trong pha Evaluate, khi mạng PDN muốn xả nút $X$ xuống $0\,\text{V}$, tại thời điểm ban đầu $Y$ vẫn bằng $0$, do đó $M_{kp}$ vẫn đang cố bơm dòng nạp lên $V_{DD}$.
-  * Mạng PDN buộc phải "chiến đấu" thắng dòng nạp của Keeper để kéo sụt áp nút $X$ xuống dưới ngưỡng đóng của Inverter:
-
-    $$I_{net\_discharge} = I_{PDN} - I_{kp}$$
-
-  * **Quy tắc định cỡ vàng:**
-
-    $$W_{kp} \approx 0.10 - 0.15 \times W_{PDN,eq}$$
-
-    Nếu định cỡ Keeper quá lớn ($W_{kp} > 0.3 W_{PDN}$), thời gian trễ $t_{pd,eval}$ sẽ tăng vọt trên $50\%$, công suất ngắn mạch tăng cao, thậm chí nếu Keeper quá mạnh có thể làm nút $X$ không thể xả xuống mức $0$ (mạch bị tê liệt chức năng logic!).
+### 7.6 Đáp án 3 Câu hỏi Thảo luận Post-lab
+1. **OR4 không có Charge Sharing ở Evaluate:** Vì 4 NMOS mắc song song nối xuống `n_eval`, khi `M_eval` mở thì `n_eval` nối đất, không tồn tại nút nội cô lập như mạch xếp chồng nối tiếp 2 NMOS.
+2. **Low-skew Inverter ($16\lambda/8\lambda$):** Vì tỉ số $W_p/W_n = 2 < 3$, nên NMOS tương đối mạnh hơn PMOS, kéo ngưỡng $V_M$ xuống $2,27\,\text{V}$ (thấp hơn $2,45\,\text{V}$), giúp tăng lề nhiễu mức cao $NM_H = V_X' - V_M$ chống lật giả khi $X$ bị sụt áp nhẹ.
+3. **Thiết kế Keeper hợp lệ DRC:** Giữ bề rộng Active tối thiểu $W_{kp} = 3\lambda$ hoặc $4\lambda$ và tăng chiều dài kênh **$L_{kp} = 4\lambda - 8\lambda$** để làm yếu dòng Keeper mà không vi phạm DRC.
 
 ---
 
-### 4. Logic Domino (Domino Logic) và Tính Đơn Điệu (Monotonicity)
+## PHẦN III: TIÊU CHÍ NGHIỆM THU & BỘ CÂU HỎI VẤN ĐÁP TẠI BÀN
 
-#### Vấn đề nghiêm trọng khi ghép tầng Dynamic thuần:
-Nếu ghép trực tiếp 2 cổng Dynamic thuần:
-- Trong pha Precharge, nút động $X_1$ và $X_2$ đều được nạp lên $1$.
-- Bước vào pha Evaluate, giả sử dữ liệu ngõ vào cổng 1 khiến nút $X_1$ sẽ xả từ $1 \to 0$.
-- Do trễ truyền lan của cổng 1 ($t_{pd1}$), tại thời điểm bắt đầu Evaluate, $X_1$ vẫn ở mức cao. Cực cổng NMOS của tầng 2 nhận mức $1$ này và lập tức xả nút $X_2$ xuống $0$!
-- Khi $X_1$ đã xả xong về $0$, transistor tầng 2 ngắt đi nhưng nút $X_2$ **đã mất điện tích và không thể nạp lại được trong pha Evaluate** $\implies$ Kết quả logic tầng 2 bị sai hoàn toàn (Lỗi Premature Discharge)!
+### 7.7 Barem chấm điểm nhanh tại bàn (Thang 10)
+- **Pre-lab (2,0 điểm):** Tính đúng $V_M = 2,27\,\text{V}$, $V_X' = 2,94\,\text{V}$, $NM_H = 0,67\,\text{V}$, viết Netlist 2-NMOS và tỉ số dòng Keeper.
+- **Ex7.1–7.2 (2,5 điểm):** Đo đúng $V_{X,min}$ có/không Keeper trên 2-NMOS; dựng đúng `domino_or4_x1` ($9\text{T}$) và kiểm chứng 6/6 tổ hợp.
+- **Ex7.3 (2,5 điểm):** Quét đủ 4 mức Keeper, vẽ cả 2 đường ($t_{pd,eval}$ và $V_{X,min}$), giải thích được lỗi `.meas` ở $8\lambda$.
+- **Ex7.4–7.5 (2,0 điểm):** Chứng minh lỗi xả sớm Dynamic trực tiếp vs Domino; đo đủ bảng đối sánh PPA với Static OR4.
+- **Báo cáo & Vấn đáp (1,0 điểm):** Đầy đủ số liệu và trả lời đúng vấn đáp.
 
-#### Giải pháp Cứu cánh của Domino Logic:
-Bằng cách thêm một **Static Inverter** vào ngõ ra của mỗi cổng Dynamic:
-- Trong pha Precharge: $X = 1 \implies Y = \overline{X} = 0$. Tín hiệu truyền sang tầng sau là mức $0$, giữ cho toàn bộ mạng PDN của tầng sau ở trạng thái TẮT an toàn tuyệt đối.
-- Trong pha Evaluate: Ngõ ra $Y$ chỉ có thể giữ nguyên mức $0$ hoặc chuyển từ **$0 \to 1$**.
-- Tính chất này gọi là **Tính Đơn Điệu Tăng (Monotonically Rising Property)**.
-- Khi một chuỗi các cổng Domino ghép tầng, mỗi tầng khi đánh giá xong sẽ lật từ $0 \to 1$, kích hoạt tầng tiếp theo đánh giá y hệt các quân cờ Domino đổ liên hoàn, loại bỏ $100\%$ lỗi xả sớm!
-
----
-
-## PHẦN II: ĐÁP ÁN CHI TIẾT VÀ SỐ LIỆU BENCHMARK SPICE
-
-### 1. Khảo Sát Hiện Tượng Chia Sẻ Điện Tích (`dynamic_charge_sharing.sp`)
-
-(Mô phỏng LTspice, $V_{DD} = 5.0\,\text{V}$, $C_X = 20\,\text{fF}$, $C_{int} = 14\,\text{fF}$, xung nhịp $50\,\text{MHz}$)
-
-| Thông số đo đạc | Không có Keeper (`x_nokp`) | Có Weak PMOS Keeper (`x_kp`) | Nhận xét chuyên môn |
-| :--- | :---: | :---: | :--- |
-| **Điện áp nút $X$ thấp nhất ($V_{min}$)** | **$2.942\,\text{V}$** | **$4.915\,\text{V}$** | Keeper phục hồi sụt áp hoàn hảo |
-| **Độ sụt áp đỉnh ($\Delta V_{X,max}$)** | **$2.058\,\text{V}$** | **$0.085\,\text{V}$** | Sụt áp giảm tới **$24.2$ lần** |
-| **Gai điện áp nhiễu ngõ ra $Y$ ($V_{glitch}$)** | **$1.846\,\text{V}$** | **$0.118\,\text{V}$** | Ngăn chặn hoàn toàn hiện tượng lật giả |
-| **Trạng thái logic ngõ ra $Y$** | **Không ổn định (Có xung kim)** | **$0.000\,\text{V}$ (Chuẩn tĩnh)** | Đảm bảo độ bền nhiễu tuyệt đối |
-
----
-
-### 2. Mô Phỏng Transient Cổng Domino OR 4-ngõ vào (`domino_4input_tran.sp`)
-
-(Xung nhịp $f = 100\,\text{MHz}$, chu kỳ $T = 10\,\text{ns}$, sườn xung $t_r = t_f = 0.1\,\text{ns}$, tải $C_L = 30\,\text{fF}$)
-
-| Chu kỳ | Trạng thái ($A, B, C, D$) | Điện áp nút động $V(X)$ | Ngõ ra $V(Y)$ | Trễ đánh giá $t_{pd,eval}$ | Trạng thái Logic |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| **Chu kỳ 1** | $0, 0, 0, 0$ | $4.985\,\text{V}$ | $0.002\,\text{V}$ | — | `Y = 0` (PDN ngắt, Keeper giữ) |
-| **Chu kỳ 2** | $1, 0, 0, 0$ | $0.021\,\text{V}$ | $4.980\,\text{V}$ | **$78.5\,\text{ps}$** | `Y = 1` (Nhánh A xả) |
-| **Chu kỳ 3** | $0, 1, 0, 0$ | $0.020\,\text{V}$ | $4.981\,\text{V}$ | **$79.1\,\text{ps}$** | `Y = 1` (Nhánh B xả) |
-| **Chu kỳ 4** | $0, 0, 1, 0$ | $0.022\,\text{V}$ | $4.979\,\text{V}$ | **$79.8\,\text{ps}$** | `Y = 1` (Nhánh C xả) |
-
-- **Công suất tiêu tán trung bình:** $P_{avg} = 0.185\,\text{mW}$ tại $100\,\text{MHz}$.
-- **Trễ trung bình đánh giá:** $t_{pd,eval} \approx 78.5\,\text{ps}$ (Nhanh hơn Static CMOS OR4 gấp **$2.74$ lần**!).
-
----
-
-### 3. Khảo Sát Quét Kích Thước Keeper Transistor (`keeper_sizing_sweep.sp`)
-
-| Kích thước $W_{kp}$ | Tỉ lệ $W_{kp} / W_{PDN}$ | Trễ đánh giá $t_{pd,eval}$ | Tăng trễ so với chuẩn | Mức độ Tranh chấp Keeper |
-| :---: | :---: | :---: | :---: | :--- |
-| **$0.6\,\mu\text{m}$ ($2\lambda$)** | **$0.15$** | **$78.5\,\text{ps}$** | **$0.0\%$ (Chuẩn)** | **Tối ưu (Chống rò tốt, trễ thấp nhất)** |
-| **$1.2\,\mu\text{m}$ ($4\lambda$)** | $0.30$ | **$92.4\,\text{ps}$** | $+17.7\%$ | Bắt đầu suy giảm tốc độ |
-| **$1.8\,\mu\text{m}$ ($6\lambda$)** | $0.45$ | **$114.6\,\text{ps}$** | $+46.0\%$ | Tranh chấp đáng kể, tiêu hao công suất |
-| **$2.4\,\mu\text{m}$ ($8\lambda$)** | $0.60$ | **$145.2\,\text{ps}$** | $+85.0\%$ | **Quá cỡ (Tranh chấp nặng, trễ gần gấp 2)** |
-
----
-
-### 4. Trích Xuất Ký Sinh Post-Layout PEX (`domino_pex_postlayout.sp`)
-
-| Thông số | Pre-layout (Lý thuyết) | Post-layout (PEX) | Mức độ suy giảm |
-| :--- | :---: | :---: | :---: |
-| **Điện dung nút động $C_X$** | $25.0\,\text{fF}$ | **$53.5\,\text{fF}$** | $+114\%$ (Do ký sinh Metal1 + Drain diff) |
-| **Trễ đánh giá $t_{pd,eval}$** | $78.5\,\text{ps}$ | **$102.4\,\text{ps}$** | $+30.4\%$ |
-| **Điện áp sụt đỉnh khi chia sẻ** | $0.085\,\text{V}$ | **$0.142\,\text{V}$** | Vẫn nằm trong giới hạn an toàn ($< 0.3\,\text{V}$) |
-
----
-
-## PHẦN III: HƯỚNG DẪN CHẤM VÀ CÂU HỎI VẤN ĐÁP TẠI BÀN (VIVA QUESTIONS)
-
-### 1. Barem Điểm Chi Tiết (Thang điểm 10)
-
-| Tiêu chí | Nội dung đánh giá | Điểm tối đa |
-| :--- | :--- | :---: |
-| **Chuẩn bị Pre-lab** | Giải bài toán Charge sharing, giải thích Monotonicity và viết netlist | **2.0 điểm** |
-| **Mô phỏng SPICE In-lab** | Đo đạc chính xác Charge sharing, trễ $t_{pd,eval}$, quét Keeper | **3.0 điểm** |
-| **Layout & DRC/LVS** | Mask layout `domino_or4_x1`, DRC 0 lỗi, LVS matching 100% | **3.0 điểm** |
-| **Báo cáo & Vấn đáp tại bàn** | Điền số liệu đầy đủ, trả lời lưu loát câu hỏi bản chất vật lý | **2.0 điểm** |
-| **Tổng cộng** | **Đạt chuẩn đầu ra môn học CLO1 - CLO4** | **10.0 điểm** |
-
----
-
-### 2. Các Bẫy Kỹ Thuật Học Sinh Hay Mắc Phải Khi Thực Hành
-
-1. **Quên gán xung nhịp cho Foot NMOS ($M_{eval}$):** Nối nhầm cực cổng của Foot NMOS lên $V_{DD}$ biến mạch thành Pseudo-NMOS Logic thay vì Dynamic Logic, gây tiêu tốn công suất tĩnh khổng lồ khi PDN dẫn.
-2. **Nối cực cổng Keeper sai vị trí:** Cực cổng của $M_{kp}$ phải nối vào **ngõ ra sau Inverter ($Y$)**, nếu nối trực tiếp vào nút động $X$ thì Keeper sẽ luôn khóa hoặc luôn mở sai quy luật.
-3. **Kích thước Keeper quá lớn:** Sinh viên nghĩ rằng Keeper càng to thì mạch càng bền vững, kết quả là mạch bị chậm đi $2$ lần hoặc không xả được nút $X$ về $0\,\text{V}$.
-4. **Vi phạm luật DRC khi chia sẻ khuếch tán (Diffusion Sharing) của 4 NMOS song song:** Quên đặt tiếp xúc Substrate Tap (`gnd`) đầy đủ giữa các dải N-Active dẫn đến lỗi Latch-up hoặc DRC `Well/Substrate tap spacing`.
-
----
-
-### 3. Ngân Hàng Câu Hỏi Vấn Đáp Tại Bàn (Viva Questions)
-
-**Câu 1: Tại sao cổng logic động Dynamic CMOS không thể hoạt động ở tần số xung nhịp cực thấp ($f \to 0$) nếu không có Keeper?**  
-*Đáp án chuẩn:* Do nút động $X$ trong pha Evaluate là một nút hở (Floating node). Dòng rò qua các transistor ngắt ($I_{sub}$) và dòng rò tiếp giáp khuếch tán ($I_{leak}$) sẽ liên tục rút điện tích của tụ điện ký sinh $C_X$. Sau khoảng thời gian $t_{hold,max}$, điện áp nút $X$ sẽ tự tụt xuống dưới ngưỡng logic gây mất dữ liệu. Keeper PMOS cung cấp dòng bù rò, giúp mạch có thể dừng xung nhịp tùy ý.
-
-**Câu 2: Hiện tượng "Keeper Contention" là gì và giải pháp tối ưu hóa định cỡ là gì?**  
-*Đáp án chuẩn:* Là hiện tượng tranh chấp dòng điện giữa mạng PDN (đang kéo nút $X$ xuống đất) và Keeper PMOS (vẫn đang mở và cố kéo $X$ lên $V_{DD}$) tại thời điểm bắt đầu pha Evaluate. Giải pháp là định cỡ $W_{kp} \approx 0.10 - 0.15 \times W_{PDN,eq}$, vừa đủ lớn để bù dòng rò nhưng đủ nhỏ để không cản trở tốc độ xả của PDN.
-
-**Câu 3: Tại sao Domino Logic bắt buộc phải có cổng Inverter tĩnh ở ngõ ra? Có thể bỏ cổng Inverter này được không?**  
-*Đáp án chuẩn:* Không thể bỏ được. Nếu bỏ Inverter, trong pha Precharge ngõ ra là mức $1$, khi nối chuỗi sang tầng Dynamic tiếp theo sẽ làm tầng sau bị xả sớm ngoài ý muốn (Premature discharge) trước khi tầng trước kịp đánh giá. Cổng Inverter đảm bảo tín hiệu luôn bằng $0$ trong pha Precharge và chỉ có thể chuyển dịch đơn điệu tăng ($0 \to 1$) trong pha Evaluate.
-
-**Câu 4: So sánh ưu điểm về diện tích và tốc độ giữa Domino OR4 và Static CMOS NOR4?**  
-*Đáp án chuẩn:* Static CMOS NOR4 đòi hỏi 4 PMOS mắc nối tiếp (phải định cỡ cực lớn gấp 8-12 lần để cân bằng trễ sườn lên) $\implies$ diện tích lớn, tải ngõ vào nặng ($g = 3.0$). Domino OR4 chỉ có 4 NMOS song song và 1 Foot NMOS $\implies$ diện tích nhỏ hơn $50\%$, nỗ lực logic $g \approx 0.83$ (nhỏ hơn 3.6 lần), trễ đánh giá nhanh hơn gấp $2.7$ lần!
-
-**Câu 5: Trong layout Domino OR4, làm thế nào để giảm thiểu điện dung ký sinh tại nút động $X$?**  
-*Đáp án chuẩn:* Áp dụng kỹ thuật chia sẻ cực Máng (Drain Diffusion Sharing) cho 4 transistor NMOS song song và đặt cực Máng chung nối trực tiếp vào cực Máng của $M_{pre}$ và cực Cổng của Inverter bằng đoạn Metal1 ngắn nhất, không đi qua các tầng Via trung gian không cần thiết.
-
-
----
-
-## PHẦN III: NHỮNG ĐIỂM CẦN CHỈNH SỬA TRONG HANDOUT SINH VIÊN TRƯỚC KHI LÊN LỚP
-
-> [!WARNING]
-> **Cảnh báo lỗi kỹ thuật trong Handout gốc cần khắc phục:**  
-> Lấy ví dụ OR4 để giải thích chia sẻ điện tích là chưa phù hợp (PDN song song không có nút nội xếp chồng); nên dùng AND3/AND4; inverter 16λ/8λ có V_M = 2,27 V là low-skew, không phải "high-skew".
+### 7.8 Bộ câu hỏi vấn đáp nhanh tại bàn (3 câu chọn lọc)
+1. *"Tại sao nếu đặt Keeper PMOS bằng kích thước Inverter chuẩn ($W_{kp}=12\lambda, L=2\lambda$) thì cổng Domino OR4 gần như chắc chắn bị chết cứng ở mức 0?"* (Đáp: Dòng kéo lên của PMOS $12\lambda$ tương đương dòng kéo xuống của 1 nhánh NMOS $4\lambda$, nên PDN không kéo nổi $X$ qua ngưỡng $V_M$).
+2. *"Tại sao ở pha Evaluate của Domino Logic, ngõ vào $A$ không được phép chuyển từ $1 \to 0$ giữa chừng?"* (Đáp: Vì nếu $A=1$ lúc đầu thì nút $X$ đã bị xả về $0\,\text{V}$; sau đó dù $A$ về $0$ thì $M_{pre}$ đang tắt nên $X$ không thể tự nạp lại lên $5\,\text{V}$ cho đến pha Precharge kế tiếp).
+3. *"Vì sao một cổng Domino OR4 chỉ cần tải đầu vào $C_{in} = 4\lambda$ trên mỗi chân, nhỏ hơn $13$ lần so với cổng Static OR4 ($52\lambda$)?"* (Đáp: Vì mỗi ngõ vào của Domino chỉ lái đúng $1$ NMOS $4\lambda$, trong khi Static OR4 gồm NOR4 phải dùng thêm $4$ PMOS mắc nối tiếp kích thước lớn $48\lambda$ ở mỗi chân).

@@ -1430,51 +1430,19 @@ $$\overline{Sum} = \overline{A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (
 # 7. LAB 7 — LOGIC ĐỘNG (DYNAMIC CMOS) VÀ DOMINO (CHƯƠNG 6)
 
 ## 7.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu chu trình hoạt động 2 pha: Pha nạp trước (Precharge - $\text{CLK}=0$) và Pha đánh giá (Evaluate - $\text{CLK}=1$).
-2. Nắm vững bản chất hiện tượng chia sẻ điện tích (Charge Sharing) tại các nút nội và điều kiện gây lật giả logic.
-3. Hiểu cơ chế hoạt động và kích thước của transistor bù rò (Keeper): cuộc giằng co giữa Keeper và PDN.
-4. Nắm chắc tính chất đơn điệu (Monotonicity) của logic động và giải thích được vì sao bắt buộc phải có cổng Inverter tĩnh giữa các tầng Domino.
+1. Hiểu chu trình 2 pha (Precharge/Evaluate) và ưu thế thực sự của Domino OR4 nằm ở **tổng bề rộng ($\Sigma W \approx 62-64\lambda$ vs $224\lambda$) và $C_{in}$ ($4\lambda$ vs $52\lambda$)** chứ không chỉ số lượng transistor ($9\text{T}$ vs $10\text{T}$).
+2. Nắm vững điều kiện xảy ra Charge Sharing: cổng Domino OR4 có Foot NMOS **không** bị Charge Sharing ở Evaluate; phải dùng mạch thử **2-NMOS nối tiếp** tạo nút nội cô lập $C_{int}$.
+3. Hiểu đúng bản chất Low-skew Inverter ($16\lambda/8\lambda \implies V_M = 2,273\,\text{V} < 2,45\,\text{V}$), giới hạn công thức cân bằng ($V_G - V_{thn} \approx 3,79\,\text{V}$), và cách định cỡ Keeper hợp lệ DRC ($W_{kp} \ge 3\lambda - 4\lambda, L_{kp} = 4\lambda - 8\lambda$).
+4. Chứng minh thực nghiệm tính đơn điệu ($0 \to 1$) của Domino chuỗi so với lỗi xả sớm của Dynamic nối trực tiếp.
 
 ---
 
-## 7.2 Phân tích hiện tượng chia sẻ điện tích (Charge Sharing)
-Xét mạch logic động với nút động $X$ có điện dung $C_X$. Giả sử bên trong mạng PDN có một nút nội trung gian $C_{int}$ ban đầu mang điện tích $0\,\text{V}$.
-- Trong pha Evaluate, nếu ngõ vào làm thông các transistor phía trên nút nội nhưng transistor phía dưới ngắt:
-- Điện tích ban đầu $Q = C_X \cdot V_{DD}$ sẽ tái phân bố giữa $C_X$ và $C_{int}$.
-- Điện áp sụt giảm tức thời trên nút $X$:
-  $$V'_X = V_{DD} \cdot \frac{C_X}{C_X + C_{int}}$$
-- **Minh họa bằng số:** Với $C_X = 20\,\text{fF}$ và $C_{int} = 14\,\text{fF}$:
-  $$V'_X = 5,0 \cdot \frac{20}{20 + 14} \approx \mathbf{2,94\,\text{V}}$$
-- **Lề an toàn đối với cổng Inverter tĩnh phía sau:**
-  Vì ngưỡng chuyển mạch của Inverter tĩnh là $V_M \approx 2,45\,\text{V}$, điện áp $V'_X = 2,94\,\text{V} > 2,45\,\text{V}$. Do đó lề nhiễu mức cao còn lại:
-  $$NM_H = 2,94 - 2,45 = \mathbf{0,49\,\text{V}}$$
-  Nếu có thêm nhiễu xuyên âm (Crosstalk) hoặc dòng rò dưới ngưỡng (Subthreshold leakage), $V'_X$ sẽ tụt qua $2,45\,\text{V}$, làm ngõ ra Inverter lật lên $1$ giả tạo!
-
-```
-                    DOMINO CMOS LOGIC GATE
-                          VDD (5.0V)
-                              |
-                     +--------+--------+
-                     |                 |
-                [PMOS Precharge]  [PMOS Keeper] (W=2λ)
-                 (Gate: CLK)      (Gate: Y)
-                     |                 |
-                     +--------+--------+
-                              |
-                            (Nút X)---------------+
-                              |                   |
-                        +-----+-----+             |
-                        |    PDN    |         +---+---+
-                        | Logic NMOS|         |Static |
-                        +-----+-----+         |Invert.|---- Out (Y)
-                              |               +---+---+
-                        [NMOS Foot] (W=8λ)
-                         (Gate: CLK)
-                              |
-                             GND
-```
-
-*Sơ đồ nguyên lý Logic động thuần và Cổng Domino hoàn chỉnh:*
+## 7.2 Phân tích Chia sẻ Điện tích, Low-skew Inverter & Keeper
+- **Low-skew Inverter $16\lambda/8\lambda$:** $r = \sqrt{\frac{40 \cdot 8}{120 \cdot 4}} = 0,8165 \implies V_M = \mathbf{2,273\,\text{V}}$ (bản cũ gọi nhầm High-skew và dùng $2,45\,\text{V}$).
+- **Bài toán Charge Sharing ($C_X = 20\,\text{fF}, C_{int} = 14\,\text{fF}$):**
+  $$V'_X = 5,0 \cdot \frac{20}{20 + 14} = \mathbf{2,941\,\text{V}}, \quad NM_H = 2,941 - 2,273 = \mathbf{0,668\,\text{V}}$$
+  *(Điều kiện lật giả: $C_{int} \ge 1,20\,C_X$. Công thức cân bằng chỉ áp dụng khi $\frac{C_{int}}{C_X + C_{int}} \ge 0,24 - 0,27$ do giới hạn nạp $V_G - V_{thn}$ của NMOS trên).*
+- **Đánh đổi Keeper ($L_{kp}=2\lambda$):** Quét $W_{kp} = 2\lambda, 4\lambda, 6\lambda, 8\lambda$ cho tỉ lệ dòng $I_{kp}/I_{PDN} \approx 0,17; 0,34; 0,51; 0,69$. Ở $8\lambda$, Keeper tranh chấp mạnh có thể làm `.meas` báo `FAILED`.
 - [dynamic_cmos_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dynamic_cmos_schematic.png)
 - [domino_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/domino_logic_schematic.png)
 
