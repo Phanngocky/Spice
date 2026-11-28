@@ -20,7 +20,7 @@ Bài 10 là **Đồ án Đỉnh cao (Capstone Project)** của toàn bộ học 
    - Tích hợp khối Thanh ghi ngõ ra 4-bit `DFF_REG4` (Master-Slave D-Flip-Flop chốt theo xung nhịp `CLK`).
    - Thiết kế khối tạo cờ trạng thái: Cờ Zero ($Z = 1$ khi $OUT[3:0] = 0000_2$) và Cờ Số nhớ tràn ($C_{out}$).
 3. **Phân tích và Đóng khép Thời gian (Timing Closure):** Đo đạc đường trễ tới hạn dài nhất (Worst-case Critical Path), thời gian thiết lập ($t_{setup}$), thời gian trễ Clock-to-Q ($t_{c-q}$) và xác định tần số xung nhịp tối đa của vi mạch ($f_{max} \ge 1.0\,\text{GHz}$).
-4. **Đảm bảo Toàn vẹn Nguồn điện (Power Integrity):** Thiết kế Vòng cấp nguồn đôi (Dual Power Ring $V_{DD}/GND$) bao quanh chu vi chip, giảm thiểu sụt áp $IR\text{-}Drop < 50\,\text{mV}$ ($< 1\% V_{DD}$) khi cả 358 transistor chuyển mạch đồng thời.
+4. **Đảm bảo Toàn vẹn Nguồn điện (Power Integrity):** Thiết kế Vòng cấp nguồn đôi (Dual Power Ring $V_{DD}/GND$) bao quanh chu vi chip, giảm thiểu sụt áp $IR\text{-}Drop < 50\,\text{mV}$ ($<$ 1% $V_{DD}$) khi cả 358 transistor chuyển mạch đồng thời.
 5. **Nghiệm thu Vi mạch Chuẩn Công nghiệp:** Bàn giao bộ hồ sơ thiết kế hoàn chỉnh gồm: Schematic cấp chip, Mask Layout 0 lỗi DRC, LVS Match 100%, Báo cáo Datasheet đo đạc PEX và bảo vệ đồ án trước hội đồng giảng viên.
 
 ---

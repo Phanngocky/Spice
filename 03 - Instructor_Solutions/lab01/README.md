@@ -18,7 +18,7 @@
 2. **Tỉ số định kích thước $(W_p/W_n)$ và điểm $V_M$ (P2):**
    - Để đạt đối xứng $V_M = 2,50\,\text{V}$: $\sqrt{r} = \frac{2,5 - 0,7}{5,0 - 2,5 - 0,8} = \frac{1,8}{1,7} \approx 1,0588 \implies r \approx 1,1211 \implies \frac{(W/L)_p}{(W/L)_n} = 1,1211 \times 3,0 = \mathbf{3,363}$.
    - Chuẩn thiết kế lưới nguyên $\lambda_{DR} = 0,30\,\mu\text{m}$: Chọn $W_p = 12\lambda = 3,60\,\mu\text{m}$, $W_n = 4\lambda = 1,20\,\mu\text{m}$ (tỉ số $3,0$).
-   - Với tỉ số này ($r=1,0$): $V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{2} = \mathbf{2,450\,\text{V}}$ (lệch $-50\,\text{mV}$ hay $2,0\%$ so với $2,50\,\text{V}$).
+   - Với tỉ số này ($r=1,0$): $V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{2} = \mathbf{2,450\,\text{V}}$ (lệch $-50\,\text{mV}$ hay 2,0% so với $2,50\,\text{V}$).
 
 3. **Điện trở dẫn hiệu dụng $R_{on}$ tại $V_{DS} \to 0$ (P3):**
    - $R_{on,n} = \frac{1}{240 \times 10^{-6} \times (5,0 - 0,70)} = \mathbf{969\,\Omega}$.
@@ -49,9 +49,9 @@
 | **$V_{IH}$ (slope = $-1$)** | $2,89\,\text{V}$ | $2,78 - 2,85\,\text{V}$ | $2,78 - 2,85\,\text{V}$ | Điểm $dV_{out}/dV_{in} = -1$ |
 | **Lề nhiễu thấp $NM_L$** | $2,01\,\text{V}$ | $\ge 1,65\,\text{V}$ | $\ge 1,65\,\text{V}$ | $NM_L = V_{IL} - 0$ |
 | **Lề nhiễu cao $NM_H$** | $2,11\,\text{V}$ | $\ge 2,15\,\text{V}$ | $\ge 2,15\,\text{V}$ | $NM_H = 5,0 - V_{IH}$ |
-| **Trễ sườn xuống $t_{pHL}$ ($C_L=50\text{fF}$)** | $33,6\,\text{ps}$ ($0,69RC$) | $48 - 55\,\text{ps}$ | $70 - 78\,\text{ps}$ | Tăng $+40 - 48\%$ do tụ ký sinh khuếch tán $C_{db}$ và dây dẫn |
-| **Trễ sườn lên $t_{pLH}$ ($C_L=50\text{fF}$)** | $34,4\,\text{ps}$ ($0,69RC$) | $50 - 58\,\text{ps}$ | $73 - 82\,\text{ps}$ | Tăng $+40 - 48\%$ do tụ ký sinh khuếch tán $C_{db}$ và dây dẫn |
-| **Trễ trung bình $t_{pd}$ ($C_L=50\text{fF}$)** | $34,0\,\text{ps}$ ($0,69RC$) | $49 - 56\,\text{ps}$ | $72 - 80\,\text{ps}$ | Tăng $+42 - 48\%$ sau trích xuất PEX |
+| **Trễ sườn xuống $t_{pHL}$ ($C_L=50\text{fF}$)** | $33,6\,\text{ps}$ ($0,69RC$) | $48 - 55\,\text{ps}$ | $70 - 78\,\text{ps}$ | Tăng +40 - 48% do tụ ký sinh khuếch tán $C_{db}$ và dây dẫn |
+| **Trễ sườn lên $t_{pLH}$ ($C_L=50\text{fF}$)** | $34,4\,\text{ps}$ ($0,69RC$) | $50 - 58\,\text{ps}$ | $73 - 82\,\text{ps}$ | Tăng +40 - 48% do tụ ký sinh khuếch tán $C_{db}$ và dây dẫn |
+| **Trễ trung bình $t_{pd}$ ($C_L=50\text{fF}$)** | $34,0\,\text{ps}$ ($0,69RC$) | $49 - 56\,\text{ps}$ | $72 - 80\,\text{ps}$ | Tăng +42 - 48% sau trích xuất PEX |
 
 ---
 

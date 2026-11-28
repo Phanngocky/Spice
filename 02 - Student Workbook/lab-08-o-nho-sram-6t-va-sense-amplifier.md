@@ -189,7 +189,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 #### b. Kết quả Đo đạc Thực hành (In-lab & Post-lab)
 1. **Ex8.1 — Lề nhiễu tĩnh ($SNM$):**
 
-| Chế độ hoạt động | Dự đoán định tính | Đo $SNM$ (thùy nhỏ hơn) | Tỉ lệ $\% V_{DD}$ |
+| Chế độ hoạt động | Dự đoán định tính | Đo $SNM$ (thùy nhỏ hơn) | Tỉ lệ $\text{ pct} V_{DD}$ |
 | :--- | :---: | :---: | :---: |
 | **Chế độ Giữ ($SNM_{hold}$, $WL=0$)** | Lớn nhất | ................ V | ................ % |
 | **Chế độ Đọc ($SNM_{read}$, $WL=5\text{V}$)** | Giảm mạnh | ................ V | ................ % |

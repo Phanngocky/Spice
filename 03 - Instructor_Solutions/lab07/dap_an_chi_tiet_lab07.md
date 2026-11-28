@@ -12,7 +12,7 @@
 1. **Điều kiện Charge Sharing:** Cổng Domino OR4 có Foot NMOS không gặp Charge Sharing ở pha Evaluate vì `n_eval` nối đất qua $M_{eval}$. Phải dùng mạch thử **2-NMOS nối tiếp** (`Mn_top`, `Mn_bot`) tạo nút nội cô lập $C_{int}$.
 2. **Inverter $16\lambda/8\lambda$ là Low-skew:** Với $W_p/W_n = 2 < 3$, $r = 0,8165 \implies V_M = \mathbf{2,273\,\text{V}} < 2,45\,\text{V}$ (không phải High-skew và không dùng $V_M=2,45\,\text{V}$).
 3. **Giới hạn công thức Charge Sharing:** Transistor trên chỉ nạp $C_{int}$ lên tối đa $V_G - V_{thn} \approx 3,79\,\text{V}$ (C5N), nên công thức cân bằng chỉ đúng khi $\frac{C_{int}}{C_X + C_{int}} \ge 0,24 - 0,27$.
-4. **Định cỡ Keeper hợp lệ DRC:** $W_{kp} = 2\lambda$ vi phạm bề rộng Active tối thiểu ($3\lambda$); thực tế dùng $W_{kp} = 3\lambda - 4\lambda$ với $L_{kp} = 4\lambda - 8\lambda$. Quét Ex7.3 đo cả $t_{pd,eval}$ và $V_{X,min}$; ở $W_{kp}=8\lambda$ ($L=2\lambda$), dòng Keeper $\approx 69\%$ dòng PDN đơn nên `.meas` có thể báo `FAILED`.
+4. **Định cỡ Keeper hợp lệ DRC:** $W_{kp} = 2\lambda$ vi phạm bề rộng Active tối thiểu ($3\lambda$); thực tế dùng $W_{kp} = 3\lambda - 4\lambda$ với $L_{kp} = 4\lambda - 8\lambda$. Quét Ex7.3 đo cả $t_{pd,eval}$ và $V_{X,min}$; ở $W_{kp}=8\lambda$ ($L=2\lambda$), dòng Keeper $\approx 69$% dòng PDN đơn nên `.meas` có thể báo `FAILED`.
 5. **Ưu thế $\Sigma W$ và $C_{in}$:** Domino OR4 ($9\text{T}$) có $\Sigma W = 62-64\lambda$, $C_{in} = 4\lambda$/chân, nhỏ hơn rất nhiều so với Static OR4 ($10\text{T}, \Sigma W = 224\lambda, C_{in} = 52\lambda$).
 
 ---

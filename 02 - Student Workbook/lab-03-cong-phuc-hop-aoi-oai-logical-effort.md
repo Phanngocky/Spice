@@ -13,12 +13,12 @@
 ## 1. MỤC TIÊU BÀI THỰC HÀNH
 
 Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
-1. **Phân tích nguyên lý Cổng phức hợp CMOS (Complex Logic Gates):** Hiểu rõ cách hiện thực hàm logic dạng AND-OR-INVERT (`AOI`) và OR-AND-INVERT (`OAI`) chỉ trong **một tầng logic duy nhất (Single-stage Gate)**; lượng hóa ưu thế giảm số transistor (từ 10 xuống 6, giảm $40\%$) và giảm tổng bề rộng kênh (giảm $\approx 18\%$) so với phương án ghép các cổng rời (NAND2, Inverter, NOR2) (CLO1).
+1. **Phân tích nguyên lý Cổng phức hợp CMOS (Complex Logic Gates):** Hiểu rõ cách hiện thực hàm logic dạng AND-OR-INVERT (`AOI`) và OR-AND-INVERT (`OAI`) chỉ trong **một tầng logic duy nhất (Single-stage Gate)**; lượng hóa ưu thế giảm số transistor (từ 10 xuống 6, giảm 40%) và giảm tổng bề rộng kênh (giảm $\approx 18$%) so với phương án ghép các cổng rời (NAND2, Inverter, NOR2) (CLO1).
 2. **Thành thạo phương pháp định kích thước theo trường hợp xấu nhất (Worst-Case Sizing):** Định cỡ bề rộng kênh $(W/L)$ cho mạng kéo lên (PUN) và kéo xuống (PDN) không đối xứng, bảo đảm điện trở kéo tương đương bằng Inverter chuẩn `INV_X1` ($R_{eq,N} \approx 969\,\Omega, R_{eq,P} \approx 992\,\Omega$) (CLO1).
 3. **Làm chủ Lý thuyết Nỗ lực Logic (Logical Effort Theory):** 
    - Xác định chính xác nỗ lực logic $g$ (Logical Effort) và trễ ký sinh $p$ (Parasitic Delay) cho từng ngõ vào của cổng phức hợp.
    - Nắm vững phương pháp thực nghiệm đo đạc đường trễ $t_{pd}$ theo nỗ lực điện $h$ bằng testbench kép đối chuẩn trực tiếp với `INV_X1` để trích xuất $g_{meas}$ và $p_{meas}$ (CLO2).
-4. **Giải bài toán Tối ưu hóa Chuỗi đệm (Inverter Buffer Chain Optimization):** Tính toán số tầng đệm tối ưu $N$, hệ số phóng đại từng tầng $\hat{f}$, và thiết kế chuỗi Inverter nhiều tầng để lái tải dung lớn ($C_L = 1\,\text{pF}$) đạt mức giảm trễ $\approx 72,5\%$ (nhanh hơn $3,63$ lần) so với lái trực tiếp (CLO1, CLO2).
+4. **Giải bài toán Tối ưu hóa Chuỗi đệm (Inverter Buffer Chain Optimization):** Tính toán số tầng đệm tối ưu $N$, hệ số phóng đại từng tầng $\hat{f}$, và thiết kế chuỗi Inverter nhiều tầng để lái tải dung lớn ($C_L = 1\,\text{pF}$) đạt mức giảm trễ $\approx 72,5$% (nhanh hơn $3,63$ lần) so với lái trực tiếp (CLO1, CLO2).
 5. **Thiết kế Mask Layout cho Cổng phức hợp:** Áp dụng phương pháp đường đi Euler để tìm thứ tự cổng Polysilicon tối ưu $C - A - B$, thực hiện kỹ thuật chia sẻ cực má chung nối ra `out` (Abutment), kiểm tra DRC đạt 0 lỗi và đối chiếu sơ đồ LVS (NCC) đạt kết quả trùng khớp đồng bộ (CLO4).
 6. **Đóng gói IP Tế bào chuẩn:** Tạo Cell Icon `aoi21_x1{ic}` và tế bào chuỗi đệm `buf_chain_3st{ic}` bàn giao làm linh kiện thành phần cho các bài thực hành tiếp theo (CLO4).
 
@@ -63,8 +63,8 @@ Thay vào đó, cấu trúc **Cổng phức hợp AOI21 (And-Or-Invert 2-1)** t�
   $$Y = \overline{(A \cdot B) + C} = \overline{(A \cdot B)} \cdot \bar{C} = (\bar{A} + \bar{B}) \cdot \bar{C}$$
   Mạng gồm 2 PMOS mắc song song ($M_{PA} \parallel M_{PB}$), sau đó nối tiếp với 1 PMOS đại diện cho biến $C$ ($M_{PC}$).
 - $\implies$ **Tổng số transistor chỉ còn: 6 transistor (3 PMOS + 3 NMOS)**. Tín hiệu chỉ đi qua **1 tầng chuyển mạch duy nhất**, giúp:
-  * Giảm $40\%$ số lượng transistor (từ 10 xuống 6).
-  * Giảm $\approx 18\%$ tổng bề rộng kênh silicon (từ $112\lambda$ xuống $92\lambda$).
+  * Giảm 40% số lượng transistor (từ 10 xuống 6).
+  * Giảm $\approx 18$% tổng bề rộng kênh silicon (từ $112\lambda$ xuống $92\lambda$).
   * Triệt tiêu hoàn toàn nút ký sinh liên tầng trung gian giữa các cổng rời.
 
 ```
@@ -151,7 +151,7 @@ So với Inverter chuẩn có $C_{out,inv} \propto 12\lambda + 4\lambda = 16\lam
 $$p_{AOI21} = \frac{36\lambda}{16\lambda} = \mathbf{2,250} \quad (p_{AOI21} \approx 2,25 \cdot p_{inv})$$
 
 > [!TIP]
-> **Ưu thế của ngõ vào C:** Ngõ vào $C$ có nỗ lực logic $g_C = 1,75$ nhỏ hơn $12,5\%$ so với ngõ $A, B$ ($g=2,0$). Đồng thời nhánh kéo xuống qua $M_{NC}$ đi thẳng xuống đất mà không qua nút nội trung gian. Do đó trong thiết kế vi mạch, tín hiệu đến muộn nhất trên đường tới hạn (Critical Path) thường được ưu tiên gán vào ngõ vào $C$.
+> **Ưu thế của ngõ vào C:** Ngõ vào $C$ có nỗ lực logic $g_C = 1,75$ nhỏ hơn 12,5% so với ngõ $A, B$ ($g=2,0$). Đồng thời nhánh kéo xuống qua $M_{NC}$ đi thẳng xuống đất mà không qua nút nội trung gian. Do đó trong thiết kế vi mạch, tín hiệu đến muộn nhất trên đường tới hạn (Critical Path) thường được ưu tiên gán vào ngõ vào $C$.
 
 ---
 
@@ -181,12 +181,12 @@ Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus
 | Số tầng $N$ | Nỗ lực mỗi tầng $\hat{f} = 50^{1/N}$ | Trễ chuẩn hóa $D / \tau$ | Đánh giá so sánh | Kích thước các tầng ($W_n / W_p$) |
 | :---: | :---: | :---: | :--- | :--- |
 | **$N = 1$** | $50,00$ | $51,00\,\tau$ | Lái trực tiếp | Tầng 1 ($1,0\times$): $4\lambda / 12\lambda$ ($1,2\,\mu\text{m} / 3,6\,\mu\text{m}$) |
-| **$N = 2$** | $7,07$ | $16,14\,\tau$ | Chậm hơn $+14,8\%$ | Tầng 2 ($7,1\times$): $28\lambda / 85\lambda$ |
-| **$N = 3$** | **$3,68$** | **$14,05\,\tau$** | **Tối ưu cực tiểu ($100\%$)** | Tầng 1: $1\times$; Tầng 2: $3,68\times$ ($15\lambda / 44\lambda$); Tầng 3: $13,57\times$ ($54\lambda / 163\lambda$) |
-| **$N = 4$** | $2,66$ | $14,64\,\tau$ | Chậm hơn $+4,2\%$ | Tầng 1: $1\times$; Tầng 2: $2,66\times$; Tầng 3: $7,07\times$; Tầng 4: $18,8\times$ |
-| **$N = 5$** | $2,19$ | $15,93\,\tau$ | Chậm hơn $+13,4\%$ | Quá nhiều tầng, tốn diện tích và công suất |
+| **$N = 2$** | $7,07$ | $16,14\,\tau$ | Chậm hơn +14,8% | Tầng 2 ($7,1\times$): $28\lambda / 85\lambda$ |
+| **$N = 3$** | **$3,68$** | **$14,05\,\tau$** | **Tối ưu cực tiểu (100%)** | Tầng 1: $1\times$; Tầng 2: $3,68\times$ ($15\lambda / 44\lambda$); Tầng 3: $13,57\times$ ($54\lambda / 163\lambda$) |
+| **$N = 4$** | $2,66$ | $14,64\,\tau$ | Chậm hơn +4,2% | Tầng 1: $1\times$; Tầng 2: $2,66\times$; Tầng 3: $7,07\times$; Tầng 4: $18,8\times$ |
+| **$N = 5$** | $2,19$ | $15,93\,\tau$ | Chậm hơn +13,4% | Quá nhiều tầng, tốn diện tích và công suất |
 
-$\implies$ **Kết luận:** Chuỗi đệm 3 tầng ($N=3$) giúp giảm thời gian trễ từ $51,0\,\tau$ xuống còn $14,05\,\tau$, tức **giảm trễ $\approx 72,5\%$ (tốc độ nhanh hơn $3,63$ lần)**!
+$\implies$ **Kết luận:** Chuỗi đệm 3 tầng ($N=3$) giúp giảm thời gian trễ từ $51,0\,\tau$ xuống còn $14,05\,\tau$, tức **giảm trễ $\approx 72,5$% (tốc độ nhanh hơn $3,63$ lần)**!
 
 ---
 
@@ -261,7 +261,7 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
 | Mốc thời gian | Thời lượng | Nội dung thực hiện chính | Sản phẩm nghiệm thu tại chỗ |
 | :---: | :---: | :--- | :--- |
 | **00 – 10'** | 10 phút | Kiểm tra Pre-lab tại bàn máy, thống nhất quy định an toàn và thư mục làm việc. | Chữ ký xác nhận Pre-lab vào Phiếu báo cáo. |
-| **10 – 35'** | 25 phút | **Ex3.1:** Dựng Schematic `aoi21_x1{sch}`, gán 6 Export, chạy mô phỏng kiểm chứng 8 trạng thái bảng chân trị logic. | Dạng sóng 8 trạng thái logic đúng $100\%$. |
+| **10 – 35'** | 25 phút | **Ex3.1:** Dựng Schematic `aoi21_x1{sch}`, gán 6 Export, chạy mô phỏng kiểm chứng 8 trạng thái bảng chân trị logic. | Dạng sóng 8 trạng thái logic đúng 100%. |
 | **35 – 70'** | 35 phút | **Ex3.2:** Dựng Testbench kép đo Logical Effort $g$ và $p$ của AOI21 đối chuẩn trực tiếp với `INV_X1`. | Trích xuất đồ thị hồi quy, tính $g_{meas}$ và $p_{meas}$. |
 | **70 – 95'** | 25 phút | **Ex3.3:** Thiết kế chuỗi đệm Inverter 3 tầng `buf_chain_3st{sch}`, mô phỏng lái tải nặng $C_L = 1\,\text{pF}$ vs lái trực tiếp. | Đo được trễ giảm $> 3$ lần, sườn xung phục hồi. |
 | **95 – 125'** | 30 phút | **Ex3.4:** Thiết kế Mask Layout `aoi21_x1{lay}` (thứ tự $C-A-B$), chạy DRC đạt 0 lỗi, chạy NCC LVS đạt MATCH. | Cửa sổ NCC thông báo so khớp đồng bộ. |
@@ -344,7 +344,7 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
    - **Kịch bản B:** Đặt chuỗi đệm 3 tầng `buf_chain_3st` lái tải nặng $C_L = 1,0\,\text{pF}$.
    - Tần số xung kích thích: $20\,\text{MHz}$ (chu kỳ $50\,\text{ns}$).
    - Dùng lệnh `.MEAS` đo trễ truyền lan $t_{pd}$, thời gian sườn tăng $t_{rise}$ và sườn giảm $t_{fall}$ tại tải $1\,\text{pF}$ cho cả hai kịch bản.
-   - Tính tỉ số cải thiện tốc độ $\frac{t_{pd,direct}}{t_{pd,chain}}$ và phần trăm giảm trễ $\frac{t_{pd,direct} - t_{pd,chain}}{t_{pd,direct}} \times 100\%$.
+   - Tính tỉ số cải thiện tốc độ $\frac{t_{pd,direct}}{t_{pd,chain}}$ và phần trăm giảm trễ $\frac{t_{pd,direct} - t_{pd,chain}}{t_{pd,direct}} \times 100$%.
 
 ---
 
@@ -415,9 +415,9 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 #### c. Kết quả Thực nghiệm Tối ưu Chuỗi đệm Lái tải Nặng $C_L = 1\,\text{pF}$:
 
-| Thông số kỹ thuật | Kịch bản A (Lái trực tiếp 1X) | Kịch bản B (Chuỗi đệm 3 tầng) | Tỉ số cải thiện ($\frac{\text{A}}{\text{B}}$) | Mức giảm trễ ($\%$) |
+| Thông số kỹ thuật | Kịch bản A (Lái trực tiếp 1X) | Kịch bản B (Chuỗi đệm 3 tầng) | Tỉ số cải thiện ($\frac{\text{A}}{\text{B}}$) | Mức giảm trễ ($$%) |
 | :--- | :---: | :---: | :---: | :---: |
-| **Thời gian trễ $t_{pd}$** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | Giảm `......` $\%$ |
+| **Thời gian trễ $t_{pd}$** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | Giảm `......` $$% |
 | **Sườn tăng $t_{rise}$ (10%–90%)** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | — |
 | **Sườn giảm $t_{fall}$ (90%–10%)** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | — |
 
@@ -471,7 +471,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 | :---: | :--- | :--- | :---: |
 | 1 | **Schematic AOI21 & Chuỗi đệm** | 0 lỗi DRC kết nối mạng F5; gán đủ 6 Export cho AOI21; Icon chuẩn. | `[        ]` |
 | 2 | **Kiểm chứng Bảng chân trị** | Đúng hoàn toàn 8 trạng thái logic $Y = \overline{(A \cdot B) + C}$. | `[        ]` |
-| 3 | **Đo Logical Effort $g_A$** | Sai lệch giữa $g_{meas}$ thực nghiệm và lý thuyết ($2,00$) $\le 15\%$. | `[        ]` |
+| 3 | **Đo Logical Effort $g_A$** | Sai lệch giữa $g_{meas}$ thực nghiệm và lý thuyết ($2,00$) $\le 15$%. | `[        ]` |
 | 4 | **Trễ ký sinh thực nghiệm $p$** | Giá trị đo được nằm trong dải $1,8 - 2,6$ (chuẩn hóa theo $p_{inv}$). | `[        ]` |
 | 5 | **Hiệu quả Chuỗi đệm 3 tầng** | Thời gian trễ $t_{pd}$ giảm tối thiểu $3,0$ lần so với lái trực tiếp 1X. | `[        ]` |
 | 6 | **Mặt nạ Layout AOI21** | Thứ tự Poly $C-A-B$; chia sẻ cực má chung Out; chiều cao $H_{cell} = 60\lambda_{DR}$. | `[        ]` |
@@ -487,7 +487,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
    - *Nguyên nhân:* Sinh viên định nghĩa sai nỗ lực điện $h = C_L / C_{in,inv}$. Vì cổng đã định cỡ cùng $R_{on}$, trễ theo $C_L / C_{in,inv}$ luôn có hệ số góc bằng $1$.
    - *Khắc phục:* Đặt $h = C_L / C_{in,A}$ (với $C_{in,A} = 2 C_{in,inv}$) và tính $g_{meas} = \text{Slope}_{h,A} / \text{Slope}_{h,inv}$.
 2. **Lỗi đo ngõ C ra kết quả quá nhanh không phản ánh trường hợp xấu nhất:**
-   - *Hiện tượng:* Đo trễ sườn lên ngõ C thấy nhanh hơn ngõ A tới $25\%$.
+   - *Hiện tượng:* Đo trễ sườn lên ngõ C thấy nhanh hơn ngõ A tới 25%.
    - *Nguyên nhân:* Sinh viên đặt $A = B = 0$ khi kích C. Khi đó cả 2 PMOS A và B cùng dẫn song song, làm điện trở kéo lên giảm còn $744\,\Omega$ thay vì $992\,\Omega$.
    - *Khắc phục:* Đặt $A = 1, B = 0$ (hoặc $A = 0, B = 1$) khi kích C để đo đúng trường hợp xấu nhất (chỉ 1 PMOS trong cụm song song dẫn).
 3. **Lỗi DRC khoảng cách Poly-to-Poly trên Layout:**
@@ -505,9 +505,9 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 
 | Tiêu chí đánh giá | Trọng số | Chuẩn đầu ra | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
 | :--- | :---: | :---: | :--- | :--- | :--- | :--- |
-| **1. Chuẩn bị Pre-lab** | **20%** | CLO1 | Tính toán chính xác $100\%$ kích thước và $g, p$ cho OAI21; giải bài toán buffer chain $F=64$ chính xác; vẽ đúng Stick diagram $C-A-B$. | Tính đúng các công thức chính; bài toán buffer chain đúng; Stick diagram đúng nguyên lý. | Tính toán còn sai lệch số học; Stick diagram vẽ sơ sài, thiếu tiếp xúc Taps. | Không làm Pre-lab hoặc sao chép bài người khác. |
+| **1. Chuẩn bị Pre-lab** | **20%** | CLO1 | Tính toán chính xác 100% kích thước và $g, p$ cho OAI21; giải bài toán buffer chain $F=64$ chính xác; vẽ đúng Stick diagram $C-A-B$. | Tính đúng các công thức chính; bài toán buffer chain đúng; Stick diagram đúng nguyên lý. | Tính toán còn sai lệch số học; Stick diagram vẽ sơ sài, thiếu tiếp xúc Taps. | Không làm Pre-lab hoặc sao chép bài người khác. |
 | **2. Schematic & Chân trị AOI21** | **20%** | CLO2 | Dựng Schematic chuẩn kích thước, 0 lỗi F5; kiểm chứng đủ 8 trạng thái logic sạch sẽ, xử lý tốt glitch. | Dựng đúng mạch; kiểm chứng được 8 trạng thái logic; thao tác SPICE tương đối tốt. | Dựng được mạch nhưng kết nối còn cảnh báo F5; đo chân trị còn nhầm lẫn. | Không dựng được mạch hoặc sơ đồ báo lỗi cú pháp. |
-| **3. Đo Logical Effort $g$ & $p$** | **20%** | CLO2 | Thiết lập đúng testbench kép với `INV_X1`; quét đủ các mức tải; trích xuất thực nghiệm $g_{meas}$ và $p_{meas}$ khớp lý thuyết trong sai lệch $\le 15\%$. | Thiết lập được testbench; đo được trễ nhưng thao tác hồi quy còn chậm. | Đo trễ thủ công; hệ số $g_{meas}$ sai lệch nhiều do chưa chuẩn hóa đúng theo $h$. | Không đo được Logical Effort hoặc số liệu phi lý. |
+| **3. Đo Logical Effort $g$ & $p$** | **20%** | CLO2 | Thiết lập đúng testbench kép với `INV_X1`; quét đủ các mức tải; trích xuất thực nghiệm $g_{meas}$ và $p_{meas}$ khớp lý thuyết trong sai lệch $\le 15$%. | Thiết lập được testbench; đo được trễ nhưng thao tác hồi quy còn chậm. | Đo trễ thủ công; hệ số $g_{meas}$ sai lệch nhiều do chưa chuẩn hóa đúng theo $h$. | Không đo được Logical Effort hoặc số liệu phi lý. |
 | **4. Tối ưu Chuỗi đệm** | **15%** | CLO2 | Hiện thực chuẩn xác chuỗi đệm 3 tầng; chứng minh thực nghiệm trễ giảm $> 3$ lần so với lái trực tiếp 1X; phân tích rõ sườn xung. | Thiết kế được chuỗi đệm 3 tầng; đo được độ giảm trễ nhưng tính toán kích thước tầng còn làm tròn lệch. | Lắp ráp được chuỗi đệm nhưng trễ đo đạc chưa tối ưu; thao tác đo lúng túng. | Không hiện thực được bài toán chuỗi đệm. |
 | **5. Mask Layout, DRC & LVS** | **15%** | CLO4 | Layout AOI21 tối ưu dải khuếch tán $C-A-B$, khoảng cách Poly $\ge 6\lambda$ qua contact; 0 lỗi DRC; LVS MATCH 100% độc lập. | Layout đúng chuẩn, 0 lỗi DRC; LVS match sau 1 lần chỉnh sửa nhỏ nhãn chân. | Layout cồng kềnh, vi phạm một vài lỗi DRC khoảng cách nhưng tự sửa được; LVS match. | Vi phạm nhiều lỗi DRC nghiêm trọng; LVS không match; bỏ dở layout. |
 | **6. Báo cáo, Đối sánh & Vấn đáp** | **10%** | CLO1, CLO4 | Báo cáo đầy đủ, số liệu trung thực; trả lời xuất sắc 3 câu hỏi biện luận chuyên sâu và câu hỏi vấn đáp tại bàn của giảng viên. | Điền đủ số liệu; trả lời đúng các câu hỏi lý thuyết chính. | Báo cáo hoàn thành nhưng phần biện luận ưu thế ngõ C còn sơ sài. | Báo cáo để trống nhiều phần; không trả lời được vấn đáp. |

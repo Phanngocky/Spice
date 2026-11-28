@@ -11,7 +11,7 @@
 ## 1. Tóm tắt Đính chính Kỹ thuật (Audit Lab 08)
 1. **Giải quyết mâu thuẫn $V_Q$ khi đọc `'0'`:** Công thức bậc nhất cho $1,075\,\text{V} > V_{tn} = 0,70\,\text{V}$ ở $CR=2$. Nghiệm bậc hai chính xác cho $V_Q = \mathbf{0,789\,\text{V}}$ (không body effect) và $\mathbf{0,725\,\text{V}}$ (có body effect trên Access NMOS). Tiêu chí vật lý đúng là $V_Q < V_M$ của Inverter đối diện ($\mathbf{1,485\,\text{V}}$).
 2. **Sức kéo khi ghi `'0'` (`PR`):** Với $K'_n / K'_p = 3$, tỉ số sức kéo Access ($4\lambda$) so với Load ($2\lambda$) là **$6\times$**, kéo nút $Q$ cân bằng ở $\mathbf{0,357\,\text{V}} \ll 1,485\,\text{V}$.
-3. **Giá trị $SNM$ & Phương pháp đo:** $SNM_{hold} \approx \mathbf{1,303\,\text{V}}$ ($26,1\% V_{DD}$), $SNM_{read} \approx \mathbf{0,359\,\text{V}}$ ($7,2\% V_{DD}$, do $V_M$ dịch lên $2,090\,\text{V}$), không phải $0,62\,\text{V}$. Đo bằng phương pháp xoay trục $45^\circ$ tại **thùy nhỏ hơn**.
+3. **Giá trị $SNM$ & Phương pháp đo:** $SNM_{hold} \approx \mathbf{1,303\,\text{V}}$ (26,1% $V_{DD}$), $SNM_{read} \approx \mathbf{0,359\,\text{V}}$ (7,2% $V_{DD}$, do $V_M$ dịch lên $2,090\,\text{V}$), không phải $0,62\,\text{V}$. Đo bằng phương pháp xoay trục $45^\circ$ tại **thùy nhỏ hơn**.
 4. **Tách Đọc tĩnh vs Đọc động & Tường minh VLSA:** Dùng nguồn cố định $5\,\text{V}$ cho Đọc tĩnh ($V_Q$); dùng tụ $C_{BL}=1\,\text{pF}$ thả nổi cho Đọc động ($\Delta V_{BL}(t)$). Bổ sung sơ đồ `sense_amp_vlsa` (`Mp` $12\lambda$, `Mn` $8\lambda$, `Mn_tail` $12\lambda$, `Mn_pass` $4\lambda$), đo $t_{latch}$ cả hai chiều $\pm 150\,\text{mV}$ và đối sánh trực tiếp với đường đọc không VLSA.
 
 ---

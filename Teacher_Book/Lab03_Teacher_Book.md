@@ -13,7 +13,7 @@
 # 3. LAB 3 — CỔNG PHỨC HỢP AOI/OAI VÀ LOGICAL EFFORT (CHƯƠNG 3, 6)
 
 ## 3.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. **Bản chất của Cổng phức hợp CMOS tĩnh (AOI/OAI):** Nhận diện cách gom các cấu trúc logic nhiều tầng (AND-OR-INVERT) thành **một tầng chuyển mạch duy nhất (Single-stage)**. Hiểu rõ đánh đổi vật lý: giảm $40\%$ số lượng transistor (từ 10 xuống 6) và giảm $\approx 18\%$ tổng bề rộng kênh silicon, triệt tiêu các nút ký sinh trung gian, nhưng phải trả giá bằng việc xếp chồng transistor trong mạng nạp/xả.
+1. **Bản chất của Cổng phức hợp CMOS tĩnh (AOI/OAI):** Nhận diện cách gom các cấu trúc logic nhiều tầng (AND-OR-INVERT) thành **một tầng chuyển mạch duy nhất (Single-stage)**. Hiểu rõ đánh đổi vật lý: giảm 40% số lượng transistor (từ 10 xuống 6) và giảm $\approx 18$% tổng bề rộng kênh silicon, triệt tiêu các nút ký sinh trung gian, nhưng phải trả giá bằng việc xếp chồng transistor trong mạng nạp/xả.
 2. **Nắm vững phương pháp Logical Effort (Sutherland, Sproull, Harris):** Mô hình trễ tuyến tính chuẩn hóa $d = g \cdot h + p$ giúp tính toán nhẩm kích thước và dự báo trễ của các đường truyền phức tạp mà không cần chạy hàng nghìn lượt SPICE.
 3. **Thành thạo phương pháp thực nghiệm đo $g$ và $p$:** Bác bỏ sai lầm định nghĩa $h$ theo Inverter (khiến hệ số góc luôn bằng $1$). Hiểu và thực hành phương pháp Testbench kép đối chuẩn trực tiếp với `INV_X1` để trích xuất $\tau$, $g_{meas}$ và $p_{meas}$.
 4. **Hiểu bản chất "đáy phẳng" của bài toán Chuỗi đệm (Buffer Chain):** Số tầng tối ưu $N^*$ cho phép kỹ sư linh hoạt chọn $N$ chẵn/lẻ (để giữ hoặc đảo pha logic) hoặc chọn $N$ nhỏ hơn để tiết kiệm diện tích mà trễ tổng cộng chỉ tăng thêm vài phần trăm.
@@ -28,9 +28,9 @@ Xét hàm logic: $Y = \overline{(A \cdot B) + C}$.
 
 | Tiêu chí kỹ thuật | Phương án Ghép Cổng Rời (NAND2 + INV + NOR2) | Phương án Cổng Phức hợp AOI21 (`aoi21_x1`) | Mức độ Tối ưu |
 | :--- | :---: | :---: | :---: |
-| **Số lượng Transistor** | $4\text{T (NAND2)} + 2\text{T (INV)} + 4\text{T (NOR2)} = \mathbf{10\text{T}}$ | $3\text{T (PMOS)} + 3\text{T (NMOS)} = \mathbf{6\text{T}}$ | **Giảm $40,0\%$** |
+| **Số lượng Transistor** | $4\text{T (NAND2)} + 2\text{T (INV)} + 4\text{T (NOR2)} = \mathbf{10\text{T}}$ | $3\text{T (PMOS)} + 3\text{T (NMOS)} = \mathbf{6\text{T}}$ | **Giảm 40,0%** |
 | **Số tầng trễ logic** | **2 tầng chuyển mạch** (tín hiệu đi qua 2 cổng) | **1 tầng chuyển mạch duy nhất** | **Giảm 1 tầng trễ** |
-| **Tổng bề rộng kênh $\sum W$** | $40\lambda + 16\lambda + 56\lambda = \mathbf{112\lambda_{DR} = 33,6\,\mu\text{m}}$ | $3(24\lambda) + 2(8\lambda) + 4\lambda = \mathbf{92\lambda_{DR} = 27,6\,\mu\text{m}}$ | **Giảm $17,86\%$** |
+| **Tổng bề rộng kênh $\sum W$** | $40\lambda + 16\lambda + 56\lambda = \mathbf{112\lambda_{DR} = 33,6\,\mu\text{m}}$ | $3(24\lambda) + 2(8\lambda) + 4\lambda = \mathbf{92\lambda_{DR} = 27,6\,\mu\text{m}}$ | **Giảm 17,86%** |
 | **Nút ký sinh liên tầng** | Có 2 nút dây nối trung gian mang điện dung ký sinh | Triệt tiêu hoàn toàn nút trung gian | Giảm điện dung ký sinh |
 | **Công suất động tiêu tán** | Lớn (nạp/xả tụ ký sinh tại 2 nút trung gian) | Nhỏ hơn đáng kể ($P_{dyn} = \alpha C_{tot} V_{DD}^2 f$) | Tiết kiệm năng lượng |
 
@@ -149,14 +149,14 @@ $$\hat{f} + 1 - \hat{f} \ln \hat{f} = 0 \implies \hat{f} (\ln \hat{f} - 1) = 1 \
 | Số tầng $N$ | Nỗ lực mỗi tầng $\hat{f} = 50^{1/N}$ | Trễ chuẩn hóa $D / \tau$ | Tỉ lệ so với tối ưu | Ý nghĩa kỹ thuật |
 | :---: | :---: | :---: | :---: | :--- |
 | **$N = 1$** | $50,00$ | $1 \times (50 + 1) = \mathbf{51,00\,\tau}$ | Chậm gấp **$3,63$ lần** | Lái trực tiếp: trễ lớn, sườn xung thoái hóa |
-| **$N = 2$** | $7,07$ | $2 \times (7,07 + 1) = \mathbf{16,14\,\tau}$ | Chậm hơn $+14,8\%$ | Tiết kiệm diện tích, giữ nguyên pha logic |
-| **$N = 3$** | **$3,68$** | $3 \times (3,68 + 1) = \mathbf{14,05\,\tau}$ | **Cực tiểu hoàn toàn ($100\%$)** | Tối ưu tốc độ cao nhất (Đảo pha tín hiệu) |
-| **$N = 4$** | $2,66$ | $4 \times (2,66 + 1) = \mathbf{14,64\,\tau}$ | Chậm hơn $+4,2\%$ | Giữ nguyên pha logic, diện tích tăng nhẹ |
-| **$N = 5$** | $2,19$ | $5 \times (2,19 + 1) = \mathbf{15,93\,\tau}$ | Chậm hơn $+13,4\%$ | Quá nhiều tầng, lãng phí công suất và diện tích |
+| **$N = 2$** | $7,07$ | $2 \times (7,07 + 1) = \mathbf{16,14\,\tau}$ | Chậm hơn +14,8% | Tiết kiệm diện tích, giữ nguyên pha logic |
+| **$N = 3$** | **$3,68$** | $3 \times (3,68 + 1) = \mathbf{14,05\,\tau}$ | **Cực tiểu hoàn toàn (100%)** | Tối ưu tốc độ cao nhất (Đảo pha tín hiệu) |
+| **$N = 4$** | $2,66$ | $4 \times (2,66 + 1) = \mathbf{14,64\,\tau}$ | Chậm hơn +4,2% | Giữ nguyên pha logic, diện tích tăng nhẹ |
+| **$N = 5$** | $2,19$ | $5 \times (2,19 + 1) = \mathbf{15,93\,\tau}$ | Chậm hơn +13,4% | Quá nhiều tầng, lãng phí công suất và diện tích |
 
 > [!IMPORTANT]
 > **Tính chất "Đáy phẳng" (Flat-Bottom Property):**  
-> Chú ý rằng trễ của $N = 4$ ($14,64\tau$) chỉ lớn hơn trễ tối ưu của $N = 3$ ($14,05\tau$) đúng $4,2\%$. Trong thiết kế vi mạch thực tế, nếu mạch đòi hỏi tín hiệu không đảo (non-inverting), kỹ sư sẽ **chọn ngay $N = 4$** mà không cần phải thêm một Inverter phụ làm tăng thêm trễ.
+> Chú ý rằng trễ của $N = 4$ ($14,64\tau$) chỉ lớn hơn trễ tối ưu của $N = 3$ ($14,05\tau$) đúng 4,2%. Trong thiết kế vi mạch thực tế, nếu mạch đòi hỏi tín hiệu không đảo (non-inverting), kỹ sư sẽ **chọn ngay $N = 4$** mà không cần phải thêm một Inverter phụ làm tăng thêm trễ.
 
 ---
 
@@ -243,8 +243,8 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot \tau$** �
 | :---: | :---: | :---: | :--- |
 | **$N = 1$** | $64,00$ | $1 \times (64 + 1) = \mathbf{65,00\,\tau}$ | Lái trực tiếp: rất chậm |
 | **$N = 2$** | $8,00$ | $2 \times (8 + 1) = \mathbf{18,00\,\tau}$ | Chưa tối ưu |
-| **$N = 3$** | **$4,00$** | $3 \times (4 + 1) = \mathbf{15,00\,\tau}$ | **Tối ưu hoàn toàn ($100\%$)** |
-| **$N = 4$** | $2,83$ | $4 \times (2,83 + 1) = \mathbf{15,31\,\tau}$ | Chỉ chậm hơn tối ưu $+2,1\%$ |
+| **$N = 3$** | **$4,00$** | $3 \times (4 + 1) = \mathbf{15,00\,\tau}$ | **Tối ưu hoàn toàn (100%)** |
+| **$N = 4$** | $2,83$ | $4 \times (2,83 + 1) = \mathbf{15,31\,\tau}$ | Chỉ chậm hơn tối ưu +2,1% |
 
 ---
 
@@ -252,19 +252,19 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot \tau$** �
 
 | STT | Thông số đo đạc kỹ thuật | Giá trị Giải tích | Đo SPICE Pre-layout | Đo SPICE Post-layout (PEX) | Ghi chú & Nhận xét |
 | :---: | :--- | :---: | :---: | :---: | :--- |
-| 1 | **Chức năng logic AOI21** | 8 trạng thái | Đạt $100\%$ | Đạt $100\%$ | Lấy mẫu tại $t = 2,5\,\text{ns}, 7,5\,\text{ns}, \dots$ |
+| 1 | **Chức năng logic AOI21** | 8 trạng thái | Đạt 100% | Đạt 100% | Lấy mẫu tại $t = 2,5\,\text{ns}, 7,5\,\text{ns}, \dots$ |
 | 2 | **$t_{pd,inv}$ Inverter chuẩn ($C_L = 20\text{fF}$)** | $13,6\,\text{ps}$ | $22 - 28\,\text{ps}$ | $32 - 40\,\text{ps}$ | Đối chuẩn cơ sở |
 | 3 | **Hằng số trễ $\tau$** | $\approx 10 - 13\,\text{ps}$ | $12 - 16\,\text{ps}$ | $16 - 22\,\text{ps}$ | Trích xuất từ độ dốc `INV_X1` |
-| 4 | **Logical Effort ngõ A ($g_{meas,A}$)** | $2,00$ | $1,85 - 2,15$ | $1,90 - 2,20$ | Khớp trong sai lệch $\le 10\%$ |
+| 4 | **Logical Effort ngõ A ($g_{meas,A}$)** | $2,00$ | $1,85 - 2,15$ | $1,90 - 2,20$ | Khớp trong sai lệch $\le 10$% |
 | 5 | **Logical Effort ngõ C ($g_{meas,C}$)** | $1,75$ | $1,62 - 1,88$ | $1,65 - 1,92$ | Nhẹ tải hơn ngõ A |
 | 6 | **Trễ ký sinh thực nghiệm ($p_{meas}$)** | $2,25$ | $1,90 - 2,40$ | $2,40 - 2,90$ | Chuẩn hóa theo $p_{inv}$ |
 | 7 | **Trễ worst-case ngõ C ($50\text{fF}$)** | $34,4\,\text{ps}$ | $52 - 62\,\text{ps}$ | $74 - 88\,\text{ps}$ | $A=1, B=0$, chỉ 1 PMOS dẫn |
 | 8 | **Trễ lái trực tiếp 1X ($C_L = 1\text{pF}$)** | $\approx 0,68\,\text{ns}$ | $0,95 - 1,25\,\text{ns}$ | $1,05 - 1,35\,\text{ns}$ | Sườn xung bị kéo dài rất lớn |
-| 9 | **Trễ qua chuỗi đệm 3 tầng ($1\text{pF}$)** | $\approx 0,19\,\text{ns}$ | $0,28 - 0,36\,\text{ns}$ | $0,35 - 0,45\,\text{ns}$ | **Giảm trễ $> 70\%$ (nhanh hơn $> 3$ lần)** |
+| 9 | **Trễ qua chuỗi đệm 3 tầng ($1\text{pF}$)** | $\approx 0,19\,\text{ns}$ | $0,28 - 0,36\,\text{ns}$ | $0,35 - 0,45\,\text{ns}$ | **Giảm trễ $> 70$% (nhanh hơn $> 3$ lần)** |
 | 10 | **Sườn tăng $t_{rise}$ tại tải $1\text{pF}$** | N/A | Trực tiếp: $> 2,0\,\text{ns}$ | Chuỗi: $< 0,35\,\text{ns}$ | Sườn xung vuông vức trở lại |
 | 11 | **Diện tích Layout AOI21 ($W \times H$)** | N/A | $\approx 180 - 210\,\mu\text{m}^2$ | $\approx 180 - 210\,\mu\text{m}^2$ | Thứ tự $C-A-B$, $H=60\lambda$ |
 | 12 | **DRC MOSIS Errors** | 0 | 0 lỗi | 0 lỗi | Bắt buộc 0 lỗi |
-| 13 | **LVS Comparison (NCC)** | N/A | **MATCH** | **MATCH** | Trùng khớp sơ đồ $100\%$ |
+| 13 | **LVS Comparison (NCC)** | N/A | **MATCH** | **MATCH** | Trùng khớp sơ đồ 100% |
 
 ---
 
@@ -299,10 +299,10 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot \tau$** �
 ## 3.11 Đáp án Chi tiết Câu hỏi Post-lab
 
 1. **Ưu thế và Giới hạn của Cổng phức hợp:**  
-   - *Ưu thế:* Giảm số lượng transistor từ $30 - 40\%$ và giảm diện tích silicon $\approx 18 - 25\%$; triệt tiêu hoàn toàn các nút ký sinh liên tầng trung gian; giảm công suất tiêu tán động; giảm trễ tổng thể nhờ tín hiệu chỉ đi qua 1 tầng chuyển mạch.
+   - *Ưu thế:* Giảm số lượng transistor từ 30 - 40% và giảm diện tích silicon $\approx 18 - 25$%; triệt tiêu hoàn toàn các nút ký sinh liên tầng trung gian; giảm công suất tiêu tán động; giảm trễ tổng thể nhờ tín hiệu chỉ đi qua 1 tầng chuyển mạch.
    - *Giới hạn:* Việc mắc nối tiếp quá nhiều transistor ($\ge 4$) trong mạng PUN hoặc PDN làm tăng điện trở dẫn, tụ ký sinh nút nội $X_n, X_p$ tích tụ nhiều làm tăng trễ theo hàm bậc hai ($N^2$), đồng thời các transistor phía trên bị hiệu ứng thân nặng nề làm sụt giảm dòng điện nghiêm trọng.
 2. **Bản chất Ưu thế của Ngõ vào C trong AOI21:**  
-   - Ngõ vào C chỉ nối vào 1 NMOS đơn ($4\lambda$) và 1 PMOS nối tiếp ($24\lambda$) $\implies C_{in,C} \propto 28\lambda$ nhỏ hơn $12,5\%$ so với ngõ A và B ($32\lambda$). Tầng logic lái phía trước khi nối vào ngõ C sẽ chịu tải nhẹ hơn và chuyển mạch nhanh hơn ($g_C = 1,75 < g_A = 2,00$).
+   - Ngõ vào C chỉ nối vào 1 NMOS đơn ($4\lambda$) và 1 PMOS nối tiếp ($24\lambda$) $\implies C_{in,C} \propto 28\lambda$ nhỏ hơn 12,5% so với ngõ A và B ($32\lambda$). Tầng logic lái phía trước khi nối vào ngõ C sẽ chịu tải nhẹ hơn và chuyển mạch nhanh hơn ($g_C = 1,75 < g_A = 2,00$).
    - Nhánh kéo xuống của ngõ C qua $M_{NC}$ đi trực tiếp từ $Out$ xuống đất, không có nút nội trung gian, loại bỏ hoàn toàn hiện tượng trễ do xả điện tích tồn dư tại nút nội.
 3. **So sánh Đường rời NAND2 $\to$ INV $\to$ NOR2 với AOI21:**  
    - Phương án cổng rời:
@@ -320,7 +320,7 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot \tau$** �
 ### 1. Barem Nghiệm thu Tại bàn (Thang 10):
 - **1. Chuẩn bị Pre-lab (2.0 điểm):** Tính đúng kích thước và $g, p$ cho OAI21; giải đúng bài toán chuỗi đệm $F=64$; vẽ đúng Stick diagram $C-A-B$.
 - **2. Schematic & Chân trị AOI21 (2.0 điểm):** Dựng đúng sơ đồ, 0 warning F5; kiểm chứng đủ 8 trạng thái logic sạch sẽ, xử lý tốt glitch.
-- **3. Đo Logical Effort $g$ & $p$ (2.0 điểm):** Thiết lập đúng testbench kép với `INV_X1`; trích xuất thực nghiệm $g_{meas}$ và $p_{meas}$ khớp lý thuyết trong sai lệch $\le 15\%$.
+- **3. Đo Logical Effort $g$ & $p$ (2.0 điểm):** Thiết lập đúng testbench kép với `INV_X1`; trích xuất thực nghiệm $g_{meas}$ và $p_{meas}$ khớp lý thuyết trong sai lệch $\le 15$%.
 - **4. Tối ưu Chuỗi đệm (1.5 điểm):** Hiện thực chuẩn xác chuỗi đệm 3 tầng; chứng minh thực nghiệm trễ giảm $> 3$ lần so với lái trực tiếp 1X; phân tích rõ sườn xung.
 - **5. Mask Layout, DRC & LVS (1.5 điểm):** Bố trí dải khuếch tán liền mạch $C-A-B$; khoảng cách Poly $\ge 6\lambda$ qua contact; DRC 0 errors; NCC LVS báo **"MATCH"**.
 - **6. Báo cáo, Đối sánh PPA & Tác phong (1.0 điểm):** Lập bảng đối sánh đầy đủ; thái độ nghiêm túc; trả lời trôi chảy câu hỏi vấn đáp.
@@ -333,6 +333,6 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot \tau$** �
 3. *Hỏi:* "Tại sao thứ tự dải Polysilicon $C - A - B$ lại tối ưu hơn thứ tự $A - B - C$ khi vẽ Layout cổng AOI21?"  
    *Đáp chuẩn:* Vì với thứ tự $C - A - B$, cực má của $M_{NC}$ và $M_{NA}$ trên dải N-Active nằm kề sát nhau, cho phép dùng chung một tiếp xúc Contact ngõ ra `out` (Abutment). Ngược lại với thứ tự $A - B - C$, cực Out bị tách rời ra hai đầu dải khuếch tán, không thể chia sẻ cực má chung.
 4. *Hỏi:* "Trong bài toán chuỗi đệm lái tải nặng $1\,\text{pF}$, tại sao chuỗi 3 tầng lại nhanh hơn việc lái trực tiếp bằng Inverter 1X tới hơn 3 lần?"  
-   *Đáp chuẩn:* Vì Inverter 1X có kích thước quá nhỏ, nỗ lực điện $H = 50$ làm thời gian xả dòng bị kéo dài nghiêm trọng ($D = 51\tau$). Khi chèn chuỗi 3 tầng với hệ số phóng đại mỗi tầng $\hat{f} \approx 3,68$, mỗi tầng chỉ phải lái một tải dung vừa phải gấp $\approx 3,7$ lần chính nó, giúp các tầng chuyển mạch rất nhanh và tổng trễ chỉ còn $14,05\tau$ (giảm trễ $72,5\%$).
+   *Đáp chuẩn:* Vì Inverter 1X có kích thước quá nhỏ, nỗ lực điện $H = 50$ làm thời gian xả dòng bị kéo dài nghiêm trọng ($D = 51\tau$). Khi chèn chuỗi 3 tầng với hệ số phóng đại mỗi tầng $\hat{f} \approx 3,68$, mỗi tầng chỉ phải lái một tải dung vừa phải gấp $\approx 3,7$ lần chính nó, giúp các tầng chuyển mạch rất nhanh và tổng trễ chỉ còn $14,05\tau$ (giảm trễ 72,5%).
 5. *Hỏi:* "Tính chất 'đáy phẳng' của hàm tối ưu chuỗi đệm có ý nghĩa thực tế gì đối với kỹ sư vi mạch?"  
-   *Đáp chuẩn:* Đường cong trễ theo số tầng $N$ có đáy rất phẳng quanh điểm cực tiểu. Ví dụ với $H=50$, trễ của $N=4$ ($14,64\tau$) chỉ chậm hơn $N=3$ ($14,05\tau$) có $4\%$. Điều này cho phép kỹ sư linh hoạt chọn $N=4$ nếu cần giữ nguyên pha tín hiệu logic mà không sợ làm suy thoái tốc độ của toàn mạch.
+   *Đáp chuẩn:* Đường cong trễ theo số tầng $N$ có đáy rất phẳng quanh điểm cực tiểu. Ví dụ với $H=50$, trễ của $N=4$ ($14,64\tau$) chỉ chậm hơn $N=3$ ($14,05\tau$) có 4%. Điều này cho phép kỹ sư linh hoạt chọn $N=4$ nếu cần giữ nguyên pha tín hiệu logic mà không sợ làm suy thoái tốc độ của toàn mạch.

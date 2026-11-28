@@ -46,7 +46,7 @@ Trong đó:
 
   $$f_{max,ideal} = \frac{1}{T_{clk,min}} = \frac{1}{520 \times 10^{-12}\,\text{s}} \approx 1.92\,\text{GHz}$$
 
-- **Chu kỳ xung nhịp thực tế sau Layout PEX (Trễ tăng $\approx 35\%$ do ký sinh):**
+- **Chu kỳ xung nhịp thực tế sau Layout PEX (Trễ tăng $\approx 35$% do ký sinh):**
 
   $$T_{clk,pex} \approx 520.0 \times 1.35 \approx 702.0\,\text{ps}$$
 
@@ -70,7 +70,7 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 - **Giải pháp Thiết kế Vòng Cấp Nguồn Kép (Dual Power Ring):**
   * Bao bọc toàn bộ chu vi chip bằng 2 vòng kim loại siêu rộng: Vòng ngoài $V_{DD}$ và Vòng trong $GND$ sử dụng lớp kim loại dầy **Metal 2 và Metal 1 chập song song**.
   * Dòng điện từ các Pad nguồn được phân tán đều theo hai nhánh vòng tròn khép kín, làm giảm điện trở tương đương của mạng nguồn xuống dưới $1.0\,\Omega$.
-  * Phân nhánh các thanh kim loại ngang (Power Straps) đan lưới (Power Mesh) vào tận từng hàng tế bào, triệt tiêu $IR\text{-}drop < 50\,\text{mV}$ ($< 1\% V_{DD}$).
+  * Phân nhánh các thanh kim loại ngang (Power Straps) đan lưới (Power Mesh) vào tận từng hàng tế bào, triệt tiêu $IR\text{-}drop < 50\,\text{mV}$ ($<$ 1% $V_{DD}$).
 
 ---
 
@@ -78,12 +78,12 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 
 | Khối chức năng con | Cấu trúc mạch chi tiết | Số Transistor | Tỉ lệ phần cứng |
 | :--- | :--- | :---: | :---: |
-| **Khối Số học (Arithmetic)** | Bộ cộng nhanh `CLA_ADDER_4B` (4 PG + 1 CLG + 4 Sum) | **$134\,\text{T}$** | $37.4\%$ |
-| **Khối Logic (4-bit)** | 4 cổng AND ($24\text{T}$) + 4 cổng OR ($24\text{T}$) + 4 cổng XOR ($24\text{T}$) | **$72\,\text{T}$** | $20.1\%$ |
-| **Khối Dồn kênh (Multiplexer)** | 4 bit dồn kênh `MUX4_TG` (mỗi bit 16 Transistors) | **$64\,\text{T}$** | $17.9\%$ |
-| **Khối Thanh ghi ngõ ra (Register)** | 4 tế bào Master-Slave D-Flip-Flop `DFF_MS_X1` | **$72\,\text{T}$** | $20.1\%$ |
-| **Khối Cờ trạng thái (Flags)** | Cổng NOR4 cho cờ Zero ($8\text{T}$) + DFF chốt cờ Carry ($8\text{T}$) | **$16\,\text{T}$** | $4.5\%$ |
-| **TỔNG CỘNG TOÀN CHIP** | **Vi mạch 4-bit Registered ALU hoàn chỉnh** | **$358\,\text{T}$** | **$100.0\%$** |
+| **Khối Số học (Arithmetic)** | Bộ cộng nhanh `CLA_ADDER_4B` (4 PG + 1 CLG + 4 Sum) | **$134\,\text{T}$** | 37.4% |
+| **Khối Logic (4-bit)** | 4 cổng AND ($24\text{T}$) + 4 cổng OR ($24\text{T}$) + 4 cổng XOR ($24\text{T}$) | **$72\,\text{T}$** | 20.1% |
+| **Khối Dồn kênh (Multiplexer)** | 4 bit dồn kênh `MUX4_TG` (mỗi bit 16 Transistors) | **$64\,\text{T}$** | 17.9% |
+| **Khối Thanh ghi ngõ ra (Register)** | 4 tế bào Master-Slave D-Flip-Flop `DFF_MS_X1` | **$72\,\text{T}$** | 20.1% |
+| **Khối Cờ trạng thái (Flags)** | Cổng NOR4 cho cờ Zero ($8\text{T}$) + DFF chốt cờ Carry ($8\text{T}$) | **$16\,\text{T}$** | 4.5% |
+| **TỔNG CỘNG TOÀN CHIP** | **Vi mạch 4-bit Registered ALU hoàn chỉnh** | **$358\,\text{T}$** | **100.0%** |
 
 ---
 
@@ -123,9 +123,9 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 
 | Đại lượng kiểm tra cấp Chip | Giá trị Pre-layout | Giá trị Post-layout PEX | Đánh giá mức độ ảnh hưởng |
 | :--- | :---: | :---: | :--- |
-| **Sụt áp VDD trên Power Ring ($IR\text{-}drop$)** | $0.0\,\text{mV}$ (Nguồn lý tưởng) | **$42.6\,\text{mV}$** | Chỉ chiếm $0.85\% V_{DD}$ (Đạt chuẩn $< 5\%$) |
-| **Trễ Clock-to-Q ($t_{c-q}$)** | $118.5\,\text{ps}$ | **$142.0\,\text{ps}$** | Tăng $+19.8\%$ do ký sinh chân Pad |
-| **Trễ đường tới hạn toàn vi mạch** | $295.0\,\text{ps}$ | **$385.0\,\text{ps}$** | Tăng $+30.5\%$ do Metal1/Metal2 routing |
+| **Sụt áp VDD trên Power Ring ($IR\text{-}drop$)** | $0.0\,\text{mV}$ (Nguồn lý tưởng) | **$42.6\,\text{mV}$** | Chỉ chiếm 0.85% $V_{DD}$ (Đạt chuẩn $< 5$%) |
+| **Trễ Clock-to-Q ($t_{c-q}$)** | $118.5\,\text{ps}$ | **$142.0\,\text{ps}$** | Tăng +19.8% do ký sinh chân Pad |
+| **Trễ đường tới hạn toàn vi mạch** | $295.0\,\text{ps}$ | **$385.0\,\text{ps}$** | Tăng +30.5% do Metal1/Metal2 routing |
 | **Tần số xung nhịp tối đa thực tế ($f_{max}$)** | $1.92\,\text{GHz}$ | **$1.42\,\text{GHz}$** | **Đạt và vượt xa mục tiêu $1.0\,\text{GHz}$** |
 
 ---
@@ -148,7 +148,7 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 ### 2. Các Lỗi Thiết Kế Phổ Biến Sinh Viên Hay Gặp Trong Bài Capstone
 
 1. **Quên đồng bộ hóa tín hiệu chọn lệnh (`OP[1:0]`):** Tín hiệu `OP` chuyển trạng thái cùng lúc với dữ liệu nhưng không được chốt qua thanh ghi, dẫn đến việc ngõ ra của MUX bị méo mó trước khi DFF kịp chốt.
-2. **Kích thước dây nguồn trong vùng Core quá bé:** Sinh viên dùng dây Metal 1 kích thước tối thiểu ($W = 3\lambda = 0.9\,\mu\text{m}$) để cấp nguồn cho cả 358 transistor, dẫn đến sụt áp $IR\text{-}drop > 500\,\text{mV}$ ($> 10\% V_{DD}$), khiến mạch chạy sai chức năng ở tần số cao.
+2. **Kích thước dây nguồn trong vùng Core quá bé:** Sinh viên dùng dây Metal 1 kích thước tối thiểu ($W = 3\lambda = 0.9\,\mu\text{m}$) để cấp nguồn cho cả 358 transistor, dẫn đến sụt áp $IR\text{-}drop > 500\,\text{mV}$ ($>$ 10% $V_{DD}$), khiến mạch chạy sai chức năng ở tần số cao.
 3. **Hiện tượng Clock Skew giữa các bit trong thanh ghi ngõ ra:** Đường phân phối xung nhịp `CLK` đi dây hình nhánh dài không cân bằng khiến bit 0 nhận xung nhịp trước bit 3 tới $80\,\text{ps}$, gây vi phạm thời gian giữ (Hold Time Violation) tại một số bit.
 4. **Vi phạm quy tắc chân Pad / I/O Pin:** Quên gán Export đầy đủ hoặc đặt tên chân Export ở Layout không khớp với Schematic (ví dụ `out[3]` viết thành `OUT3`), dẫn đến lỗi LVS chân cổng (Port Mismatch).
 
@@ -160,7 +160,7 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 *Đáp án chuẩn:* Để ngăn chặn hiện tượng lan truyền xung kim (Glitch/Hazard) và đảm bảo tính xác định về mặt thời gian (Determinism). Trong quá trình tính toán tổ hợp, sự chênh lệch đường trễ giữa các bộ cộng và khối logic tạo ra hàng loạt các trạng thái giả quá độ. Thanh ghi ngõ ra chốt dữ liệu theo xung nhịp `CLK`, đảm bảo rằng dữ liệu xuất ra bus chỉ được cập nhật khi toàn bộ các mạch tổ hợp bên trong đã hoàn tất chuyển mạch và đạt trạng thái ổn định vững chắc.
 
 **Câu 2: Phân tích các thành phần cấu thành nên chu kỳ xung nhịp tối thiểu $T_{clk,min}$ của vi mạch ALU 4-bit? Làm thế nào để nâng cao tần số $f_{max}$ hơn nữa?**  
-*Đáp án chuẩn:* $T_{clk,min} = t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$. Trong đó thành phần chiếm tỉ trọng lớn nhất là trễ mạch tổ hợp $t_{comb,max} = t_{CLA4} + t_{MUX4} \approx 295\,\text{ps}$ (chiếm gần $60\%$ chu kỳ). Để nâng cao $f_{max}$ hơn nữa, ta có thể áp dụng kỹ thuật đường ống hóa (Pipelining): Chèn thêm một tầng thanh ghi trung gian giữa khối CLA4 và khối MUX4:1, chia đôi đường trễ tổ hợp và cho phép tăng tần số lên gấp gần $1.8$ lần.
+*Đáp án chuẩn:* $T_{clk,min} = t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$. Trong đó thành phần chiếm tỉ trọng lớn nhất là trễ mạch tổ hợp $t_{comb,max} = t_{CLA4} + t_{MUX4} \approx 295\,\text{ps}$ (chiếm gần 60% chu kỳ). Để nâng cao $f_{max}$ hơn nữa, ta có thể áp dụng kỹ thuật đường ống hóa (Pipelining): Chèn thêm một tầng thanh ghi trung gian giữa khối CLA4 và khối MUX4:1, chia đôi đường trễ tổ hợp và cho phép tăng tần số lên gấp gần $1.8$ lần.
 
 **Câu 3: Mục đích kỹ thuật của việc thiết kế Vòng cấp nguồn (Power Ring) bao quanh chip là gì?**  
 *Đáp án chuẩn:* Nhằm đảm bảo toàn vẹn nguồn điện (Power Integrity) và cực tiểu hóa hiện tượng sụt áp động $IR\text{-}Drop$. Power Ring tạo ra một mạng lưới kim loại trở kháng cực thấp bao bọc chu vi chip, cho phép dòng điện động đỉnh từ các Pad nguồn được phân tán đều theo nhiều hướng song song tới các tế bào bên trong, ngăn chặn hiện tượng sụt nguồn cục bộ tại lõi chip và hiện tượng nảy đất (Ground Bounce).

@@ -47,7 +47,7 @@ $$V_M = \frac{V_{thn} + \sqrt{r} (V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
   $$\left(\frac{W}{L}\right)_p = 3 \cdot 1,1211 \cdot \left(\frac{W}{L}\right)_n \approx \mathbf{3,363} \cdot \left(\frac{W}{L}\right)_n$$
   Với $W_n = 4\lambda_{DR} = 1,20\,\mu\text{m} \implies W_p = 13,45\lambda_{DR} \approx 4,04\,\mu\text{m}$.
 - **Lý do chọn $W_p = 12\lambda_{DR} = 3,60\,\mu\text{m}$ ($W_p/W_n = 3,0$):**  
-  Do quy tắc thiết kế yêu cầu số nguyên $\lambda_{DR}$, việc chọn $W_p = 12\lambda_{DR}$ và $W_n = 4\lambda_{DR}$ là giải pháp tối ưu thực tế, chấp nhận độ lệch $V_M$ chỉ $2\%$ ($-50\,\text{mV}$) để đạt được tính mô-đun hóa và đối xứng ô chuẩn khi xếp layout.
+  Do quy tắc thiết kế yêu cầu số nguyên $\lambda_{DR}$, việc chọn $W_p = 12\lambda_{DR}$ và $W_n = 4\lambda_{DR}$ là giải pháp tối ưu thực tế, chấp nhận độ lệch $V_M$ chỉ 2% ($-50\,\text{mV}$) để đạt được tính mô-đun hóa và đối xứng ô chuẩn khi xếp layout.
 
 ### c. Bảng đối chiếu điểm chuyển mạch $V_M$
 | $W_p / W_n$ | Tỉ số $r$ | $V_M$ Suy dẫn bậc 2 | $V_M$ SPICE Level 3 | Cột Đo thực nghiệm | Nhận xét sư phạm |
@@ -84,11 +84,11 @@ $$V_M = \frac{V_{thn} + \sqrt{r} (V_{DD} - |V_{thp}|)}{1 + \sqrt{r}}$$
 ---
 
 ## 1.4 Giải thích bản chất trễ $t_{pd}$ và sai lệch với mô hình $0,69 \cdot RC$
-- **Nguồn gốc công thức $0,69$:** Xuất phát từ phương trình vi phân phóng nạp mạch RC tuyến tính thuần túy: $V(t) = V_{DD} \cdot e^{-t/RC}$. Tại ngưỡng $50\%$ ($V(t) = 0,5 V_{DD}$), ta có $e^{-t/RC} = 0,5 \implies t_{50\%} = RC \ln 2 \approx 0,693 \cdot RC$.
+- **Nguồn gốc công thức $0,69$:** Xuất phát từ phương trình vi phân phóng nạp mạch RC tuyến tính thuần túy: $V(t) = V_{DD} \cdot e^{-t/RC}$. Tại ngưỡng $50$ ($V(t) = 0,5 V_{DD}$), ta có $e^{-t/RC} = 0,5 \implies t_{50} = RC \ln 2 \approx 0,693 \cdot RC$.
 - **Tại sao số đo SPICE luôn lớn hơn $\sim 1,5$ đến $1,8$ lần:**  
   Điện trở $R_{on,n} = 969\,\Omega$ được tính tại điểm cuối của quá trình xả ($V_{DS} \to 0$, vùng tuyến tính sâu). Tuy nhiên, khi ngõ vào chuyển từ $0 \to 5\,\text{V}$, tụ tải $C_L$ đang ở mức $5\,\text{V}$, làm NMOS hoạt động trong vùng **Bão hòa** trong suốt giai đoạn đầu ($V_{out} > 5,0 - 0,7 = 4,3\,\text{V}$) với dòng bão hòa bị chặn ở mức:
   $$I_{sat,n} \approx \frac{1}{2} K'_n \left(\frac{W}{L}\right)_n (V_{DD} - V_{thn})^2 = \frac{1}{2} (120\mu) (2) (4,3)^2 \approx 2,22\,\text{mA}$$
-  Để xả điện áp từ $5,0\,\text{V}$ xuống ngưỡng $50\%$ ($2,5\,\text{V}$), thời gian xả dòng xấp xỉ bằng:
+  Để xả điện áp từ $5,0\,\text{V}$ xuống ngưỡng $50$ ($2,5\,\text{V}$), thời gian xả dòng xấp xỉ bằng:
   $$t \approx \frac{C_L \cdot \Delta V}{I_{sat,n}} = \frac{50\,\text{fF} \cdot 2,5\,\text{V}}{2,22\,\text{mA}} \approx 56,3\,\text{ps}$$
   Con số $56,3\,\text{ps}$ này khớp chặt chẽ với kết quả tích phân giải tích số ($49,8\,\text{ps}$) và SPICE Level 3 ($50 - 56\,\text{ps}$), cao hơn rõ rệt so với con số tính nhanh $0,69 \cdot 969\,\Omega \cdot 50\,\text{fF} = 33,6\,\text{ps}$.
 
@@ -147,7 +147,7 @@ Buổi học thực hành Lab 1 là bước chuyển bản lề từ mô phỏng
 2. Khi chọn $W_n = 4\lambda_{DR} = 1,2\,\mu\text{m}$ và $W_p = 12\lambda_{DR} = 3,6\,\mu\text{m}$ ($W_p/W_n = 3,0$):
    $$r = \frac{40 \times (3,6/0,6)}{120 \times (1,2/0,6)} = \frac{240}{240} = \mathbf{1,0000}$$
    $$V_M = \frac{0,70 + 1,0 \times (5,0 - 0,80)}{1 + 1,0} = \frac{4,90}{2} = \mathbf{2,450\,\text{V}}$$
-   Độ lệch so với $2,50\,\text{V}$ là: $|2,45 - 2,50| = \mathbf{0,050\,\text{V}} = 50\,\text{mV}$ (sai lệch tương đối $2,0\%$).
+   Độ lệch so với $2,50\,\text{V}$ là: $|2,45 - 2,50| = \mathbf{0,050\,\text{V}} = 50\,\text{mV}$ (sai lệch tương đối 2,0%).
 
 ### P3. Ước lượng điện trở dẫn $R_{on}$ và trễ $0,69 R C$
 - $R_{on,n} = \frac{1}{(240 \times 10^{-6}) \times (5,0 - 0,70)} = \mathbf{969,0\,\Omega}$.
@@ -234,7 +234,7 @@ CL out 0 {CL_val}
 | **$t_{pHL}$ ($C_L = 50\,\text{fF}$)** | $33,58\,\text{ps}$ ($0,69RC$) | $49,80\,\text{ps}$ | **$48 - 55\,\text{ps}$** | $70 - 78\,\text{ps}$ | |
 | **$t_{pLH}$ ($C_L = 50\,\text{fF}$)** | $34,37\,\text{ps}$ ($0,69RC$) | $51,91\,\text{ps}$ | **$50 - 58\,\text{ps}$** | $73 - 82\,\text{ps}$ | |
 | **$t_{pd}$ ($C_L = 50\,\text{fF}$)** | $33,98\,\text{ps}$ ($0,69RC$) | $50,86\,\text{ps}$ | **$49 - 56\,\text{ps}$** | $72 - 80\,\text{ps}$ | |
-| **Độ tăng trễ PEX vs Pre** | — | $+47,0\%$ | — | **$+42 - 48\%$** | |
+| **Độ tăng trễ PEX vs Pre** | — | +47,0% | — | **+42 - 48%** | |
 
 ---
 
@@ -250,7 +250,7 @@ CL out 0 {CL_val}
 
 2. **Cơ chế vật lý của tụ khuếch tán má $C_{db}$ và ảnh hưởng khi tải lớn:**
    - Vùng khuếch tán má tạo tiếp giáp $p-n$ phân cực ngược với đế/giếng, hình thành tụ tiếp giáp phẳng $C_{bottom} = CJ \cdot AD$ và tụ thành bên $C_{sidewall} = CJSW \cdot PD$.
-   - Khi tải ngoài rất lớn ($C_L = 1\,\text{pF} = 1000\,\text{fF}$): Tụ ký sinh $C_{par} \approx 23,5\,\text{fF}$ chỉ chiếm $\approx 2,3\%$ tổng tải. Lúc này tải ngoài chiếm ưu thế hoàn toàn, nên độ tăng trễ phần trăm sau PEX trở nên không đáng kể.
+   - Khi tải ngoài rất lớn ($C_L = 1\,\text{pF} = 1000\,\text{fF}$): Tụ ký sinh $C_{par} \approx 23,5\,\text{fF}$ chỉ chiếm $\approx 2,3$% tổng tải. Lúc này tải ngoài chiếm ưu thế hoàn toàn, nên độ tăng trễ phần trăm sau PEX trở nên không đáng kể.
 
 3. **Cơ chế chống Latch-up của Guard Rings:**
    - Các tiếp xúc Tap rời rạc chỉ dập điện thế cục bộ tại một điểm. Dòng hạt dẫn thiểu số vẫn có thể khuếch tán ngang và kích hoạt BJT ký sinh ở xa.

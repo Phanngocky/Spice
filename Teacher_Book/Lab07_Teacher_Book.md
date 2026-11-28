@@ -59,10 +59,10 @@ Do `Mn_top` nạp $C_{int}$ theo kiểu source-follower, nó tự ngắt khi $V_
 #### c. Tỉ số dòng Keeper / PDN đơn ở $V_X = 2,5\,\text{V}$
 - Một nhánh PDN đơn ($4\lambda$ nối tiếp foot $8\lambda$, $R_{eq} \approx 969 + 485 = 1\,454\,\Omega$) có dòng xấp xỉ $I_{PDN} \approx \frac{2,5}{1454} \approx \mathbf{1,72\,\text{mA}}$.
 - Keeper PMOS ($L=2\lambda$, ở $V_G=0, V_{SD}=2,5\text{V}$):
-  * $W_{kp} = 2\lambda$: $I_{kp} \approx 0,30\,\text{mA}$ ($17\%$ $I_{PDN}$)
-  * $W_{kp} = 4\lambda$: $I_{kp} \approx 0,59\,\text{mA}$ ($34\%$ $I_{PDN}$)
-  * $W_{kp} = 6\lambda$: $I_{kp} \approx 0,89\,\text{mA}$ ($51\%$ $I_{PDN}$)
-  * $W_{kp} = 8\lambda$: $I_{kp} \approx 1,18\,\text{mA}$ ($69\%$ $I_{PDN}$ $\implies$ nguy cơ cao PDN không thắng nổi Keeper, `.meas` báo `FAILED`!).
+  * $W_{kp} = 2\lambda$: $I_{kp} \approx 0,30\,\text{mA}$ (17% $I_{PDN}$)
+  * $W_{kp} = 4\lambda$: $I_{kp} \approx 0,59\,\text{mA}$ (34% $I_{PDN}$)
+  * $W_{kp} = 6\lambda$: $I_{kp} \approx 0,89\,\text{mA}$ (51% $I_{PDN}$)
+  * $W_{kp} = 8\lambda$: $I_{kp} \approx 1,18\,\text{mA}$ (69% $I_{PDN}$ $\implies$ nguy cơ cao PDN không thắng nổi Keeper, `.meas` báo `FAILED`!).
 
 ---
 

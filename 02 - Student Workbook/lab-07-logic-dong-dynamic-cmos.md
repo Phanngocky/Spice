@@ -271,7 +271,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 | Hiện tượng lỗi | Nguyên nhân gốc rễ | Cách khắc phục nhanh |
 | :--- | :--- | :--- |
-| **Lệnh `.meas` báo `Measurement FAILED` ở mức $W_{kp} = 8\lambda$** | Dòng nạp của Keeper PMOS quá lớn so với nhánh PDN đơn ($\approx 69\%$), khiến nút $X$ không kéo xuống dưới ngưỡng $V_M$ nên $Y$ không lật. | Đây là **kết quả vật lý hợp lệ** chứng minh Keeper contention quá mức; ghi nhận trạng thái thất bại vào bảng. |
+| **Lệnh `.meas` báo `Measurement FAILED` ở mức $W_{kp} = 8\lambda$** | Dòng nạp của Keeper PMOS quá lớn so với nhánh PDN đơn ($\approx 69$%), khiến nút $X$ không kéo xuống dưới ngưỡng $V_M$ nên $Y$ không lật. | Đây là **kết quả vật lý hợp lệ** chứng minh Keeper contention quá mức; ghi nhận trạng thái thất bại vào bảng. |
 | **Thử Charge Sharing trên cổng Domino OR4 thấy $V(x)$ không hề sụt** | Mạng OR4 mắc song song, khi $M_{eval}$ mở trong pha Evaluate thì nút `n_eval` nối đất, không có nút nội cô lập. | Phải dùng mạch thử **2-NMOS nối tiếp** (`Mn_top`, `Mn_bot`) như hướng dẫn trong Ex7.1. |
 | **Nút động $X$ bị trôi áp bất thường khi tần số xung nhịp thấp** | Do bước tích phân quá lớn hoặc dòng rò nút động làm mất điện tích ở chu kỳ dài. | Đặt bước tích phân chặt `.tran 0 25n 0 10p` và kiểm tra nối đúng Keeper PMOS hồi tiếp từ `y`. |
 

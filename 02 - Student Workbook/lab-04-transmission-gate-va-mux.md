@@ -329,7 +329,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 ## 8. BẢNG KIỂM CHỨNG VÀ ĐỐI CHUẨN KỸ THUẬT (BENCHMARK)
 
-*(Sinh viên tự đối chiếu kết quả đo của mình với dải giá trị tham chiếu lý thuyết/tiêu chuẩn nghiệm thu dưới đây. Sai số cho phép do đặc trưng mô hình Level 3 và điều kiện sườn xung $\pm 15 - 20\%$).*
+*(Sinh viên tự đối chiếu kết quả đo của mình với dải giá trị tham chiếu lý thuyết/tiêu chuẩn nghiệm thu dưới đây. Sai số cho phép do đặc trưng mô hình Level 3 và điều kiện sườn xung $\pm 15 - 20$%).*
 
 | Thông số kiểm chứng | Dải giá trị kỳ vọng (MOSIS C5N) | Điều kiện kiểm tra |
 | :--- | :---: | :--- |
@@ -360,8 +360,8 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 | Tiêu chí đánh giá | Trọng số | Xuất sắc (8.5 – 10) | Khá (7.0 – 8.4) | Đạt (5.0 – 6.9) | Không đạt (< 5.0) |
 | :--- | :---: | :--- | :--- | :--- | :--- |
-| **1. Chuẩn bị Pre-lab** | **20%** | Giải đúng phương trình điểm cố định (sai số $\le 5\%$), định cỡ đúng `TG_FAST`, điền đủ bảng chân trị MUX4 và vẽ Stick 3 cột Poly hợp lệ. | Tính đúng body effect nhưng sai định cỡ `TG_FAST` hoặc Stick Diagram thiếu kết nối nhỏ. | Có bài chuẩn bị nhưng bỏ qua body effect của PMOS hoặc thiếu bảng chân trị. | Không hoàn thành Pre-lab hoặc sao chép. |
-| **2. Khảo sát Pass Transistor & $R_{TG}$ (Ex4.1)** | **20%** | Đo đủ 4 nhánh với cửa sổ `.meas` chuẩn (chênh lệch $\le 15\%$ so với benchmark) và vẽ thành công đường cong $R_{TG}(V_{in})$. | Đo đúng Weak '1'/Weak '0' và TG, nhưng đường cong $R_{TG}(V_{in})$ chưa rõ hoặc thiếu nhánh 4. | Chạy được mô phỏng nhưng mắc lỗi `.meas vmin_pmos = 0V` do quên đặt cửa sổ đo. | Không chạy được mô phỏng LTspice. |
+| **1. Chuẩn bị Pre-lab** | **20%** | Giải đúng phương trình điểm cố định (sai số $\le 5$%), định cỡ đúng `TG_FAST`, điền đủ bảng chân trị MUX4 và vẽ Stick 3 cột Poly hợp lệ. | Tính đúng body effect nhưng sai định cỡ `TG_FAST` hoặc Stick Diagram thiếu kết nối nhỏ. | Có bài chuẩn bị nhưng bỏ qua body effect của PMOS hoặc thiếu bảng chân trị. | Không hoàn thành Pre-lab hoặc sao chép. |
+| **2. Khảo sát Pass Transistor & $R_{TG}$ (Ex4.1)** | **20%** | Đo đủ 4 nhánh với cửa sổ `.meas` chuẩn (chênh lệch $\le 15$% so với benchmark) và vẽ thành công đường cong $R_{TG}(V_{in})$. | Đo đúng Weak '1'/Weak '0' và TG, nhưng đường cong $R_{TG}(V_{in})$ chưa rõ hoặc thiếu nhánh 4. | Chạy được mô phỏng nhưng mắc lỗi `.meas vmin_pmos = 0V` do quên đặt cửa sổ đo. | Không chạy được mô phỏng LTspice. |
 | **3. Schematic & Đo kiểm MUX2/MUX4 (Ex4.2–4.4)** | **25%** | Dựng đúng `tg_gate`, `mux2_tg` (6T), `mux4_tg` (18T); đo đủ 3 đường trễ MUX2, đo được glitch/dòng chồng dẫn khi $D_0 \neq D_1$, đo trễ MUX4. | Dựng đúng schematic và đo đủ 3 đường trễ MUX2, thiếu định lượng ca chồng dẫn hoặc trễ MUX4. | Dựng đúng mạch nhưng chọn pha xung sai nên không đo được $t_{pd(S \to Y)}$. | Mạch MUX sai logic hoặc không xuất được Netlist. |
 | **4. Layout `mux2_tg`, DRC & NCC (Ex4.5)** | **20%** | Layout 3 cột Poly gọn gàng ($W \le 34\lambda$), **0 lỗi DRC**, NCC báo **MATCH** độc lập. | Đạt **0 lỗi DRC** và NCC **MATCH**, kích thước layout còn rộng ($W > 34\lambda$). | Layout hoàn thành nhưng còn $\le 2$ lỗi DRC nhỏ hoặc phải sửa dây mới đạt MATCH. | Không hoàn thành layout hoặc NCC báo MISMATCH. |
 | **5. Post-lab PEX, Elmore & Báo cáo** | **15%** | Tách đủ 3 lần chạy PEX, đo và vẽ đúng đồ thị Elmore $N = 1 \dots 6$ (khớp $O(N^2)$), trả lời thấu đáo 4 câu hỏi thảo luận. | Hoàn thành PEX và chuỗi Elmore nhưng giải thích câu hỏi chuyên sâu chưa đầy đủ. | Chỉ làm phần điền khuyết In-lab, thiếu thí nghiệm chuỗi Elmore hoặc thiếu tách 3 bước PEX. | Nộp thiếu báo cáo hoặc số liệu không khớp file mô phỏng. |

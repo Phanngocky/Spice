@@ -17,7 +17,7 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 3. **Thiết kế Mạch lật D-Flip-Flop Master-Slave (`dff_ms_x1`):** Ghép nối phân cấp 2 tầng D-Latch đối pha ($22$ transistor), phân tích nguyên nhân tồn tại khoảng chồng dẫn ngắn do trễ $\overline{CLK}$ và mối liên hệ trực tiếp với thời gian giữ $t_{hold}$.
 4. **Thực hiện Quét Đặc tính Định thời (Timing Characterization) trên LTspice:**
    - Khởi tạo trạng thái bằng `.ic` để đo chính xác $t_{c-q,LH}$ và $t_{c-q,HL}$.
-   - Quét độ lệch pha $\Delta t$ (tính giữa hai mốc $50\%$–$50\%$) cho cả sườn lên và sườn xuống của $D$ để xác định $t_{setup}$ theo quy ước đẩy trễ $10\%$ (10% push-out).
+   - Quét độ lệch pha $\Delta t$ (tính giữa hai mốc $50$–$50$) cho cả sườn lên và sườn xuống của $D$ để xác định $t_{setup}$ theo quy ước đẩy trễ 10% (10% push-out).
    - Quét mốc $D$ quanh sườn $CLK$ từ $-50\,\text{ps}$ đến $+100\,\text{ps}$ (bước $5\,\text{ps}$) bằng lệnh `.meas FIND` để xác định ngưỡng và dấu của $t_{hold}$, đồng thời quan sát hiện tượng bất ổn định (Metastability).
 5. **Đóng gói IP Tế bào chuẩn:** Tạo Cell Icon `dlatch_x1{ic}` và `dff_ms_x1{ic}` phục vụ khối thanh ghi tích lũy của **Bài 10 (Capstone ALU 4-bit)**.
 
@@ -67,13 +67,13 @@ Mạch chốt D tĩnh gồm 2 cổng truyền ($TG_1, TG_2$) và 3 Inverter ($I_
                             Sườn lên 50% CLK      Q đổi mức 50%
 ```
 
-1. **Thời gian thiết lập ($t_{setup}$):** Khoảng thời gian tối thiểu $D$ phải ổn định **trước** sườn lên $50\%$ của $CLK$ để điện tích nạp/xả qua $TG_{M1}$ kịp lật trạng thái nút $X_M$ qua $I_{M1}$:
+1. **Thời gian thiết lập ($t_{setup}$):** Khoảng thời gian tối thiểu $D$ phải ổn định **trước** sườn lên $50$ của $CLK$ để điện tích nạp/xả qua $TG_{M1}$ kịp lật trạng thái nút $X_M$ qua $I_{M1}$:
    $$t_{setup} \approx t_{pd,TG(M1)} + t_{pd,I(M1)}$$
-   - **Quy ước đo $t_{setup}$ (10% Push-out Rule):** Khi giảm dần $\Delta t = t_{CLK,50\%} - t_{D,50\%}$, trễ $t_{c-q}$ tăng vọt lên (hiệu ứng đẩy trễ — push-out). Theo quy ước thường dùng trong đặc trưng hóa thư viện, $t_{setup}$ là giá trị $\Delta t$ tại điểm $t_{c-q}(\Delta t) = 1.10 \times t_{c-q,nominal}$ (một số hãng dùng ngưỡng 5%).
-2. **Thời gian giữ ($t_{hold}$):** Khoảng thời gian tối thiểu $D$ phải giữ nguyên **sau** sườn lên $50\%$ của $CLK$ cho tới khi $TG_{M1}$ đóng hẳn:
+   - **Quy ước đo $t_{setup}$ (10% Push-out Rule):** Khi giảm dần $\Delta t = t_{CLK,50} - t_{D,50}$, trễ $t_{c-q}$ tăng vọt lên (hiệu ứng đẩy trễ — push-out). Theo quy ước thường dùng trong đặc trưng hóa thư viện, $t_{setup}$ là giá trị $\Delta t$ tại điểm $t_{c-q}(\Delta t) = 1.10 \times t_{c-q,nominal}$ (một số hãng dùng ngưỡng 5%).
+2. **Thời gian giữ ($t_{hold}$):** Khoảng thời gian tối thiểu $D$ phải giữ nguyên **sau** sườn lên $50$ của $CLK$ cho tới khi $TG_{M1}$ đóng hẳn:
    $$t_{hold} \approx t_{pd,INV(CLK)}$$
    - Lưu ý: Khác với $t_{setup}$, **không áp dụng quy tắc đẩy trễ 10% cho $t_{hold}$**. Hold là điều kiện nhị phân (ngõ ra $Q$ giữ đúng giá trị cũ hay bị dữ liệu mới ghi đè sai).
-3. **Trễ từ Xung nhịp đến Ngõ ra ($t_{c-q}$):** Khoảng thời gian từ mốc $50\%$ sườn lên $CLK$ tới mốc $50\%$ ngõ ra $Q$. Đường truyền đầy đủ đi qua bộ đảo xung nhịp, cổng truyền Slave và cặp Inverter ngõ ra ($I_{S1}, I_{S2}$):
+3. **Trễ từ Xung nhịp đến Ngõ ra ($t_{c-q}$):** Khoảng thời gian từ mốc $50$ sườn lên $CLK$ tới mốc $50$ ngõ ra $Q$. Đường truyền đầy đủ đi qua bộ đảo xung nhịp, cổng truyền Slave và cặp Inverter ngõ ra ($I_{S1}, I_{S2}$):
    $$t_{c-q} \approx t_{pd,INV(CLK)} + t_{pd,TG(S1)} + t_{pd,I(S1)} + t_{pd,I(S2)}$$
 4. **Hiện tượng Bất ổn định (Metastability):** Nếu $D$ chuyển mức quá sát trong cửa sổ setup-hold, nút $X_M$ rơi vào trạng thái cân bằng lơ lửng quanh $V_M \approx V_{DD}/2$. Vòng phản hồi cần thời gian giải quyết (resolve time) rất dài và không bị chặn trên về mặt lý thuyết trước khi rơi về 0 hoặc 1.
 5. **Ràng buộc chu kỳ xung nhịp hệ thống:**
@@ -193,7 +193,7 @@ Xuất Netlist `dff_ms_x1`, gắn tải `CL q 0 50fF` và chạy với bước t
    - **Đo $t_{c-q,HL}$:** Khởi tạo $Q=5\text{V}$ (hoặc nạp 1 ở chu kỳ trước), sau đó cho $D=0\text{V}$ trước sườn lên tiếp theo của `CLK`, đo `TARG v(q) VAL=2.5 FALL=1`.
 
 2. **Quét xác định $t_{setup}$ (cho cả $D$ lên và $D$ xuống):**
-   - Định nghĩa $\Delta t = t_{CLK,50\%} - t_{D,50\%}$ (giữa hai mốc $2.5\,\text{V}$). Nếu `CLK` và `D` có cùng $t_r = t_f = 0.1\,\text{ns}$ thì khoảng dịch `delay` đúng bằng $\Delta t$.
+   - Định nghĩa $\Delta t = t_{CLK,50} - t_{D,50}$ (giữa hai mốc $2.5\,\text{V}$). Nếu `CLK` và `D` có cùng $t_r = t_f = 0.1\,\text{ns}$ thì khoảng dịch `delay` đúng bằng $\Delta t$.
    - Quét thô $\Delta t$ từ $500\,\text{ps}$ xuống $20\,\text{ps}$, sau đó quét mịn quanh vùng sườn dốc (knee):
      ```spice
      .step param dt LIST 0.5n 0.3n 0.2n 0.15n 0.12n 0.10n 0.08n 0.06n 0.04n 0.02n
@@ -213,7 +213,7 @@ Xuất Netlist `dff_ms_x1`, gắn tải `CL q 0 50fF` và chạy với bước t
    - Chọn một giá trị $\Delta t$ sát ngay biên giới thất bại (ví dụ tại ranh giới chuyển từ giữ được sang mất dữ liệu khi quét $t_{setup}$ hoặc $t_{hold}$), phóng to đồ thị nút nội $V(Q_M)$ và ngõ ra $V(q)$ để ghi nhận hiện tượng điện áp trôi lơ lửng quanh $V_{DD}/2$ một khoảng thời gian dài trước khi rơi về 0 hoặc 5 V.
 
 - **Sản phẩm Ex5.4:** Bảng số liệu $t_{c-q}$ (LH, HL), đồ thị push-out xác định $t_{setup}$ (LH, HL), ngưỡng $t_{hold}$ và ảnh chụp dạng sóng Metastability.
-- **Câu hỏi kiểm tra nhanh:** Tại sao trong phép đo $t_{hold}$ ta phải dùng `.meas FIND v(q) AT=...` thay vì dùng tiêu chí đẩy trễ $10\%$ như ở $t_{setup}$?
+- **Câu hỏi kiểm tra nhanh:** Tại sao trong phép đo $t_{hold}$ ta phải dùng `.meas FIND v(q) AT=...` thay vì dùng tiêu chí đẩy trễ 10% như ở $t_{setup}$?
 
 ---
 

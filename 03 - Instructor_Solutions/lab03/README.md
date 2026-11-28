@@ -23,19 +23,19 @@ Thư mục này chứa đầy đủ các tệp SPICE Netlist hoàn chỉnh đã 
 | Thông số đo đạc | Giá trị Lý thuyết Giải tích | Mô phỏng Pre-layout | Mô phỏng Post-layout (PEX) | Ghi chú đánh giá chuyên môn |
 | :--- | :---: | :---: | :---: | :--- |
 | **Kích thước AOI21** | NMOS: $8\lambda, 8\lambda, 4\lambda$ / PMOS: $24\lambda \times 3$ | Đúng kích thước | Đúng kích thước | $R_{eq,N} \approx 969\,\Omega, R_{eq,P} \approx 992\,\Omega$ |
-| **Chức năng logic AOI21** | 8 trạng thái $Y = \overline{(A \cdot B) + C}$ | Đạt $100\%$ | Đạt $100\%$ | Lấy mẫu tại cuối chu kỳ để tránh glitch |
+| **Chức năng logic AOI21** | 8 trạng thái $Y = \overline{(A \cdot B) + C}$ | Đạt 100% | Đạt 100% | Lấy mẫu tại cuối chu kỳ để tránh glitch |
 | **Logical Effort ngõ A ($g_A$)** | $2,000$ ($32\lambda / 16\lambda$) | $1,85 - 2,15$ | $1,90 - 2,20$ | Đối chuẩn trực tiếp với `INV_X1` |
-| **Logical Effort ngõ C ($g_C$)** | $1,750$ ($28\lambda / 16\lambda$) | $1,62 - 1,88$ | $1,65 - 1,92$ | Nhẹ tải hơn ngõ A $12,5\%$ |
+| **Logical Effort ngõ C ($g_C$)** | $1,750$ ($28\lambda / 16\lambda$) | $1,62 - 1,88$ | $1,65 - 1,92$ | Nhẹ tải hơn ngõ A 12,5% |
 | **Trễ ký sinh ($p_{AOI21}$)** | $2,250$ ($36\lambda / 16\lambda$) | $1,90 - 2,40$ | $2,40 - 2,90$ | Chuẩn hóa theo $p_{inv}$ |
 | **Trễ worst-case ngõ C ($50\text{fF}$)** | $34,4\,\text{ps}$ | $52 - 62\,\text{ps}$ | $74 - 88\,\text{ps}$ | $A=1, B=0$ (chỉ 1 PMOS nhánh song song dẫn) |
 | **Trễ ngõ C khi $A=B=0$ ($50\text{fF}$)** | $25,7\,\text{ps}$ | $38 - 46\,\text{ps}$ | $55 - 65\,\text{ps}$ | Nhanh hơn do 2 PMOS cùng dẫn song song |
 | **Trễ lái trực tiếp 1X ($1\text{pF}$)** | $\approx 0,68\,\text{ns}$ ($51\tau$) | $0,95 - 1,25\,\text{ns}$ | $1,05 - 1,35\,\text{ns}$ | Sườn xung bị kéo dài rất lớn |
-| **Trễ chuỗi đệm 3 tầng ($1\text{pF}$)** | $\approx 0,19\,\text{ns}$ ($14,05\tau$) | $0,28 - 0,36\,\text{ns}$ | $0,35 - 0,45\,\text{ns}$ | **Giảm trễ $> 70\%$ (nhanh hơn $> 3$ lần)** |
-| **Tổng bề rộng kênh $\sum W$** | $92\lambda_{DR}$ ($27,6\,\mu\text{m}$) | $27,6\,\mu\text{m}$ | $27,6\,\mu\text{m}$ | Nhỏ hơn $17,86\%$ so với cổng rời ($112\lambda$) |
-| **Số lượng Transistor** | 6 Transistors | 6 Transistors | 6 Transistors | Giảm $40\%$ so với cổng rời (10T) |
+| **Trễ chuỗi đệm 3 tầng ($1\text{pF}$)** | $\approx 0,19\,\text{ns}$ ($14,05\tau$) | $0,28 - 0,36\,\text{ns}$ | $0,35 - 0,45\,\text{ns}$ | **Giảm trễ $> 70$% (nhanh hơn $> 3$ lần)** |
+| **Tổng bề rộng kênh $\sum W$** | $92\lambda_{DR}$ ($27,6\,\mu\text{m}$) | $27,6\,\mu\text{m}$ | $27,6\,\mu\text{m}$ | Nhỏ hơn 17,86% so với cổng rời ($112\lambda$) |
+| **Số lượng Transistor** | 6 Transistors | 6 Transistors | 6 Transistors | Giảm 40% so với cổng rời (10T) |
 | **Diện tích Layout hình học** | N/A | $\approx 180 - 210\,\mu\text{m}^2$ | $\approx 180 - 210\,\mu\text{m}^2$ | Thứ tự $C-A-B$, $H_{cell} = 60\lambda$ |
 | **DRC MOSIS Errors** | 0 | 0 | 0 | Bắt buộc 0 lỗi |
-| **LVS Comparison (NCC)** | N/A | N/A | **MATCH** | Trùng khớp sơ đồ $100\%$ |
+| **LVS Comparison (NCC)** | N/A | N/A | **MATCH** | Trùng khớp sơ đồ 100% |
 
 ---
 
@@ -48,6 +48,6 @@ Thư mục này chứa đầy đủ các tệp SPICE Netlist hoàn chỉnh đã 
 3. *Hỏi:* "Tại sao thứ tự dải Polysilicon $C - A - B$ lại tối ưu hơn thứ tự $A - B - C$ khi vẽ Layout cổng AOI21?"  
    *Trả lời chuẩn:* Vì với thứ tự $C - A - B$, cực má của $M_{NC}$ và $M_{NA}$ trên dải N-Active nằm kề sát nhau, cho phép dùng chung một tiếp xúc Contact ngõ ra `out` (Abutment). Ngược lại với thứ tự $A - B - C$, cực Out bị tách rời ra hai đầu dải khuếch tán, không thể chia sẻ cực má chung.
 4. *Hỏi:* "Trong bài toán chuỗi đệm lái tải nặng $1\,\text{pF}$, tại sao chuỗi 3 tầng lại nhanh hơn việc lái trực tiếp bằng Inverter 1X tới hơn 3 lần?"  
-   *Trả lời chuẩn:* Vì Inverter 1X có kích thước quá nhỏ, nỗ lực điện $H = 50$ làm thời gian xả dòng bị kéo dài nghiêm trọng ($D = 51\tau$). Khi chèn chuỗi 3 tầng với hệ số phóng đại mỗi tầng $\hat{f} \approx 3,68$, mỗi tầng chỉ phải lái một tải dung vừa phải gấp $\approx 3,7$ lần chính nó, giúp các tầng chuyển mạch rất nhanh và tổng trễ chỉ còn $14,05\tau$ (giảm trễ $72,5\%$).
+   *Trả lời chuẩn:* Vì Inverter 1X có kích thước quá nhỏ, nỗ lực điện $H = 50$ làm thời gian xả dòng bị kéo dài nghiêm trọng ($D = 51\tau$). Khi chèn chuỗi 3 tầng với hệ số phóng đại mỗi tầng $\hat{f} \approx 3,68$, mỗi tầng chỉ phải lái một tải dung vừa phải gấp $\approx 3,7$ lần chính nó, giúp các tầng chuyển mạch rất nhanh và tổng trễ chỉ còn $14,05\tau$ (giảm trễ 72,5%).
 5. *Hỏi:* "Tính chất 'đáy phẳng' của hàm tối ưu chuỗi đệm có ý nghĩa thực tế gì đối với kỹ sư vi mạch?"  
-   *Trả lời chuẩn:* Đường cong trễ theo số tầng $N$ có đáy rất phẳng quanh điểm cực tiểu. Ví dụ với $H=50$, trễ của $N=4$ ($14,64\tau$) chỉ chậm hơn $N=3$ ($14,05\tau$) có $4\%$. Điều này cho phép kỹ sư linh hoạt chọn $N=4$ nếu cần giữ nguyên pha tín hiệu logic mà không sợ làm suy thoái tốc độ của toàn mạch.
+   *Trả lời chuẩn:* Đường cong trễ theo số tầng $N$ có đáy rất phẳng quanh điểm cực tiểu. Ví dụ với $H=50$, trễ của $N=4$ ($14,64\tau$) chỉ chậm hơn $N=3$ ($14,05\tau$) có 4%. Điều này cho phép kỹ sư linh hoạt chọn $N=4$ nếu cần giữ nguyên pha tín hiệu logic mà không sợ làm suy thoái tốc độ của toàn mạch.

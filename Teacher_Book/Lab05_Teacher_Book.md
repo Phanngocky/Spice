@@ -18,9 +18,9 @@
    - **Mạch tuần tự (Sequential Logic):** Khác với mạch tổ hợp (ngõ ra chỉ phụ thuộc ngõ vào hiện tại), mạch tuần tự có khả năng lưu giữ trạng thái quá khứ nhờ vòng phản hồi dương (Cross-coupled Inverters).
    - **D-Latch vs D-Flip-Flop (DFF):** D-Latch nhạy theo mức xung nhịp (trong suốt khi `CLK=1`, chốt khi `CLK=0`), dễ bị nhiễu xuyên tầng (Race) nếu mắc nối tiếp. DFF Master-Slave ghép 2 D-Latch đối pha để chỉ lấy mẫu dữ liệu quanh sườn xung nhịp, làm phần tử nhớ chuẩn cho hệ thống số đồng bộ (thanh ghi, pipeline, ALU).
 2. **Định nghĩa chuẩn:**
-   - **$t_{setup}$ (Thời gian thiết lập):** Khoảng thời gian tối thiểu $D$ phải ổn định **trước** mốc $50\%$ sườn lên `CLK` (đo bằng quy ước đẩy trễ $10\%$ của $t_{c-q}$).
-   - **$t_{hold}$ (Thời gian giữ):** Khoảng thời gian tối thiểu $D$ phải giữ nguyên **sau** mốc $50\%$ sườn lên `CLK` để dữ liệu mới không ghi đè làm hỏng trạng thái vừa chốt (điều kiện nhị phân).
-   - **$t_{c-q}$ (Clock-to-Q Delay):** Độ trễ từ mốc $50\%$ sườn lên `CLK` đến mốc $50\%$ ngõ ra $Q$ ổn định.
+   - **$t_{setup}$ (Thời gian thiết lập):** Khoảng thời gian tối thiểu $D$ phải ổn định **trước** mốc $50$ sườn lên `CLK` (đo bằng quy ước đẩy trễ 10% của $t_{c-q}$).
+   - **$t_{hold}$ (Thời gian giữ):** Khoảng thời gian tối thiểu $D$ phải giữ nguyên **sau** mốc $50$ sườn lên `CLK` để dữ liệu mới không ghi đè làm hỏng trạng thái vừa chốt (điều kiện nhị phân).
+   - **$t_{c-q}$ (Clock-to-Q Delay):** Độ trễ từ mốc $50$ sườn lên `CLK` đến mốc $50$ ngõ ra $Q$ ổn định.
    - **Metastability:** Trạng thái cân bằng không bền quanh $V_M \approx V_{DD}/2$ khi vi phạm cửa sổ setup/hold, đòi hỏi thời gian giải quyết kéo dài theo hàm mũ.
 3. **Vai trò từng tầng mạch & tham số trong thực tế:**
 
@@ -75,7 +75,7 @@ Sử dụng bộ số liệu minh họa từ Lab 1 & Lab 4 ($t_{pd,inv} \approx 
 - **45–60' (Ex5.3):** Dựng phân cấp `dff_ms_x1{sch}` ($22\text{T}$). Nhấn mạnh `X_CLK_INV` (`inv_x1`) đang phải lái đồng thời cả `X_MASTER.clk` và `X_SLAVE.clk_n`.
 - **60–115' (Ex5.4 — Trọng tâm 55 phút):**
   * Hướng dẫn `.ic V(q)=0` để tránh `.meas t_cq` bị lỗi do điểm làm việc DC `.op`.
-  * Giải thích rõ định nghĩa $\Delta t$ giữa hai mốc $50\%$–$50\%$, quét cả $D$ lên và $D$ xuống, loại bỏ các điểm bị trượt chu kỳ khỏi đồ thị push-out.
+  * Giải thích rõ định nghĩa $\Delta t$ giữa hai mốc $50$–$50$, quét cả $D$ lên và $D$ xuống, loại bỏ các điểm bị trượt chu kỳ khỏi đồ thị push-out.
   * Cho chạy quét `dt_h` từ `-50p` đến `+100p` (step `5p`) với `.meas FIND v(q) AT=25n` để xác định ngưỡng $t_{hold}$.
   * Dành 10 phút cho sinh viên phóng to 1 ca sát biên giới để quan sát trực quan Metastability.
 - **115–135':** Phân tích tập thể và nghiệm thu tại bàn.

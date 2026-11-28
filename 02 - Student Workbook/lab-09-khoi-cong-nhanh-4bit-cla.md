@@ -46,7 +46,7 @@ Bộ cộng CLA 4-bit tính trước đồng thời các bit số nhớ $C_1, C_
 
 - **Độ sâu chuỗi & Kích thước:** Các cổng `AOI21` đến `AOI54321` có độ sâu chuỗi nối tiếp tăng dần từ $2$ lên $5$ transistor (cả PDN và PUN).
   * Nếu áp dụng **quy tắc cùng sức kéo với `inv_x1`** ($4\lambda/12\lambda$), các cổng $C_1, C_2, C_3, C_4$ cần kích thước tăng tuyến tính theo độ sâu: NMOS $= 8, 12, 16, 20\lambda$ và PMOS $= 24, 36, 48, 60\lambda$ (làm tổng bề rộng $\Sigma W$ rất lớn).
-  * Để cân bằng giữa diện tích và độ phức tạp định tuyến trong bài thực hành này, ta áp dụng **chiến lược kích thước cố định $W_n = 8\lambda$ ($2.4\,\mu\text{m}$) và $W_p = 24\lambda$ ($7.2\,\mu\text{m}$)** cho tất cả các nhánh AOI (tương ứng $\approx 40\%$ sức kéo của `inv_x1` ở chuỗi 5 transistor của $C_4$), kết hợp Inverter đệm ngõ ra chuẩn `inv_x1`.
+  * Để cân bằng giữa diện tích và độ phức tạp định tuyến trong bài thực hành này, ta áp dụng **chiến lược kích thước cố định $W_n = 8\lambda$ ($2.4\,\mu\text{m}$) và $W_p = 24\lambda$ ($7.2\,\mu\text{m}$)** cho tất cả các nhánh AOI (tương ứng $\approx 40$% sức kéo của `inv_x1` ở chuỗi 5 transistor của $C_4$), kết hợp Inverter đệm ngõ ra chuẩn `inv_x1`.
 - **Thách thức Fan-in & Tải trên $P_i$:** Khi mở rộng số bit $N$, độ sâu chuỗi và số transistor trong CLG tăng nhanh theo $O(N^2)$, đồng thời các đường cờ như $P_1, P_2$ phải kéo rất nhiều cực cổng trong CLG (tạo tải lớn cho tầng `PG`). Do đó với bộ cộng lớn ($8, 16, 32$ bit), kỹ sư không xây CLG phẳng 1 khối mà phải chia nhóm 4-bit phân cấp (Hierarchical CLA).
 - **Lưu ý về Diện tích:** Số lượng transistor không đại diện trực tiếp cho diện tích silicon; cần đánh giá thêm qua tổng bề rộng kênh $\Sigma W$ (và diện tích Layout thực tế nếu có).
 
@@ -132,7 +132,7 @@ Bộ cộng CLA 4-bit tính trước đồng thời các bit số nhớ $C_1, C_
 
 ### Ex9.4: Đo Trễ các Đường Tới hạn ($C_0$ và $A, B$) (LTspice)
 
-Chạy mô phỏng với bước tích phân chặt `.tran 0 15n 0 5p`, các xung kích thích có $t_r = t_f = 100\,\text{ps}$, đo trễ giữa hai mốc $50\%$–$50\%$ (`2.5V`):
+Chạy mô phỏng với bước tích phân chặt `.tran 0 15n 0 5p`, các xung kích thích có $t_r = t_f = 100\,\text{ps}$, đo trễ giữa hai mốc $50$–$50$ (`2.5V`):
 
 1. **Ca 1 — Đường $C_0$ truyền qua CLG tĩnh ($P = 1111, G = 0000$):**
    - Đặt $A = 1111_2, B = 0000_2$, cấp xung `Vc0` chuyển $0 \to 5\,\text{V}$ tại $t = 5\,\text{ns}$ (`PULSE(0 5.0 5n 0.1n 0.1n 5n 10n)`).
@@ -222,7 +222,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 | **Tổng Transistor `cla_adder_4b`** | $132\text{T}$ (`4T` XOR) / $148\text{T}$ (`6T`) / $164\text{T}$ (`8T`) | Tùy thuộc kiến trúc `xor_tg` |
 | **$\Sigma W$ của `clg_4b`** | $1152\lambda$ (cố định $8\lambda/24\lambda$) / $2288\lambda$ (cùng sức kéo) | RCA 4-bit: $2112\lambda$ |
 | **Tải lên cờ $P_1, P_2$** | $6$ nhánh AOI ($W_{gate} = 192\lambda \approx 86\,\text{fF}$) | Gấp $\sim 12\times$ `inv_x1` |
-| **Ước lượng thô $t_{pd}(C_0 \to C_4)$** | Khoảng $100 - 135\,\text{ps}$ (giảm $\sim 45-55\%$ so với RCA) | Tùy bộ lái và tải $50\,\text{fF}$ |
+| **Ước lượng thô $t_{pd}(C_0 \to C_4)$** | Khoảng $100 - 135\,\text{ps}$ (giảm $\sim 45-55$% so với RCA) | Tùy bộ lái và tải $50\,\text{fF}$ |
 
 ---
 

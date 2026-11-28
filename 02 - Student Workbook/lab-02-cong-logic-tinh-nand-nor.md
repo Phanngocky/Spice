@@ -112,13 +112,13 @@ Nếu trễ lý thuyết tại tải cố định bằng nhau, tại sao trong c
 1. **Tổng bề rộng kênh và Diện tích Silicon:**
    - NAND2: $\sum W = 2(8\lambda) + 2(12\lambda) = 40\lambda_{DR} = 12,0\,\mu\text{m}$.
    - NOR2: $\sum W = 2(4\lambda) + 2(24\lambda) = 56\lambda_{DR} = 16,8\,\mu\text{m}$.
-   - Cổng NOR2 có tổng chiều rộng cổng lớn hơn **$+40,0\%$**, dẫn tới diện tích Layout lớn hơn từ $40\%$ đến $50\%$.
+   - Cổng NOR2 có tổng chiều rộng cổng lớn hơn **+40,0%**, dẫn tới diện tích Layout lớn hơn từ 40% đến $50$.
 2. **Điện dung ngõ vào ($C_{in}$) và Tải đối với tầng trước:**
    - Điện dung cổng ngõ vào: $C_{in} = C_{ox} L (W_n + W_p)$.
    - $\text{INV\_X1}$: $(4 + 12)\lambda = 16\lambda_{DR} \cdot C_{ox} L$ (quy ước $1,0 \times C_{in,inv}$).
    - NAND2: $(8 + 12)\lambda = 20\lambda_{DR} \cdot C_{ox} L = 1,25 \times C_{in,inv}$ (Logical Effort $g = 5/4 = 1,25$).
    - NOR2: $(4 + 24)\lambda = 28\lambda_{DR} \cdot C_{ox} L = 1,75 \times C_{in,inv}$ (Logical Effort $g = 7/4 = 1,75$).
-   - Cổng NOR2 làm tầng trước phải lái tải dung nặng hơn **$+40,0\%$**, làm chậm tốc độ của toàn bộ đường truyền tín hiệu phía trước!
+   - Cổng NOR2 làm tầng trước phải lái tải dung nặng hơn **+40,0%**, làm chậm tốc độ của toàn bộ đường truyền tín hiệu phía trước!
 3. **Hiệu ứng thân (Body Effect) trên PMOS nối tiếp của NOR2:**
    - Trong chuỗi PMOS của NOR2, transistor $M_{PB}$ có cực nguồn nối vào nút nội $X_p$ (thay vì nối lên $V_{DD}$). Khi điện thế nút $X_p < V_{DD}$, điện áp nguồn-thân $V_{SB} > 0$ làm tăng điện áp ngưỡng $|V_{thp}|$ từ $0,80\,\text{V}$ lên $\approx 1,1 - 1,2\,\text{V}$, làm suy giảm đáng kể dòng nạp và tăng trễ sườn lên thực tế.
 4. **Điện dung ký sinh cực má tại nút ngõ ra:**
@@ -159,8 +159,8 @@ Xét chuỗi 2 NMOS nối tiếp của cổng NAND2 với nút nội trung gian 
 
 > [!IMPORTANT]
 > **Quy luật phụ thuộc tải dung ngõ ra:**  
-> - Với tải lớn $C_L = 50\,\text{fF}$, độ trễ tăng thêm do nút nội chỉ chiếm tỉ lệ nhỏ: $\Delta t / t \approx 0,5 \cdot C_{int} / C_L \approx 5\%$.
-> - Với tải nhỏ $C_L = 10\,\text{fF}$, độ trễ tăng thêm chiếm tới **$20\% - 25\%$**!  
+> - Với tải lớn $C_L = 50\,\text{fF}$, độ trễ tăng thêm do nút nội chỉ chiếm tỉ lệ nhỏ: $\Delta t / t \approx 0,5 \cdot C_{int} / C_L \approx 5$%.
+> - Với tải nhỏ $C_L = 10\,\text{fF}$, độ trễ tăng thêm chiếm tới **$20\text{ pct} - 25$%**!  
 > **Quy tắc thiết kế vàng trong VLSI:** Tín hiệu đến muộn nhất trên đường tới hạn (Critical Path) luôn phải được nối vào chân cổng gần ngõ ra nhất ($A$) để tận dụng việc nút nội đã được xả điện tích từ trước!
 
 ---
@@ -216,7 +216,7 @@ Khi thiết kế Layout cho tế bào logic nhiều transistor, nếu sắp xế
    - Chiều dài kênh cho mọi transistor: $L = 2\lambda_{DR} = 0,60\,\mu\text{m}$.
    - Kích thước $(W/L)$ theo $\lambda_{DR}$ và theo $\mu\text{m}$ cho 4 transistor của `nand2_x1` và 4 transistor của `nor2_x1`.
    - Tính điện trở dẫn hiệu dụng trường hợp xấu nhất: $R_{eq,N}$ và $R_{eq,P}$.
-2. Tính tổng chiều rộng kênh $\sum W$ của mỗi cổng và tỉ lệ chênh lệch $\frac{\sum W_{NOR2} - \sum W_{NAND2}}{\sum W_{NAND2}} \times 100\%$.
+2. Tính tổng chiều rộng kênh $\sum W$ của mỗi cổng và tỉ lệ chênh lệch $\frac{\sum W_{NOR2} - \sum W_{NAND2}}{\sum W_{NAND2}} \times 100$%.
 3. Tính điện dung ngõ vào tương đối $C_{in}$ cho từng chân ngõ vào (theo tỉ số với $C_{in,inv}$) và suy ra hệ số Logical Effort $g$ của mỗi cổng.
 
 ### Câu hỏi 2: Ước lượng Thời gian Trễ Lý thuyết ($C_L = 50\,\text{fF}$ và $C_L = 10\,\text{fF}$)
@@ -300,7 +300,7 @@ Viết các khối lệnh kích thích nguồn và câu lệnh `.MEAS` trong LTs
 3. **Khảo sát tại mức tải nhỏ $C_L = 10\,\text{fF}$:**
    - Thay đổi giá trị tụ tải thành $C_L = 10\,\text{fF}$ và chạy lại kịch bản Ca 1 và Ca 2.
    - So sánh tỉ lệ tăng trễ sườn xuống:
-     $$\Delta\% = \frac{t_{pHL(Ca2)} - t_{pHL(Ca1)}}{t_{pHL(Ca1)}} \times 100\%$$
+     $$\Delta\text{ pct} = \frac{t_{pHL(Ca2)} - t_{pHL(Ca1)}}{t_{pHL(Ca1)}} \times 100\text{ pct}$$
    - Ghi nhận xem ở mức tải nào hiệu ứng nút nội $X_n$ làm chậm mạch rõ nét nhất.
 
 ---
@@ -360,13 +360,13 @@ Sinh viên hoàn thành bảng tổng hợp sau vào Báo cáo kỹ thuật:
 
 | Tiêu chí so sánh | Cổng NAND2 (`nand2_x1`) | Cổng NOR2 (`nor2_x1`) | Tỉ lệ khác biệt (NOR2 so với NAND2) | Nhận xét phân tích |
 | :--- | :---: | :---: | :---: | :--- |
-| **Tổng bề rộng kênh $\sum W$** | $40\lambda_{DR}$ ($12,0\,\mu\text{m}$) | $56\lambda_{DR}$ ($16,8\,\mu\text{m}$) | $+40,0\%$ | NOR2 tốn diện tích silicon hơn |
-| **Điện dung ngõ vào Pin A ($C_{in}$)** | $20\lambda_{DR} \cdot C'$ | $28\lambda_{DR} \cdot C'$ | $+40,0\%$ | NOR2 nặng tải hơn cho tầng trước |
-| **Hệ số Logical Effort ($g$)** | $1,250$ ($5/4$) | $1,750$ ($7/4$) | $+40,0\%$ | NAND2 tối ưu hơn trên đường truyền |
-| **Diện tích Layout ($W \times H$)** | `..............` $\mu\text{m}^2$ | `..............` $\mu\text{m}^2$ | `..............` $\%$ | So sánh kích thước mặt nạ thực tế |
-| **Trễ trung bình Pre-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $\%$ | Tại tải ngoài $C_L = 50\,\text{fF}$ |
-| **Trễ trung bình Post-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $\%$ | Sau khi trích xuất ký sinh PEX |
-| **Độ tăng trễ Post-layout ($\Delta t_{pd}$)** | `..............` $\%$ | `..............` $\%$ | `..............` | Ảnh hưởng của tụ ký sinh cực má |
+| **Tổng bề rộng kênh $\sum W$** | $40\lambda_{DR}$ ($12,0\,\mu\text{m}$) | $56\lambda_{DR}$ ($16,8\,\mu\text{m}$) | +40,0% | NOR2 tốn diện tích silicon hơn |
+| **Điện dung ngõ vào Pin A ($C_{in}$)** | $20\lambda_{DR} \cdot C'$ | $28\lambda_{DR} \cdot C'$ | +40,0% | NOR2 nặng tải hơn cho tầng trước |
+| **Hệ số Logical Effort ($g$)** | $1,250$ ($5/4$) | $1,750$ ($7/4$) | +40,0% | NAND2 tối ưu hơn trên đường truyền |
+| **Diện tích Layout ($W \times H$)** | `..............` $\mu\text{m}^2$ | `..............` $\mu\text{m}^2$ | `..............` $$% | So sánh kích thước mặt nạ thực tế |
+| **Trễ trung bình Pre-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $$\text{ pct} | Tại tải ngoài $C_L = 50\,\text{fF}$ |
+| **Trễ trung bình Post-layout ($t_{pd}$)** | `..............` ps | `..............` ps | `..............` $$% | Sau khi trích xuất ký sinh PEX |
+| **Độ tăng trễ Post-layout ($\Delta t_{pd}$)** | `..............` $$\text{ pct} | `..............` $$% | `..............` | Ảnh hưởng của tụ ký sinh cực má |
 
 ### 7.3 Câu hỏi Phân tích Chuyên sâu Post-lab
 1. **Ưu thế của cổng NAND trong công nghiệp:**  
@@ -417,7 +417,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 | 1 | **Schematic NAND2 & NOR2** | 0 lỗi DRC kết nối mạng; gán đủ 5 Export; Icon chuẩn IEEE. | `[        ]` |
 | 2 | **Ngưỡng chuyển mạch $V_M$ NAND2** | Quét 1 ngõ: $2,42 - 2,52\,\text{V}$; Quét 2 ngõ chung: dời lên $2,65 - 2,78\,\text{V}$. | `[        ]` |
 | 3 | **Trễ quá độ Pre-layout ($C_L = 50\,\text{fF}$)** | $t_{pHL}, t_{pLH}$ trường hợp xấu nhất nằm trong dải $45 - 65\,\text{ps}$. | `[        ]` |
-| 4 | **Hiệu ứng nút nội $X_n$ ở $C_L = 10\,\text{fF}$** | Trễ $t_{pHL}$ khi kích ngõ B chậm hơn ngõ A từ $15\%$ đến $25\%$. | `[        ]` |
+| 4 | **Hiệu ứng nút nội $X_n$ ở $C_L = 10\,\text{fF}$** | Trễ $t_{pHL}$ khi kích ngõ B chậm hơn ngõ A từ 15% đến 25%. | `[        ]` |
 | 5 | **Mặt nạ Layout NAND2** | Chiều cao $40\lambda_{DR}$; ray nguồn $\ge 6\lambda_{DR}$; khoảng cách Poly $\ge 6\lambda_{DR}$ qua Contact. | `[        ]` |
 | 6 | **DRC & LVS NAND2** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** đồng bộ. | `[        ]` |
 | 7 | **Báo cáo & Phân tích PPA** | Điền đủ các bảng số liệu, giải thích rõ cơ chế vật lý chênh lệch giữa NAND và NOR. | `[        ]` |
@@ -439,9 +439,9 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
    - *Nguyên nhân:* Đặt sai tên nhãn chân Export (chú ý phân biệt chữ hoa/chữ thường như `A`, `B`, `out`); hoặc nối nhầm cực nguồn của PMOS với cực má.
    - *Khắc phục:* Mở cửa sổ thông báo chi tiết của NCC, xem thành phần transistor nào bị đánh dấu `Unmatched`, sửa lại nối dây trên Layout.
 4. **Không quan sát thấy sự chênh lệch trễ do nút nội $X_n$ trên NAND2:**
-   - *Hiện tượng:* Đo $t_{pHL}$ khi kích ngõ A và ngõ B cho kết quả gần như y hệt nhau (chênh lệch $< 2\%$).
+   - *Hiện tượng:* Đo $t_{pHL}$ khi kích ngõ A và ngõ B cho kết quả gần như y hệt nhau (chênh lệch $< 2$%).
    - *Nguyên nhân:* Sinh viên chỉ mô phỏng ở tải dung quá lớn ($C_L = 50\,\text{fF}$ hoặc $100\,\text{fF}$), khiến thành phần trễ xả tải ngoài lấn át hoàn toàn trễ xả nút nội.
-   - *Khắc phục:* Giảm tải dung xuống $C_L = 10\,\text{fF}$ hoặc $5\,\text{fF}$ để thấy rõ mức chênh lệch $15\% - 25\%$.
+   - *Khắc phục:* Giảm tải dung xuống $C_L = 10\,\text{fF}$ hoặc $5\,\text{fF}$ để thấy rõ mức chênh lệch $15\text{ pct} - 25$%.
 
 ---
 
@@ -449,7 +449,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 
 | Tiêu chí đánh giá | Trọng số | Chuẩn đầu ra | Mức Xuất sắc (8.5 – 10) | Mức Khá (7.0 – 8.4) | Mức Đạt (5.0 – 6.9) | Mức Không đạt (< 5.0) |
 | :--- | :---: | :---: | :--- | :--- | :--- | :--- |
-| **1. Chuẩn bị Pre-lab** | **20%** | CLO1 | Tính toán chính xác $100\%$ kích thước $W/L$, điện trở $R_{on}$, trễ lý thuyết; vẽ đúng đồ thị Euler và sơ đồ que Stick Diagram có chú thích lớp. | Tính đúng các công thức chính; sơ đồ que đúng cấu trúc nhưng chú thích chưa đầy đủ. | Tính toán còn sai lệch số học; sơ đồ que sơ sài, thiếu tiếp xúc Taps. | Không làm Pre-lab hoặc sao chép bài người khác. |
+| **1. Chuẩn bị Pre-lab** | **20%** | CLO1 | Tính toán chính xác 100% kích thước $W/L$, điện trở $R_{on}$, trễ lý thuyết; vẽ đúng đồ thị Euler và sơ đồ que Stick Diagram có chú thích lớp. | Tính đúng các công thức chính; sơ đồ que đúng cấu trúc nhưng chú thích chưa đầy đủ. | Tính toán còn sai lệch số học; sơ đồ que sơ sài, thiếu tiếp xúc Taps. | Không làm Pre-lab hoặc sao chép bài người khác. |
 | **2. Schematic & VTC NAND2** | **20%** | CLO2 | Dựng Schematic chuẩn kích thước, 0 lỗi F5; đo chính xác $V_M$ ca 1 ngõ và 2 ngõ nối chung; giải thích đúng bản chất dời ngưỡng. | Dựng đúng mạch; đo được $V_M$; giải thích bản chất còn đôi chỗ chưa rõ. | Dựng được mạch nhưng thao tác đo $V_M$ chậm, cần trợ giúp. | Không dựng được mạch hoặc sơ đồ báo lỗi cú pháp. |
 | **3. Đo trễ & Hiệu ứng nút nội** | **20%** | CLO2 | Sử dụng thành thạo câu lệnh `.MEAS` khảo sát đủ 3 kịch bản; đo đạc và chỉ rõ độ lệch trễ nút nội ở cả 2 mức tải $50\,\text{fF}$ và $10\,\text{fF}$. | Đo đủ 3 kịch bản trễ ở $50\,\text{fF}$; quan sát được hiệu ứng nút nội. | Đo trễ thủ công bằng con trỏ do chưa viết được câu lệnh `.MEAS`. | Không đo được trễ hoặc số liệu sai lệch nghiêm trọng. |
 | **4. Schematic & Đo trễ NOR2** | **15%** | CLO2 | Dựng đúng NOR2 ($W_p = 24\lambda$); thiết lập đúng nguồn tĩnh $0\,\text{V}$; đo đủ trễ trường hợp xấu nhất và tốt nhất. | Dựng đúng NOR2; đo được trễ trường hợp xấu nhất. | Dựng được mạch nhưng nhầm lẫn kích thước hoặc đấu nhầm nguồn tĩnh. | Không hoàn thành mạch NOR2. |

@@ -175,11 +175,11 @@ $$v_C(t') = V_0 e^{-t'/\tau}$$
 ### 3. Bảng mốc thời gian quy ước nạp điện
 | Thời gian | Điện áp nạp đạt được | Phần trăm so với $V_0$ | Ý nghĩa kỹ thuật |
 | :---: | :---: | :---: | :--- |
-| **$0,693 \tau$** | $0,500 V_0$ | $50,0\%$ | Mốc đo độ trễ truyền lan $t_{50\%}$ danh định. |
-| **$1,0 \tau$** | $V_0(1 - e^{-1}) \approx 0,632 V_0$ | **$63,2\%$** | Hằng số thời gian $\tau$ của mạch. |
-| **$2,197 \tau$** | Khoảng cách từ $10\%$ đến $90\%$ | $\Delta = 80\%$ | Thời gian sườn xung tăng $t_r \approx 2,2 \tau$. |
-| **$3,0 \tau$** | $0,950 V_0$ | $95,0\%$ | Điểm chuyển tiếp gần bão hòa. |
-| **$5,0 \tau$** | $V_0(1 - e^{-5}) \approx 0,993 V_0$ | **$99,3\%$** | **Quy ước kỹ thuật xem tụ đã nạp no hoàn toàn.** |
+| **$0,693 \tau$** | $0,500 V_0$ | 50,0% | Mốc đo độ trễ truyền lan $t_{50}$ danh định. |
+| **$1,0 \tau$** | $V_0(1 - e^{-1}) \approx 0,632 V_0$ | **63,2%** | Hằng số thời gian $\tau$ của mạch. |
+| **$2,197 \tau$** | Khoảng cách từ 10% đến 90% | $\Delta = 80$% | Thời gian sườn xung tăng $t_r \approx 2,2 \tau$. |
+| **$3,0 \tau$** | $0,950 V_0$ | 95,0% | Điểm chuyển tiếp gần bão hòa. |
+| **$5,0 \tau$** | $V_0(1 - e^{-5}) \approx 0,993 V_0$ | **99,3%** | **Quy ước kỹ thuật xem tụ đã nạp no hoàn toàn.** |
 
 ---
 
@@ -239,7 +239,7 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
    - Lưu ý đặc biệt: Chỉ cho sinh viên xem menu **View $\to$ SPICE Netlist** ngay sau khi vẽ xong sơ đồ để sinh viên hiểu bản chất schematic chỉ là giao diện đồ họa sinh ra netlist.
 3. **Kết quả tham chiếu:**
    - Với $V_{in} = 5,0\,\text{V}, R_1 = 12\,\text{k}\Omega, R_2 = 18\,\text{k}\Omega$:
-     * $V(out) = 3,0000\,\text{V}$ (Sai số $0,00\%$).
+     * $V(out) = 3,0000\,\text{V}$ (Sai số 0,00%).
      * $I(R1) = 0,1667\,\text{mA} = 166,7\,\mu\text{A}$.
      * Độ dốc đặc tuyến $\frac{\Delta V_{out}}{\Delta V_{in}} = \frac{18}{30} = 0,6000$.
 4. **Câu hỏi gợi mở vấn đáp:**
@@ -255,11 +255,11 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
    - Cơ chế nạp xả: Tụ tích trữ điện tích, điện áp trên tụ tỷ lệ với điện tích $q = C \cdot v_C$. Dòng điện qua tụ $i_C = C \frac{dv_C}{dt}$. Vì dòng điện hữu hạn nên $v_C$ không thể biến thiên gián đoạn (nhảy bậc).
    - Bản chất của các câu lệnh `.meas TRIG ... TARG ...`: Bắt thời điểm tín hiệu vượt qua ngưỡng điện áp xác định.
 2. **Kịch bản hướng dẫn:**
-   - Cho sinh viên tự cấu hình nguồn xung `PULSE(0 5.0 0 10n 10n 500u 1000u)`. Giải thích rõ: $T_{on} = 500\,\mu\text{s} = 5\tau$ để tụ nạp đầy $99,3\%$; $T_{period} = 1000\,\mu\text{s} = 10\tau$ để quan sát đủ cả chu kỳ nạp và xả.
+   - Cho sinh viên tự cấu hình nguồn xung `PULSE(0 5.0 0 10n 10n 500u 1000u)`. Giải thích rõ: $T_{on} = 500\,\mu\text{s} = 5\tau$ để tụ nạp đầy 99,3%; $T_{period} = 1000\,\mu\text{s} = 10\tau$ để quan sát đủ cả chu kỳ nạp và xả.
    - Hướng dẫn mở Error Log (`Ctrl + L`) xem kết quả đo tự động.
 3. **Kết quả tham chiếu:**
    - $\tau = 20\,\text{k}\Omega \times 5\,\text{nF} = 100,0\,\mu\text{s}$.
-   - Trễ 50%: $t_{pd} = \ln(2) \cdot \tau = \mathbf{69,315\,\mu\text{s}}$ (SPICE đo được: $69,31 - 69,33\,\mu\text{s}$, sai lệch $< 0,05\%$).
+   - Trễ 50%: $t_{pd} = \ln(2) \cdot \tau = \mathbf{69,315\,\mu\text{s}}$ (SPICE đo được: $69,31 - 69,33\,\mu\text{s}$, sai lệch $< 0,05$%).
    - Sườn tăng 10%–90%: $t_r = \ln(9) \cdot \tau = \mathbf{219,72\,\mu\text{s}} \approx 2,2\tau$ (SPICE đo được: $219,5 - 220,0\,\mu\text{s}$).
    - Đỉnh dòng nạp: $I_{peak,chg} = +\frac{5,0\,\text{V}}{20\,\text{k}\Omega} = \mathbf{+0,2500\,\text{mA}}$.
    - Đỉnh dòng xả: $I_{peak,dis} = -\frac{5,0\,\text{V}}{20\,\text{k}\Omega} = \mathbf{-0,2500\,\text{mA}}$.
@@ -284,7 +284,7 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
    - Hướng dẫn đọc biểu đồ Bode: Trục tung bên trái là biên độ ($0\,\text{dB}$ ở tần số thấp, suy giảm $-20\,\text{dB/decade}$ ở tần số cao); trục tung bên phải là góc pha ($0^\circ$ ở tần số thấp, $-45^\circ$ tại $f_c$, tiến về $-90^\circ$ ở tần số cao).
 3. **Kết quả tham chiếu:**
    - $f_c = \frac{1}{2\pi \times 100\,\mu\text{s}} \approx \mathbf{1591,55\,\text{Hz}} \approx \mathbf{1,592\,\text{kHz}}$.
-   - SPICE đo tự động: $f_c \approx 1591 - 1593\,\text{Hz}$ (Sai lệch $< 0,1\%$).
+   - SPICE đo tự động: $f_c \approx 1591 - 1593\,\text{Hz}$ (Sai lệch $< 0,1$%).
    - Góc pha đo được tại $f_c$: $-44,9^\circ \text{ đến } -45,1^\circ$.
 4. **Câu hỏi gợi mở vấn đáp:**
    - *"Nếu tăng tụ điện $C$ lên 10 lần, tần số cắt của mạch sẽ dịch sang trái hay sang phải trên biểu đồ Bode?"* (Đáp: Tần số cắt giảm 10 lần, đường đặc tuyến dịch sang trái, băng thông mạch bị thu hẹp).
@@ -305,7 +305,7 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
    - $R = 40\,\text{k}\Omega \implies t_{pd} = 138,63\,\mu\text{s}$
    - Độ dốc thực nghiệm:
      $$\text{Slope} = \frac{138,63 - 17,33}{40 - 5} = \frac{121,30\,\mu\text{s}}{35\,\text{k}\Omega} = \mathbf{3,4657\,\text{ns}/\text{k}\Omega}$$
-   - Kiểm chéo với lý thuyết: $\ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = \mathbf{3,4657 \times 10^{-9}\,\text{s}/\Omega} \implies$ Khớp đồng bộ $100\%$.
+   - Kiểm chéo với lý thuyết: $\ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = \mathbf{3,4657 \times 10^{-9}\,\text{s}/\Omega} \implies$ Khớp đồng bộ 100%.
 
 ---
 
@@ -322,7 +322,7 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
      `M1 drain gate source bulk N W=1.2u L=0.6u`
 3. **Kết quả tham chiếu:**
    - Dòng điện cực má mô phỏng: $I_D \approx 1,40\,\text{mA}$.
-   - Sai lệch so với công thức bậc hai: Thấp hơn $\approx 37\%$.
+   - Sai lệch so với công thức bậc hai: Thấp hơn $\approx 37$%.
 
 ---
 
@@ -332,30 +332,30 @@ Bảng số liệu chuẩn dùng để đối chiếu khi chấm bài thực hà
 
 | Bài | Thông số đo | Biểu thức lý thuyết | Giá trị Lý thuyết | Kết quả SPICE `.meas` | Sai lệch tương đối | Đánh giá nghiệm thu |
 | :---: | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Đạt hoàn toàn |
-| **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | $0,00\%$ | Dòng từ in sang out |
-| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính đồng bộ |
-| **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05\%$ | Chuẩn $\le 2,0\%$ |
-| **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
-| **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
-| **Ex0.2** | Đỉnh dòng nạp | $+V_0 / R$ | $+0,2500\,\text{mA}$ | **$+0,2500\,\text{mA}$** | $0,00\%$ | Xuất hiện tại $t = 0^+$ |
-| **Ex0.2** | Đỉnh dòng xả | $-V_0 / R$ | $-0,2500\,\text{mA}$ | **$-0,2500\,\text{mA}$** | $0,00\%$ | Đảo chiều tại $t = 500\,\mu\text{s}^+$ |
-| **Ex0.3** | Độ lợi dải thông | $A_{V,0}$ | $1,000$ ($0\,\text{dB}$) | **$0,000\,\text{dB}$** | $0,00\%$ | Đo tại $10\,\text{Hz}$ |
-| **Ex0.3** | Tần số cắt $f_c$ | $\frac{1}{2\pi RC}$ | $1591,55\,\text{Hz}$ | **$1592\,\text{Hz}$** | $< 0,10\%$ | Điểm biên độ $-3\,\text{dB}$ |
-| **Ex0.3** | Góc pha tại $f_c$ | $-\arctan(1)$ | $-45,0^\circ$ | **$-45,0^\circ$** | $< 0,10\%$ | Đọc trên trục bên phải |
-| **Ex0.4** | $t_{pd}$ ($R=5\text{k}$) | $\ln(2) \cdot 5\text{k} \cdot C$ | $17,329\,\mu\text{s}$ | **$17,33\,\mu\text{s}$** | $0,00\%$ | Bước quét 1 |
-| **Ex0.4** | $t_{pd}$ ($R=10\text{k}$) | $\ln(2) \cdot 10\text{k} \cdot C$ | $34,657\,\mu\text{s}$ | **$34,66\,\mu\text{s}$** | $0,00\%$ | Bước quét 2 |
-| **Ex0.4** | $t_{pd}$ ($R=20\text{k}$) | $\ln(2) \cdot 20\text{k} \cdot C$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $0,00\%$ | Bước quét 3 |
-| **Ex0.4** | $t_{pd}$ ($R=40\text{k}$) | $\ln(2) \cdot 40\text{k} \cdot C$ | $138,629\,\mu\text{s}$ | **$138,63\,\mu\text{s}$** | $0,00\%$ | Bước quét 4 |
-| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\text{ns/k}\Omega$ | **$3,466\,\text{ns/k}\Omega$** | $< 0,05\%$ | Trùng khớp hoàn toàn |
-| **Ex0.5** | Dòng $I_D$ NMOS | Shichman-Hodges | $\sim 2,22\,\text{mA}$ | **$1,35 - 1,45\,\text{mA}$** | $\sim 37\%$ | Bão hòa vận tốc hạt dẫn |
+| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | 0,00% | Đạt hoàn toàn |
+| **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | 0,00% | Dòng từ in sang out |
+| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | 0,00% | Tuyến tính đồng bộ |
+| **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05$% | Chuẩn $\le 2,0$% |
+| **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10$% | Chuẩn $\le 2,0$% |
+| **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10$% | Chuẩn $\le 2,0$% |
+| **Ex0.2** | Đỉnh dòng nạp | $+V_0 / R$ | $+0,2500\,\text{mA}$ | **$+0,2500\,\text{mA}$** | 0,00% | Xuất hiện tại $t = 0^+$ |
+| **Ex0.2** | Đỉnh dòng xả | $-V_0 / R$ | $-0,2500\,\text{mA}$ | **$-0,2500\,\text{mA}$** | 0,00% | Đảo chiều tại $t = 500\,\mu\text{s}^+$ |
+| **Ex0.3** | Độ lợi dải thông | $A_{V,0}$ | $1,000$ ($0\,\text{dB}$) | **$0,000\,\text{dB}$** | 0,00% | Đo tại $10\,\text{Hz}$ |
+| **Ex0.3** | Tần số cắt $f_c$ | $\frac{1}{2\pi RC}$ | $1591,55\,\text{Hz}$ | **$1592\,\text{Hz}$** | $< 0,10$% | Điểm biên độ $-3\,\text{dB}$ |
+| **Ex0.3** | Góc pha tại $f_c$ | $-\arctan(1)$ | $-45,0^\circ$ | **$-45,0^\circ$** | $< 0,10$% | Đọc trên trục bên phải |
+| **Ex0.4** | $t_{pd}$ ($R=5\text{k}$) | $\ln(2) \cdot 5\text{k} \cdot C$ | $17,329\,\mu\text{s}$ | **$17,33\,\mu\text{s}$** | 0,00% | Bước quét 1 |
+| **Ex0.4** | $t_{pd}$ ($R=10\text{k}$) | $\ln(2) \cdot 10\text{k} \cdot C$ | $34,657\,\mu\text{s}$ | **$34,66\,\mu\text{s}$** | 0,00% | Bước quét 2 |
+| **Ex0.4** | $t_{pd}$ ($R=20\text{k}$) | $\ln(2) \cdot 20\text{k} \cdot C$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | 0,00% | Bước quét 3 |
+| **Ex0.4** | $t_{pd}$ ($R=40\text{k}$) | $\ln(2) \cdot 40\text{k} \cdot C$ | $138,629\,\mu\text{s}$ | **$138,63\,\mu\text{s}$** | 0,00% | Bước quét 4 |
+| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\text{ns/k}\Omega$ | **$3,466\,\text{ns/k}\Omega$** | $< 0,05$% | Trùng khớp hoàn toàn |
+| **Ex0.5** | Dòng $I_D$ NMOS | Shichman-Hodges | $\sim 2,22\,\text{mA}$ | **$1,35 - 1,45\,\text{mA}$** | $\sim 37$% | Bão hòa vận tốc hạt dẫn |
 
 ---
 
 ## 0.10. CÂU HỎI MỞ RỘNG VÀ ĐÁP ÁN GỢI Ý
 
 1. **Câu hỏi:** *"Nếu trong phân tích quá độ `.tran`, ta đặt $T_{on} = 2\tau$ thay vì $5\tau$ thì điều gì sẽ xảy ra với các phép đo trễ và thời gian sườn?"*  
-   - *Đáp án gợi ý:* Sau $2\tau$, điện áp tụ chỉ nạp được $V_0(1 - e^{-2}) \approx 86,5\% \cdot V_0$ ($4,32\,\text{V}$). Tụ chưa nạp no đã bị xả sớm, làm điện áp đỉnh bị sụt mất $13,5\%$. Hệ quả: phép đo sườn tăng $t_r$ ($10\% \to 90\%$) sẽ bị hỏng hoàn toàn vì điện áp không bao giờ chạm tới mốc $90\%$ ($4,5\,\text{V}$).
+   - *Đáp án gợi ý:* Sau $2\tau$, điện áp tụ chỉ nạp được $V_0(1 - e^{-2}) \approx 86,5\text{ pct} \cdot V_0$ ($4,32\,\text{V}$). Tụ chưa nạp no đã bị xả sớm, làm điện áp đỉnh bị sụt mất 13,5%. Hệ quả: phép đo sườn tăng $t_r$ ($1010% $\\to$ 90%%) sẽ bị hỏng hoàn toàn vì điện áp không bao giờ chạm tới mốc 90% ($4,5\,\text{V}$).
 2. **Câu hỏi:** *"Tại sao trong mạch RC, tích giữa thời gian sườn tăng $t_r$ và tần số cắt $f_c$ lại là một hằng số không đổi xấp xỉ $0,35$?"*  
    - *Đáp án gợi ý:* Ta có $t_r = \ln(9) \cdot RC \approx 2,1972 \cdot RC$ và $f_c = \frac{1}{2\pi RC}$. Nhân hai vế:
      $$t_r \cdot f_c = (2,1972 \cdot RC) \cdot \left(\frac{1}{2\pi RC}\right) = \frac{2,1972}{2\pi} \approx \mathbf{0,3497} \approx \mathbf{0,35}$$
@@ -468,7 +468,7 @@ flowchart TD
         0  t10  t50      1tau        5tau      10tau             Thời gian (t)
            |<-- t_r ----->|                     |<-- t_f ------>|
 ```
-*Mô tả sư phạm:* Đánh dấu trực quan các mốc $1\tau$ ($63,2\%$), $5\tau$ ($99,3\%$), trễ $t_{50\%}$ và thời gian sườn xung $t_r, t_f$.
+*Mô tả sư phạm:* Đánh dấu trực quan các mốc $1\tau$ (63,2%), $5\tau$ (99,3%), trễ $t_{50}$ và thời gian sườn xung $t_r, t_f$.
 
 ---
 
@@ -582,7 +582,7 @@ flowchart TD
 
 | Tiêu chuẩn đánh giá | Trọng số | Mức Xuất sắc (90% - 100%) | Mức Đạt chuẩn (70% - 85%) | Mức Cần cố gắng (< 70%) |
 | :--- | :---: | :--- | :--- | :--- |
-| **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **4.0 đ** | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2\%$. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5\%$. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
+| **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **4.0 đ** | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2$%. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5$%. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
 | **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **2.0 đ** | Thiết lập đúng biến `{Rval}`, quét đúng 4 bước, vẽ được đồ thị thực nghiệm và tính đúng độ dốc. Gọi model C5N đo được dòng $I_D$. | Chạy được lệnh `.step` nhưng chưa vẽ được đồ thị độ dốc; gọi được model C5N. | Quên ngoặc nhọn `{}` làm kết quả quét bị sai; không liên kết được thư viện C5N. |
 | **Hiểu bản chất qua câu hỏi tư duy** | **2.0 đ** | Trả lời sắc bén, chính xác bản chất vật lý của các câu hỏi tư duy (vai trò nút đất, hằng số $\tau$, ý nghĩa $5\tau$, sụt giảm biên độ AC). | Trả lời được các câu hỏi cơ bản nhưng phần giải thích bản chất vật lý còn mơ hồ. | Không trả lời được câu hỏi hoặc chỉ chép lại công thức mà không hiểu ý nghĩa. |
 | **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **2.0 đ** | Thư mục dự án tổ chức đồng bộ đúng cấu trúc; sơ đồ và Netlist đầy đủ; báo cáo trung thực, có ghi nhận lỗi và cách sửa. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
@@ -668,11 +668,11 @@ $$V_M = \frac{V_{tn} + \sqrt{r} (V_{DD} - |V_{tp}|)}{1 + \sqrt{r}}$$
 ---
 
 ## 1.4 Giải thích bản chất trễ $t_{pd}$ và sai lệch với mô hình $0,69 \cdot RC$
-- **Nguồn gốc công thức $0,69$:** Xuất phát từ phương trình vi phân phóng nạp mạch RC tuyến tính thuần túy: $V(t) = V_{DD} \cdot e^{-t/RC}$. Tại ngưỡng $50\%$ ($V(t) = 0,5 V_{DD}$), ta có $e^{-t/RC} = 0,5 \implies t_{50\%} = RC \ln 2 \approx 0,693 \cdot RC$.
+- **Nguồn gốc công thức $0,69$:** Xuất phát từ phương trình vi phân phóng nạp mạch RC tuyến tính thuần túy: $V(t) = V_{DD} \cdot e^{-t/RC}$. Tại ngưỡng $50$ ($V(t) = 0,5 V_{DD}$), ta có $e^{-t/RC} = 0,5 \implies t_{50} = RC \ln 2 \approx 0,693 \cdot RC$.
 - **Tại sao số đo SPICE luôn lớn hơn $\sim 1,5$ đến $1,8$ lần:**  
   Điện trở $R_{on,n} = 969\,\Omega$ được tính tại điểm cuối của quá trình xả ($V_{DS} \to 0$, vùng tuyến tính sâu). Tuy nhiên, khi ngõ vào chuyển từ $0 \to 5\,\text{V}$, tụ tải $C_L$ đang ở mức $5\,\text{V}$, làm NMOS hoạt động trong vùng **Bão hòa** trong suốt giai đoạn đầu ($V_{out} > 5,0 - 0,7 = 4,3\,\text{V}$) với dòng bão hòa bị chặn ở mức:
   $$I_{sat,n} \approx \frac{1}{2} K'_n \left(\frac{W}{L}\right)_n (V_{DD} - V_{tn})^2 = \frac{1}{2} (120\mu) (2) (4,3)^2 \approx 2,22\,\text{mA}$$
-  Để xả điện áp từ $5,0\,\text{V}$ xuống ngưỡng $50\%$ ($2,5\,\text{V}$), thời gian xả dòng xấp xỉ bằng:
+  Để xả điện áp từ $5,0\,\text{V}$ xuống ngưỡng $50$ ($2,5\,\text{V}$), thời gian xả dòng xấp xỉ bằng:
   $$t \approx \frac{C_L \cdot \Delta V}{I_{sat,n}} = \frac{50\,\text{fF} \cdot 2,5\,\text{V}}{2,22\,\text{mA}} \approx 56,3\,\text{ps}$$
   Con số $56,3\,\text{ps}$ này khớp chặt chẽ với kết quả tích phân giải tích số ($49,8\,\text{ps}$) và SPICE Level 3 ($59\,\text{ps}$), cao hơn rõ rệt so với con số tính nhanh $0,69 \cdot 969 \cdot 50\,\text{fF} = 33,6\,\text{ps}$.
 
@@ -724,9 +724,9 @@ $$V_M = \frac{V_{tn} + \sqrt{r} (V_{DD} - |V_{tp}|)}{1 + \sqrt{r}}$$
 ### b. So sánh định lượng PPA giữa NAND2 và NOR2
 | Tiêu chí so sánh | Cổng NAND2 | Cổng NOR2 | Tỉ lệ khác biệt | Ý nghĩa sư phạm |
 | :--- | :---: | :---: | :---: | :--- |
-| **Tổng chiều rộng kênh $\sum W$** | $2 \times 8\lambda + 2 \times 12\lambda = 40\lambda$ | $2 \times 4\lambda + 2 \times 24\lambda = 56\lambda$ | NOR2 lớn hơn **$+40,0\%$** | NAND2 tiết kiệm diện tích silicon hơn hẳn. |
-| **Điện dung ngõ vào Pin A ($C_{in}$)** | $8\lambda + 12\lambda = 20\lambda$ ($14,2\,\text{fF}$) | $4\lambda + 24\lambda = 28\lambda$ ($20,0\,\text{fF}$) | NOR2 nặng hơn **$+40,0\%$** | Lái cổng NOR2 làm tầng trước chậm đi đáng kể. |
-| **Logical Effort $g$** | $g = 20\lambda / 16\lambda = 1,25$ ($5/4$) | $g = 28\lambda / 16\lambda = 1,75$ ($7/4$) | NOR2 kém hơn **$+40,0\%$** | Trong thư viện chuẩn, NAND luôn được ưu tiên. |
+| **Tổng chiều rộng kênh $\sum W$** | $2 \times 8\lambda + 2 \times 12\lambda = 40\lambda$ | $2 \times 4\lambda + 2 \times 24\lambda = 56\lambda$ | NOR2 lớn hơn **+40,0%** | NAND2 tiết kiệm diện tích silicon hơn hẳn. |
+| **Điện dung ngõ vào Pin A ($C_{in}$)** | $8\lambda + 12\lambda = 20\lambda$ ($14,2\,\text{fF}$) | $4\lambda + 24\lambda = 28\lambda$ ($20,0\,\text{fF}$) | NOR2 nặng hơn **+40,0%** | Lái cổng NOR2 làm tầng trước chậm đi đáng kể. |
+| **Logical Effort $g$** | $g = 20\lambda / 16\lambda = 1,25$ ($5/4$) | $g = 28\lambda / 16\lambda = 1,75$ ($7/4$) | NOR2 kém hơn **+40,0%** | Trong thư viện chuẩn, NAND luôn được ưu tiên. |
 | **Trễ nội ký sinh $p$** | $p = (24\lambda + 8\lambda) / 16\lambda = 2,0$ | $p = (24\lambda + 8\lambda) / 16\lambda = 2,0$ | Ngang bằng | Cùng có 2 cực má PMOS và 1 cực má NMOS tại Out. |
 
 ---
@@ -801,12 +801,12 @@ Cổng AOI21 thực hiện hàm logic: $Y = \overline{(A \cdot B) + C}$.
 | Số tầng $N$ | Nỗ lực mỗi tầng $\hat{f} = H^{1/N}$ | Trễ chuẩn hóa $D/\tau$ | Tỉ lệ so với tối ưu | Kích thước các tầng ($W/L$) |
 | :---: | :---: | :---: | :---: | :--- |
 | **1 tầng** | 50,00 | $51,00\,\tau$ | Chậm gấp **$3,63$ lần** | Tầng 1: $1\text{X}$ ($4\lambda / 12\lambda$) lái thẳng $1\,\text{pF}$. |
-| **2 tầng** | 7,07 | $16,14\,\tau$ | Chậm hơn $+14,8\%$ | $1\text{X} \to 7,07\text{X}$. |
-| **3 tầng** | **3,68** | **$14,05\,\tau$** | **Tối ưu cực tiểu ($100\%$)** | $1\text{X} \to 3,68\text{X} \to 13,57\text{X}$. |
-| **4 tầng** | 2,66 | $14,64\,\tau$ | Chậm hơn $+4,2\%$ | $1\text{X} \to 2,66\text{X} \to 7,07\text{X} \to 18,8\text{X}$. |
-| **5 tầng** | 2,19 | $15,93\,\tau$ | Chậm hơn $+13,4\%$ | $1\text{X} \to 2,19\text{X} \to 4,78\text{X} \to 10,4\text{X} \to 22,9\text{X}$. |
+| **2 tầng** | 7,07 | $16,14\,\tau$ | Chậm hơn +14,8% | $1\text{X} \to 7,07\text{X}$. |
+| **3 tầng** | **3,68** | **$14,05\,\tau$** | **Tối ưu cực tiểu (100%)** | $1\text{X} \to 3,68\text{X} \to 13,57\text{X}$. |
+| **4 tầng** | 2,66 | $14,64\,\tau$ | Chậm hơn +4,2% | $1\text{X} \to 2,66\text{X} \to 7,07\text{X} \to 18,8\text{X}$. |
+| **5 tầng** | 2,19 | $15,93\,\tau$ | Chậm hơn +13,4% | $1\text{X} \to 2,19\text{X} \to 4,78\text{X} \to 10,4\text{X} \to 22,9\text{X}$. |
 
-**Chỗ cần chỉnh trong Handout gốc:** Handout ghi "tối ưu nhanh hơn $3,63$ lần (cải thiện $363\%$)". Giảng viên cần sửa cách dùng từ: Trễ giảm từ $51\,\tau$ xuống $14,05\,\tau$, tức tốc độ tăng $3,63$ lần, tương ứng thời gian trễ giảm $\frac{51 - 14,05}{51} \approx 72,5\%$. Không được dùng cụm từ "cải thiện $363\%$".
+**Chỗ cần chỉnh trong Handout gốc:** Handout ghi "tối ưu nhanh hơn $3,63$ lần (cải thiện 363%)". Giảng viên cần sửa cách dùng từ: Trễ giảm từ $51\,\tau$ xuống $14,05\,\tau$, tức tốc độ tăng $3,63$ lần, tương ứng thời gian trễ giảm $\frac{51 - 14,05}{51} \approx 72,5$%. Không được dùng cụm từ "cải thiện 363%".
 
 ---
 
@@ -879,7 +879,7 @@ $$g_{TG} = 240 \cdot 10^{-6} \cdot [5,0 - 0,70 - 0,80] = 840\,\mu\text{S} \impli
 ## 5.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. Phân biệt rạch ròi giữa Mạch chốt (Latch - nhạy theo mức) và Mạch lật (Flip-Flop - nhạy theo sườn xung nhịp).
 2. Nắm vững định nghĩa và phương pháp đo 3 thông số định thời sống còn: Thời gian thiết lập ($t_{setup}$), Thời gian giữ ($t_{hold}$), và Trễ từ xung nhịp đến ngõ ra ($t_{c-q}$).
-3. Hiểu hiện tượng bất ổn định (Metastability) khi vi phạm cửa sổ định thời và quy tắc push-out $10\%$.
+3. Hiểu hiện tượng bất ổn định (Metastability) khi vi phạm cửa sổ định thời và quy tắc push-out 10%.
 4. Nắm chắc phương trình ràng buộc chu kỳ xung nhịp hệ thống: $T_{clk} \ge t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$.
 
 ---
@@ -914,8 +914,8 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered D
 ---
 
 ## 5.3 Phương pháp đo $t_{setup}, t_{hold}$ và Hiện tượng Metastability
-- **Quy tắc đẩy trễ $10\%$ (10% Push-out Rule):**  
-  Thời gian thiết lập $t_{setup}$ danh định được xác định là khoảng cách thời gian nhỏ nhất giữa sườn dữ liệu $D$ và sườn xung nhịp $\text{CLK}$ sao cho trễ $t_{c-q}$ chỉ tăng tối đa $10\%$ so với giá trị lý tưởng khi $D$ đến rất sớm.
+- **Quy tắc đẩy trễ 10% (10% Push-out Rule):**  
+  Thời gian thiết lập $t_{setup}$ danh định được xác định là khoảng cách thời gian nhỏ nhất giữa sườn dữ liệu $D$ và sườn xung nhịp $\text{CLK}$ sao cho trễ $t_{c-q}$ chỉ tăng tối đa 10% so với giá trị lý tưởng khi $D$ đến rất sớm.
 - **Hiện tượng bất ổn định (Metastability):**  
   Khi $D$ thay đổi quá gần sườn xung nhịp, nút nội $X_M$ không kịp đạt mức logic đầy đủ ($0\,\text{V}$ hoặc $5\,\text{V}$) mà dừng ở vùng lơ lửng quanh ngưỡng $V_M \approx 2,45\,\text{V}$. Vòng phản hồi hai inverter mất thời gian phục hồi tăng theo quy luật hàm mũ:
   $$t_{resolve} = \tau_{reg} \cdot \ln \left(\frac{V_{DD}}{\Delta V_0}\right)$$
@@ -1035,7 +1035,7 @@ Xét mạch logic động với nút động $X$ có điện dung $C_X$. Giả s
 ## 8.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. Hiểu mâu thuẫn thiết kế cốt lõi của ô nhớ SRAM 6T: Chế độ Đọc đòi hỏi Driver phải mạnh hơn Access (tránh phá hủy dữ liệu - Read Stability), trong khi chế độ Ghi đòi hỏi Access phải mạnh hơn Load (đè được dữ liệu cũ - Writeability).
 2. Nắm vững phương pháp đo Lề nhiễu tĩnh (Static Noise Margin - SNM) thông qua đường cong cánh bướm (Butterfly Curve).
-3. Hiểu nguyên lý hoạt động của Mạch khuếch đại cảm nhận (Sense Amplifier): sử dụng phản hồi dương để biến chênh lệch điện áp nhỏ ($\Delta V \approx 100-150\,\text{mV}$) thành mức logic đầy đủ trong thời gian cực ngắn, tiết kiệm $>90\%$ năng lượng nạp xả bitline.
+3. Hiểu nguyên lý hoạt động của Mạch khuếch đại cảm nhận (Sense Amplifier): sử dụng phản hồi dương để biến chênh lệch điện áp nhỏ ($\Delta V \approx 100-150\,\text{mV}$) thành mức logic đầy đủ trong thời gian cực ngắn, tiết kiệm $>90$% năng lượng nạp xả bitline.
 
 ---
 
@@ -1088,7 +1088,7 @@ Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phả
 1. Hiểu tư duy thiết kế vi mạch bậc cao: Triệt tiêu sự phụ thuộc tuần tự của chuỗi số nhớ bằng cách biểu diễn tín hiệu nhớ dưới dạng biểu thức đại số logic song song.
 2. Nắm vững phương trình sinh nhớ ($G_i = A_i \cdot B_i$) và truyền nhớ ($P_i = A_i \oplus B_i$).
 3. Nhận thức giới hạn vật lý của Fan-in: Việc khai triển biểu thức $C_4$ dẫn tới cổng AOI có 5 transistor NMOS xếp chồng, làm tăng điện trở kéo xuống và đòi hỏi giải pháp phân cụm (Hierarchical Carry Lookahead).
-4. Đánh giá khách quan sự đánh đổi PPA: Tăng $\sim 20\%$ diện tích và số lượng transistor để đổi lấy tốc độ nhanh hơn $>50\%$ so với Ripple Carry Adder.
+4. Đánh giá khách quan sự đánh đổi PPA: Tăng $\sim 20$% diện tích và số lượng transistor để đổi lấy tốc độ nhanh hơn $>50$ so với Ripple Carry Adder.
 
 ---
 
@@ -1130,10 +1130,10 @@ Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phả
 ### Bảng phân bổ 134 Transistor của tế bào CLA 4-bit chuẩn
 | Khối chức năng | Thành phần logic chi tiết | Số Transistor | Tỉ lệ phần cứng |
 | :--- | :--- | :---: | :---: |
-| **Khối PG Generator** | 4 cổng NAND2 ($4 \times 4\text{T}$) + 4 cổng XOR ($4 \times 6\text{T}$) + 4 INV | **48T** | $35,8\%$ |
-| **Khối tạo Carry CLG** | $C_1$ (6T) + $C_2$ (12T) + $C_3$ (20T) + $C_4$ (30T) + 4 INV (8T) | **62T** | $46,3\%$ |
-| **Khối tạo Sum** | 4 cổng XOR 2 ngõ vào ($S_i = P_i \oplus C_i$) | **24T** | $17,9\%$ |
-| **TỔNG TOÀN KHỐI CLA** | **Kiến trúc CLA 4-bit nguyên khối** | **134T** | **$100\%$** |
+| **Khối PG Generator** | 4 cổng NAND2 ($4 \times 4\text{T}$) + 4 cổng XOR ($4 \times 6\text{T}$) + 4 INV | **48T** | 35,8% |
+| **Khối tạo Carry CLG** | $C_1$ (6T) + $C_2$ (12T) + $C_3$ (20T) + $C_4$ (30T) + 4 INV (8T) | **62T** | 46,3% |
+| **Khối tạo Sum** | 4 cổng XOR 2 ngõ vào ($S_i = P_i \oplus C_i$) | **24T** | 17,9% |
+| **TỔNG TOÀN KHỐI CLA** | **Kiến trúc CLA 4-bit nguyên khối** | **134T** | **100%** |
 
 ---
 
@@ -1143,7 +1143,7 @@ Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phả
 1. Trải nghiệm trọn vẹn quy trình thiết kế vi mạch tích hợp hệ thống (System-on-Chip Top-Down Design Flow): từ đặc tả tập lệnh $\to$ phân rã khối $\to$ thiết kế tế bào $\to$ Floorplanning $\to$ đóng gói PEX $\to$ nghiệm thu toàn diện.
 2. Làm chủ bài toán Ngân sách thời gian (Timing Budget) trên đường tới hạn: xác định chính xác tần số xung nhịp cực đại $f_{max}$.
 3. Nắm vững kỹ thuật thiết kế mạng phân phối nguồn (Power Grid Network) và ước lượng độ sụt áp tĩnh/động ($IR\text{-drop}$ và $L \cdot di/dt$).
-4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp đồng bộ $100\%$ và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
+4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp đồng bộ 100% và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
 
 ---
 
@@ -1193,7 +1193,7 @@ $\text{CLK} \to \text{Thanh ghi ngõ vào} \to \text{Khối tạo PG} \to \text{
 | **TẦN SỐ HOẠT ĐỘNG TỐI ĐA** | **$f_{max}$** | **$1,92\,\text{GHz}$** | **$1,42\,\text{GHz}$** | $1 / T_{clk,min}$. |
 
 **Kết luận chuyên môn cho giảng viên:**
-Mục tiêu $f_{max} \ge 1,0\,\text{GHz}$ mà đề cương đề ra là **hoàn toàn thực tế và có biên an toàn kỹ thuật vững chắc** ($f_{max,PEX} \approx 1,42\,\text{GHz} > 1,0\,\text{GHz}$ với biên dự phòng $>40\%$). Giảng viên có thể tự tin đưa tiêu chí $f_{clk} \ge 1,0\,\text{GHz}$ vào rubric chấm điểm nghiệm thu đồ án!
+Mục tiêu $f_{max} \ge 1,0\,\text{GHz}$ mà đề cương đề ra là **hoàn toàn thực tế và có biên an toàn kỹ thuật vững chắc** ($f_{max,PEX} \approx 1,42\,\text{GHz} > 1,0\,\text{GHz}$ với biên dự phòng $>40$%). Giảng viên có thể tự tin đưa tiêu chí $f_{clk} \ge 1,0\,\text{GHz}$ vào rubric chấm điểm nghiệm thu đồ án!
 
 ---
 
@@ -1204,7 +1204,7 @@ Mục tiêu $f_{max} \ge 1,0\,\text{GHz}$ mà đề cương đề ra là **hoàn
 | **Chung** | Toàn bộ 10 bài | Tham chiếu ảnh `images/` bị lỗi đường dẫn; lộ thư mục đáp án `03 - Instructor_Solutions/`. | **C** | Thay đường dẫn ảnh chuẩn nội bộ; xóa bỏ toàn bộ dấu vết thư mục đáp án trong bản phát cho SV. |
 | **Lab 1** | Mục I & Pre-lab | Ghi $W_p/W_n = 3,0$ cho $V_M = 2,50\,\text{V}$; dùng lẫn lộn $\lambda_{kênh}$ và $\lambda_{lưới}$. | **C** | Đính chính: $3/1$ cho $V_M = 2,45\,\text{V}$; muốn $2,50\,\text{V}$ cần $3,36$. Viết tách biệt $\lambda_{kênh}$ và $\lambda_{lưới}$ trên bảng. |
 | **Lab 2** | Mục III.3 & III.4 | Sơ đồ Stick NAND2 vẽ thiếu chân Out; khẳng định hoàn toàn "NAND luôn nhanh hơn NOR". | **C** | Bổ sung nút Out vào sơ đồ Euler; ghi rõ điều kiện "nhanh hơn khi độ linh động electron lớn hơn lỗ trống". |
-| **Lab 3** | Mục III.1 & III.4 | Ghi "AOI21 giảm diện tích 40%"; ghi "cải thiện tốc độ 363%"; $C_{in} = 20\,\text{fF}$ không khớp. | **C** | Sửa thành "giảm $40\%$ số transistor, giảm $18\%$ tổng chiều rộng kênh"; sửa thành "nhanh hơn $3,63$ lần (giảm $72\%$ trễ)". |
+| **Lab 3** | Mục III.1 & III.4 | Ghi "AOI21 giảm diện tích 40%"; ghi "cải thiện tốc độ 363%"; $C_{in} = 20\,\text{fF}$ không khớp. | **C** | Sửa thành "giảm 40% số transistor, giảm 18% tổng chiều rộng kênh"; sửa thành "nhanh hơn $3,63$ lần (giảm 72% trễ)". |
 | **Lab 4** | Mục III.1 & III.2 | $R_{TG}$ tại $2,5\,\text{V}$ ghi $490\,\Omega$; Weak 0 của PMOS ghi $0,8-1,05\,\text{V}$ (quên Body Effect). | **C** | Đính chính: $R_{TG}(2,5\,\text{V}) \approx 1,19\,\text{k}\Omega$. Điện áp Weak 0 thực tế dâng lên $\approx 1,4\,\text{V}$ do hiệu ứng thân PMOS. |
 | **Lab 5** | Mục III.3 | Lỗi font ký tự tiếng Hoa ("điện荷"); vẽ thiếu inverter đệm ngõ ra làm sai số transistor. | **C** | Xóa ký tự lạ; chuẩn hóa sơ đồ DFF 18T (gồm 2 Latch 8T + 1 Inverter xung nhịp 2T). |
 | **Lab 6** | Mục III.2 & III.3 | Khối Carry ghi nhầm "4 NMOS + 4 PMOS"; công thức Sum bị sai vế trái; đếm transistor mơ hồ. | **C** | Sửa thành 5 NMOS + 5 PMOS ($10\text{T}$); vế trái là $\overline{Sum}$; chốt cứng tổng 28 Transistors. |
@@ -1219,7 +1219,7 @@ Mục tiêu $f_{max} \ge 1,0\,\text{GHz}$ mà đề cương đề ra là **hoàn
 
 # 12. KẾ HOẠCH HÀNH ĐỘNG VÀ GIẢI QUYẾT TRIỆT ĐỂ CÁC ĐIỂM CHƯA KIỂM
 
-Nhằm chuyển đổi toàn bộ các nhãn "Chưa kiểm" thành "Đã kiểm chứng $100\%$", bộ phận giảng viên và trợ giảng thực hiện theo quy trình 6 bước sau trước tuần lễ bắt đầu học kỳ:
+Nhằm chuyển đổi toàn bộ các nhãn "Chưa kiểm" thành "Đã kiểm chứng 100%", bộ phận giảng viên và trợ giảng thực hiện theo quy trình 6 bước sau trước tuần lễ bắt đầu học kỳ:
 
 1. **Khóa cứng tham số mô hình PDK C5N:**
    Toàn bộ máy tính phòng lab sử dụng duy nhất tệp [C5_models.txt](file:///d:/tam/VLSI_Spice/04%20-%20Models_and_Libraries/C5_models.txt). Tên model trong netlist SPICE là `N` cho NMOS và `P` cho PMOS (cú pháp: `M1 Out In GND GND N W=... L=...`).

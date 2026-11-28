@@ -12,7 +12,7 @@
 1. **Vai trò Inverter phản hồi $I_3$:** Với kiến trúc chuẩn có $TG_2$ (Hình 5.1), $TG_1$ và $TG_2$ không dẫn cùng lúc ở trạng thái xác lập nên $I_3$ **không** tranh chấp với $TG_1$ và chỉ cần kích thước tối thiểu ($4\lambda/2\lambda$). Nếu bỏ $TG_2$ (mạch chốt kiểu weak inverter), $W=4\lambda, L=2\lambda$ **không đủ yếu** ($V_X = 2,244\,\text{V} < 2,45\,\text{V}$), phải dùng $L=4\lambda$ ($V_X = 3,098\,\text{V}$).
 2. **Race Condition & Nguồn gốc $t_{hold}$:** Cấu trúc Master-Slave chỉ giảm race khi $\overline{CLK}$ bám sát $CLK$; độ trễ qua `X_CLK_INV` ($\approx t_{pd,inv}$) sinh ra khoảng chồng dẫn ngắn và chính là nguyên nhân gây ra $t_{hold} > 0$.
 3. **Đường dẫn đầy đủ của $t_{c-q}$:** $CLK \to \overline{CLK} \to TG_{S1} \to I_{S1} \to I_{S2} \to Q$ (3 INV + 1 TG $\approx 144\,\text{ps}$, không phải $110\,\text{ps}$ thiếu $I_2$).
-4. **Phương pháp đo SPICE:** Phải dùng `.ic V(q)=0` và `TD=` cho $t_{c-q}$; định nghĩa $\Delta t$ ở mốc $50\%$–$50\%$ và dùng quy ước 10% push-out riêng cho $t_{setup}$ (cả sườn lên và xuống của $D$); dùng quét bước $5\,\text{ps}$ (`-50p..+100p`) với `.meas FIND` cho ngưỡng nhị phân $t_{hold}$.
+4. **Phương pháp đo SPICE:** Phải dùng `.ic V(q)=0` và `TD=` cho $t_{c-q}$; định nghĩa $\Delta t$ ở mốc $50$–$50$ và dùng quy ước 10% push-out riêng cho $t_{setup}$ (cả sườn lên và xuống của $D$); dùng quét bước $5\,\text{ps}$ (`-50p..+100p`) với `.meas FIND` cho ngưỡng nhị phân $t_{hold}$.
 5. **Lộ trình:** Lab 5 tập trung hoàn toàn vào thiết kế mạch tuần tự và đo kiểm định thời trong 135 phút (không bắt buộc Layout/PEX).
 
 ---

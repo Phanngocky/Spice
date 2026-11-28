@@ -469,7 +469,7 @@ $$C_{in} \approx C_{ox} \cdot (W_n L_n + W_p L_p)$$
    - Mở tệp netlist PEX, quan sát các tham số hình học khuếch tán (`AS, AD, PS, PD`) và các phần tử tụ ký sinh dây nối.
    - Thêm nguồn kích thích và tụ tải $C_L = 50\,\text{fF}$ giống Ex1.3, chạy mô phỏng quá độ để đo các thông số trễ Post-layout: $t_{pHL,post}, t_{pLH,post}, t_{pd,post}$.
    - Tính toán phần trăm suy giảm tốc độ hậu thiết kế:
-     $$\Delta t_{pd} (\%) = \frac{t_{pd,post} - t_{pd,pre}}{t_{pd,pre}} \times 100\%$$
+     $$\Delta t_{pd} (\text{pct}) = \frac{t_{pd,post} - t_{pd,pre}}{t_{pd,pre}} \times 100\text{ pct}$$
 
 ### 2. Trả lời các câu hỏi phân tích Post-lab
 1. **Thiết kế kích thước đối xứng $W_p = W_n = 4\lambda_{DR}$:**  
@@ -516,12 +516,12 @@ Sinh viên tổng hợp toàn bộ kết quả đo đạc và kiểm chứng và
 
 | Đại lượng kỹ thuật | [1] Dự đoán Pre-lab | [2] Đo đạc Pre-layout | [3] Đo đạc Post-layout | So với Benchmark GV ([2] vs Benchmark) | So với Lý thuyết 0,69RC ([2] vs [1]) | Ngưỡng nghiệm thu |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Điện áp chuyển mạch $V_M$** | ................. V | ................. V | ................. V | — | Sai lệch: ........... % | $\le 3\%$ so với Pre-lab |
+| **Điện áp chuyển mạch $V_M$** | ................. V | ................. V | ................. V | — | Sai lệch: ........... % | $\le 3$% so với Pre-lab |
 | **Lề nhiễu mức thấp $NM_L$** | ................. V | ................. V | ................. V | — | — | Đạt tiêu chuẩn thiết kế |
 | **Lề nhiễu mức cao $NM_H$** | ................. V | ................. V | ................. V | — | — | Đạt tiêu chuẩn thiết kế |
-| **Trễ sườn xuống $t_{pHL}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20\%$ so với Benchmark GV |
-| **Trễ sườn lên $t_{pLH}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20\%$ so với Benchmark GV |
-| **Trễ trung bình $t_{pd}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20\%$ so với Benchmark GV |
+| **Trễ sườn xuống $t_{pHL}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20$% so với Benchmark GV |
+| **Trễ sườn lên $t_{pLH}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20$% so với Benchmark GV |
+| **Trễ trung bình $t_{pd}$** | ................. ps | ................. ps | ................. ps | Sai lệch: ........... % | Tỉ số đo / 0,69RC: ....... | $\le 20$% so với Benchmark GV |
 
 *Lưu ý:* Giá trị Benchmark của Giảng viên được công bố trong cẩm nang hướng dẫn Teacher's Book. Phép so sánh với mô hình $0,69 \cdot R_{on} \cdot C_L$ dùng để đánh giá năng lực phân tích bản chất vật lý (quá trình xả qua vùng bão hòa), không dùng làm tiêu chí đạt/trượt kỹ thuật.
 
@@ -544,8 +544,8 @@ Sinh viên tổng hợp toàn bộ kết quả đo đạc và kiểm chứng và
 | Hạng mục đánh giá | Chuẩn CLO | Điểm | Tiêu chí đạt điểm tối đa |
 | :--- | :---: | :---: | :--- |
 | **Chuẩn bị Pre-lab (Mục 4)** | **CLO1** | **2.0 điểm** | Điền đủ tham số P1; giải đúng P2 ($W_p/W_n$ và $V_M$); tính đúng $R_{on}$, trễ P3; vẽ Stick diagram P4 có đủ Taps và dải Poly liên tục; netlist P5 hoàn chỉnh; dự đoán P6, P7 hợp lý. |
-| **Khảo sát I-V & Phân tích VTC (Ex1.1, Ex1.2)** | **CLO2** | **2.5 điểm** | Quét đúng họ đặc tuyến ra và truyền dẫn; trích xuất chuẩn xác $V_{th}$ và $\lambda_{CLM}$; Schematic đúng quy chuẩn; đo chính xác $V_M$ (sai số $\le 3\%$ so với Pre-lab), xác định đúng lề nhiễu $NM_L, NM_H$. |
-| **Mô phỏng quá độ Transient & Đo trễ (Ex1.3)** | **CLO2** | **2.0 điểm** | Thiết lập nguồn xung đúng chuẩn; dùng thành thạo khối lệnh `.meas` đo đủ 5 thông số ở 3 mức tải dung; sai lệch trễ $\le 20\%$ so với Benchmark GV; giải thích sắc bén cơ chế sai lệch so với $0,69RC$. |
+| **Khảo sát I-V & Phân tích VTC (Ex1.1, Ex1.2)** | **CLO2** | **2.5 điểm** | Quét đúng họ đặc tuyến ra và truyền dẫn; trích xuất chuẩn xác $V_{th}$ và $\lambda_{CLM}$; Schematic đúng quy chuẩn; đo chính xác $V_M$ (sai số $\le 3$% so với Pre-lab), xác định đúng lề nhiễu $NM_L, NM_H$. |
+| **Mô phỏng quá độ Transient & Đo trễ (Ex1.3)** | **CLO2** | **2.0 điểm** | Thiết lập nguồn xung đúng chuẩn; dùng thành thạo khối lệnh `.meas` đo đủ 5 thông số ở 3 mức tải dung; sai lệch trễ $\le 20$% so với Benchmark GV; giải thích sắc bén cơ chế sai lệch so với $0,69RC$. |
 | **Mask Layout, kiểm tra DRC & LVS (Ex1.4)** | **CLO2, CLO4** | **2.5 điểm** | Vẽ Layout chuẩn theo quy tắc SCMOS Submicron ($H_{cell} = 40\lambda$, ray nguồn $6\lambda$); có đủ tiếp xúc Well Tap và Substrate Tap chống Latch-up; kiểm tra DRC đạt 0 lỗi; NCC đối chiếu LVS đạt **MATCH**. |
 | **Đánh giá PEX & Báo cáo Post-lab (Ex1.5, Mục 7)** | **CLO4** | **1.0 điểm** | Trích xuất netlist PEX và đo được độ suy giảm tốc độ; nộp đủ tệp thư viện `lab_vlsi.jelib`; báo cáo kỹ thuật 3–4 trang trình bày mạch lạc, trả lời xuất sắc 3 câu hỏi bản chất vật lý Post-lab. |
 

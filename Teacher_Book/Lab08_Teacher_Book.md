@@ -28,14 +28,14 @@
 | **Driver NMOS ($M_{D1}, M_{D2}$, $8\lambda$)** | Kéo giữ nút `'0'` xuống đất trong cả Hold và Read. Phải mạnh hơn Access ($CR \ge 1,5 - 2,0$) để điện áp dâng $V_Q$ khi đọc ($\approx 0,73 - 0,79\,\text{V}$) nằm an toàn dưới ngưỡng lật $V_M \approx 1,49\,\text{V}$ của Inverter đối diện. |
 | **Access NMOS ($M_{AX1}, M_{AX2}$, $4\lambda$)** | Đóng mở cổng nối với `BL`/`BLB` theo tín hiệu hàng `WL`. Nằm ở giao điểm của hai mâu thuẫn: to quá thì hỏng Đọc, nhỏ quá thì không Ghi được! |
 | **Load PMOS ($M_{L1}, M_{L2}$, $2\lambda$)** | Giữ nút `'1'` chống dòng rò lúc Hold; phải yếu hơn Access (nhờ $\mu_n \approx 3\mu_p$, $PR=0,5$ cho sức kéo Access/Load $= 6\times$) để khi ghi `'0'` kéo tụt được nút lưu trữ xuống $\approx 0,36\,\text{V} \ll V_M$. *(Layout thực tế dùng $W_L \ge 3\lambda$, tăng $L_L$)*. |
-| **Cụm VLSA & Chân `saen`** | Khi `saen` bật lên $V_{DD}$, cặp Inverter ghép chéo khuếch đại vi sai $\pm 150\,\text{mV}$ thành $0/5\,\text{V}$ chỉ trong $\sim 70-200\,\text{ps}$, giúp tiết kiệm $>90\%$ năng lượng nạp xả `BL`/`BLB`. |
+| **Cụm VLSA & Chân `saen`** | Khi `saen` bật lên $V_{DD}$, cặp Inverter ghép chéo khuếch đại vi sai $\pm 150\,\text{mV}$ thành $0/5\,\text{V}$ chỉ trong $\sim 70-200\,\text{ps}$, giúp tiết kiệm $>90$% năng lượng nạp xả `BL`/`BLB`. |
 
 ---
 
 ### 8.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Giải quyết triệt để mâu thuẫn công thức $V_Q$ khi đọc `'0'`:** Công thức xấp xỉ bậc nhất $\frac{V_{DD}-V_{tn}}{2\cdot CR}$ cho $1,075\,\text{V}$ ở $CR=2$ (lớn hơn $V_{tn}=0,70\,\text{V}$). Giải phương trình bậc hai chính xác cho $V_Q = \mathbf{0,789\,\text{V}}$ (không body effect) hoặc $\mathbf{0,725\,\text{V}}$ (có body effect trên Access NMOS). Tiêu chí vật lý đúng không phải $V_Q < V_{tn}$, mà là **$V_Q < V_M$ của Inverter đối diện** ($V_M \approx \mathbf{1,485\,\text{V}}$ với $8\lambda/2\lambda$).
 2. **Hiểu đúng sức kéo khi ghi `'0'` (`PR`):** Dù $PR = 0,5$ theo tỉ số $W/L$, nhưng vì $K'_n / K'_p = 3$ nên tỉ số dòng thực tế giữa Access ($4\lambda$) và Load ($2\lambda$) là **$6\times$**, kéo nút $Q$ xuống cân bằng ở $\mathbf{0,357\,\text{V}} \ll V_M = 1,485\,\text{V}$.
-3. **Nắm chính xác định nghĩa & giá trị $SNM$:** $SNM_{hold} \approx \mathbf{1,303\,\text{V}}$ ($26,1\% V_{DD}$) và $SNM_{read} \approx \mathbf{0,359\,\text{V}}$ ($7,2\% V_{DD}$, do $V_M$ dịch từ $1,485\,\text{V}$ lên $2,090\,\text{V}$), không phải $0,62\,\text{V}$ như bản cũ ghi nhầm.
+3. **Nắm chính xác định nghĩa & giá trị $SNM$:** $SNM_{hold} \approx \mathbf{1,303\,\text{V}}$ (26,1% $V_{DD}$) và $SNM_{read} \approx \mathbf{0,359\,\text{V}}$ (7,2% $V_{DD}$, do $V_M$ dịch từ $1,485\,\text{V}$ lên $2,090\,\text{V}$), không phải $0,62\,\text{V}$ như bản cũ ghi nhầm.
 4. **Tách bạch Đọc tĩnh ($V_Q$) vs Đọc động ($\Delta V_{BL}$) và đo đối sánh VLSA tường minh:** Phải gắn $C_{BL}=1\,\text{pF}$ thả nổi mới đo được $\Delta V_{BL}(t)$ và so sánh công bằng tốc độ/năng lượng giữa đọc có VLSA với đọc không VLSA (chờ Bitline xả xuống $V_{DD}/2$).
 
 ---
@@ -111,4 +111,4 @@
 ### 8.8 Bộ câu hỏi vấn đáp nhanh tại bàn (3 câu chọn lọc)
 1. *"Nếu anh/chị tăng chiều rộng Access NMOS lên bằng Driver NMOS ($CR = 1,0$) để ghi nhanh hơn, hiện tượng gì xảy ra ở đường cong Butterfly chế độ Read?"* (Đáp: $V_Q$ dâng lên $\approx 1,12 - 1,26\,\text{V}$, hai thùy Butterfly ép sát lại làm $SNM_{read} \to 0$, ô nhớ mất dữ liệu ngay khi đọc).
 2. *"Vì sao trong thiết kế layout SRAM 6T không nên dùng $W_L = 2\lambda$ nếu quy trình DRC yêu cầu Active tối thiểu $3\lambda$?"* (Đáp: Sẽ vi phạm DRC; phải tăng $W_L \ge 3\lambda$ và tăng chiều dài kênh $L_L$ tương ứng để giữ nguyên tỉ số $PR$ yếu cho phép ghi).
-3. *"Khi đọc mảng nhớ $C_{BL} = 1\,\text{pF}$, năng lượng nạp lại Bitline tiết kiệm được bao nhiêu lần khi dùng VLSA kích ở $\Delta V_{BL}=150\,\text{mV}$ so với đọc thường xả $2,5\,\text{V}$?"* (Đáp: Năng lượng tỉ lệ thuận với $\Delta V_{BL}$, tiết kiệm $\frac{2,50 - 0,15}{2,50} = \mathbf{94\%}$, tức giảm $\sim 16,7$ lần!).
+3. *"Khi đọc mảng nhớ $C_{BL} = 1\,\text{pF}$, năng lượng nạp lại Bitline tiết kiệm được bao nhiêu lần khi dùng VLSA kích ở $\Delta V_{BL}=150\,\text{mV}$ so với đọc thường xả $2,5\,\text{V}$?"* (Đáp: Năng lượng tỉ lệ thuận với $\Delta V_{BL}$, tiết kiệm $\frac{2,50 - 0,15}{2,50} = \mathbf{94\text{ pct}}$, tức giảm $\sim 16,7$ lần!).

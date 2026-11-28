@@ -22,7 +22,7 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
    - Quét điện áp DC: `.dc`
    - Đáp ứng miền thời gian (Quá độ): `.tran`
    - Đáp ứng miền tần số: `.ac`
-3. **Đo tự động các thông số quá độ và tần số bằng câu lệnh `.meas`**: Đo chính xác độ trễ lan truyền ($t_{pd}$), thời gian sườn tăng/giảm ($t_r, t_f$), đỉnh dòng điện nạp/xả và tần số cắt $-3\,\text{dB}$ ($f_c$) với sai lệch tương đối $\le 2,0\%$ so với lý thuyết giải tích (CLO2).
+3. **Đo tự động các thông số quá độ và tần số bằng câu lệnh `.meas`**: Đo chính xác độ trễ lan truyền ($t_{pd}$), thời gian sườn tăng/giảm ($t_r, t_f$), đỉnh dòng điện nạp/xả và tần số cắt $-3\,\text{dB}$ ($f_c$) với sai lệch tương đối $\le 2,0$% so với lý thuyết giải tích (CLO2).
 4. **Khảo sát độ nhạy tham số linh kiện** bằng chỉ thị `.param` và lệnh quét `.step`, trích xuất dữ liệu đo từ SPICE Error Log và vẽ đồ thị thực nghiệm để xác định độ dốc (CLO2).
 5. **Thực hiện kiểm chéo giữa hai phép đo độc lập** (miền thời gian và miền tần số) để khẳng định tính nhất quán vật lý của hệ thống tuyến tính bậc một ($t_r \cdot f_c \approx 0,35$) (CLO2).
 6. **Liên kết mô hình công nghệ MOSFET C5N Level 3** bằng lệnh `.include`, đo dòng cực má $I_D$ bằng `.op`, so sánh với mô hình bậc hai Shichman-Hodges và giải thích các nguyên nhân vật lý gây chênh lệch (CLO1, CLO2).
@@ -136,8 +136,8 @@ Mạch RC nối tiếp là mô hình vật lý cơ sở của mọi cổng vi m�
   *(Ví dụ minh họa lý thuyết: Với $R = 10\,\text{k}\Omega, C = 2\,\text{nF} \implies \tau = 10\,\text{k}\Omega \times 2\,\text{nF} = 20\,\mu\text{s}$).*
 - **Nạp điện ($0 \le t < T_{on}$):** $v_C(t) = V_0 (1 - e^{-t/\tau})$.
 - **Xả điện ($T_{on} \le t < T_{period}$, $t' = t - T_{on}$):** $v_C(t') = v_C(T_{on}) \cdot e^{-t'/\tau}$.
-- **Trễ 50%:** $t_{50\%} = \tau \ln(2) \approx 0,693 \cdot RC$.  
-  *(Với ví dụ trên: $t_{50\%} \approx 0,693 \times 20\,\mu\text{s} \approx 13,86\,\mu\text{s}$).*
+- **Trễ 50%:** $t_{50} = \tau \ln(2) \approx 0,693 \cdot RC$.  
+  *(Với ví dụ trên: $t_{50} \approx 0,693 \times 20\,\mu\text{s} \approx 13,86\,\mu\text{s}$).*
 - **Thời gian sườn tăng (10%–90%):** $t_r = \tau \ln(9) \approx 2,197 \cdot RC \approx 2,2 \cdot RC$.  
   *(Với ví dụ trên: $t_r \approx 2,197 \times 20\,\mu\text{s} \approx 43,94\,\mu\text{s} \approx 44\,\mu\text{s}$).*
 - **Tần số cắt $-3\,\text{dB}$:** $f_c = \frac{1}{2\pi RC}$; tại $f_c$, góc pha bằng $-45^\circ$, biên độ suy giảm $-3,01\,\text{dB}$.  
@@ -174,9 +174,9 @@ Trong SPICE, dòng điện qua một linh kiện hai cực được quy ước *
    b) Dự đoán độ dốc $\frac{dV_{out}}{dV_{in}}$ khi quét điện áp ngõ vào từ $0\,\text{V}$ đến $10\,\text{V}$.
 3. **Câu P3 (Tính toán thông số quá độ mạch RC):**  
    Cho mạch RC nối tiếp gồm $R = 5\,\text{k}\Omega$ và $C = 10\,\text{nF}$, kích thích bởi bước nhảy điện áp từ $0\,\text{V} \to 5,0\,\text{V}$.  
-   Tính: Hằng số thời gian $\tau$, thời gian trễ 50% ($t_{50\%}$), thời gian sườn tăng 10%–90% ($t_r$), và tần số cắt $-3\,\text{dB}$ ($f_c$).
+   Tính: Hằng số thời gian $\tau$, thời gian trễ 50% ($t_{50}$), thời gian sườn tăng 10%–90% ($t_r$), và tần số cắt $-3\,\text{dB}$ ($f_c$).
 4. **Câu P4 (Thiết lập nguồn xung PULSE):**  
-   Để tụ điện trong mạch ở Câu P3 có đủ thời gian nạp đạt trên $99\%$ điện áp nguồn và sau đó xả về dưới $1\%$, hãy xác định giá trị tối thiểu của độ rộng xung $T_{on}$ và chu kỳ xung $T_{period}$.
+   Để tụ điện trong mạch ở Câu P3 có đủ thời gian nạp đạt trên 99% điện áp nguồn và sau đó xả về dưới 1%, hãy xác định giá trị tối thiểu của độ rộng xung $T_{on}$ và chu kỳ xung $T_{period}$.
 5. **Câu P5 (Độ nhạy tham số):**  
    Nếu ta giữ nguyên điện trở $R$ và tăng điện dung tụ điện lên gấp đôi ($C' = 2C$), thời gian trễ $t_{pd}$ và tần số cắt $f_c$ của mạch sẽ thay đổi như thế nào?
 6. **Câu P6 (Phác thảo dạng sóng nạp không đầy):**  
@@ -257,15 +257,15 @@ Quá trình thực hành Lab 0 được tổ chức trực tiếp tại phòng m
 
 **3. Câu hỏi tư duy:**
 - *Câu hỏi 1:* Tại sao điện áp trên tụ điện $v_C(t)$ không thể thay đổi tức thời khi có xung điện áp nhảy bậc ở ngõ vào?
-- *Câu hỏi 2:* Dùng con trỏ chuột (Cursor) đo điện áp $V(out)$ tại thời điểm $t = \tau = 100\,\mu\text{s}$. Giá trị này đạt bao nhiêu phần trăm so với $5,0\,\text{V}$ và có khớp với lý thuyết $63,2\%$ không?
+- *Câu hỏi 2:* Dùng con trỏ chuột (Cursor) đo điện áp $V(out)$ tại thời điểm $t = \tau = 100\,\mu\text{s}$. Giá trị này đạt bao nhiêu phần trăm so với $5,0\,\text{V}$ và có khớp với lý thuyết 63,2% không?
 - *Câu hỏi 3:* Nếu tăng giá trị điện dung lên gấp đôi ($C = 10\,\text{nF}$), thời gian trễ $t_{pd}$ và sườn tăng $t_r$ thay đổi như thế nào?
-- *Câu hỏi 4:* Tính điện áp trên tụ $v_C$ tại thời điểm $t = T_{on} = 500\,\mu\text{s}$ trước, từ đó suy ra dòng điện đỉnh xả lý thuyết $I_{peak,dis}$. So sánh độ lớn của $|I_{peak,dis}|$ với đỉnh dòng nạp $I_{peak,chg}$ và giải thích vì sao có sự chênh lệch nhỏ ($\,\sim 0,67\%$) giữa hai giá trị này.
+- *Câu hỏi 4:* Tính điện áp trên tụ $v_C$ tại thời điểm $t = T_{on} = 500\,\mu\text{s}$ trước, từ đó suy ra dòng điện đỉnh xả lý thuyết $I_{peak,dis}$. So sánh độ lớn của $|I_{peak,dis}|$ với đỉnh dòng nạp $I_{peak,chg}$ và giải thích vì sao có sự chênh lệch nhỏ ($\,\sim 0,67$%) giữa hai giá trị này.
 
 **4. Sản phẩm nghiệm thu Ex0.2:**
 - Sơ đồ mạch `ex02_rc_tran.asc`.
 - Tệp Netlist `ex02_rc_tran.sp`.
 - Dạng sóng chụp màn hình gồm 2 đồ thị: Điện áp $V(in), V(out)$ và Dòng điện $I(C1)$.
-- Bảng đối chiếu số liệu đo SPICE `.meas` so với công thức giải tích ($\tau = RC$, $t_{50\%} = \ln(2) RC$, $t_r = \ln(9) RC$, $I_{peak,chg}$, $I_{peak,dis}$).
+- Bảng đối chiếu số liệu đo SPICE `.meas` so với công thức giải tích ($\tau = RC$, $t_{50} = \ln(2) RC$, $t_r = \ln(9) RC$, $I_{peak,chg}$, $I_{peak,dis}$).
 
 ---
 
@@ -387,7 +387,7 @@ lab00_MSSV_HoTen/
 ### 2. Nội dung báo cáo kỹ thuật tổng kết (3–4 trang)
 Báo cáo trình bày khoa học, súc tích gồm 4 phần:
 1. **Đáp án phần Pre-lab:** Trình bày lời giải 6 câu hỏi chuẩn bị trước khi đến lớp.
-2. **Bảng tổng hợp kết quả Benchmark:** Bảng so sánh đầy đủ giữa Lý thuyết giải tích và Đo đạc SPICE cho cả 5 bài Ex0.1 – Ex0.5, kèm cột tính sai lệch tương đối $\text{Error (\%)}$ và kết quả kiểm chéo $t_r \cdot f_c$.
+2. **Bảng tổng hợp kết quả Benchmark:** Bảng so sánh đầy đủ giữa Lý thuyết giải tích và Đo đạc SPICE cho cả 5 bài Ex0.1 – Ex0.5, kèm cột tính sai lệch tương đối $\text{Error (\text{pct})}$ và kết quả kiểm chéo $t_r \cdot f_c$.
 3. **Trả lời các câu hỏi tư duy trọng tâm:** Trình bày ngắn gọn câu trả lời cho các câu hỏi tư duy đã nêu trong từng bài Ex.
 4. **Thử nghiệm lỗi có chủ đích (Deliberate Fault Injection):** Để rèn luyện kỹ năng chẩn đoán, sinh viên bắt buộc chủ động tạo ra **ít nhất 01 lỗi kỹ thuật có chủ đích** (ví dụ: xóa cọc đất ở Ex0.1, hoặc bỏ dấu ngoặc nhọn `{}` ở Ex0.4, hoặc gõ nhầm tiền tố `10M`), chụp ảnh thông báo lỗi của LTspice, giải thích cơ chế phát sinh lỗi và cách khắc phục.
 
@@ -396,10 +396,10 @@ Báo cáo trình bày khoa học, súc tích gồm 4 phần:
 ## 8. TIÊU CHÍ KIỂM CHỨNG KỸ THUẬT & SAI LỆCH CHẤP NHẬN
 
 Mỗi kết quả đo tự động bằng `.meas` được đánh giá độ chính xác bằng công thức:
-$$\text{Sai lệch tương đối (\%)} = \frac{|\text{Giá trị SPICE} - \text{Giá trị Lý thuyết}|}{\text{Giá trị Lý thuyết}} \times 100\%$$
+$$\text{Sai lệch tương đối (\text{pct})} = \frac{|\text{Giá trị SPICE} - \text{Giá trị Lý thuyết}|}{\text{Giá trị Lý thuyết}} \times 100\text{ pct}$$
 
-- **Chỉ tiêu đối với mạch RC (Ex0.1 – Ex0.4):** Sai lệch tương đối $\le 2,0\%$. Mạch RC là mạng tuyến tính lý tưởng nên khi thiết lập đúng bước thời gian $dT_{max} \le \tau/1000$ (`0.1u`), sai số mô phỏng thông thường sẽ rất nhỏ ($< 0,1\%$).
-- **Đối với bài MOSFET (Ex0.5):** Không áp dụng chỉ tiêu sai số $\le 2\%$. Sinh viên được yêu cầu **nêu và giải thích sự chênh lệch** giữa mô hình giải tích bậc hai thô và mô hình SPICE Level 3 (dòng thực tế thường thấp hơn từ $30\%$ đến $40\%$ do bão hòa vận tốc hạt dẫn và suy giảm độ linh động).
+- **Chỉ tiêu đối với mạch RC (Ex0.1 – Ex0.4):** Sai lệch tương đối $\le 2,0$%. Mạch RC là mạng tuyến tính lý tưởng nên khi thiết lập đúng bước thời gian $dT_{max} \le \tau/1000$ (`0.1u`), sai số mô phỏng thông thường sẽ rất nhỏ ($< 0,1$%).
+- **Đối với bài MOSFET (Ex0.5):** Không áp dụng chỉ tiêu sai số $\le 2$%. Sinh viên được yêu cầu **nêu và giải thích sự chênh lệch** giữa mô hình giải tích bậc hai thô và mô hình SPICE Level 3 (dòng thực tế thường thấp hơn từ 30% đến 40% do bão hòa vận tốc hạt dẫn và suy giảm độ linh động).
 
 ---
 
@@ -421,7 +421,7 @@ $$\text{Sai lệch tương đối (\%)} = \frac{|\text{Giá trị SPICE} - \text
 | Hạng mục đánh giá | Chuẩn CLO | Điểm | Tiêu chí đạt điểm tối đa |
 | :--- | :---: | :---: | :--- |
 | **Chuẩn bị Pre-lab (Nộp đầu buổi)** | **CLO1** | **1.5 điểm** | Trả lời đầy đủ, chính xác 6 câu hỏi Pre-lab; hiểu đúng đơn vị, quy tắc mạch phân áp và động học nạp xả RC. |
-| **Kỹ năng thao tác tại lớp (Ex0.1 – Ex0.3)** | **CLO2** | **3.5 điểm** | Dựng sơ đồ đúng chuẩn, vận hành đủ các chế độ `.op`, `.tran`, `.ac`; trích xuất đúng số đo tự động bằng `.meas` với sai số $\le 2\%$; thực hiện đúng kiểm chéo $t_r \cdot f_c$. |
+| **Kỹ năng thao tác tại lớp (Ex0.1 – Ex0.3)** | **CLO2** | **3.5 điểm** | Dựng sơ đồ đúng chuẩn, vận hành đủ các chế độ `.op`, `.tran`, `.ac`; trích xuất đúng số đo tự động bằng `.meas` với sai số $\le 2$%; thực hiện đúng kiểm chéo $t_r \cdot f_c$. |
 | **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **CLO2** | **2.0 điểm** | Quét đúng 4 bước giá trị $R$, vẽ được đồ thị thực nghiệm và xác nhận độ dốc; liên kết đúng thư viện C5N và đo được dòng $I_D$. |
 | **Dự đoán – Đo đạc – Giải thích sai lệch** | **CLO1, CLO2** | **1.5 điểm** | Thể hiện rõ quy trình khoa học: dự đoán trước, đo bằng SPICE, đối chiếu và giải thích sắc bén các chênh lệch vật lý (đặc biệt là dòng xả Ex0.2 và dòng MOSFET Ex0.5). |
 | **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **CLO4** | **1.5 điểm** | Thư mục dự án đầy đủ 5 schematic, 5 netlist, waveforms và C5_models.txt; báo cáo 3–4 trang trình bày trung thực, có thử nghiệm lỗi có chủ đích. |\n

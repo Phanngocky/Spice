@@ -16,10 +16,10 @@
 1. **Hiểu bản chất topo mạng đối ngẫu tĩnh:** Mạng kéo xuống (PDN) dùng NMOS thực hiện hàm bù $\bar{Y}$, mạng kéo lên (PUN) dùng PMOS thực hiện hàm $Y$. Phép nối tiếp trong mạng này tương ứng với song song trong mạng kia theo định lý De Morgan.
 2. **Nắm vững nguyên tắc định cỡ theo trường hợp xấu nhất (Worst-Case Sizing):** Định cỡ để điện trở kéo tương đương bằng Inverter chuẩn `INV_X1` ($R_{eq,N} \approx 969\,\Omega, R_{eq,P} \approx 992\,\Omega$).
 3. **Hiểu rõ bản chất so sánh NAND vs NOR (Bác bỏ hiểu lầm):** Ở cùng tải dung ngoài $C_L = 50\,\text{fF}$, trễ lý thuyết worst-case của NAND2 và NOR2 **bằng nhau** ($\approx 33,8\,\text{ps}$). Ưu thế đáng kể thực sự của NAND nằm ở:
-   - Tiết kiệm **$+40\%$ tổng diện tích kênh** ($\sum W$: $40\lambda$ vs $56\lambda$).
-   - Nhẹ tải hơn **$+40\%$ điện dung ngõ vào** ($C_{in}$: $20\lambda$ vs $28\lambda$), không làm chậm tầng lái phía trước.
+   - Tiết kiệm **+40% tổng diện tích kênh** ($\sum W$: $40\lambda$ vs $56\lambda$).
+   - Nhẹ tải hơn **+40% điện dung ngõ vào** ($C_{in}$: $20\lambda$ vs $28\lambda$), không làm chậm tầng lái phía trước.
    - Tránh được hiệu ứng thân (Body Effect) trên chuỗi PMOS nối tiếp vốn làm suy giảm mạnh dòng kéo lên của NOR2.
-4. **Giải thích được hiện tượng trễ phụ thuộc vector chuyển mạch (Input-pattern dependency):** Phân tích cơ chế tích lũy điện tích tại nút nội $X_n$. Hiểu vì sao ở tải lớn ($50\,\text{fF}$) độ lệch chỉ $\sim 5\%$, nhưng ở tải nhỏ ($10\,\text{fF}$) độ lệch vọt lên tới $\sim 20 - 25\%$.
+4. **Giải thích được hiện tượng trễ phụ thuộc vector chuyển mạch (Input-pattern dependency):** Phân tích cơ chế tích lũy điện tích tại nút nội $X_n$. Hiểu vì sao ở tải lớn ($50\,\text{fF}$) độ lệch chỉ $\sim 5$%, nhưng ở tải nhỏ ($10\,\text{fF}$) độ lệch vọt lên tới $\sim 20 - 25$%.
 5. **Thành thạo phương pháp đường Euler trên đồ thị dải khuếch tán:** Tìm thứ tự dải Poly chung $A - B$ để thực hiện chia sẻ vùng khuếch tán (Abutment), triệt tiêu các khoảng cắt dải khuếch tán và giảm điện dung ký sinh nút ngõ ra.
 6. **Nắm chắc luật hình học DRC:** Khoảng cách giữa 2 dải Poly tại nơi có đặt Contact chia sẻ cực má bắt buộc phải $\ge 6\lambda_{DR} = 1,80\,\mu\text{m}$ (không được nhầm lẫn với khoảng cách ly $3\lambda_{DR}$ ở nơi không có contact).
 
@@ -82,9 +82,9 @@ Bảng tổng hợp đối sánh chuyên sâu dành cho giảng viên phản bi�
 
 | Chỉ số PPA | Cổng Inverter `INV_X1` | Cổng NAND2 (`nand2_x1`) | Cổng NOR2 (`nor2_x1`) | So sánh NOR2 với NAND2 |
 | :--- | :---: | :---: | :---: | :---: |
-| **Tổng chiều rộng kênh $\sum W$** | $16\lambda_{DR}$ ($4,8\,\mu\text{m}$) | $40\lambda_{DR}$ ($12,0\,\mu\text{m}$) | $56\lambda_{DR}$ ($16,8\,\mu\text{m}$) | NOR2 lớn hơn **$+40,0\%$** |
-| **Điện dung ngõ vào Pin A ($C_{in}$)** | $16\lambda_{DR} \cdot C'$ ($1,00\times$) | $20\lambda_{DR} \cdot C'$ ($1,25\times$) | $28\lambda_{DR} \cdot C'$ ($1,75\times$) | NOR2 nặng hơn **$+40,0\%$** |
-| **Hệ số Logical Effort ($g$)** | $1,000$ | $1,250$ ($5/4$) | $1,750$ ($7/4$) | NOR2 kém hơn **$+40,0\%$** |
+| **Tổng chiều rộng kênh $\sum W$** | $16\lambda_{DR}$ ($4,8\,\mu\text{m}$) | $40\lambda_{DR}$ ($12,0\,\mu\text{m}$) | $56\lambda_{DR}$ ($16,8\,\mu\text{m}$) | NOR2 lớn hơn **+40,0%** |
+| **Điện dung ngõ vào Pin A ($C_{in}$)** | $16\lambda_{DR} \cdot C'$ ($1,00\times$) | $20\lambda_{DR} \cdot C'$ ($1,25\times$) | $28\lambda_{DR} \cdot C'$ ($1,75\times$) | NOR2 nặng hơn **+40,0%** |
+| **Hệ số Logical Effort ($g$)** | $1,000$ | $1,250$ ($5/4$) | $1,750$ ($7/4$) | NOR2 kém hơn **+40,0%** |
 | **Trễ $t_{pd,worst}$ lý thuyết ($C_L = 50\,\text{fF}$)** | $33,8\,\text{ps}$ | $33,8\,\text{ps}$ | $33,8\,\text{ps}$ | **Bằng nhau đồng bộ** |
 | **Ảnh hưởng Body Effect** | Không | Không đáng kể ($X_n$ xả) | **Rất nặng** ($V_{SB} > 0$ trên PMOS) | NOR2 bị suy thoái dòng nạp |
 | **Tụ ký sinh cực má nút Out ($C_{db}$)** | Nhỏ | $C_{db,N1} + 2C_{db,P}$ | $2C_{db,N} + C_{db,P2} (24\lambda)$ | NOR2 có diện tích khuếch tán lớn hơn |
@@ -93,7 +93,7 @@ Bảng tổng hợp đối sánh chuyên sâu dành cho giảng viên phản bi�
 > **Kết luận sư phạm then chốt:**  
 > Đừng bao giờ nói với sinh viên một cách chung chung là *"cổng NAND nhanh hơn cổng NOR"*. Hãy giải thích chính xác:  
 > 1. Khi xét riêng một cổng kéo một tải thuần $C_L$ cố định, nếu định cỡ đúng thì tốc độ worst-case của chúng ngang nhau.  
-> 2. Nhưng trong một chuỗi logic (Logic Path), cổng NOR2 làm tầng đứng trước nó phải kéo một tụ ngõ vào lớn hơn $40\%$, khiến tầng trước bị chậm đi $40\%$. Đồng thời nó chiếm diện tích silicon lớn hơn $40\%$. Do đó, xét trên toàn hệ thống vi mạch, **mạng dùng cổng NAND luôn nhanh hơn, nhỏ hơn và tiêu thụ năng lượng thấp hơn mạng dùng cổng NOR**.
+> 2. Nhưng trong một chuỗi logic (Logic Path), cổng NOR2 làm tầng đứng trước nó phải kéo một tụ ngõ vào lớn hơn 40%, khiến tầng trước bị chậm đi 40%. Đồng thời nó chiếm diện tích silicon lớn hơn 40%. Do đó, xét trên toàn hệ thống vi mạch, **mạng dùng cổng NAND luôn nhanh hơn, nhỏ hơn và tiêu thụ năng lượng thấp hơn mạng dùng cổng NOR**.
 
 ---
 
@@ -131,12 +131,12 @@ $$\Delta t_{pHL} \approx 0,69315 \times 484,5\,\Omega \times 5,0\,\text{fF} \app
 **So sánh phần trăm tăng trễ ở 2 mức tải:**
 - **Tại $C_L = 50\,\text{fF}$:**
   $$t_{pHL(Ca1)} \approx 0,69315 \times 969\,\Omega \times 50\,\text{fF} \approx 33,6\,\text{ps}$$
-  $$\frac{\Delta t_{pHL}}{t_{pHL(Ca1)}} = \frac{1,68\,\text{ps}}{33,6\,\text{ps}} \times 100\% \approx \mathbf{5,0\%}$$
-  *(Độ lệch $5\%$ rất khó quan sát rõ trên đồ thị mô phỏng do sai số số trị)*.
+  $$\frac{\Delta t_{pHL}}{t_{pHL(Ca1)}} = \frac{1,68\,\text{ps}}{33,6\,\text{ps}} \times 100\text{ pct} \approx \mathbf{5,0\text{ pct}}$$
+  *(Độ lệch 5% rất khó quan sát rõ trên đồ thị mô phỏng do sai số số trị)*.
 - **Tại $C_L = 10\,\text{fF}$:**
   $$t_{pHL(Ca1)} \approx 0,69315 \times 969\,\Omega \times 10\,\text{fF} \approx 6,72\,\text{ps}$$
-  $$\frac{\Delta t_{pHL}}{t_{pHL(Ca1)}} = \frac{1,68\,\text{ps}}{6,72\,\text{ps}} \times 100\% \approx \mathbf{25,0\%}$$
-  *(Độ lệch $25\%$ hiển thị vô cùng rõ nét! Đây là lý do vì sao bài thực hành yêu cầu đo ở cả hai mức tải $50\,\text{fF}$ và $10\,\text{fF}$)*.
+  $$\frac{\Delta t_{pHL}}{t_{pHL(Ca1)}} = \frac{1,68\,\text{ps}}{6,72\,\text{ps}} \times 100\text{ pct} \approx \mathbf{25,0\text{ pct}}$$
+  *(Độ lệch 25% hiển thị vô cùng rõ nét! Đây là lý do vì sao bài thực hành yêu cầu đo ở cả hai mức tải $50\,\text{fF}$ và $10\,\text{fF}$)*.
 
 ---
 
@@ -228,7 +228,7 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
 | **NOR2** | $M_{N1}, M_{N2}$ | PDN (song song) | $4\lambda / 2\lambda$ | $1,20\,\mu\text{m} / 0,60\,\mu\text{m}$ | $R_{eq,N,worst} = \mathbf{969,0\,\Omega}, R_{eq,N,best} = \mathbf{484,5\,\Omega}$ |
 | **NOR2** | $M_{P1}, M_{P2}$ | PUN (nối tiếp) | $24\lambda / 2\lambda$ | $7,20\,\mu\text{m} / 0,60\,\mu\text{m}$ | $R_{on,P1} = R_{on,P2} = 496,0\,\Omega \implies R_{eq,P} = \mathbf{992,1\,\Omega}$ |
 
-- **Tổng bề rộng kênh:** $\sum W_{NAND2} = 40\lambda_{DR} = 12,0\,\mu\text{m}$; $\sum W_{NOR2} = 56\lambda_{DR} = 16,8\,\mu\text{m}$ (NOR2 lớn hơn $+40,0\%$).
+- **Tổng bề rộng kênh:** $\sum W_{NAND2} = 40\lambda_{DR} = 12,0\,\mu\text{m}$; $\sum W_{NOR2} = 56\lambda_{DR} = 16,8\,\mu\text{m}$ (NOR2 lớn hơn +40,0%).
 - **Điện dung ngõ vào tương đối:**
   - $C_{in,inv} \propto 16\lambda_{DR}$.
   - $C_{in,NAND2} \propto 20\lambda_{DR} = 1,25 \times C_{in,inv} \implies g_{NAND2} = 1,250$ ($5/4$).
@@ -239,7 +239,7 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
   - NAND2: $t_{pHL} = 33,6\,\text{ps}$; $t_{pLH,worst} = 34,4\,\text{ps}$; $t_{pLH,best} = 17,2\,\text{ps}$; $t_{pd,worst} = \mathbf{34,0\,\text{ps}}$.
   - NOR2: $t_{pLH} = 34,4\,\text{ps}$; $t_{pHL,worst} = 33,6\,\text{ps}$; $t_{pHL,best} = 16,8\,\text{ps}$; $t_{pd,worst} = \mathbf{34,0\,\text{ps}}$.
 - **Tại $C_L = 10\,\text{fF}$:**
-  - NAND2: $t_{pHL(Ca1)} = 6,7\,\text{ps}$; $t_{pHL(Ca2)} = 6,7 + 1,7 = 8,4\,\text{ps}$ (tăng $+25,0\%$).
+  - NAND2: $t_{pHL(Ca1)} = 6,7\,\text{ps}$; $t_{pHL(Ca2)} = 6,7 + 1,7 = 8,4\,\text{ps}$ (tăng +25,0%).
 
 ---
 
@@ -252,15 +252,15 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
 | 3 | **$V_M$ NOR2 (1 ngõ quét, $B=0\text{V}$)** | $2,450\,\text{V}$ | $2,43 - 2,49\,\text{V}$ | $2,43 - 2,49\,\text{V}$ | Cân bằng lý tưởng |
 | 4 | **$V_M$ NOR2 (2 ngõ quét chung)** | $2,180\,\text{V}$ | $2,22 - 2,28\,\text{V}$ | $2,22 - 2,28\,\text{V}$ | Dời sang trái do 2 NMOS dẫn |
 | 5 | **NAND2 $t_{pHL(Ca1)}$ ($A$ switch, $50\text{fF}$)** | $33,6\,\text{ps}$ | $48 - 54\,\text{ps}$ | $68 - 76\,\text{ps}$ | Nút nội đã xả điện |
-| 6 | **NAND2 $t_{pHL(Ca2)}$ ($B$ switch, $50\text{fF}$)** | $35,3\,\text{ps}$ | $51 - 57\,\text{ps}$ | $72 - 82\,\text{ps}$ | Chậm hơn $\sim 5 - 6\%$ |
+| 6 | **NAND2 $t_{pHL(Ca2)}$ ($B$ switch, $50\text{fF}$)** | $35,3\,\text{ps}$ | $51 - 57\,\text{ps}$ | $72 - 82\,\text{ps}$ | Chậm hơn $\sim 5 - 6$% |
 | 7 | **NAND2 $t_{pHL(Ca1)}$ ($A$ switch, $10\text{fF}$)** | $6,7\,\text{ps}$ | $11 - 14\,\text{ps}$ | $18 - 24\,\text{ps}$ | Tải nhẹ |
-| 8 | **NAND2 $t_{pHL(Ca2)}$ ($B$ switch, $10\text{fF}$)** | $8,4\,\text{ps}$ | $14 - 18\,\text{ps}$ | $24 - 31\,\text{ps}$ | **Chậm hơn $20 - 25\%$ do xả $C_{int}$** |
+| 8 | **NAND2 $t_{pHL(Ca2)}$ ($B$ switch, $10\text{fF}$)** | $8,4\,\text{ps}$ | $14 - 18\,\text{ps}$ | $24 - 31\,\text{ps}$ | **Chậm hơn 20 - 25% do xả $C_{int}$** |
 | 9 | **NAND2 $t_{pLH(worst)}$ (1 PMOS, $50\text{fF}$)** | $34,4\,\text{ps}$ | $50 - 58\,\text{ps}$ | $70 - 80\,\text{ps}$ | Trường hợp xấu nhất |
 | 10 | **NAND2 $t_{pLH(best)}$ (2 PMOS, $50\text{fF}$)** | $17,2\,\text{ps}$ | $26 - 32\,\text{ps}$ | $38 - 46\,\text{ps}$ | Nhanh gấp đôi khi 2 PMOS cùng dẫn |
 | 11 | **NOR2 $t_{pLH(worst)}$ (2 PMOS, $50\text{fF}$)** | $34,4\,\text{ps}$ | $58 - 68\,\text{ps}$ | $88 - 105\,\text{ps}$ | Chậm hơn rõ rệt do Body Effect |
 | 12 | **NOR2 $t_{pHL(worst)}$ (1 NMOS, $50\text{fF}$)** | $33,6\,\text{ps}$ | $46 - 52\,\text{ps}$ | $64 - 72\,\text{ps}$ | 1 NMOS kéo xuống |
 | 13 | **NOR2 $t_{pHL(best)}$ (2 NMOS, $50\text{fF}$)** | $16,8\,\text{ps}$ | $24 - 28\,\text{ps}$ | $34 - 40\,\text{ps}$ | Nhanh gấp đôi khi 2 NMOS cùng dẫn |
-| 14 | **Diện tích Layout hình học ($W \times H$)** | N/A | NAND2: $\approx 105 - 120\,\mu\text{m}^2$ | NOR2: $\approx 160 - 180\,\mu\text{m}^2$ | **NOR2 lớn hơn $+45 - 50\%$** |
+| 14 | **Diện tích Layout hình học ($W \times H$)** | N/A | NAND2: $\approx 105 - 120\,\mu\text{m}^2$ | NOR2: $\approx 160 - 180\,\mu\text{m}^2$ | **NOR2 lớn hơn $+45 - 50$** |
 | 15 | **DRC MOSIS Errors** | 0 | 0 lỗi | 0 lỗi | Bắt buộc 0 lỗi |
 | 16 | **LVS Comparison (NCC)** | N/A | **MATCH 100%** | **MATCH 100%** | So khớp topo đồng bộ |
 
@@ -289,20 +289,20 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
 - **Sinh viên:** *"Dạ $50\,\text{fF}$ ạ."*
 - **Giảng viên:** *"Theo công thức Elmore, độ lệch trễ $\Delta t_{pHL} \approx \ln(2) R_{on} C_{int}$. Nó phụ thuộc vào $C_{int}$ chứ có phụ thuộc vào $C_L$ không?"*
 - **Sinh viên:** *"Dạ không, nó phụ thuộc vào tụ nút nội khoảng $5\,\text{fF}$."*
-- **Giảng viên:** *"Đúng. Khi tải ngoài $C_L = 50\,\text{fF}$ rất lớn, thời gian xả tải ngoài mất hơn $30\,\text{ps}$, nên $1,6\,\text{ps}$ của nút nội chỉ chiếm $5\%$. Bây giờ em giảm tụ tải xuống $C_L = 10\,\text{fF}$ xem tỷ lệ chênh lệch sẽ là bao nhiêu?"*
-- **Sinh viên (sau khi chạy):** *"Thưa thầy, trễ tăng từ $12\,\text{ps}$ lên $15\,\text{ps}$, lệch hơn $25\%$ rõ rệt luôn ạ!"*
+- **Giảng viên:** *"Đúng. Khi tải ngoài $C_L = 50\,\text{fF}$ rất lớn, thời gian xả tải ngoài mất hơn $30\,\text{ps}$, nên $1,6\,\text{ps}$ của nút nội chỉ chiếm 5%. Bây giờ em giảm tụ tải xuống $C_L = 10\,\text{fF}$ xem tỷ lệ chênh lệch sẽ là bao nhiêu?"*
+- **Sinh viên (sau khi chạy):** *"Thưa thầy, trễ tăng từ $12\,\text{ps}$ lên $15\,\text{ps}$, lệch hơn 25% rõ rệt luôn ạ!"*
 
 ---
 
 ## 2.10 Đáp án Chi tiết Câu hỏi Post-lab
 
 1. **Ưu thế của cổng NAND trong thiết kế ASIC:**  
-   - Cổng NAND2 có tổng bề rộng kênh $\sum W = 40\lambda$ nhỏ hơn $40\%$ so với NOR2 ($56\lambda$), giúp tiết kiệm diện tích silicon trên chip.
-   - Điện dung ngõ vào của NAND2 ($20\lambda \cdot C'$) nhẹ hơn $40\%$ so với NOR2 ($28\lambda \cdot C'$), tương ứng Logical Effort $g_{NAND2} = 1,25 < g_{NOR2} = 1,75$. Khi một cổng logic lái cổng NAND, trễ của cổng lái nhỏ hơn nhiều so với lái cổng NOR.
+   - Cổng NAND2 có tổng bề rộng kênh $\sum W = 40\lambda$ nhỏ hơn 40% so với NOR2 ($56\lambda$), giúp tiết kiệm diện tích silicon trên chip.
+   - Điện dung ngõ vào của NAND2 ($20\lambda \cdot C'$) nhẹ hơn 40% so với NOR2 ($28\lambda \cdot C'$), tương ứng Logical Effort $g_{NAND2} = 1,25 < g_{NOR2} = 1,75$. Khi một cổng logic lái cổng NAND, trễ của cổng lái nhỏ hơn nhiều so với lái cổng NOR.
    - Tránh được hiệu ứng thân làm tăng $|V_{thp}|$ của PMOS nối tiếp trong NOR2.
 2. **Vai trò của Kỹ thuật Abutment:**  
-   - Chia sẻ vùng khuếch tán giúp loại bỏ khoảng cách ly cách điện ($3\lambda_{DR}$) giữa các transistor, giảm chiều dài tế bào từ $25 - 35\%$.
-   - Giảm một nửa diện tích khuếch tán tại nút ngõ ra, triệt tiêu $50\%$ điện dung ký sinh cực má $C_{db}$, giúp tăng tốc độ chuyển mạch thực tế và giảm tiêu thụ công suất động $P_{dyn} = \alpha C f V_{DD}^2$.
+   - Chia sẻ vùng khuếch tán giúp loại bỏ khoảng cách ly cách điện ($3\lambda_{DR}$) giữa các transistor, giảm chiều dài tế bào từ 25 - 35%.
+   - Giảm một nửa diện tích khuếch tán tại nút ngõ ra, triệt tiêu $50$ điện dung ký sinh cực má $C_{db}$, giúp tăng tốc độ chuyển mạch thực tế và giảm tiêu thụ công suất động $P_{dyn} = \alpha C f V_{DD}^2$.
 3. **Thách thức khi thiết kế NAND4:**  
    - Để giữ nguyên khả năng kéo dòng tương đương Inverter chuẩn, 4 NMOS nối tiếp phải có chiều rộng kênh:
      $$W_n = 4 \times W_{n,inv} = 4 \times 4\lambda_{DR} = \mathbf{16\lambda_{DR} = 4,80\,\mu\text{m}}$$
@@ -315,7 +315,7 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
 ### 1. Barem Nghiệm thu Tại bàn (Thang 10):
 - **1. Chuẩn bị Pre-lab (2.0 điểm):** Tính đúng kích thước $W/L$, điện trở $R_{on}$, trễ lý thuyết; vẽ đúng đồ thị Euler và sơ đồ que Stick Diagram có đầy đủ chú thích lớp và Tap.
 - **2. Schematic & VTC NAND2 (2.0 điểm):** Dựng đúng sơ đồ, 0 warning F5; đo chính xác điểm $V_M$ trường hợp 1 ngõ ($2,45\,\text{V}$) và 2 ngõ ($2,75\,\text{V}$); giải thích đúng bản chất dời ngưỡng.
-- **3. Đo trễ & Hiệu ứng nút nội (2.0 điểm):** Viết đúng câu lệnh `.meas`; đo đủ 3 kịch bản; chứng minh được trễ tăng $20 - 25\%$ ở tải $10\,\text{fF}$.
+- **3. Đo trễ & Hiệu ứng nút nội (2.0 điểm):** Viết đúng câu lệnh `.meas`; đo đủ 3 kịch bản; chứng minh được trễ tăng 20 - 25% ở tải $10\,\text{fF}$.
 - **4. Schematic & Đo trễ NOR2 (1.5 điểm):** Dựng đúng NOR2 ($W_p = 24\lambda$); đấu ngõ tĩnh xuống đất $0\,\text{V}$; đo đủ trễ worst-case và best-case.
 - **5. Physical Layout, DRC & LVS (1.5 điểm):** Bố trí dải khuếch tán liền mạch Abutment; khoảng cách Poly $\ge 6\lambda$ qua contact; DRC 0 errors; NCC LVS báo **"MATCH 100%"**.
 - **6. Báo cáo, Đối sánh PPA & Tác phong (1.0 điểm):** Lập bảng đối sánh PPA đầy đủ; thái độ nghiêm túc; trả lời trôi chảy câu hỏi vấn đáp.
@@ -326,7 +326,7 @@ Tại ngưỡng chuyển mạch $V_{in} = V_{out} = V_M$, các transistor đều
 2. *Hỏi:* "Đường đi Euler có vai trò gì trong việc vẽ Layout vi mạch CMOS?"  
    *Đáp chuẩn:* Giúp tìm thứ tự các cổng Polysilicon đồng nhất trên cả 2 mạng PUN và PDN ($A-B$). Nhờ đó các transistor kề nhau có thể dùng chung vùng khuếch tán (Abutment), loại bỏ các khoảng cách ly $3\lambda$, thu nhỏ diện tích và triệt tiêu điện dung ký sinh cực má.
 3. *Hỏi:* "Nếu hai cổng NAND2 và NOR2 cùng được định cỡ để có điện trở kéo xấu nhất bằng nhau, trễ tại tải cố định bằng nhau, thì tại sao người ta vẫn ưu tiên dùng NAND2?"  
-   *Đáp chuẩn:* Vì NOR2 có tổng chiều rộng kênh $\sum W$ lớn hơn $40\%$ (tốn diện tích) và điện dung ngõ vào $C_{in}$ lớn hơn $40\%$ ($g=1,75$ so với $1,25$). Cổng NOR2 làm tầng logic phía trước bị chậm đi $40\%$ do phải kéo tải nặng hơn.
+   *Đáp chuẩn:* Vì NOR2 có tổng chiều rộng kênh $\sum W$ lớn hơn 40% (tốn diện tích) và điện dung ngõ vào $C_{in}$ lớn hơn 40% ($g=1,75$ so với $1,25$). Cổng NOR2 làm tầng logic phía trước bị chậm đi 40% do phải kéo tải nặng hơn.
 4. *Hỏi:* "Tại sao khoảng cách giữa hai dải Poly tại cực má chung của NAND2 phải là $6\lambda$ mà không thể là $3\lambda$?"  
    *Đáp chuẩn:* Vì ở giữa 2 dải Poly đó có đặt Contact kim loại nối ra chân Out. Chiều rộng Contact là $2\lambda$, khoảng cách cách ly từ Contact tới mỗi mép Poly tối thiểu là $2\lambda$. Do đó khoảng cách Poly-to-Poly tối thiểu phải là $2 + 2 + 2 = 6\lambda$ ($1,8\,\mu\text{m}$).
 5. *Hỏi:* "Khi đo VTC của NAND2, tại sao khi nối chung cả 2 ngõ vào $A=B$ thì ngưỡng $V_M$ lại dịch chuyển sang phải?"  

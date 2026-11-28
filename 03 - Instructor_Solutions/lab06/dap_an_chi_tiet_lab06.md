@@ -13,7 +13,7 @@
 2. **Số lượng Transistor Mirror Adder:** Khối Carry = $5\text{N} + 5\text{P} + 2\text{T} = 12\text{T}$; Khối Sum = $7\text{N} + 7\text{P} + 2\text{T} = 16\text{T}$; Tổng chuẩn xác duy nhất là **$28$ Transistors** (không phải $24$ hay $24-28\text{T}$).
 3. **Tính chất tự đối ngẫu (Mirror):** PUN và PDN khối Carry dùng **cùng cấu trúc topo**, cho phép dùng chung đường đi Euler 5 transistor `B - A - Cin - A - B`.
 4. **TG Adder (`tg_adder_tran.sp`):** Phiên bản ghép module từ `xor_tg` ($8\text{T}$), `inv_p` ($2\text{T}$), `xor_tg` ($8\text{T}$) và `MUX2_C` ($4\text{T}$) gồm **$22$ Transistors** (có thể tối ưu xuống $16\text{T}$ khi chia sẻ nút đảo).
-5. **Đường tới hạn & Đảo vị trí $C_{in}$:** Bỏ ngưỡng $C_{in} \to C_{out}$ nhanh hơn $A \to Sum$ gấp $\ge 2$ lần; đường chậm nhất là $C_{in} \to Sum$ (qua `cob` $\to$ `sb` $\to$ `sum`). Đảo vị trí $C_{in}$ được kiểm chứng thực nghiệm thay cho con số $30-40\%$.
+5. **Đường tới hạn & Đảo vị trí $C_{in}$:** Bỏ ngưỡng $C_{in} \to C_{out}$ nhanh hơn $A \to Sum$ gấp $\ge 2$ lần; đường chậm nhất là $C_{in} \to Sum$ (qua `cob` $\to$ `sb` $\to$ `sum`). Đảo vị trí $C_{in}$ được kiểm chứng thực nghiệm thay cho con số 30-40%.
 
 ---
 
