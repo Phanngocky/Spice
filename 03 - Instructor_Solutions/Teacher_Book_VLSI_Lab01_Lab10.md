@@ -1408,53 +1408,22 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (`dff_ms_x1`, 22T) đượ
 
 ## 6.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. Hiểu sâu kiến trúc vi mạch số: $Sum$ là hàm XOR 3 ngõ vào đối xứng, trong khi $C_{out}$ là hàm đa số (Majority function - bằng 1 khi có từ 2 ngõ vào trở lên bằng 1).
-2. Hiểu vì sao kiến trúc Mirror Adder 28T thống trị các thư viện chuẩn ASIC: tính tự đối ngẫu giúp PDN và PUN có cấu trúc topo giống hệt nhau, và việc tái sử dụng $\overline{C_{out}}$ để tạo $Sum$ giúp tiết kiệm tối đa số lượng transistor.
-3. Nhận thức rõ ràng: Tốc độ của bộ cộng gợn sóng $N$-bit (Ripple Carry Adder) bị khống chế tuyệt đối bởi trễ lan truyền số nhớ $C_{in} \to C_{out}$, không phải trễ $Sum$.
+2. Hiểu rõ cấu trúc Mirror Adder 28T ($12\text{T}$ khối Carry + $16\text{T}$ khối Sum): tính tự đối ngẫu giúp PDN và PUN dùng **cùng cấu trúc topo** (chung đường đi Euler 5 transistor `B - A - Cin - A - B`), đồng thời biểu thức $Sum = ABC_{in} + \overline{C_{out}}(A+B+C_{in})$ chính là hàm của PDN tạo $\overline{Sum}$.
+3. Nắm vững bản chất đường tới hạn trong RCA $N$-bit: không đặt ngưỡng $C_{in} \to C_{out}$ nhanh hơn $A \to Sum$ gấp $\ge 2$ lần (đường $C_{in} \to Sum$ đi qua $\overline{C_{out}} \to \overline{Sum} \to Sum$ mới là đường chậm nhất); tầm quan trọng của $C_{in} \to C_{out}$ nằm ở hệ số nhân $(N-1)$ trong chuỗi RCA và tải liên tầng $W_{Cin} = 128\lambda$.
 
 ---
 
-## 6.2 Phân tích giải phẫu Mirror Adder 28T
-Phương trình chuẩn hóa:
-$$C_{out} = A \cdot B + C_{in} \cdot (A + B)$$
-$$\overline{C_{out}} = \overline{A \cdot B + C_{in} \cdot (A + B)}$$
-$$Sum = A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (A + B + C_{in})$$
+## 6.2 Phân tích giải phẫu Mirror Adder 28T & TG Adder 22T
+Phương trình chuẩn hóa (PDN thực hiện $Sum$, ngõ ra tầng là $\overline{Sum}$):
+$$C_{out} = A \cdot B + C_{in} \cdot (A + B), \quad \overline{C_{out}} = \overline{A \cdot B + C_{in} \cdot (A + B)}$$
+$$\overline{Sum} = \overline{A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (A + B + C_{in})}$$
 
-```
-                   MIRROR ADDER 28T TOPOLOGY
-      [CARRY BLOCK: 10T]                  [SUM BLOCK: 14T]
-          VDD (5.0V)                          VDD (5.0V)
-              |                                   |
-      +-------+-------+                   +-------+-------+
-      | PUN: 5 PMOS   |                   | PUN: 7 PMOS   |
-      | Đối ngẫu Carry|                   | 3 PMOS // C_B |
-      +-------+-------+                   +-------+-------+
-              |                                   |
-              +--------- C_out_B                  +--------- Sum_B
-              |                                   |
-      +-------+-------+                   +-------+-------+
-      | PDN: 5 NMOS   |                   | PDN: 7 NMOS   |
-      | A.B + Cin(A+B)|                   | 3 NMOS // C_B |
-      +-------+-------+                   +-------+-------+
-              |                                   |
-             GND                                 GND
-              |                                   |
-        [INV C: 2T]                         [INV S: 2T]
-              |                                   |
-            C_out                                Sum
-```
-
-*Sơ đồ mạch chi tiết Mirror Adder và Transmission Gate Adder:*
+*Sơ đồ mạch chi tiết và giải phẫu:*
+- **Mirror Adder (28T):** Carry ($5\text{N}+5\text{P}+2\text{T} = 12\text{T}$) + Sum ($7\text{N}+7\text{P}+2\text{T} = 16\text{T}$), tổng $\Sigma W = 528\lambda$, tải chân $C_{in}$ là $W_{Cin} = 128\lambda$ ($\approx 58\,\text{fF}$).
+- **TG Full Adder (`tg_adder_tran.sp`):** Ghép module từ `xor_tg` ($8\text{T}$) + `inv_p` ($2\text{T}$) + `xor_tg` ($8\text{T}$) + 2 `tg_gate` ($4\text{T}$) = **$22\text{T}$** (có thể tối ưu xuống $16\text{T}$ khi chia sẻ nút đảo nội).
+- **Đính chính lỗi cũ:** Bỏ khẳng định $C_{in} \to C_{out}$ giảm trễ $30-40\%$ chưa kiểm và biến thành thí nghiệm đảo vị trí $C_{in}$ (sát nút `cob` vs sát rail); bỏ số PPA điền sẵn và bỏ layout 28T khỏi buổi 135 phút.
 - [mirror_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mirror_adder_schematic.png)
 - [tg_adder_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_adder_schematic.png)
-
-### Bảng kiểm kê và sửa lỗi Handout về số lượng Transistor
-| Khối chức năng vi mạch | Số Transistor thực tế | Handout cũ ghi nhầm | Phân tích giải phẫu kỹ thuật |
-| :--- | :---: | :---: | :--- |
-| **Khối tạo số nhớ $\overline{C_{out}}$** | **10T** ($5\text{P} + 5\text{N}$) | "4 NMOS + 4 PMOS" | Nhánh $A \cdot B$ tốn 2T; nhánh $C_{in}(A+B)$ tốn 3T $\implies 5\text{T}$ mỗi mạng. |
-| **Bộ đệm Inverter cho $C_{out}$** | **2T** ($1\text{P} + 1\text{N}$) | Bỏ quên | Khôi phục cực tính và tăng cường khả năng lái cho tầng sau. |
-| **Khối tạo tổng $\overline{Sum}$** | **14T** ($7\text{P} + 7\text{N}$) | Không tách bạch | Nhánh $A \cdot B \cdot C_{in}$ tốn 3T; nhánh $\overline{C_{out}}(A+B+C_{in})$ tốn 4T $\implies 7\text{T}$ mỗi mạng. |
-| **Bộ đệm Inverter cho $Sum$** | **2T** ($1\text{P} + 1\text{N}$) | Bỏ quên | Cần thiết để lật cực tính từ $\overline{Sum} \to Sum$. |
-| **TỔNG TOÀN TẾ BÀO FA** | **28T** | "24 đến 28T" | Con số chuẩn xác duy nhất là **28 Transistors**. |
 
 ---
 
