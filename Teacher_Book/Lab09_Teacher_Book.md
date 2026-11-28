@@ -1,260 +1,105 @@
 # GIÁO TRÌNH NỘI BỘ DÀNH CHO GIẢNG VIÊN VÀ TRỢ GIẢNG
-# BÀI LAB 09 — TEACHER'S BOOK: THIẾT KẾ ĐƯỜNG DỮ LIỆU KHỐI CỘNG NHANH 4-BIT (4-BIT CLA)
+# BÀI LAB 09 — TEACHER'S BOOK: BỘ CỘNG NHANH 4-BIT CARRY LOOKAHEAD (CLA)
 *(Tài liệu chuyên môn lưu hành nội bộ — Tuyệt đối không phát cho sinh viên)*
 
 > **Đi kèm Handout thực hành của sinh viên:** [lab-09-khoi-cong-nhanh-4bit-cla.md](../02%20-%20Student%20Workbook/lab-09-khoi-cong-nhanh-4bit-cla.md)  
 > **Thư mục giải pháp & Netlist tham chiếu:** [03 - Instructor_Solutions/lab09/](../03%20-%20Instructor_Solutions/lab09/)  
+> **Script kiểm chứng số liệu:** [verify_lab09_new.py](../scripts/verify_lab09_new.py)  
 > **Tiến trình công nghệ áp dụng:** MOSIS SCMOS C5N 0,5 µm ($V_{DD} = 5,0\,\text{V}, \lambda = 0,30\,\mu\text{m}, L_{min} = 0,60\,\mu\text{m}$).
 
 ---
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
-# 9. LAB 9 — BỘ CỘNG NHANH 4-BIT CLA (CARRY LOOKAHEAD ADDER) (TỰ CHỌN / ĐỒ ÁN)
-
-## 9.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu tư duy thiết kế vi mạch bậc cao: Triệt tiêu sự phụ thuộc tuần tự của chuỗi số nhớ bằng cách biểu diễn tín hiệu nhớ dưới dạng biểu thức đại số logic song song.
-2. Nắm vững phương trình sinh nhớ ($G_i = A_i \cdot B_i$) và truyền nhớ ($P_i = A_i \oplus B_i$).
-3. Nhận thức giới hạn vật lý của Fan-in: Việc khai triển biểu thức $C_4$ dẫn tới cổng AOI có 5 transistor NMOS xếp chồng, làm tăng điện trở kéo xuống và đòi hỏi giải pháp phân cụm (Hierarchical Carry Lookahead).
-4. Đánh giá khách quan sự đánh đổi PPA: Tăng $\sim 20\%$ diện tích và số lượng transistor để đổi lấy tốc độ nhanh hơn $>50\%$ so với Ripple Carry Adder.
-
----
-
-## 9.2 Khai triển biểu thức và Kiểm kê phần cứng vi mạch
-
-```
-                     CLA 4-BIT ARCHITECTURE
-             A[3:0]                     B[3:0]
-               |                          |
-               +------------+-------------+
-                            |
-                     [PG GENERATOR] (48T)
-                    Gi = Ai.Bi, Pi = Ai^Bi
-                            |
-                 +----------+----------+
-                 | P[3:0]              | G[3:0]
-                 v                     v
-              +---------------------------+ <--- Cin
-              |   CARRY LOOKAHEAD (CLG)   | (62T)
-              | C1, C2, C3, C4 Generation |
-              +---------------------------+
-                 |       |       |       |
-                 C1      C2      C3      C4 (Carry Out)
-                 |       |       |       |
-                 +-------+-------+-------+
-                 |
-                 v
-           [SUM GENERATOR] (24T: 4 XOR)
-             Si = Pi ^ Ci
-                 |
-                 v
-              SUM[3:0]
-```
-
-*Sơ đồ khối kiến trúc CLA 4-bit và Sơ đồ nguyên lý khối CLG:*
-- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/cla_4bit_architecture.png)
-- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/clg_carry_logic_schematic.png)
-
-### Bảng phân bổ 134 Transistor của tế bào CLA 4-bit chuẩn
-| Khối chức năng | Thành phần logic chi tiết | Số Transistor | Tỉ lệ phần cứng |
-| :--- | :--- | :---: | :---: |
-| **Khối PG Generator** | 4 cổng NAND2 ($4 \times 4\text{T}$) + 4 cổng XOR ($4 \times 6\text{T}$) + 4 INV | **48T** | $35,8\%$ |
-| **Khối tạo Carry CLG** | $C_1$ (6T) + $C_2$ (12T) + $C_3$ (20T) + $C_4$ (30T) + 4 INV (8T) | **62T** | $46,3\%$ |
-| **Khối tạo Sum** | 4 cổng XOR 2 ngõ vào ($S_i = P_i \oplus C_i$) | **24T** | $17,9\%$ |
-| **TỔNG TOÀN KHỐI CLA** | **Kiến trúc CLA 4-bit nguyên khối** | **134T** | **$100\%$** |
+### 9.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
+1. **Đính chính kiểm kê Transistor và $\Sigma W$:**
+   - Khối `clg_4b` chuẩn CMOS đầy đủ gồm `AOI21` ($6\text{T}$) + `AOI321` ($12\text{T}$) + `AOI4321` ($20\text{T}$) + `AOI54321` ($30\text{T}$) = $68\text{T}$ + 4 Inverter ($8\text{T}$) = **$76$ Transistors** (bản cũ ghi nhầm $62\text{T}$ do thiếu nhánh PMOS trong file SPICE rút gọn).
+   - Tổng số transistor CLA 4-bit phụ thuộc vào kiến trúc `XOR2`: **$132\text{T}$** (`4T` XOR, $+17,9\%$), **$148\text{T}$** (`6T` XOR, $+32,1\%$), hoặc **$164\text{T}$** (`8T` XOR như `cla_4bit_tran.sp`, $+46,4\%$) so với 4-bit RCA ($112\text{T}$). Con số `134T (+19,6%)` ở bản cũ không tái tạo được.
+   - **Số transistor $\neq$ Diện tích:** Theo tổng bề rộng kênh $\Sigma W$, `clg_4b` cỡ cố định ($8\lambda/24\lambda$) có $\Sigma W = 1\,152\lambda$, còn nếu định cỡ **cùng sức kéo với `inv_x1`** ($8,12,16,20\lambda$ N và $24,36,48,60\lambda$ P) thì $\Sigma W = \mathbf{2\,288\lambda}$ (so với $4 \times$ Mirror Adder = $2\,112\lambda$).
+2. **Không ấn định trước "nhanh hơn trên 60%":** Ước lượng Elmore thô cho đường $C_0 \to C_4$ (cỡ cố định $8\lambda/24\lambda$) vào khoảng $\approx 117\,\text{ps}$ so với RCA 4 tầng $\approx 240\,\text{ps}$ (giảm $\sim 51\%$, chưa chắc vượt $60\%$ ở $4$-bit!). Hơn nữa, đường tới hạn đầy đủ của cả bộ cộng phải xét từ **$A, B \to C_4$ và $A, B \to S_3$** đi qua tầng `PG` đang chịu tải nặng ($P_1, P_2$ xuất hiện $6$ lần trong CLG $\implies W_{gate} = 192\lambda \approx 86\,\text{fF}$!).
+3. **Thách thức Fan-in:** Mạng `AOI54321` xếp chồng $5$ transistor nối tiếp làm tăng điện trở và độ phức tạp $O(N^2)$ khi tăng số bit $N$, đòi hỏi phải dùng CLA phân cấp (nhóm 4-bit) cho $8, 16, 32$ bit.
 
 ---
 
+### 9.2 Bảng Kiểm kê Chi tiết Khối `clg_4b` và Tải Fan-in (Theo `verify_lab09_new.py`)
+
+| Cổng phức hợp | Các nhánh | Số N = Số P | Độ sâu N / P | Cỡ cùng sức kéo ($W_n, W_p$) | Số T (đủ CMOS) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `AOI21` ($C_1$) | `1, 2` | 3 | 2 / 2 | $8\lambda, 24\lambda$ | 6T |
+| `AOI321` ($C_2$) | `1, 2, 3` | 6 | 3 / 3 | $12\lambda, 36\lambda$ | 12T |
+| `AOI4321` ($C_3$) | `1, 2, 3, 4` | 10 | 4 / 4 | $16\lambda, 48\lambda$ | 20T |
+| `AOI54321` ($C_4$) | `1, 2, 3, 4, 5` | 15 | 5 / 5 | $20\lambda, 60\lambda$ | 30T |
+| **Tổng AOI + 4 INV** | — | **$34\text{N}+34\text{P}+4\text{INV}$** | — | **$\Sigma W = 2\,288\lambda$** | **76T** |
+
+**Số lần xuất hiện & Tải cổng trong `clg_4b` (cỡ cố định $8\lambda/24\lambda$):**
+- $P_1, P_2$: $6$ lần $\implies W_{gate} = 192\lambda \approx 86,4\,\text{fF}$ ($12\times$ `inv_x1`).
+- $P_0, P_3, G_0, C_0$: $4$ lần $\implies W_{gate} = 128\lambda \approx 57,6\,\text{fF}$ ($8\times$ `inv_x1`).
+- $G_1$: $3$ lần ($96\lambda$); $G_2$: $2$ lần ($64\lambda$); $G_3$: $1$ lần ($32\lambda$).
 
 ---
 
-## PHẦN II: KỊCH BẢN GIẢNG DẠY, ĐÁP ÁN CHI TIẾT & SỐ LIỆU ĐỐI CHUẨN SPICE BENCHMARK
+## PHẦN II: KỊCH BẢN GIẢNG DẠY, ĐÁP ÁN CHI TIẾT & SỐ LIỆU ĐỐI CHUẨN
 
-# TÀI LIỆU GIẢNG DẠY VÀ ĐÁP ÁN CHI TIẾT: BÀI 9 (LAB 09)
-# THIẾT KẾ ĐƯỜNG DỮ LIỆU KHỐI CỘNG NHANH 4-BIT (4-BIT CARRY LOOKAHEAD ADDER - CLA)
-*(Tài liệu chuyên môn dành riêng cho Giảng viên & Trợ giảng — Bộ môn ĐTVT, Trường ĐH SPKT – ĐHĐN)*
-
----
-
-## PHẦN I: CƠ SỞ LÝ THUYẾT & NGUYÊN LÝ GIẢNG DẠY DÀNH CHO GIẢNG VIÊN
-
-### 1. Hạn Chế Nút Thắt Cổ Chai Của RCA và Triết Lý Thiết Kế CLA
-
-Trong Bài 6, chúng ta đã nghiên cứu Mạch cộng toàn phần (Full Adder) và bộ cộng gợn sóng (Ripple Carry Adder - RCA):
-- **Nút thắt cổ chai của RCA:** Số nhớ $C_{out,i}$ của tầng thứ $i$ phụ thuộc trực tiếp vào số nhớ $C_{in,i}$ từ tầng $i-1$. Tín hiệu số nhớ phải gợn từng bước tuần tự qua chuỗi $N$ tế bào, dẫn đến thời gian trễ tăng tuyến tính theo kích thước từ dữ liệu:
-
-  $$T_{RCA} = O(N)$$
-
-  Khi mở rộng lên $32$-bit hay $64$-bit, trễ lan truyền số nhớ chiếm hơn **$85\%$ tổng thời gian trễ** của toàn bộ khối tính toán ALU.
-- **Triết lý đột phá của Carry Lookahead Adder (CLA):**
-  * Thay vì đợi số nhớ lan truyền tuần tự qua từng bit, CLA **tính toán trước đồng thời toàn bộ các bit số nhớ ($C_1, C_2, C_3, C_4$)** trực tiếp từ hai toán hạng đầu vào $A[3:0], B[3:0]$ và số nhớ đầu tiên $C_0$.
-  * Toàn bộ các bit số nhớ được tạo ra song song chỉ sau **$2$ tầng trễ cổng logic**, biến độ phức tạp thời gian từ $O(N)$ trở thành xấp xỉ hằng số $O(1)$!
+### 9.3 Kế hoạch Buổi học 135 Phút & Điều phối Phòng máy
+- **00–10':** Cổng kiểm tra Pre-lab. Rà nhanh khai triển $C_3$, sơ đồ PUN/PDN của `AOI321` và phép đếm T theo kiến trúc `XOR` sinh viên chọn.
+- **10–30' (Ex9.1):** Dựng `pg_cell{sch}` ($14\text{T}$) và `sum_cell{sch}` ($8\text{T}$).
+- **30–65' (Ex9.2):** Dựng `clg_4b{sch}` ($76\text{T}$). Phát khung sẵn `AOI54321` để sinh viên tập trung dựng `AOI21, AOI321, AOI4321` và nối Inverter.
+- **65–80' (Ex9.3):** Tích hợp `cla_adder_4b{sch}` và kiểm chứng 6 tổ hợp chức năng tĩnh.
+- **80–105' (Ex9.4):** Chạy đo trễ cho cả Ca 1 ($C_0$ chuyển) và Ca 2 ($G_0, P_0$ chuyển từ $A, B$) với `.tran 0 15n 0 5p`.
+- **105–125' (Ex9.5):** Đối sánh song song CLA 4-bit vs RCA 4-bit (Bài 6) dưới cùng tải $50\,\text{fF}$ và bộ lái.
+- **125–135':** Tổng kết và nghiệm thu tại bàn.
 
 ---
 
-### 2. Dẫn Xuất Đại Số & Hệ Phương Trình Số Nhớ Đệ Quy
+### 9.4 Đáp án Chi tiết Pre-lab & Bảng Đối Chuẩn
 
-Xét một bit cộng thứ $i$ bất kỳ với hai ngõ vào $A_i$ và $B_i$:
-1. **Cờ Sinh số nhớ (Generate - $G_i$):**
+1. **Khai triển $C_3$ (CLA 3-bit):**
+   $$C_3 = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0$$
+2. **Đếm Transistor & $\Sigma W$:**
+   - Với `XOR = 8T` (`2 INV + 2 TG` như `cla_4bit_tran.sp`): `PG` $= 14\text{T}$ ($4\times = 56\text{T}$), `CLG` $= 76\text{T}$, `Sum` $= 8\text{T}$ ($4\times = 32\text{T}$) $\implies$ Tổng = **$164\text{T}$** ($+46,4\%$ so với RCA $112\text{T}$).
+   - $\Sigma W$ của `clg_4b` (cố định $8\lambda/24\lambda$) = **$1\,152\lambda$** (nhỏ hơn $\Sigma W = 2\,112\lambda$ của 4-bit RCA).
+   - *Điều kiện có lợi:* CLA có lợi khi số bit $N \ge 4-8$ và độ sâu Fan-in được chia nhóm hợp lý; RCA có lợi khi $N$ nhỏ ($2-4$ bit) cần tối giản diện tích/công suất tĩnh hoặc đường dữ liệu không bị gắt về trễ Carry.
+3. **Tải Fan-in lên $P_1$ & Dự đoán $G_0 \to C_4$ vs $C_0 \to C_4$:**
+   - $P_1$ xuất hiện $6$ lần $\implies W_{gate} = 192\lambda \approx 86,4\,\text{fF}$.
+   - Đường $G_0 \to C_4$ (khi $A_0=B_0$ chuyển) chậm hơn $C_0 \to C_4$ vì phải đi thêm qua tầng `PG` (`NAND2 + INV`) và nút $G_0$ còn gánh thêm tải $4$ nhánh trong CLG ($128\lambda$).
 
-   $$G_i = A_i \cdot B_i$$
+**Bảng Đối chuẩn Kỹ thuật Tham chiếu (MOSIS C5N, $C_L = 50\,\text{fF}$):**
 
-   Khi cả hai bit $A_i = B_i = 1$, một số nhớ chắc chắn được sinh ra tại tầng $i$ bất chấp số nhớ ngõ vào $C_i$ bằng $0$ hay $1$.
-2. **Cờ Truyền số nhớ (Propagate - $P_i$):**
-
-   $$P_i = A_i \oplus B_i \quad (\text{or } P_i = A_i + B_i)$$
-
-   Khi có đúng một bit bằng $1$, nếu có số nhớ $C_i = 1$ đi vào thì số nhớ này sẽ được truyền xuyên qua tầng $i$ để đi tiếp tới tầng $i+1$.  
-   (Trong thiết kế này, ta chọn $P_i = A_i \oplus B_i$ để tái sử dụng ngay tín hiệu $P_i$ cho việc tạo tổng $S_i = P_i \oplus C_i$, tiết kiệm diện tích silicon).
-
-#### Khai triển đệ quy hệ phương trình Carry Lookahead:
-- Bit số nhớ thứ nhất:
-
-  $$C_1 = G_0 + P_0 C_0$$
-
-- Bit số nhớ thứ hai (thế $C_1$ vào):
-
-  $$C_2 = G_1 + P_1 C_1 = G_1 + P_1 (G_0 + P_0 C_0) = G_1 + P_1 G_0 + P_1 P_0 C_0$$
-
-- Bit số nhớ thứ ba (thế $C_2$ vào):
-
-  $$C_3 = G_2 + P_2 C_2 = G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0$$
-
-- Bit số nhớ thứ tư (thế $C_3$ vào):
-
-  $$C_4 = G_3 + P_3 G_2 + P_3 P_2 G_1 + P_3 P_2 P_1 G_0 + P_3 P_2 P_1 P_0 C_0$$
-
-#### Tính toán Tổng Sum:
-$$S_i = P_i \oplus C_i = A_i \oplus B_i \oplus C_i \quad (i = 0, 1, 2, 3)$$
+| Hạng mục | Giá trị suy dẫn / Tham chiếu | Ghi chú |
+| :--- | :---: | :--- |
+| Tổng Transistor CLA 4-bit | $132\text{T}$ (`4T` XOR) / $148\text{T}$ (`6T`) / $164\text{T}$ (`8T`) | Không ra `134T` |
+| `clg_4b` Transistor / $\Sigma W$ | $76\text{T}$ / $1\,152\lambda$ (cố định) hoặc $2\,288\lambda$ (cùng sức kéo) | |
+| Ước lượng thô $t_{pd}(C_0 \to C_4)$ | $\approx 100 - 135\,\text{ps}$ | Giảm $\sim 45-55\%$ so với RCA $240\,\text{ps}$ |
+| $t_{pd}(A_0 \to C_4)$ ($G_0$ chuyển) | Chậm hơn $C_0 \to C_4$ | Do cộng thêm trễ tầng `PG` và tải $G_0$ |
 
 ---
 
-### 3. Hiện Thực Mức Transistor: Cổng Phức Hợp AOI và Thách Thức Fan-in
+### 9.5 Kịch bản Gỡ lỗi Socratic cho Giảng viên
 
-Mỗi phương trình số nhớ $C_i$ có dạng tổng của các tích (Sum of Products), được hiện thực cực kỳ nhỏ gọn bằng cổng phức hợp **AOI (AND-OR-Invert)** kết hợp với một Inverter đệm:
-- $C_1$: Cổng AOI21 + Inverter.
-- $C_2$: Cổng AOI321 + Inverter.
-- $C_3$: Cổng AOI4321 + Inverter.
-- $C_4$: Cổng AOI54321 + Inverter.
-
-#### Thách thức Vật lý về Giới hạn Fan-in (Fan-in Limitation):
-- Nhánh dài nhất của phương trình $C_4$ ($P_3 P_2 P_1 P_0 C_0$) yêu cầu **$5$ transistor NMOS mắc nối tiếp** trong mạng kéo xuống PDN.
-- Khi số lượng transistor nối tiếp tăng lên:
-  * Điện trở kênh dẫn cộng dồn: $R_{eq} \approx 5 \cdot R_n$.
-  * Điện dung ký sinh tại các nút nội trung gian tăng tuyến tính: $C_{int} \approx 4 \cdot C_{diff}$.
-  * Trễ chuyển mạch Elmore tăng theo hàm bậc hai: $\tau \approx R C + 2 R C + \dots + 5 R C = 15 R C$.
-- $\implies$ **Quy tắc thiết kế công nghiệp:** Trong công nghệ CMOS tiêu chuẩn, kích thước tối đa của một khối CLA đơn tầng thường **không vượt quá 4-bit** ($Fan\text{-}in \le 5$). Để xây dựng các bộ cộng $16$-bit hay $64$-bit, kỹ sư bắt buộc phải ghép phân tầng (Hierarchical Block CLA hoặc dùng cấu trúc cây song song Kogge-Stone / Brent-Kung).
+1. **Sinh viên báo: *"Thầy ơi, em đếm đi đếm lại toàn khối CLA 4-bit theo mạch em dựng ra $164\text{T}$, sao một số tài liệu cũ ghi $134\text{T}$?"***
+   - *Gợi ý Socratic:* "Em thử tách riêng từng khối: `clg_4b` đủ PMOS/NMOS của `AOI21..54321` là mấy transistor ($76\text{T}$), và cổng `XOR` trong `pg_cell` em đang dùng có mấy Inverter và mấy TG ($8\text{T}$)? Cộng lại có ra $164\text{T}$ không? Con số $134\text{T}$ trước đây đã bị đếm thiếu PMOS ở `clg_4b`." $\implies$ Sinh viên tin tưởng vào phép đếm chuẩn xác của chính mình.
+2. **Sinh viên thắc mắc: *"Khi em đo $C_0 \to C_4$ thì CLA rất nhanh, nhưng khi đo $A_0 \to C_4$ ở Ca 2b ($P_0$ chuyển) thì thấy bị chậm đi rõ rệt!"***
+   - *Gợi ý Socratic:* "Ở Ca 1 ($A=1111, B=0000$), các cờ $P, G$ đang đứng yên hay chuyển động? Còn ở Ca 2b, tín hiệu từ $A_0$ phải đi qua cổng nào trước khi vào CLG, và ngõ ra `P` phải kéo bao nhiêu cực cổng trong CLG?" $\implies$ Sinh viên hiểu vai trò tải Fan-in trên tầng `PG`.
 
 ---
 
-### 4. Phân Tích Đánh Đổi Phần Cứng (PPA Trade-off)
-
-| Tiêu chí | 4-bit Ripple Carry Adder (RCA) | 4-bit Carry Lookahead Adder (CLA) | Đánh giá so sánh |
-| :--- | :---: | :---: | :--- |
-| **Tổng số Transistor** | $112\,\text{T}$ ($4 \times 28\,\text{T}$) | **$134\,\text{T}$** ($48\,\text{T}_{PG} + 62\,\text{T}_{CLG} + 24\,\text{T}_{Sum}$) | CLA tốn thêm **$+19.6\%$** diện tích |
-| **Trễ lan truyền Carry ($C_0 \to C_4$)** | $282.0\,\text{ps}$ (4 tầng nối tiếp) | **$175.0\,\text{ps}$** (Tính song song 2 tầng) | **CLA nhanh hơn $1.61\times$ ($+61\%$)** |
-| **Trễ đường tới hạn ($A/B \to S_3$)** | $355.0\,\text{ps}$ | **$230.0\,\text{ps}$** | **CLA nhanh hơn $1.54\times$ ($+54\%$)** |
-| **Độ phức tạp trễ lý thuyết** | $O(N)$ (Tuyến tính) | **$O(1)$** (Hằng số ở cấp khối 4-bit) | Vượt trội hoàn toàn khi mở rộng bit |
+### 9.6 Đáp án 3 Câu hỏi Thảo luận Post-lab
+1. **Tại sao phải đo cả đường $A, B \to C_4, S_3$:** Vì trong Ca 1 ($C_0$ chuyển), tầng `PG` đứng yên nên che mất độ trễ tạo $P, G$ và hiệu ứng tải nặng ($86\,\text{fF}$ trên $P_1, P_2$) mà `pg_cell` phải gánh.
+2. **Cố định $8\lambda/24\lambda$ vs Cùng sức kéo:** Ở kích thước cố định $8\lambda/24\lambda$, chuỗi 5 transistor của `AOI54321` có điện trở gấp $5/2$ lần chuỗi 2 transistor, nên sức kéo chỉ còn $\approx 40\%$ `inv_x1`. Nếu tăng kích thước theo độ sâu ($20\lambda/60\lambda$ cho $C_4$) để giữ cùng sức kéo thì $\Sigma W$ của `clg_4b` tăng gần gấp đôi (từ $1\,152\lambda$ lên $2\,288\lambda$).
+3. **Giới hạn Fan-in & CLA phân cấp:** Nếu mở rộng CLG phẳng lên 8 hoặc 16 bit, số transistor nối tiếp lên tới 9–17 (không khả thi về tốc độ lẫn sụt áp). Giải pháp là chia thành các nhóm 4-bit tạo cờ nhóm $P_G, G_G$ đưa vào tầng CLG thứ 2 (Hierarchical CLA), giữ độ sâu tối đa ở mức 4–5 transistor.
 
 ---
 
-## PHẦN II: ĐÁP ÁN CHI TIẾT VÀ SỐ LIỆU BENCHMARK SPICE
+## PHẦN III: TIÊU CHÍ NGHIỆM THU & BỘ CÂU HỎI VẤN ĐÁP TẠI BÀN
 
-### 1. Bảng Chân Trị và Kiểm Chứng Số Học 4-bit CLA (`cla_4bit_tran.sp`)
+### 9.7 Barem chấm điểm nhanh tại bàn (Thang 10)
+- **Pre-lab (2,0 điểm):** Khai triển đúng biến thể, vẽ PUN/PDN `AOI321`, đếm đúng T và $\Sigma W$ theo XOR chọn, tính đúng tải $P_1$.
+- **Ex9.1–9.3 (2,5 điểm):** Dựng đủ `pg_cell`, `clg_4b` ($76\text{T}$), `cla_adder_4b`, 0 lỗi `F5`, chạy đúng 6/6 tổ hợp tĩnh.
+- **Ex9.4 (2,5 điểm):** Đo đủ cả đường $C_0$ ($C_0 \to C_4, S_3$) và đường $A, B$ ($G_0, P_0$ chuyển) với `.tran 0 15n 0 5p`.
+- **Ex9.5 (2,0 điểm):** Đối sánh song song CLA vs RCA cùng tải/bộ lái, điền đủ 4 cột và kết luận có điều kiện.
+- **Báo cáo & Vấn đáp (1,0 điểm):** Đầy đủ số liệu và trả lời đúng vấn đáp về Fan-in.
 
-(MOSIS C5N 0.5µm, $V_{DD} = 5.0\,\text{V}$, tải ngõ ra $C_L = 30\,\text{fF}$ cho Sum, $C_{L,C4} = 50\,\text{fF}$)
-
-| Trường hợp | Toán hạng $A[3:0]$ | Toán hạng $B[3:0]$ | $C_0$ | Tổng $Sum[3:0]$ | $C_4$ | Phép tính thực thi | Đánh giá |
-| :---: | :---: | :---: | :---: | :---: | :---: | :--- | :---: |
-| **1** | `0000` ($0$) | `0000` ($0$) | 0 | **`0000` ($0$)** | **0** | $0 + 0 + 0 = 0$ | PASS |
-| **2** | `0101` ($5$) | `0011` ($3$) | 0 | **`1000` ($8$)** | **0** | $5 + 3 + 0 = 8$ (Không tràn) | PASS |
-| **3** | `1001` ($9$) | `0110` ($6$) | 0 | **`1111` ($15$)** | **0** | $9 + 6 + 0 = 15$ (Cận tràn) | PASS |
-| **4** | `1100` ($12$) | `0111` ($7$) | 0 | **`0011` ($3$)** | **1** | $12 + 7 + 0 = 19 = 16 + 3$ | PASS |
-| **5** | **`1111` ($15$)** | **`0000` ($0$)** | **$0 \to 1$** | **`0000` ($0$)** | **1** | **$15 + 0 + 1 = 16$ (Worst Case)**| **PASS** |
-| **6** | `1111` ($15$) | `1111` ($15$) | 1 | **`1111` ($15$)** | **1** | $15 + 15 + 1 = 31 = 16 + 15$ | PASS |
-
----
-
-### 2. Kết Quả Đối Sánh Trực Tiếp 4-bit CLA vs 4-bit RCA (`cla_vs_rca_benchmark.sp`)
-
-(Đo đạc trong trường hợp xấu nhất: $A = 1111_2, B = 0000_2, C_0$ nhảy từ $0 \to 1$)
-
-| Thông số đo đạc | 4-bit RCA (Mirror Adder) | 4-bit CLA (Carry Lookahead) | Tỉ số cải thiện (Speedup) |
-| :--- | :---: | :---: | :---: |
-| **Trễ lan truyền số nhớ $t_{pd(C0 \to C4)}$** | **$282.0\,\text{ps}$** | **$175.0\,\text{ps}$** | **$1.61\times$ (Nhanh hơn $61\%$)** |
-| **Trễ đường tới hạn $t_{pd(C0 \to S3)}$** | **$355.0\,\text{ps}$** | **$230.0\,\text{ps}$** | **$1.54\times$ (Nhanh hơn $54\%$)** |
-| **Công suất tiêu tán trung bình ($100\,\text{MHz}$)** | $0.215\,\text{mW}$ | $0.258\,\text{mW}$ | Tăng $+20\%$ do thêm logic CLG |
-
----
-
-### 3. Kết Quả Đo Đạc Độc Lập Khối CLG (`clg_unit_tran.sp`)
-
-| Đường tín hiệu số nhớ | Biểu thức logic | Số transistor nối tiếp max | Thời gian trễ $t_{pd}$ từ $C_0$ |
-| :---: | :--- | :---: | :---: |
-| **$C_1$** | $G_0 + P_0 C_0$ | 2 NMOS | **$72.4\,\text{ps}$** |
-| **$C_2$** | $G_1 + P_1 G_0 + P_1 P_0 C_0$ | 3 NMOS | **$88.5\,\text{ps}$** |
-| **$C_3$** | $G_2 + P_2 G_1 + P_2 P_1 G_0 + P_2 P_1 P_0 C_0$ | 4 NMOS | **$102.1\,\text{ps}$** |
-| **$C_4$** | $G_3 + P_3 G_2 + \dots + P_3 P_2 P_1 P_0 C_0$ | 5 NMOS | **$110.0\,\text{ps}$** |
-
-*Nhận xét:* Dù $C_4$ có tới 5 transistor nối tiếp nhưng nhờ định cỡ $W_{PMOS} = 7.2\,\mu\text{m}$ và $W_{NMOS} = 2.4\,\mu\text{m}$, trễ của $C_4$ chỉ chênh lệch rất nhỏ so với $C_3$ ($110\,\text{ps}$ vs $102\,\text{ps}$), bảo đảm tính đồng bộ cao.
-
----
-
-### 4. Kết Quả Trích Xuất Ký Sinh Post-Layout PEX (`cla_pex_postlayout.sp`)
-
-| Thông số kiểm tra | Pre-layout (Lý thuyết) | Post-layout (PEX) | Tỉ lệ suy giảm |
-| :--- | :---: | :---: | :---: |
-| **Trễ số nhớ $t_{pd(C0 \to C4)}$** | $175.0\,\text{ps}$ | **$208.5\,\text{ps}$** | $+19.1\%$ (Do ký sinh Metal1/Metal2 nối dài) |
-| **Trễ đường tới hạn $t_{pd(C0 \to S3)}$** | $230.0\,\text{ps}$ | **$268.0\,\text{ps}$** | $+16.5\%$ |
-| **Tốc độ so với RCA Post-layout** | $1.61\times$ | **$1.58\times$** | **Vẫn vượt trội gần $60\%$ sau khi layout** |
-
----
-
-## PHẦN III: HƯỚNG DẪN CHẤM VÀ CÂU HỎI VẤN ĐÁP TẠI BÀN (VIVA QUESTIONS)
-
-### 1. Barem Điểm Chi Tiết (Thang điểm 10)
-
-| Tiêu chí | Nội dung đánh giá | Điểm tối đa |
-| :--- | :--- | :---: |
-| **Chuẩn bị Pre-lab** | Khai triển phương trình $C_1 - C_4$, tính toán bảng chân trị và viết netlist | **2.0 điểm** |
-| **Mô phỏng SPICE In-lab** | Chạy mô phỏng CLA, đo trễ so sánh trực tiếp với RCA, đo độc lập CLG | **3.0 điểm** |
-| **Layout & DRC/LVS** | Mask layout phân cấp khối `cla_adder_4b`, đi dây 2 tầng kim loại, DRC 0 lỗi, LVS matching 100% | **3.0 điểm** |
-| **Báo cáo & Vấn đáp tại bàn** | Điền số liệu đầy đủ, giải thích sâu sắc sự đánh đổi diện tích và tốc độ | **2.0 điểm** |
-| **Tổng cộng** | **Đạt chuẩn đầu ra môn học CLO2 - CLO4** | **10.0 điểm** |
-
----
-
-### 2. Các Bẫy Kỹ Thuật Học Sinh Hay Mắc Phải Khi Thực Hành
-
-1. **Nhầm lẫn cờ $P_i$ giữa phép OR và phép XOR:** Nếu dùng $P_i = A_i + B_i$ thì đúng cho khối số nhớ nhưng không dùng trực tiếp để tính $S_i$ được. Sinh viên phải phân biệt rõ: chọn $P_i = A_i \oplus B_i$ cho phép dùng chung $P_i$ cho cả CLG và Sum unit.
-2. **Quên đảo pha ngõ ra của cổng AOI:** Cổng AOI tự nhiên có chức năng đảo (Invert: $\overline{C_i}$). Sinh viên thường quên mắc thêm Inverter đệm để tạo ra tín hiệu $C_i$ tích cực mức cao, dẫn đến số nhớ bị đảo bit sai toàn bộ.
-3. **Hiện tượng suy giảm sườn xung ở nhánh $C_4$:** Do nhánh $C_4$ có 5 NMOS nối tiếp, nếu sinh viên giữ nguyên kích thước tối thiểu ($W = 1.2\,\mu\text{m}$) thì sườn xả bị kéo dài nghiêm trọng ($t_{fall} > 400\,\text{ps}$). Phải tăng kích thước NMOS trong chuỗi lên ít nhất $W = 2.4\,\mu\text{m}$.
-4. **Xung đột lớp kim loại trong Layout:** Khối CLA có mật độ dây nối giữa PG, CLG và Sum rất dày đặc. Sinh viên đi dây tùy tiện trên cùng một lớp Metal1 sẽ bị chạm chập hoặc vi phạm luật DRC `Metal spacing`. Phải tuân thủ quy tắc: **Metal 1 đi ngang, Metal 2 đi dọc** (Manhattan Routing).
-
----
-
-### 3. Ngân Hàng Câu Hỏi Vấn Đáp Tại Bàn (Viva Questions)
-
-**Câu 1: Phân tích sự khác biệt bản chất giữa Bộ cộng gợn sóng (RCA) và Bộ cộng nhanh (CLA) về mặt độ phức tạp thời gian trễ?**  
-*Đáp án chuẩn:* Trong RCA, bit số nhớ lan truyền tuần tự qua từng tế bào Full Adder nên thời gian trễ tăng tuyến tính theo số bit $T_{RCA} = O(N)$. Trong CLA, các bit số nhớ được tính toán song song trực tiếp từ các toán hạng đầu vào qua các phương trình đại số của khối CLG, do đó thời gian sinh số nhớ chỉ qua 2 tầng cổng logic, đạt độ phức tạp hằng số $T_{CLA} = O(1)$ ở cấp độ khối 4-bit, giúp tăng tốc độ xử lý lên gần gấp đôi.
-
-**Câu 2: Tại sao trong công nghiệp người ta không thiết kế một khối CLA 16-bit hay 32-bit nguyên khối mà chỉ dừng lại ở khối 4-bit?**  
-*Đáp án chuẩn:* Vì giới hạn Fan-in trong công nghệ CMOS. Phương trình số nhớ của bit thứ $N$ đòi hỏi nhánh dài nhất phải có $N+1$ transistor mắc nối tiếp. Khi $N > 4$, điện trở kênh dẫn tăng tỉ lệ thuận và điện dung nút nội tăng khiến trễ Elmore tăng theo hàm bậc hai ($O(N^2)$), làm triệt tiêu hoàn toàn ưu thế tốc độ của CLA. Do đó người ta chỉ làm khối CLA 4-bit, sau đó ghép nối phân tầng (Hierarchical CLA).
-
-**Câu 3: Ý nghĩa vật lý của hai tín hiệu cờ $G_i$ (Generate) và $P_i$ (Propagate) là gì?**  
-*Đáp án chuẩn:* $G_i = A_i \cdot B_i$ (Cờ sinh) biểu thị tầng thứ $i$ tự sản sinh ra một số nhớ mang đi bất chấp số nhớ đầu vào $C_i$. $P_i = A_i \oplus B_i$ (Cờ truyền) biểu thị tầng thứ $i$ không tự sinh ra số nhớ nhưng sẽ truyền nguyên vẹn số nhớ đầu vào $C_i$ xuyên qua nó để chuyển tiếp lên tầng $i+1$.
-
-**Câu 4: Trình bày sự đánh đổi phần cứng (Hardware Trade-off) giữa 4-bit CLA và 4-bit RCA?**  
-*Đáp án chuẩn:* 4-bit CLA tốn $134$ transistor so với $112$ transistor của 4-bit RCA (tăng $19.6\%$ diện tích silicon và tăng nhẹ công suất tiêu tán) để đổi lấy thời gian lan truyền số nhớ nhanh hơn $61\%$ ($175\,\text{ps}$ so với $282\,\text{ps}$) và trễ tổng thể nhanh hơn $54\%$. Đây là sự đánh đổi cực kỳ kinh tế và bắt buộc trong các vi xử lý hiệu năng cao.
-
-**Câu 5: Trong thiết kế Mask Layout của khối CLA 4-bit, phương pháp định tuyến nào được áp dụng để tránh chạm chập giữa các khối PG, CLG và Sum?**  
-*Đáp án chuẩn:* Áp dụng phương pháp định tuyến trực giao Manhattan (Orthogonal Routing): Toàn bộ các đường tín hiệu dữ liệu và bus số nhớ chạy theo phương ngang được định tuyến bằng lớp Metal 1, trong khi các đường phân phối xung nhịp, nguồn và tín hiệu điều khiển chạy theo phương dọc được định tuyến bằng lớp Metal 2, kết nối xuyên tầng bằng Via1.
-
-
----
-
-## PHẦN III: NHỮNG ĐIỂM CẦN CHỈNH SỬA TRONG HANDOUT SINH VIÊN TRƯỚC KHI LÊN LỚP
-
-> [!WARNING]
-> **Cảnh báo lỗi kỹ thuật trong Handout gốc cần khắc phục:**  
-> Cổng AOI54321 tạo C4 chỉ cho W_n = 8λ là vi phạm quy tắc R_on (cần 20λ nếu muốn bằng INV_X1); chấp nhận 8λ là đánh đổi diện tích; câu hỏi Pre-lab lộ đáp án "hoàn toàn xứng đáng" cần đổi thành "dự đoán, đo và so sánh".
+### 9.8 Bộ câu hỏi vấn đáp nhanh tại bàn (3 câu chọn lọc)
+1. *"Trong khối `clg_4b`, tại sao ngõ ra `P1` và `P2` lại chịu tải điện dung nặng nhất ($6$ nhánh AOI) so với `G3` ($1$ nhánh)?"* (Đáp: Vì $P_1$ xuất hiện trong $C_2$ (1 lần), $C_3$ (2 lần? thực ra $P_1$ xuất hiện 1 lần trong $C_2$, 2 lần trong $C_3$ và 3 lần trong $C_4$ nếu khai triển phẳng — tổng cộng 6 nhánh ở dạng SOP chưa rút gọn)).
+2. *"Vì sao trong bảng thông số đối sánh CLA vs RCA ta không được kết luận diện tích CLA chỉ tăng $19,6\%$ dựa trên số transistor?"* (Đáp: Vì kích thước mỗi transistor khác nhau; `clg_4b` cố định $8\lambda/24\lambda$ có $\Sigma W = 1\,152\lambda$ nhưng nếu giữ cùng sức kéo sẽ lên tới $2\,288\lambda$).
+3. *"Nếu cần thiết kế bộ cộng 16-bit bằng CLA, anh/chị có vẽ một cổng AOI có 17 transistor nối tiếp để tính $C_{16}$ không? Nếu không thì làm thế nào?"* (Đáp: Không, vì $17$ transistor nối tiếp sẽ cực chậm; phải chia thành 4 khối CLA 4-bit dùng $P_G, G_G$ nối vào một khối CLG cấp 2).

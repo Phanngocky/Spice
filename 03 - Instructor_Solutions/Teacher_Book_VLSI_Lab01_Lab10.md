@@ -1467,55 +1467,16 @@ $$\overline{Sum} = \overline{A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (
 # 9. LAB 9 — BỘ CỘNG NHANH 4-BIT CLA (CARRY LOOKAHEAD ADDER) (TỰ CHỌN / ĐỒ ÁN)
 
 ## 9.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu tư duy thiết kế vi mạch bậc cao: Triệt tiêu sự phụ thuộc tuần tự của chuỗi số nhớ bằng cách biểu diễn tín hiệu nhớ dưới dạng biểu thức đại số logic song song.
-2. Nắm vững phương trình sinh nhớ ($G_i = A_i \cdot B_i$) và truyền nhớ ($P_i = A_i \oplus B_i$).
-3. Nhận thức giới hạn vật lý của Fan-in: Việc khai triển biểu thức $C_4$ dẫn tới cổng AOI có 5 transistor NMOS xếp chồng, làm tăng điện trở kéo xuống và đòi hỏi giải pháp phân cụm (Hierarchical Carry Lookahead).
-4. Đánh giá khách quan sự đánh đổi PPA: Tăng $\sim 20\%$ diện tích và số lượng transistor để đổi lấy tốc độ nhanh hơn $>50\%$ so với Ripple Carry Adder.
+1. Hiểu kiến trúc 3 tầng (`pg_cell` $\to$ `clg_4b` $\to$ `sum_cell`), trong đó `clg_4b` dùng **2 tầng** (AOI + Inverter) và tổng số transistor CLA 4-bit phụ thuộc vào kiến trúc `XOR` (**$132\text{T}$**, **$148\text{T}$**, hoặc **$164\text{T}$** khi `XOR=8T`; đính chính con số cũ `134T` và `62T` của CLG — đúng là **$76\text{T}$**).
+2. Phân biệt rõ số transistor với diện tích ($\Sigma W$): `clg_4b` cỡ cố định $8\lambda/24\lambda$ có $\Sigma W = 1\,152\lambda$, còn nếu định cỡ cùng sức kéo thì lên tới $\mathbf{2\,288\lambda}$ (so với $2\,112\lambda$ của 4-bit RCA).
+3. Nhận thức giới hạn **Fan-in**: `AOI54321` xếp chồng $5$ transistor, và các cờ $P_1, P_2$ gánh tải tới $6$ nhánh ($192\lambda \approx 86\,\text{fF}$), nên bắt buộc phải đo cả đường $A, B \to C_4, S_3$ (không chỉ $C_0 \to C_4$) và không ấn định trước ngưỡng cải thiện $>60\%$ (ước lượng thô $C_0 \to C_4$ giảm $\sim 51\%$).
 
 ---
 
-## 9.2 Khai triển biểu thức và Kiểm kê phần cứng vi mạch
-
-```
-                     CLA 4-BIT ARCHITECTURE
-             A[3:0]                     B[3:0]
-               |                          |
-               +------------+-------------+
-                            |
-                     [PG GENERATOR] (48T)
-                    Gi = Ai.Bi, Pi = Ai^Bi
-                            |
-                 +----------+----------+
-                 | P[3:0]              | G[3:0]
-                 v                     v
-              +---------------------------+ <--- Cin
-              |   CARRY LOOKAHEAD (CLG)   | (62T)
-              | C1, C2, C3, C4 Generation |
-              +---------------------------+
-                 |       |       |       |
-                 C1      C2      C3      C4 (Carry Out)
-                 |       |       |       |
-                 +-------+-------+-------+
-                 |
-                 v
-           [SUM GENERATOR] (24T: 4 XOR)
-             Si = Pi ^ Ci
-                 |
-                 v
-              SUM[3:0]
-```
-
-*Sơ đồ khối kiến trúc CLA 4-bit và Sơ đồ nguyên lý khối CLG:*
-- [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/cla_4bit_architecture.png)
-- [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/clg_carry_logic_schematic.png)
-
-### Bảng phân bổ 134 Transistor của tế bào CLA 4-bit chuẩn
-| Khối chức năng | Thành phần logic chi tiết | Số Transistor | Tỉ lệ phần cứng |
-| :--- | :--- | :---: | :---: |
-| **Khối PG Generator** | 4 cổng NAND2 ($4 \times 4\text{T}$) + 4 cổng XOR ($4 \times 6\text{T}$) + 4 INV | **48T** | $35,8\%$ |
-| **Khối tạo Carry CLG** | $C_1$ (6T) + $C_2$ (12T) + $C_3$ (20T) + $C_4$ (30T) + 4 INV (8T) | **62T** | $46,3\%$ |
-| **Khối tạo Sum** | 4 cổng XOR 2 ngõ vào ($S_i = P_i \oplus C_i$) | **24T** | $17,9\%$ |
-| **TỔNG TOÀN KHỐI CLA** | **Kiến trúc CLA 4-bit nguyên khối** | **134T** | **$100\%$** |
+## 9.2 Kiểm kê Phần cứng và Đánh đổi Kích thước
+- *Sơ đồ kiến trúc:* [cla_4bit_architecture.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/cla_4bit_architecture.png) và [clg_carry_logic_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/clg_carry_logic_schematic.png).
+- **Khối `clg_4b` ($76\text{T}$):** `AOI21` ($6\text{T}$) + `AOI321` ($12\text{T}$) + `AOI4321` ($20\text{T}$) + `AOI54321` ($30\text{T}$) + 4 INV ($8\text{T}$) = **$76\text{T}$**.
+- **Tổng toàn khối CLA 4-bit (với `XOR = 8T` như `cla_4bit_tran.sp`):** `4 x PG (56T)` + `CLG (76T)` + `4 x Sum (32T)` = **$164\text{T}$** ($+46,4\%$ so với 4-bit RCA $112\text{T}$).
 
 ---
 
