@@ -241,7 +241,7 @@ Mở tệp `C5_models.txt` (Level 3) trong thư mục dự án `lab01_MSSV_HoTen
 
 ### P2. Tính toán giải tích tỉ số $(W_p/W_n)$ và điểm chuyển mạch $V_M$
 Cho các tham số danh định công nghệ C5N: $V_{DD} = 5,0\,\text{V}$, $V_{thn} = 0,70\,\text{V}$, $|V_{thp}| = 0,80\,\text{V}$, $K_n' = 120\,\mu\text{A/V}^2$, $K_p' = 40\,\mu\text{A/V}^2$.
-1. Tính tỉ số định kích thước chính xác $\left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{target}}$ để điện áp chuyển mạch đối xứng hoàn hảo $V_M = V_{DD}/2 = 2,50\,\text{V}$.
+1. Tính tỉ số định kích thước chính xác $\left[\frac{(W/L)_p}{(W/L)_n}\right]_{\text{target}}$ để điện áp chuyển mạch đối xứng đồng bộ $V_M = V_{DD}/2 = 2,50\,\text{V}$.
 2. Với chiều dài kênh chuẩn $L_n = L_p = 2\lambda_{DR} = 0,60\,\mu\text{m}$, chọn $W_n = 4\lambda_{DR} = 1,20\,\mu\text{m}$ và $W_p = 12\lambda_{DR} = 3,60\,\mu\text{m}$ (tỉ số nguyên $W_p/W_n = 3,0$ theo chuẩn lưới):
    - Tính hệ số sức mạnh độ dẫn $r = \frac{k_p}{k_n}$.
    - Tính điện áp chuyển mạch lý thuyết $V_M$ tương ứng và xác định độ lệch (theo mV và theo phần trăm) so với mốc $2,50\,\text{V}$.

@@ -18,8 +18,8 @@ Sau khi hoàn thành bài thực hành này, sinh viên có khả năng:
 3. **Làm chủ Lý thuyết Nỗ lực Logic (Logical Effort Theory):** 
    - Xác định chính xác nỗ lực logic $g$ (Logical Effort) và trễ ký sinh $p$ (Parasitic Delay) cho từng ngõ vào của cổng phức hợp.
    - Nắm vững phương pháp thực nghiệm đo đạc đường trễ $t_{pd}$ theo nỗ lực điện $h$ bằng testbench kép đối chuẩn trực tiếp với `INV_X1` để trích xuất $g_{meas}$ và $p_{meas}$ (CLO2).
-4. **Giải bài toán Tối ưu hóa Chuỗi đệm (Inverter Buffer Chain Optimization):** Tính toán số tầng đệm tối ưu $N$, hệ số phóng đại từng tầng $\hat{f}$, và thiết kế chuỗi Inverter nhiều tầng để lái tải dung lớn ($C_L = 1\,	ext{pF}$) đạt mức giảm trễ $\approx 72,5\%$ (nhanh hơn $3,63$ lần) so với lái trực tiếp (CLO1, CLO2).
-5. **Thiết kế Mask Layout cho Cổng phức hợp:** Áp dụng phương pháp đường đi Euler để tìm thứ tự cổng Polysilicon tối ưu $C - A - B$, thực hiện kỹ thuật chia sẻ cực má chung nối ra `out` (Abutment), kiểm tra DRC đạt 0 lỗi và đối chiếu sơ đồ LVS (NCC) đạt kết quả trùng khớp hoàn hảo (CLO4).
+4. **Giải bài toán Tối ưu hóa Chuỗi đệm (Inverter Buffer Chain Optimization):** Tính toán số tầng đệm tối ưu $N$, hệ số phóng đại từng tầng $\hat{f}$, và thiết kế chuỗi Inverter nhiều tầng để lái tải dung lớn ($C_L = 1\,\text{pF}$) đạt mức giảm trễ $\approx 72,5\%$ (nhanh hơn $3,63$ lần) so với lái trực tiếp (CLO1, CLO2).
+5. **Thiết kế Mask Layout cho Cổng phức hợp:** Áp dụng phương pháp đường đi Euler để tìm thứ tự cổng Polysilicon tối ưu $C - A - B$, thực hiện kỹ thuật chia sẻ cực má chung nối ra `out` (Abutment), kiểm tra DRC đạt 0 lỗi và đối chiếu sơ đồ LVS (NCC) đạt kết quả trùng khớp đồng bộ (CLO4).
 6. **Đóng gói IP Tế bào chuẩn:** Tạo Cell Icon `aoi21_x1{ic}` và tế bào chuỗi đệm `buf_chain_3st{ic}` bàn giao làm linh kiện thành phần cho các bài thực hành tiếp theo (CLO4).
 
 ---
@@ -172,7 +172,7 @@ $$p_{AOI21} = \frac{36\lambda}{16\lambda} = \mathbf{2,250} \quad (p_{AOI21} \app
 
 ### 3.5 Tối ưu Hóa Chuỗi Đệm Inverter (Inverter Buffer Chain)
 
-Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus dài trên chip, chân I/O Pad $C_L = 1\,	ext{pF}$):
+Khi một cổng logic cần lái tải dung cực lớn (ví dụ đường bus dài trên chip, chân I/O Pad $C_L = 1\,\text{pF}$):
 - Nếu lái trực tiếp bằng Inverter cơ sở $1\times$ ($C_{in} \approx 20\,\text{fF}$): Tỉ số nỗ lực điện $H = C_L / C_{in} = 50$. Trễ danh định: $D = 1 \times 50 + 1 = 51\,\tau$.
 - **Chèn chuỗi $N$ tầng Inverter:**
   * Nỗ lực tối ưu mỗi tầng: $\hat{f} = H^{1/N} = 50^{1/N}$.
@@ -264,7 +264,7 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
 | **10 – 35'** | 25 phút | **Ex3.1:** Dựng Schematic `aoi21_x1{sch}`, gán 6 Export, chạy mô phỏng kiểm chứng 8 trạng thái bảng chân trị logic. | Dạng sóng 8 trạng thái logic đúng $100\%$. |
 | **35 – 70'** | 35 phút | **Ex3.2:** Dựng Testbench kép đo Logical Effort $g$ và $p$ của AOI21 đối chuẩn trực tiếp với `INV_X1`. | Trích xuất đồ thị hồi quy, tính $g_{meas}$ và $p_{meas}$. |
 | **70 – 95'** | 25 phút | **Ex3.3:** Thiết kế chuỗi đệm Inverter 3 tầng `buf_chain_3st{sch}`, mô phỏng lái tải nặng $C_L = 1\,\text{pF}$ vs lái trực tiếp. | Đo được trễ giảm $> 3$ lần, sườn xung phục hồi. |
-| **95 – 125'** | 30 phút | **Ex3.4:** Thiết kế Mask Layout `aoi21_x1{lay}` (thứ tự $C-A-B$), chạy DRC đạt 0 lỗi, chạy NCC LVS đạt MATCH. | Cửa sổ NCC thông báo so khớp hoàn hảo. |
+| **95 – 125'** | 30 phút | **Ex3.4:** Thiết kế Mask Layout `aoi21_x1{lay}` (thứ tự $C-A-B$), chạy DRC đạt 0 lỗi, chạy NCC LVS đạt MATCH. | Cửa sổ NCC thông báo so khớp đồng bộ. |
 | **125 – 135'** | 10 phút | Nghiệm thu tại bàn, đóng gói thư viện `lab03_MSSV.jelib`, dọn dẹp vệ sinh phòng máy. | Chữ ký nghiệm thu In-lab của Giảng viên. |
 
 ---
@@ -295,14 +295,14 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
 4. Nhấn phím `F5` kiểm tra kết nối mạng (bảo đảm **0 errors, 0 warnings**).
 5. Đóng gói Cell Icon `aoi21_x1{ic}`.
 6. **Mô phỏng kiểm chứng chức năng logic trên LTspice (`aoi21_func.sp`):**
-   - Thiết lập 3 nguồn xung vuông `PULSE` với chu kỳ: $T_A = 40\,	ext{ns}, T_B = 20\,	ext{ns}, T_C = 10\,	ext{ns}$ để quét đủ 8 tổ hợp từ `000` đến `111` trong khoảng thời gian $80\,	ext{ns}$:
+   - Thiết lập 3 nguồn xung vuông `PULSE` với chu kỳ: $T_A = 40\,\text{ns}, T_B = 20\,\text{ns}, T_C = 10\,\text{ns}$ để quét đủ 8 tổ hợp từ `000` đến `111` trong khoảng thời gian $80\,\text{ns}$:
      ```spice
      Va A 0 PULSE(0 5.0 0 100p 100p 19.9n 40n)
      Vb B 0 PULSE(0 5.0 0 100p 100p 9.9n 20n)
      Vc C 0 PULSE(0 5.0 0 100p 100p 4.9n 10n)
      .tran 0 80n 0 1p
      ```
-   - Dùng lệnh `.MEAS` đọc điện áp $V(out)$ tại thời điểm ổn định cuối mỗi chu kỳ (ví dụ $t = 2.5\,	ext{ns}, 7.5\,	ext{ns}, \dots$) để xác nhận bảng chân trị.
+   - Dùng lệnh `.MEAS` đọc điện áp $V(out)$ tại thời điểm ổn định cuối mỗi chu kỳ (ví dụ $t = 2.5\,\text{ns}, 7.5\,\text{ns}, \dots$) để xác nhận bảng chân trị.
 
 ---
 
@@ -310,18 +310,18 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
 
 1. **Thiết lập Testbench kép trong LTspice (`logical_effort_meas.sp`):**
    - Đặt đồng thời cổng `INV_X1` và cổng `AOI21_X1` trong cùng một file mô phỏng.
-   - Cấp xung kích thích ngõ vào biên độ $0 	o 5\,	ext{V}$, thời gian sườn xung $t_r = t_f = 50\,	ext{ps}$.
+   - Cấp xung kích thích ngõ vào biên độ $0 \to 5\,\text{V}$, thời gian sườn xung $t_r = t_f = 50\,\text{ps}$.
 2. **Khảo sát đường trễ Inverter cơ sở:**
    - Nối ngõ ra Inverter vào tải $C_L$. Sử dụng lệnh `.step param CL 10f 40f 10f`.
    - Dùng `.MEAS` đo trễ truyền lan $t_{pd,inv} = (t_{pHL} + t_{pLH})/2$.
-   - Trích xuất hệ số góc $	ext{Slope}_{inv}$ (ps/fF) và giao điểm $t_{pd0,inv}$ (ps).
+   - Trích xuất hệ số góc $\text{Slope}_{inv}$ (ps/fF) và giao điểm $t_{pd0,inv}$ (ps).
 3. **Khảo sát ngõ vào A của cổng AOI21:**
-   - Giữ ngõ $B = 5,0\,	ext{V}$ tĩnh, $C = 0,0\,	ext{V}$ tĩnh. Cấp xung vào ngõ $A$.
+   - Giữ ngõ $B = 5,0\,\text{V}$ tĩnh, $C = 0,0\,\text{V}$ tĩnh. Cấp xung vào ngõ $A$.
    - Quét tải $C_L \in \{20, 40, 60, 80\}\,\text{fF}$ (tương ứng nỗ lực điện $h = C_L / C_{in,A} \in \{1, 2, 3, 4\}$).
    - Đo trễ truyền lan $t_{pd,A}$ tại từng bước tải.
 4. **Khảo sát trường hợp xấu nhất của ngõ vào C:**
-   - Giữ ngõ $A = 5,0\,	ext{V}$ tĩnh, $B = 0,0\,	ext{V}$ tĩnh (chỉ 1 PMOS trong cụm song song dẫn). Cấp xung vào ngõ $C$.
-   - Đo trễ worst-case của ngõ C ở tải $C_L = 50\,	ext{fF}$.
+   - Giữ ngõ $A = 5,0\,\text{V}$ tĩnh, $B = 0,0\,\text{V}$ tĩnh (chỉ 1 PMOS trong cụm song song dẫn). Cấp xung vào ngõ $C$.
+   - Đo trễ worst-case của ngõ C ở tải $C_L = 50\,\text{fF}$.
 5. **Hồi quy tuyến tính & Tính toán:**
    - Xác định $g_{meas,A} = \frac{\text{Slope}_{h,A}}{\text{Slope}_{h,inv}}$ và so sánh với giá trị lý thuyết $2,00$.
    - Xác định $p_{meas} = \frac{t_{pd0,A}}{t_{pd0,inv}}$ và so sánh với giá trị lý thuyết $2,25$.
@@ -340,10 +340,10 @@ Một đường truyền tín hiệu có tổng nỗ lực đường truyền $F
    - Gán chân Export: `in`, `out`, `vdd`, `gnd`.
    - Nhấn `F5` kiểm tra đạt 0 errors, 0 warnings. Đóng gói Icon `buf_chain_3st{ic}`.
 2. **Mô phỏng đối sánh hiệu năng trên LTspice (`buffer_chain_opt.sp`):**
-   - **Kịch bản A:** Đặt 1 Inverter đơn `INV_X1` lái trực tiếp tải nặng $C_L = 1,0\,	ext{pF}$.
-   - **Kịch bản B:** Đặt chuỗi đệm 3 tầng `buf_chain_3st` lái tải nặng $C_L = 1,0\,	ext{pF}$.
-   - Tần số xung kích thích: $20\,	ext{MHz}$ (chu kỳ $50\,	ext{ns}$).
-   - Dùng lệnh `.MEAS` đo trễ truyền lan $t_{pd}$, thời gian sườn tăng $t_{rise}$ và sườn giảm $t_{fall}$ tại tải $1\,	ext{pF}$ cho cả hai kịch bản.
+   - **Kịch bản A:** Đặt 1 Inverter đơn `INV_X1` lái trực tiếp tải nặng $C_L = 1,0\,\text{pF}$.
+   - **Kịch bản B:** Đặt chuỗi đệm 3 tầng `buf_chain_3st` lái tải nặng $C_L = 1,0\,\text{pF}$.
+   - Tần số xung kích thích: $20\,\text{MHz}$ (chu kỳ $50\,\text{ns}$).
+   - Dùng lệnh `.MEAS` đo trễ truyền lan $t_{pd}$, thời gian sườn tăng $t_{rise}$ và sườn giảm $t_{fall}$ tại tải $1\,\text{pF}$ cho cả hai kịch bản.
    - Tính tỉ số cải thiện tốc độ $\frac{t_{pd,direct}}{t_{pd,chain}}$ và phần trăm giảm trễ $\frac{t_{pd,direct} - t_{pd,chain}}{t_{pd,direct}} \times 100\%$.
 
 ---
@@ -402,20 +402,20 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 
 | Fan-out $h$ | Tải dung $C_L$ (fF) | $t_{pHL}$ (ps) | $t_{pLH}$ (ps) | $t_{pd}$ trung bình (ps) |
 | :---: | :---: | :---: | :---: | :---: |
-| **$h = 1$** | $20\,	ext{fF}$ | `..............` | `..............` | `..............` |
-| **$h = 2$** | $40\,	ext{fF}$ | `..............` | `..............` | `..............` |
-| **$h = 3$** | $60\,	ext{fF}$ | `..............` | `..............` | `..............` |
-| **$h = 4$** | $80\,	ext{fF}$ | `..............` | `..............` | `..............` |
+| **$h = 1$** | $20\,\text{fF}$ | `..............` | `..............` | `..............` |
+| **$h = 2$** | $40\,\text{fF}$ | `..............` | `..............` | `..............` |
+| **$h = 3$** | $60\,\text{fF}$ | `..............` | `..............` | `..............` |
+| **$h = 4$** | $80\,\text{fF}$ | `..............` | `..............` | `..............` |
 
-- Phương trình hồi quy tuyến tính: $t_{pd}(h) = (	ext{Slope}) \cdot h + (	ext{Intercept})$
-  $$t_{pd}(h) = 	ext{....................} \cdot h + 	ext{....................} \quad (	ext{ps})$$
-- Hằng số trễ Inverter chuẩn đo được: $	au =$ `....................` ps
-- Nỗ lực logic thực nghiệm: $g_{meas,A} = 	ext{Slope} / 	au =$ `....................` *(Dự đoán Pre-lab: 2,00)*
-- Trễ ký sinh thực nghiệm: $p_{meas} = 	ext{Intercept} / 	au =$ `....................` *(Dự đoán Pre-lab: 2,25)*
+- Phương trình hồi quy tuyến tính: $t_{pd}(h) = (\text{Slope}) \cdot h + (\text{Intercept})$
+  $$t_{pd}(h) = \text{....................} \cdot h + \text{....................} \quad (\text{ps})$$
+- Hằng số trễ Inverter chuẩn đo được: $\tau =$ `....................` ps
+- Nỗ lực logic thực nghiệm: $g_{meas,A} = \text{Slope} / \tau =$ `....................` *(Dự đoán Pre-lab: 2,00)*
+- Trễ ký sinh thực nghiệm: $p_{meas} = \text{Intercept} / \tau =$ `....................` *(Dự đoán Pre-lab: 2,25)*
 
-#### c. Kết quả Thực nghiệm Tối ưu Chuỗi đệm Lái tải Nặng $C_L = 1\,	ext{pF}$:
+#### c. Kết quả Thực nghiệm Tối ưu Chuỗi đệm Lái tải Nặng $C_L = 1\,\text{pF}$:
 
-| Thông số kỹ thuật | Kịch bản A (Lái trực tiếp 1X) | Kịch bản B (Chuỗi đệm 3 tầng) | Tỉ số cải thiện ($rac{	ext{A}}{	ext{B}}$) | Mức giảm trễ ($\%$) |
+| Thông số kỹ thuật | Kịch bản A (Lái trực tiếp 1X) | Kịch bản B (Chuỗi đệm 3 tầng) | Tỉ số cải thiện ($\frac{\text{A}}{\text{B}}$) | Mức giảm trễ ($\%$) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Thời gian trễ $t_{pd}$** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | Giảm `......` $\%$ |
 | **Sườn tăng $t_{rise}$ (10%–90%)** | `..............` ns | `..............` ns | Nhanh hơn `......` lần | — |
@@ -429,8 +429,8 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
    Nêu hai lý do vì sao cổng phức hợp (AOI, OAI) được các bộ tổng hợp logic (Logic Synthesis) sử dụng với tần suất rất cao trong các thiết kế ASIC. Nêu một giới hạn vật lý quan trọng khiến người ta không thể tăng số ngõ vào của cổng phức hợp lên quá lớn ($\ge 4$ biến nối tiếp)?
 2. **Bản chất Vật lý Ưu thế của Ngõ vào C:**  
    Dựa trên cấu trúc mạch và các số đo trễ thực nghiệm, hãy phân tích tại sao ngõ vào C lại có nỗ lực logic $g_C = 1,75$ nhỏ hơn ngõ A và B ($g=2,0$). Trong thiết kế vi mạch số tốc độ cao, điều này đem lại lợi ích gì cho việc định tuyến các tín hiệu trên đường tới hạn?
-3. **So sánh Đường rời NAND2 $	o$ INV $	o$ NOR2 với AOI21:**  
-   Tính tổng nỗ lực logic đường truyền $G = g_1 \cdot g_2 \dots$ và tổng trễ ký sinh $\sum p$ cho phương án ghép 3 cổng rời (NAND2 $	o$ INV $	o$ NOR2). So sánh với thông số của cổng phức hợp AOI21 ($g=2,0, p=2,25$) để giải thích vì sao cổng phức hợp lại có ưu thế vượt trội về hiệu năng.
+3. **So sánh Đường rời NAND2 $\to$ INV $\to$ NOR2 với AOI21:**  
+   Tính tổng nỗ lực logic đường truyền $G = g_1 \cdot g_2 \dots$ và tổng trễ ký sinh $\sum p$ cho phương án ghép 3 cổng rời (NAND2 $\to$ INV $\to$ NOR2). So sánh với thông số của cổng phức hợp AOI21 ($g=2,0, p=2,25$) để giải thích vì sao cổng phức hợp lại có ưu thế đáng kể về hiệu năng.
 
 ---
 
@@ -470,22 +470,22 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 | STT | Hạng mục kiểm tra kỹ thuật | Tiêu chí đạt chuẩn | Trạng thái (Đạt / Chưa đạt) |
 | :---: | :--- | :--- | :---: |
 | 1 | **Schematic AOI21 & Chuỗi đệm** | 0 lỗi DRC kết nối mạng F5; gán đủ 6 Export cho AOI21; Icon chuẩn. | `[        ]` |
-| 2 | **Kiểm chứng Bảng chân trị** | Đúng tuyệt đối 8 trạng thái logic $Y = \overline{(A \cdot B) + C}$. | `[        ]` |
+| 2 | **Kiểm chứng Bảng chân trị** | Đúng hoàn toàn 8 trạng thái logic $Y = \overline{(A \cdot B) + C}$. | `[        ]` |
 | 3 | **Đo Logical Effort $g_A$** | Sai lệch giữa $g_{meas}$ thực nghiệm và lý thuyết ($2,00$) $\le 15\%$. | `[        ]` |
 | 4 | **Trễ ký sinh thực nghiệm $p$** | Giá trị đo được nằm trong dải $1,8 - 2,6$ (chuẩn hóa theo $p_{inv}$). | `[        ]` |
 | 5 | **Hiệu quả Chuỗi đệm 3 tầng** | Thời gian trễ $t_{pd}$ giảm tối thiểu $3,0$ lần so với lái trực tiếp 1X. | `[        ]` |
 | 6 | **Mặt nạ Layout AOI21** | Thứ tự Poly $C-A-B$; chia sẻ cực má chung Out; chiều cao $H_{cell} = 60\lambda_{DR}$. | `[        ]` |
-| 7 | **DRC & LVS AOI21** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** hoàn hảo. | `[        ]` |
+| 7 | **DRC & LVS AOI21** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** đồng bộ. | `[        ]` |
 | 8 | **Báo cáo & Phân tích chuyên sâu** | Hoàn thành đủ các bảng số liệu, giải thích rõ cơ chế vật lý của $g, p$. | `[        ]` |
 
 ---
 
 ## 9. HƯỚNG DẪN TỰ CHẨN ĐOÁN LỖI THƯỜNG GẶP
 
-1. **Lỗi đo $g_{meas} pprox 1,0$ không khớp lý thuyết ($2,00$):**
-   - *Hiện tượng:* Hồi quy trễ theo $h$ ra hệ số góc xấp xỉ bằng $1 \cdot 	au$.
+1. **Lỗi đo $g_{meas} \approx 1,0$ không khớp lý thuyết ($2,00$):**
+   - *Hiện tượng:* Hồi quy trễ theo $h$ ra hệ số góc xấp xỉ bằng $1 \cdot \tau$.
    - *Nguyên nhân:* Sinh viên định nghĩa sai nỗ lực điện $h = C_L / C_{in,inv}$. Vì cổng đã định cỡ cùng $R_{on}$, trễ theo $C_L / C_{in,inv}$ luôn có hệ số góc bằng $1$.
-   - *Khắc phục:* Đặt $h = C_L / C_{in,A}$ (với $C_{in,A} = 2 C_{in,inv}$) và tính $g_{meas} = 	ext{Slope}_{h,A} / 	ext{Slope}_{h,inv}$.
+   - *Khắc phục:* Đặt $h = C_L / C_{in,A}$ (với $C_{in,A} = 2 C_{in,inv}$) và tính $g_{meas} = \text{Slope}_{h,A} / \text{Slope}_{h,inv}$.
 2. **Lỗi đo ngõ C ra kết quả quá nhanh không phản ánh trường hợp xấu nhất:**
    - *Hiện tượng:* Đo trễ sườn lên ngõ C thấy nhanh hơn ngõ A tới $25\%$.
    - *Nguyên nhân:* Sinh viên đặt $A = B = 0$ khi kích C. Khi đó cả 2 PMOS A và B cùng dẫn song song, làm điện trở kéo lên giảm còn $744\,\Omega$ thay vì $992\,\Omega$.
@@ -493,7 +493,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 3. **Lỗi DRC khoảng cách Poly-to-Poly trên Layout:**
    - *Hiện tượng:* Báo lỗi khoảng cách tối thiểu giữa Poly C và Poly A.
    - *Nguyên nhân:* Đặt khoảng cách $3\lambda_{DR}$ tại nơi có đặt Contact ngõ ra `out`.
-   - *Khắc phục:* Khoảng cách giữa 2 dải Poly có Contact ở giữa bắt buộc phải $\ge 6\lambda_{DR} = 1,80\,\mu	ext{m}$.
+   - *Khắc phục:* Khoảng cách giữa 2 dải Poly có Contact ở giữa bắt buộc phải $\ge 6\lambda_{DR} = 1,80\,\mu\text{m}$.
 4. **Hiện tượng Glitch khi mô phỏng bảng chân trị logic:**
    - *Hiện tượng:* Xuất hiện gai điện áp nhọn tại các thời điểm chuyển mạch ngõ vào.
    - *Nguyên nhân:* Các nguồn xung $A, B, C$ đổi trạng thái đồng thời gây ra hiện tượng chạy đua tín hiệu (Race Condition).

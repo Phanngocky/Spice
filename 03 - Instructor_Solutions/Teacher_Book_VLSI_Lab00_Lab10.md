@@ -67,7 +67,7 @@ Các tham số chuẩn hóa được trích xuất trực tiếp từ tệp [C5_
 # NHẬP MÔN MÔ PHỎNG SPICE VỚI LTSPICE & MẠCH RC CƠ BẢN
 *(Tài liệu chuyên môn lưu hành nội bộ dành riêng cho Giảng viên & Trợ giảng — Bộ môn ĐTVT, Trường ĐH Sư phạm Kỹ thuật – ĐH Đà Nẵng)*
 
-> **Quy định bảo mật học liệu:** Tuyệt đối không phân phát tài liệu này cho sinh viên. Dùng làm cẩm nang hướng dẫn đứng lớp, cung cấp cơ sở vật lý toán, kịch bản hướng dẫn, phương pháp đặt câu hỏi gợi mở (Socratic Questioning), dữ liệu đối chuẩn SPICE Benchmark và các lưu ý kỹ thuật.
+> **Quy định bảo mật học liệu:** Không phân phát tài liệu này cho sinh viên. Dùng làm cẩm nang hướng dẫn đứng lớp, cung cấp cơ sở vật lý toán, kịch bản hướng dẫn, phương pháp đặt câu hỏi gợi mở (Socratic Questioning), dữ liệu đối chuẩn SPICE Benchmark và các lưu ý kỹ thuật.
 
 ---
 
@@ -203,7 +203,7 @@ Trong mạch số CMOS, các transistor hoạt động như các công tắc đ�
 ```
 
 ### Giới hạn của mô hình $0,69 \cdot R_{on} \cdot C_L$
-- Trong mạch RC thụ động (Lab 0), điện trở $R$ là tuyến tính hằng số $\implies$ Trễ đo được khớp chính xác tuyệt đối với $\ln(2) \cdot RC$.
+- Trong mạch RC thụ động (Lab 0), điện trở $R$ là tuyến tính hằng số $\implies$ Trễ đo được khớp chính xác hoàn toàn với $\ln(2) \cdot RC$.
 - Trong cổng CMOS thực tế (Lab 1), kênh dẫn MOSFET là linh kiện phi tuyến. Trong nửa đầu quá trình phóng nạp, transistor hoạt động trong vùng **Bão hòa** (dòng điện gần như không đổi), sau đó mới chuyển sang vùng **Tuyến tính**. Do đó, điện trở kênh dẫn thực tế biến thiên liên tục.
 - Giá trị $0,69 \cdot R_{on} \cdot C_L$ chỉ là **cận dưới xấp xỉ**. Trễ mô phỏng thực tế của Inverter luôn lớn hơn từ $1,5$ đến $1,8$ lần con số này. Giảng viên cần nhấn mạnh điều này để chuẩn bị tâm lý cho sinh viên bước vào Lab 1.
 
@@ -305,7 +305,7 @@ Giảng viên chủ động lựa chọn kịch bản thời lượng phù hợp
    - $R = 40\,\text{k}\Omega \implies t_{pd} = 138,63\,\mu\text{s}$
    - Độ dốc thực nghiệm:
      $$\text{Slope} = \frac{138,63 - 17,33}{40 - 5} = \frac{121,30\,\mu\text{s}}{35\,\text{k}\Omega} = \mathbf{3,4657\,\text{ns}/\text{k}\Omega}$$
-   - Kiểm chéo với lý thuyết: $\ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = \mathbf{3,4657 \times 10^{-9}\,\text{s}/\Omega} \implies$ Khớp hoàn hảo $100\%$.
+   - Kiểm chéo với lý thuyết: $\ln(2) \cdot C = 0,69315 \times 5\,\text{nF} = \mathbf{3,4657 \times 10^{-9}\,\text{s}/\Omega} \implies$ Khớp đồng bộ $100\%$.
 
 ---
 
@@ -332,9 +332,9 @@ Bảng số liệu chuẩn dùng để đối chiếu khi chấm bài thực hà
 
 | Bài | Thông số đo | Biểu thức lý thuyết | Giá trị Lý thuyết | Kết quả SPICE `.meas` | Sai lệch tương đối | Đánh giá nghiệm thu |
 | :---: | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Đạt tuyệt đối |
+| **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Đạt hoàn toàn |
 | **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | $0,00\%$ | Dòng từ in sang out |
-| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính hoàn hảo |
+| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính đồng bộ |
 | **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05\%$ | Chuẩn $\le 2,0\%$ |
 | **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
 | **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn $\le 2,0\%$ |
@@ -347,7 +347,7 @@ Bảng số liệu chuẩn dùng để đối chiếu khi chấm bài thực hà
 | **Ex0.4** | $t_{pd}$ ($R=10\text{k}$) | $\ln(2) \cdot 10\text{k} \cdot C$ | $34,657\,\mu\text{s}$ | **$34,66\,\mu\text{s}$** | $0,00\%$ | Bước quét 2 |
 | **Ex0.4** | $t_{pd}$ ($R=20\text{k}$) | $\ln(2) \cdot 20\text{k} \cdot C$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $0,00\%$ | Bước quét 3 |
 | **Ex0.4** | $t_{pd}$ ($R=40\text{k}$) | $\ln(2) \cdot 40\text{k} \cdot C$ | $138,629\,\mu\text{s}$ | **$138,63\,\mu\text{s}$** | $0,00\%$ | Bước quét 4 |
-| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\text{ns/k}\Omega$ | **$3,466\,\text{ns/k}\Omega$** | $< 0,05\%$ | Trùng khớp tuyệt đối |
+| **Ex0.4** | Độ dốc $\Delta t / \Delta R$ | $\ln(2) \cdot C$ | $3,4657\,\text{ns/k}\Omega$ | **$3,466\,\text{ns/k}\Omega$** | $< 0,05\%$ | Trùng khớp hoàn toàn |
 | **Ex0.5** | Dòng $I_D$ NMOS | Shichman-Hodges | $\sim 2,22\,\text{mA}$ | **$1,35 - 1,45\,\text{mA}$** | $\sim 37\%$ | Bão hòa vận tốc hạt dẫn |
 
 ---
@@ -501,7 +501,7 @@ flowchart TD
        tpd1  tpd2   tpd3   tpd4                          5k    10k    20k    40k
                                                      Độ dốc Slope = ln(2)*C = 3.466 ns/kOhm
 ```
-*Mô tả sư phạm:* Thấy rõ họ đường cong nạp xả biến đổi theo $R$; chứng minh bằng thực nghiệm quan hệ tuyến tính hoàn hảo giữa độ trễ và giá trị điện trở.
+*Mô tả sư phạm:* Thấy rõ họ đường cong nạp xả biến đổi theo $R$; chứng minh bằng thực nghiệm quan hệ tuyến tính đồng bộ giữa độ trễ và giá trị điện trở.
 
 ---
 
@@ -585,7 +585,7 @@ flowchart TD
 | **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **4.0 đ** | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2\%$. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5\%$. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
 | **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **2.0 đ** | Thiết lập đúng biến `{Rval}`, quét đúng 4 bước, vẽ được đồ thị thực nghiệm và tính đúng độ dốc. Gọi model C5N đo được dòng $I_D$. | Chạy được lệnh `.step` nhưng chưa vẽ được đồ thị độ dốc; gọi được model C5N. | Quên ngoặc nhọn `{}` làm kết quả quét bị sai; không liên kết được thư viện C5N. |
 | **Hiểu bản chất qua câu hỏi tư duy** | **2.0 đ** | Trả lời sắc bén, chính xác bản chất vật lý của các câu hỏi tư duy (vai trò nút đất, hằng số $\tau$, ý nghĩa $5\tau$, sụt giảm biên độ AC). | Trả lời được các câu hỏi cơ bản nhưng phần giải thích bản chất vật lý còn mơ hồ. | Không trả lời được câu hỏi hoặc chỉ chép lại công thức mà không hiểu ý nghĩa. |
-| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **2.0 đ** | Thư mục dự án tổ chức hoàn hảo đúng cấu trúc; sơ đồ và Netlist đầy đủ; báo cáo trung thực, có ghi nhận lỗi và cách sửa. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
+| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **2.0 đ** | Thư mục dự án tổ chức đồng bộ đúng cấu trúc; sơ đồ và Netlist đầy đủ; báo cáo trung thực, có ghi nhận lỗi và cách sửa. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
 
 ---
 
@@ -639,7 +639,7 @@ $$V_M = \frac{V_{tn} + \sqrt{r} (V_{DD} - |V_{tp}|)}{1 + \sqrt{r}}$$
 | **1,0** | 0,333 | $1,98\,\text{V}$ | $2,05\,\text{V}$ | `[        ]` | Kéo xuống thắng thế; VTC lệch mạnh sang trái. |
 | **2,0** | 0,667 | $2,27\,\text{V}$ | $2,31\,\text{V}$ | `[        ]` | Low-skew inverter; dùng trong domino logic. |
 | **3,0** | 1,000 | $2,45\,\text{V}$ | $2,47\,\text{V}$ | `[        ]` | Thiết kế chuẩn cân bằng trễ $t_{pHL} \approx t_{pLH}$. |
-| **3,36** | 1,121 | $2,50\,\text{V}$ | $2,51\,\text{V}$ | `[        ]` | Cân bằng tuyệt đối điểm đối xứng $V_{DD}/2$. |
+| **3,36** | 1,121 | $2,50\,\text{V}$ | $2,51\,\text{V}$ | `[        ]` | Cân bằng hoàn toàn điểm đối xứng $V_{DD}/2$. |
 
 ---
 
@@ -813,7 +813,7 @@ Cổng AOI21 thực hiện hàm logic: $Y = \overline{(A \cdot B) + C}$.
 # 4. LAB 4 — CỔNG TRUYỀN (TG) VÀ BỘ DỒN KÊNH MUX (CHƯƠNG 6)
 
 ## 4.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu cặn kẽ vì sao một transistor đơn lẻ không thể làm công tắc logic hoàn hảo: NMOS truyền mức 1 kém (Weak 1) và PMOS truyền mức 0 kém (Weak 0) do tác động của điện áp ngưỡng và hiệu ứng thân.
+1. Hiểu cặn kẽ vì sao một transistor đơn lẻ không thể làm công tắc logic đồng bộ: NMOS truyền mức 1 kém (Weak 1) và PMOS truyền mức 0 kém (Weak 0) do tác động của điện áp ngưỡng và hiệu ứng thân.
 2. Hiểu cơ chế bù trừ độ dẫn của Cổng truyền CMOS (Transmission Gate): khi kết hợp song song NMOS và PMOS kích hoạt pha ngược, điện trở tương đương $R_{TG}$ trở nên gần như phẳng trên toàn dải điện áp ngõ vào.
 3. Nắm vững mô hình trễ phân tán Elmore trong chuỗi cổng truyền: trễ tăng theo bình phương số tầng $O(N^2)$, từ đó giải thích vì sao cần chèn bộ đệm (Buffer).
 
@@ -928,7 +928,7 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered D
 ## 6.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. Hiểu sâu kiến trúc vi mạch số: $Sum$ là hàm XOR 3 ngõ vào đối xứng, trong khi $C_{out}$ là hàm đa số (Majority function - bằng 1 khi có từ 2 ngõ vào trở lên bằng 1).
 2. Hiểu vì sao kiến trúc Mirror Adder 28T thống trị các thư viện chuẩn ASIC: tính tự đối ngẫu giúp PDN và PUN có cấu trúc topo giống hệt nhau, và việc tái sử dụng $\overline{C_{out}}$ để tạo $Sum$ giúp tiết kiệm tối đa số lượng transistor.
-3. Nhận thức rõ ràng: Tốc độ của bộ cộng gợn sóng $N$-bit (Ripple Carry Adder) bị khống chế tuyệt đối bởi trễ lan truyền số nhớ $C_{in} \to C_{out}$, không phải trễ $Sum$.
+3. Nhận thức rõ ràng: Tốc độ của bộ cộng gợn sóng $N$-bit (Ripple Carry Adder) bị chi phối trực tiếp bởi trễ lan truyền số nhớ $C_{in} \to C_{out}$, không phải trễ $Sum$.
 
 ---
 
@@ -1143,7 +1143,7 @@ Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phả
 1. Trải nghiệm trọn vẹn quy trình thiết kế vi mạch tích hợp hệ thống (System-on-Chip Top-Down Design Flow): từ đặc tả tập lệnh $\to$ phân rã khối $\to$ thiết kế tế bào $\to$ Floorplanning $\to$ đóng gói PEX $\to$ nghiệm thu toàn diện.
 2. Làm chủ bài toán Ngân sách thời gian (Timing Budget) trên đường tới hạn: xác định chính xác tần số xung nhịp cực đại $f_{max}$.
 3. Nắm vững kỹ thuật thiết kế mạng phân phối nguồn (Power Grid Network) và ước lượng độ sụt áp tĩnh/động ($IR\text{-drop}$ và $L \cdot di/dt$).
-4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp hoàn hảo $100\%$ và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
+4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp đồng bộ $100\%$ và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
 
 ---
 
@@ -1203,7 +1203,7 @@ Mục tiêu $f_{max} \ge 1,0\,\text{GHz}$ mà đề cương đề ra là **hoàn
 | :---: | :--- | :--- | :---: | :--- |
 | **Chung** | Toàn bộ 10 bài | Tham chiếu ảnh `images/` bị lỗi đường dẫn; lộ thư mục đáp án `03 - Instructor_Solutions/`. | **C** | Thay đường dẫn ảnh chuẩn nội bộ; xóa bỏ toàn bộ dấu vết thư mục đáp án trong bản phát cho SV. |
 | **Lab 1** | Mục I & Pre-lab | Ghi $W_p/W_n = 3,0$ cho $V_M = 2,50\,\text{V}$; dùng lẫn lộn $\lambda_{kênh}$ và $\lambda_{lưới}$. | **C** | Đính chính: $3/1$ cho $V_M = 2,45\,\text{V}$; muốn $2,50\,\text{V}$ cần $3,36$. Viết tách biệt $\lambda_{kênh}$ và $\lambda_{lưới}$ trên bảng. |
-| **Lab 2** | Mục III.3 & III.4 | Sơ đồ Stick NAND2 vẽ thiếu chân Out; khẳng định tuyệt đối "NAND luôn nhanh hơn NOR". | **C** | Bổ sung nút Out vào sơ đồ Euler; ghi rõ điều kiện "nhanh hơn khi độ linh động electron lớn hơn lỗ trống". |
+| **Lab 2** | Mục III.3 & III.4 | Sơ đồ Stick NAND2 vẽ thiếu chân Out; khẳng định hoàn toàn "NAND luôn nhanh hơn NOR". | **C** | Bổ sung nút Out vào sơ đồ Euler; ghi rõ điều kiện "nhanh hơn khi độ linh động electron lớn hơn lỗ trống". |
 | **Lab 3** | Mục III.1 & III.4 | Ghi "AOI21 giảm diện tích 40%"; ghi "cải thiện tốc độ 363%"; $C_{in} = 20\,\text{fF}$ không khớp. | **C** | Sửa thành "giảm $40\%$ số transistor, giảm $18\%$ tổng chiều rộng kênh"; sửa thành "nhanh hơn $3,63$ lần (giảm $72\%$ trễ)". |
 | **Lab 4** | Mục III.1 & III.2 | $R_{TG}$ tại $2,5\,\text{V}$ ghi $490\,\Omega$; Weak 0 của PMOS ghi $0,8-1,05\,\text{V}$ (quên Body Effect). | **C** | Đính chính: $R_{TG}(2,5\,\text{V}) \approx 1,19\,\text{k}\Omega$. Điện áp Weak 0 thực tế dâng lên $\approx 1,4\,\text{V}$ do hiệu ứng thân PMOS. |
 | **Lab 5** | Mục III.3 | Lỗi font ký tự tiếng Hoa ("điện荷"); vẽ thiếu inverter đệm ngõ ra làm sai số transistor. | **C** | Xóa ký tự lạ; chuẩn hóa sơ đồ DFF 18T (gồm 2 Latch 8T + 1 Inverter xung nhịp 2T). |
@@ -1248,4 +1248,4 @@ Nhằm chuyển đổi toàn bộ các nhãn "Chưa kiểm" thành "Đã kiểm 
 5. **Đồng bộ hóa thư viện Layout trong Electric VLSI:**
    Kiểm tra tệp thư viện `lab_vlsi.jelib` trong Electric, xác nhận công nghệ đang chọn là `mocmos` (MOSIS CMOS Submicron, $\lambda = 0,30\,\mu\text{m}$). Kiểm tra luật N-well bao P-active tối thiểu $6\lambda$ và Active bao Contact tối thiểu $1,5\lambda$.
 6. **Lưu trữ và phân quyền:**
-   Tài liệu Giáo trình nội bộ này được lưu trữ độc quyền trong thư mục quản trị `03 - Instructor_Solutions/Teacher_Book_VLSI_Lab01_Lab10.md`. Khi xuất bản tài liệu cho sinh viên, chỉ trích xuất các phần bài tập thực hành trong `02 - Student Workbook/` và tuyệt đối loại bỏ các gợi ý giải thích cơ chế, đáp án giải tích và các netlist tham chiếu.
+   Tài liệu Giáo trình nội bộ này được lưu trữ độc quyền trong thư mục quản trị `03 - Instructor_Solutions/Teacher_Book_VLSI_Lab01_Lab10.md`. Khi xuất bản tài liệu cho sinh viên, chỉ trích xuất các phần bài tập thực hành trong `02 - Student Workbook/` và hoàn toàn loại bỏ các gợi ý giải thích cơ chế, đáp án giải tích và các netlist tham chiếu.

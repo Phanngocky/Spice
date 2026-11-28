@@ -16,7 +16,7 @@
 1. Trải nghiệm trọn vẹn quy trình thiết kế vi mạch tích hợp hệ thống (System-on-Chip Top-Down Design Flow): từ đặc tả tập lệnh $\to$ phân rã khối $\to$ thiết kế tế bào $\to$ Floorplanning $\to$ đóng gói PEX $\to$ nghiệm thu toàn diện.
 2. Làm chủ bài toán Ngân sách thời gian (Timing Budget) trên đường tới hạn: xác định chính xác tần số xung nhịp cực đại $f_{max}$.
 3. Nắm vững kỹ thuật thiết kế mạng phân phối nguồn (Power Grid Network) và ước lượng độ sụt áp tĩnh/động ($IR\text{-drop}$ và $L \cdot di/dt$).
-4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp hoàn hảo $100\%$ và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
+4. Kỷ luật nghiệm thu công nghiệp: Bộ vi mạch chỉ được xem là hoàn tất khi vượt qua đồng thời DRC 0 lỗi, LVS so khớp đồng bộ $100\%$ và mô phỏng sau trích xuất PEX đảm bảo đúng chức năng logic.
 
 ---
 
@@ -91,7 +91,7 @@ Bài 10 là **Đồ án Đỉnh cao (Capstone Project)** tổng kết toàn bộ
   2. **Bất ổn định thời gian (Timing Uncertainty):** Không thể xác định chính xác thời điểm dữ liệu ngõ ra đã ổn định để chuyển tiếp sang chu kỳ lệnh kế tiếp.
 - **Giải pháp Vi mạch Đồng bộ (Registered ALU):**
   * Tích hợp một hàng thanh ghi D-Flip-Flop (`DFF_REG4`) ở ngõ ra, được điều khiển chốt bởi một xung nhịp chung `CLK`.
-  * Dữ liệu chỉ được cập nhật đồng loạt tại đúng sườn tích cực của `CLK`, biến vi mạch thành một hệ thống đồng bộ chuẩn xác tuyệt đối (Deterministic Synchronous System).
+  * Dữ liệu chỉ được cập nhật đồng loạt tại đúng sườn tích cực của `CLK`, biến vi mạch thành một hệ thống đồng bộ chuẩn xác hoàn toàn (Deterministic Synchronous System).
 
 ---
 
@@ -130,7 +130,7 @@ Trong đó:
   $$f_{max,pex} = \frac{1}{702 \times 10^{-12}\,\text{s}} \approx 1.42\,\text{GHz}$$
 
 > [!NOTE]
-> Kết quả kiểm chứng chứng minh vi mạch Capstone ALU 4-bit của sinh viên hoàn toàn có khả năng **vận hành vượt trội tần số mục tiêu $1.0\,\text{GHz}$** trên công nghệ bán dẫn MOSIS C5N 0.5µm!
+> Kết quả kiểm chứng chứng minh vi mạch Capstone ALU 4-bit của sinh viên hoàn toàn có khả năng **vận hành đáng kể tần số mục tiêu $1.0\,\text{GHz}$** trên công nghệ bán dẫn MOSIS C5N 0.5µm!
 
 ---
 
@@ -187,9 +187,9 @@ Khi toàn bộ 358 transistor trong vi mạch chuyển mạch đồng thời t�
 
 | Tần số thử nghiệm ($f_{clk}$) | Chu kỳ ($T_{clk}$) | Độ rộng mức cao | Biên độ an toàn thời gian thiết lập ($t_{margin}$) | Đánh giá trạng thái chốt |
 | :---: | :---: | :---: | :---: | :--- |
-| **$200\,\text{MHz}$** | $5.00\,\text{ns}$ | $2.50\,\text{ns}$ | $+4480\,\text{ps}$ | Hoàn hảo |
-| **$500\,\text{MHz}$** | $2.00\,\text{ns}$ | $1.00\,\text{ns}$ | $+1480\,\text{ps}$ | Hoàn hảo |
-| **$1.00\,\text{GHz}$** | $1.00\,\text{ns}$ | $0.50\,\text{ns}$ | **$+480\,\text{ps}$** | **Vận hành chuẩn xác tuyệt đối** |
+| **$200\,\text{MHz}$** | $5.00\,\text{ns}$ | $2.50\,\text{ns}$ | $+4480\,\text{ps}$ | Đồng bộ |
+| **$500\,\text{MHz}$** | $2.00\,\text{ns}$ | $1.00\,\text{ns}$ | $+1480\,\text{ps}$ | Đồng bộ |
+| **$1.00\,\text{GHz}$** | $1.00\,\text{ns}$ | $0.50\,\text{ns}$ | **$+480\,\text{ps}$** | **Vận hành chuẩn xác hoàn toàn** |
 | **$1.50\,\text{GHz}$** | $0.67\,\text{ns}$ | $0.33\,\text{ns}$ | $+150\,\text{ps}$ | Bắt đầu tiệm cận ngưỡng giới hạn |
 | **$1.92\,\text{GHz}$** | $0.52\,\text{ns}$ | $0.26\,\text{ns}$ | **$0\,\text{ps}$ (Tới hạn)** | **$f_{max}$ lý thuyết (Setup = 0)** |
 | **$> 2.00\,\text{GHz}$** | $< 0.50\,\text{ns}$ | $< 0.25\,\text{ns}$ | **Âm (Vi phạm Setup)** | Dữ liệu ngõ ra bị lỗi chuyển mạch |

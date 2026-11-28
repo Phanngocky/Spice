@@ -3,7 +3,7 @@
 
 > [!CAUTION]
 > **TÀI LIỆU NỘI BỘ DÀNH CHO GIẢNG VIÊN VÀ TRỢ GIẢNG (TA)**  
-> Tuyệt đối không phân phát tài liệu này cho sinh viên. Chi tiết lý thuyết chuyên sâu, kịch bản sư phạm 135'/225', 10 hình kỹ thuật và giải thích toán học đầy đủ được trình bày trong:  
+> Không phân phát tài liệu này cho sinh viên. Chi tiết lý thuyết chuyên sâu, kịch bản sư phạm 135'/225', 10 hình kỹ thuật và giải thích toán học đầy đủ được trình bày trong:  
 > 👉 [dap_an_chi_tiet_lab00.md](file:///d:/tam/VLSI_Spice/03%20-%20Instructor_Solutions/lab00/dap_an_chi_tiet_lab00.md) hoặc [Lab00_Teacher_Book.md](file:///d:/tam/VLSI_Spice/Teacher_Book/Lab00_Teacher_Book.md)
 
 ---
@@ -44,7 +44,7 @@
 | :--- | :--- | :---: | :---: | :--- |
 | **`.OP`** | $V(out)$ (Ex0.1) | $3,000\,\text{V}$ | **$3,00000\,\text{V}$** | Sai số $0,00\%$ |
 | **`.OP`** | $I(R1)$ (Ex0.1) | $0,1667\,\text{mA}$ | **$0,16667\,\text{mA}$** | Dòng điện dương từ `in` sang `out` |
-| **`.DC`** | Độ dốc $\Delta V_{out}/\Delta V_{in}$ | $0,6000$ | **$0,60000$** | Tuyến tính hoàn hảo |
+| **`.DC`** | Độ dốc $\Delta V_{out}/\Delta V_{in}$ | $0,6000$ | **$0,60000$** | Tuyến tính đồng bộ |
 | **`.TRAN`** | Trễ $t_{pd}$ 50% (Ex0.2) | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | Trích xuất từ `.meas` |
 | **`.TRAN`** | Sườn tăng $t_r$ ($10\% \to 90\%$) | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $t_r \approx 2,2 \tau$ |
 | **`.TRAN`** | Sườn giảm $t_f$ ($90\% \to 10\%$) | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $t_f \approx 2,2 \tau$ |

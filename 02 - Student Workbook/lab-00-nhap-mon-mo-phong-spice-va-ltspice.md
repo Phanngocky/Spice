@@ -265,7 +265,7 @@ Quá trình thực hành Lab 0 được tổ chức trực tiếp tại phòng m
 - Sơ đồ mạch `ex02_rc_tran.asc`.
 - Tệp Netlist `ex02_rc_tran.sp`.
 - Dạng sóng chụp màn hình gồm 2 đồ thị: Điện áp $V(in), V(out)$ và Dòng điện $I(C1)$.
-- Bảng đối chiếu số liệu đo SPICE `.meas` so với công thức giải tích ($	au = RC$, $t_{50\%} = \ln(2) RC$, $t_r = \ln(9) RC$, $I_{peak,chg}$, $I_{peak,dis}$).
+- Bảng đối chiếu số liệu đo SPICE `.meas` so với công thức giải tích ($\tau = RC$, $t_{50\%} = \ln(2) RC$, $t_r = \ln(9) RC$, $I_{peak,chg}$, $I_{peak,dis}$).
 
 ---
 

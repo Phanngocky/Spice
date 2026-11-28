@@ -2,7 +2,7 @@
 # NHẬP MÔN MÔ PHỎNG SPICE VỚI LTSPICE & MẠCH RC CƠ BẢN
 *(Tài liệu chuyên môn lưu hành nội bộ dành riêng cho Giảng viên & Trợ giảng — Bộ môn ĐTVT, Trường ĐH Sư phạm Kỹ thuật – ĐH Đà Nẵng)*
 
-> **Quy định bảo mật học liệu:** Tuyệt đối không phân phát tài liệu này cho sinh viên. Dùng làm cẩm nang hướng dẫn đứng lớp, cung cấp cơ sở vật lý toán, kịch bản hướng dẫn, phương pháp đặt câu hỏi gợi mở (Socratic Questioning), dữ liệu đối chuẩn SPICE Benchmark và các lưu ý kỹ thuật.
+> **Quy định bảo mật học liệu:** Không phân phát tài liệu này cho sinh viên. Dùng làm cẩm nang hướng dẫn đứng lớp, cung cấp cơ sở vật lý toán, kịch bản hướng dẫn, phương pháp đặt câu hỏi gợi mở (Socratic Questioning), dữ liệu đối chuẩn SPICE Benchmark và các lưu ý kỹ thuật.
 
 ---
 
@@ -13,7 +13,7 @@ Trong chương trình đào tạo Thiết kế Vi mạch VLSI, sinh viên thư�
 
 **Lab 0 đóng vai trò là "vùng đệm an toàn" (Sandbox & Onboarding Lab):**
 - Tách biệt kỹ năng sử dụng công cụ mô phỏng SPICE khỏi sự phức tạp của vật lý bán dẫn.
-- Sinh viên sử dụng các linh kiện tuyến tính thụ động quen thuộc ($R, C$, nguồn điện) để làm chủ quy trình khoa học: *Tính trước $\to$ Dựng sơ đồ $	o$ Xuất Netlist $	o$ Chạy mô phỏng $	o$ Đo đạc tự động `.meas` $	o$ So sánh và giải thích sai lệch*.
+- Sinh viên sử dụng các linh kiện tuyến tính thụ động quen thuộc ($R, C$, nguồn điện) để làm chủ quy trình khoa học: *Tính trước $\to$ Dựng sơ đồ $\to$ Xuất Netlist $\to$ Chạy mô phỏng $\to$ Đo đạc tự động `.meas` $\to$ So sánh và giải thích sai lệch*.
 - Mạch RC bậc nhất trong Lab 0 chính là **mô hình tương đương cơ sở** để giải thích toàn bộ động học nạp xả, độ trễ truyền lan ($t_{pd} \approx 0,69 \cdot R_{on} \cdot C_L$) và nỗ lực logic (Logical Effort) xuyên suốt từ Lab 1 đến Lab 10.
 
 ---
@@ -234,7 +234,7 @@ Dưới đây là lời giải chuẩn xác dùng để chấm bài kiểm tra �
      $$t_r \cdot f_c = (\ln(9) \cdot RC) \cdot \left(\frac{1}{2\pi RC}\right) = \frac{\ln(9)}{2\pi} = \frac{2,1972}{6,2832} \approx \mathbf{0,3497} \approx \mathbf{0,35}$$
    - Thay số đo thực tế: $t_r = 219,72\,\mu\text{s}, f_c = 1591,55\,\text{Hz}$:
      $$219,72 \times 10^{-6}\,\text{s} \times 1591,55\,\text{s}^{-1} = \mathbf{0,3497}$$
-   - Khẳng định tính nhất quán vật lý tuyệt đối của hai phân tích hoàn toàn độc lập trong SPICE.
+   - Khẳng định tính nhất quán vật lý hoàn toàn của hai phân tích hoàn toàn độc lập trong SPICE.
 
 ---
 
@@ -283,7 +283,7 @@ Bảng số liệu chuẩn dùng để chấm bài và nghiệm thu sản phẩm
 | :---: | :--- | :--- | :---: | :---: | :---: | :--- |
 | **Ex0.1** | $V(out)$ (.op) | $V_{in} \frac{R_2}{R_1+R_2}$ | $3,0000\,\text{V}$ | **$3,0000\,\text{V}$** | $0,00\%$ | Tuyệt đối chính xác |
 | **Ex0.1** | $I(R1)$ (.op) | $V_{in} / (R_1+R_2)$ | $0,1667\,\text{mA}$ | **$0,1667\,\text{mA}$** | $0,00\%$ | Dòng chảy từ `in` sang `out` |
-| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính hoàn hảo |
+| **Ex0.1** | Hệ số góc DC | $R_2 / (R_1+R_2)$ | $0,6000$ | **$0,6000$** | $0,00\%$ | Tuyến tính đồng bộ |
 | **Ex0.2** | Trễ $t_{pd}$ 50% | $\ln(2) \cdot RC$ | $69,315\,\mu\text{s}$ | **$69,32\,\mu\text{s}$** | $< 0,05\%$ | Chuẩn sai số $\le 2,0\%$ |
 | **Ex0.2** | Sườn tăng $t_r$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn sai số $\le 2,0\%$ |
 | **Ex0.2** | Sườn giảm $t_f$ | $\ln(9) \cdot RC$ | $219,72\,\mu\text{s}$ | **$219,7\,\mu\text{s}$** | $< 0,10\%$ | Chuẩn sai số $\le 2,0\%$ |
@@ -523,7 +523,7 @@ Sai lệch <= 2%?"}
 | **Kỹ năng thực hành tại lớp (Ex0.1 – Ex0.3)** | **3.5 đ**<br>*(CLO2)* | Dựng mạch chuẩn xác, vận hành trơn tru cả 3 chế độ `.op`, `.tran`, `.ac`. Trích xuất đầy đủ 5 số đo tự động bằng `.meas` với sai số $\le 2\%$; thực hiện đúng kiểm chéo $t_r \cdot f_c$. | Dựng được mạch, chạy được mô phỏng nhưng phải nhờ trợ giúp; số liệu đo đạt sai số $\le 5\%$. | Mạch không chạy, thiếu nút đất, không trích xuất được số liệu bằng `.meas`. |
 | **Khảo sát tham số & MOSFET (Ex0.4 – Ex0.5)** | **2.0 đ**<br>*(CLO2)* | Thiết lập đúng biến `{Rval}`, quét đúng 4 bước, vẽ được đồ thị thực nghiệm và xác nhận độ dốc $3,466\,\mu\text{s}/\text{k}\Omega$. Gọi model C5N Level 3 đo được dòng $I_D$. | Chạy được lệnh `.step` nhưng chưa vẽ được đồ thị độ dốc; gọi được model C5N. | Quên ngoặc nhọn `{}` làm kết quả quét bị sai; không liên kết được thư viện C5N. |
 | **Dự đoán – Đo đạc – Giải thích sai lệch** | **1.5 đ**<br>*(CLO1, CLO2)* | Thể hiện tư duy phân tích sâu sắc: giải thích đúng nguyên nhân dòng xả $-248,3\,\mu\text{A}$ lệch $0,67\%$ và dòng NMOS giảm $37\%$ do bão hòa vận tốc hạt dẫn. | Nêu được số đo nhưng phần giải thích cơ chế vật lý còn sơ sài. | Không đối chiếu giữa lý thuyết và mô phỏng; chép lại số liệu mà không hiểu bản chất. |
-| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **1.5 đ**<br>*(CLO4)* | Thư mục dự án tổ chức hoàn hảo (5 sơ đồ, 5 netlist, waveforms, C5_models.txt); báo cáo 3–4 trang trung thực, thực hiện nghiêm túc thử nghiệm lỗi có chủ đích. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài hoặc thiếu phần thử nghiệm lỗi. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
+| **Đóng gói dự án & Báo cáo kỹ thuật (Phần B)** | **1.5 đ**<br>*(CLO4)* | Thư mục dự án tổ chức đồng bộ (5 sơ đồ, 5 netlist, waveforms, C5_models.txt); báo cáo 3–4 trang trung thực, thực hiện nghiêm túc thử nghiệm lỗi có chủ đích. | Thư mục còn thiếu một số tệp hình ảnh; báo cáo trình bày sơ sài hoặc thiếu phần thử nghiệm lỗi. | Không nộp thư mục dự án hoặc sao chép báo cáo của sinh viên khác. |
 
 ---
 

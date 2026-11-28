@@ -59,7 +59,7 @@ Theo kết quả kiểm chứng từ `verify_lab06_new.py`:
 
 ### 6.5 Đáp án Chi tiết Pre-lab
 
-1. **Chứng minh biểu thức Sum:** Kiểm tra đủ 8 tổ hợp (xem bảng trong `verify_lab06_new.py`), xác nhận $Sum = A B C_{in} + \overline{C_{out}}(A+B+C_{in})$ trùng khớp 100%.
+1. **Chứng minh biểu thức Sum:** Kiểm tra đủ 8 tổ hợp (xem bảng trong `verify_lab06_new.py`), xác nhận $Sum = A B C_{in} + \overline{C_{out}}(A+B+C_{in})$ trùng khớp hoàn toàn.
 2. **Bảng kích thước 28T & $W_{Cin}$:** Như Bảng ở Mục 6.2 ($28\text{T}$, $W_{Cin} = 128\lambda = 8 \times \text{inv\_x1}$).
 3. **Biểu thức trễ 4-bit RCA:**
    - Tới $C_{out,3}$: $T_{Cout3} = t_{pd(A,B \to Cout,0)} + 3 \cdot t_{pd(Cin \to Cout)}$ (tổng **4 tầng** carry nếu tính từ $C_{in,0}$).

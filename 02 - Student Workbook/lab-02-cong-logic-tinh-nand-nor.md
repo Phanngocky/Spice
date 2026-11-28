@@ -107,7 +107,7 @@ Theo định lý De Morgan:
 ---
 
 ### 3.3 Bản chất Vật lý So sánh PPA giữa NAND và NOR
-Nếu trễ lý thuyết tại tải cố định bằng nhau, tại sao trong công nghiệp vi mạch, **cổng NAND luôn được ưu tiên tuyệt đối so với cổng NOR**?
+Nếu trễ lý thuyết tại tải cố định bằng nhau, tại sao trong công nghiệp vi mạch, **cổng NAND luôn được ưu tiên hoàn toàn so với cổng NOR**?
 
 1. **Tổng bề rộng kênh và Diện tích Silicon:**
    - NAND2: $\sum W = 2(8\lambda) + 2(12\lambda) = 40\lambda_{DR} = 12,0\,\mu\text{m}$.
@@ -202,7 +202,7 @@ Khi thiết kế Layout cho tế bào logic nhiều transistor, nếu sắp xế
 > - Tại vùng có Contact kim loại ở giữa hai dải Poly (như cực má chung của PMOS nối ra `out`): khoảng cách giữa 2 dải Poly tối thiểu phải là:
 >   $$\text{Khoảng cách} \ge 2\lambda_{DR} \text{ (Poly đến Contact)} + 2\lambda_{DR} \text{ (Bề rộng Contact)} + 2\lambda_{DR} \text{ (Contact đến Poly)} = \mathbf{6\lambda_{DR} = 1,80\,\mu\text{m}}$$
 > - Tại vùng khuếch tán liền không có Contact (nút nội $X_n$ giữa 2 NMOS): khoảng cách giữa 2 dải Poly chỉ cần thỏa mãn luật cách ly Poly tối thiểu: $\ge 3\lambda_{DR} = 0,90\,\mu\text{m}$.  
-> **Sinh viên tuyệt đối không được đặt khoảng cách giữa 2 dải Poly là $3\lambda_{DR}$ tại nơi có đặt Contact ngõ ra, vì sẽ gây lỗi chạm DRC ngay lập tức!**
+> **Sinh viên không được đặt khoảng cách giữa 2 dải Poly là $3\lambda_{DR}$ tại nơi có đặt Contact ngõ ra, vì sẽ gây lỗi chạm DRC ngay lập tức!**
 
 ---
 
@@ -252,7 +252,7 @@ Viết các khối lệnh kích thích nguồn và câu lệnh `.MEAS` trong LTs
 | **15 – 45'** | 30 phút | **Ex2.1:** Dựng Schematic `nand2_x1{sch}`, gán Export, xuất SPICE quét VTC và đo ngưỡng $V_M$ (1 ngõ vs 2 ngõ). | Đo đúng $V_M$; sơ đồ sạch 0 warning F5. |
 | **45 – 75'** | 30 phút | **Ex2.2:** Mô phỏng quá độ Transient cổng NAND2, đo trễ 3 kịch bản ở 2 mức tải $C_L = 50\,\text{fF}$ và $10\,\text{fF}$. | Đọc đủ $t_{pHL}, t_{pLH}$ bằng `.MEAS`, ghi số liệu. |
 | **75 – 100'** | 25 phút | **Ex2.3:** Dựng Schematic `nor2_x1{sch}`, mô phỏng đo trễ sườn lên/sườn xuống trường hợp xấu nhất/tốt nhất. | Sơ đồ NOR2 chuẩn $W_p = 24\lambda$, đo đủ số liệu. |
-| **100 – 125'** | 25 phút | **Ex2.4:** Thiết kế Layout `nand2_x1{lay}`, kiểm tra DRC đạt 0 lỗi, chạy NCC LVS đạt "MATCH 100%". | Cửa sổ NCC thông báo so khớp hoàn hảo. |
+| **100 – 125'** | 25 phút | **Ex2.4:** Thiết kế Layout `nand2_x1{lay}`, kiểm tra DRC đạt 0 lỗi, chạy NCC LVS đạt "MATCH 100%". | Cửa sổ NCC thông báo so khớp đồng bộ. |
 | **125 – 135'** | 10 phút | Nghiệm thu sản phẩm tại bàn, ký sổ thực hành, lưu trữ dữ liệu và dọn dẹp vệ sinh phòng máy. | Chữ ký nghiệm thu In-lab của Giảng viên. |
 
 ---
@@ -419,7 +419,7 @@ Bảng đối chuẩn kỹ thuật giúp sinh viên tự rà soát kết quả t
 | 3 | **Trễ quá độ Pre-layout ($C_L = 50\,\text{fF}$)** | $t_{pHL}, t_{pLH}$ trường hợp xấu nhất nằm trong dải $45 - 65\,\text{ps}$. | `[        ]` |
 | 4 | **Hiệu ứng nút nội $X_n$ ở $C_L = 10\,\text{fF}$** | Trễ $t_{pHL}$ khi kích ngõ B chậm hơn ngõ A từ $15\%$ đến $25\%$. | `[        ]` |
 | 5 | **Mặt nạ Layout NAND2** | Chiều cao $40\lambda_{DR}$; ray nguồn $\ge 6\lambda_{DR}$; khoảng cách Poly $\ge 6\lambda_{DR}$ qua Contact. | `[        ]` |
-| 6 | **DRC & LVS NAND2** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** hoàn hảo. | `[        ]` |
+| 6 | **DRC & LVS NAND2** | DRC đạt **0 errors found**; LVS NCC báo **MATCH** đồng bộ. | `[        ]` |
 | 7 | **Báo cáo & Phân tích PPA** | Điền đủ các bảng số liệu, giải thích rõ cơ chế vật lý chênh lệch giữa NAND và NOR. | `[        ]` |
 
 ---

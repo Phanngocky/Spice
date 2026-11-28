@@ -1,7 +1,7 @@
 # BẢN ĐỐI CHIẾU KIỂM CHỨNG KỸ THUẬT & BENCHMARK DỮ LIỆU
 ## HỌC PHẦN THỰC HÀNH THIẾT KẾ VLSI (5505382)
 
-> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`, `scripts/verify_lab04.py`, `scripts/verify_lab05.py`, `scripts/verify_lab06.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác tuyệt đối của bộ đáp án giảng viên.
+> **Mục đích:** Tài liệu này ghi nhận kết quả chạy script kiểm chứng số học và giải tích (`scripts/verify_lab00_lab01.py`, `scripts/verify_lab02.py`, `scripts/verify_lab03.py`, `scripts/verify_lab04.py`, `scripts/verify_lab05.py`, `scripts/verify_lab06.py`) cùng các thông số benchmark từ mô phỏng SPICE để bảo đảm tính chính xác hoàn toàn của bộ đáp án giảng viên.
 
 ---
 
@@ -36,7 +36,7 @@ P3. RC Transient (R=20k, C=5nF, Vin=0->5V):
   I_peak_dis = -0.2500 mA (-250.0 uA at t=500u+)
 
 P5. VLSI Link (Inverter R=1k, CL=50fF):
-  t_50    = 34.658 ps (khớp hoàn hảo với trễ CMOS Inverter ở Lab 1)
+  t_50    = 34.658 ps (khớp đồng bộ với trễ CMOS Inverter ở Lab 1)
 
 Ex0.4. Parameter Sweep Rval (C=5nF):
   R =  5.0 kOhm -> t_pd =  17.329 us
@@ -332,7 +332,7 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 06 - 1-BIT FULL ADDER
    a. Mirror Adder (28 Transistors):
       - Khối Carry: 8T (4P + 4N) + 2T Inverter = 10 Transistors
       - Khối Sum:   12T (6P + 6N) + 2T Inverter = 14 Transistors (hoặc 24-28T)
-      - Ưu điểm: Tín hiệu phục hồi biên độ tuyệt đối (Strong 0/1); độ bền nhiễu cao
+      - Ưu điểm: Tín hiệu phục hồi biên độ hoàn toàn (Strong 0/1); độ bền nhiễu cao
       - Trễ Cin -> Cout: Chỉ qua 1 tầng logic + Inverter đệm ≈ 65 - 75 ps
    b. Transmission Gate Adder (16 Transistors):
       - XOR 1 (A xor B): 4-6T (TG + Inverter)
@@ -409,7 +409,7 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 07 - DYNAMIC & DOMINO CMOS LOGIC
 4. So sánh Hiệu năng (PPA) Domino OR4 vs Static CMOS OR4:
    - Trễ lan truyền đánh giá Domino OR4 (tpd_eval): 78.5 ps
    - Trễ lan truyền Static CMOS OR4 (tpd_static):   215.0 ps
-   - Tốc độ vượt trội (Speedup factor):              2.74x (Nhanh hơn gấp 2.7 lần!)
+   - Tốc độ đáng kể (Speedup factor):              2.74x (Nhanh hơn gấp 2.7 lần!)
    - Tổng số Transistor: Domino OR4 = 9T | Static CMOS OR4 = 10T
    - Tải điện dung ngõ vào (Input Capacitance):
      + Domino OR4: Mỗi ngõ vào chỉ nối tới 1 cổng NMOS (W=4λ) -> Cin = 4*Cox*L
@@ -464,11 +464,11 @@ KIỂM CHỨNG TÍNH TOÁN GIẢI TÍCH LAB 08 - 6T SRAM CELL & SENSE AMPLIFIER
    => Nhận xét: SNM_read giảm 51.6% so với SNM_hold do điện áp nút Q bị dâng lên,
       chứng minh chế độ Đọc là thời điểm ô nhớ SRAM dễ bị tổn thương bởi nhiễu nhất!
 
-5. Hiệu năng Vượt trội của Sense Amplifier (VLSA):
+5. Hiệu năng Đáng kể của Sense Amplifier (VLSA):
    - Điện dung ký sinh đường Bitline: C_BL = 1.0 pF
    - Thời gian đọc KHI CÓ Sense Amplifier (Delta_V = 150mV): t_read = 0.241 ns (241 ps)
    - Thời gian đọc NẾU KHÔNG CÓ Sense Amplifier (xả full 2.5V): t_read = 2.941 ns
-   => Tốc độ đọc tăng vượt trội: 12.2x (Nhanh hơn gấp 16 lần!)
+   => Tốc độ đọc tăng đáng kể: 12.2x (Nhanh hơn gấp 16 lần!)
    - Năng lượng tiêu tán Bitline có Sense Amp: E_SA   = 0.75 pJ
    - Năng lượng tiêu tán Bitline không Sense Amp: E_noSA = 12.50 pJ
    => Tiết kiệm năng lượng đọc: 94.0% (Giảm hơn 94% công suất động nạp xả Bitline!)

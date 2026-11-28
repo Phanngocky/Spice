@@ -220,7 +220,7 @@ Lập bảng tính tay giá trị ngõ ra $OUT[3:0]$, cờ $C_{out}$ và cờ $Z
 
 | Tiêu chí đánh giá | Trọng số | Mức Chưa đạt (<50%) | Mức Đạt (50% - 79%) | Mức Giỏi / Xuất sắc (80% - 100%) |
 | :--- | :---: | :--- | :--- | :--- |
-| **1. Tính toàn vẹn Schematic & Hierarchy** | 20% | Thiết kế chắp vá; thiếu khối con hoặc gán sai bus đường dữ liệu; không tạo Icon. | Phân cấp đầy đủ các khối con; schematic hoạt động đúng nhưng dây nối còn rối. | Phân cấp mẫu mực; sơ đồ nguyên lý trực quan, bus chuẩn hóa; bàn giao Icon hoàn hảo. |
+| **1. Tính toàn vẹn Schematic & Hierarchy** | 20% | Thiết kế chắp vá; thiếu khối con hoặc gán sai bus đường dữ liệu; không tạo Icon. | Phân cấp đầy đủ các khối con; schematic hoạt động đúng nhưng dây nối còn rối. | Phân cấp mẫu mực; sơ đồ nguyên lý trực quan, bus chuẩn hóa; bàn giao Icon đồng bộ. |
 | **2. Mô phỏng SPICE & Timing Closure** | 25% | Không chạy được mô phỏng hoặc chuỗi lệnh bị lỗi; không đo được $f_{max}$. | Chạy đúng 5 chu kỳ kiểm thử; đo được $f_{max}$ nhưng chưa phân tích sâu ngân sách trễ. | Mô phỏng trơn tru 5 chu kỳ; cờ $Z, C_{out}$ chuẩn xác; đo đạc $f_{max} \ge 1.0\,\text{GHz}$ xuất sắc. |
 | **3. Chất lượng Mask Layout & Power Ring** | 25% | Layout vi phạm nhiều lỗi DRC; không có Power Ring; đi dây tùy tiện gây chạm chập. | Layout có Power Ring; sửa hết lỗi DRC (0 lỗi) nhưng diện tích chip chưa tối ưu. | Floorplan khoa học; Power Ring kép chuẩn mực; định tuyến Manhattan tối ưu; DRC 0 lỗi. |
 | **4. Đối soát LVS & Phân tích PEX** | 15% | Không chạy được LVS hoặc LVS báo sai lệch lớn; không trích xuất được PEX. | LVS match sau 1–2 lần sửa chữa nhỏ; trích xuất PEX nhưng chưa liên hệ với $IR\text{-}Drop$. | LVS báo MATCH ngay lần đầu cho cả 358 Transistors; phân tích sâu sắc PEX và $IR\text{-}Drop$. |

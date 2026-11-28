@@ -323,7 +323,7 @@ Chữ ký Giảng viên / Điểm nghiệm thu tại bàn: .....................
 1. Dựa vào bảng số liệu thí nghiệm chuỗi $N = 1 \dots 6$ TG, hãy vẽ đồ thị $t_{pd}(N)$ theo $N$ và theo $N(N+1)/2$. Giải thích bản chất vật lý Elmore tại sao trễ tăng theo $O(N^2)$ và đề xuất vị trí chèn Inverter hợp lý nhất.
 2. Tại sao trong sơ đồ `tg_gate` và `mux2_tg`, cực Bulk của PMOS bắt buộc phải nối lên $V_{DD}$ mà không được nối trực tiếp vào cực Source hay cực Drain của chính nó? Điều gì xảy ra khi điện áp ngõ vào tụt xuống $0\,\text{V}$ nếu vi phạm quy tắc này?
 3. Giải thích cơ chế vật lý tạo nên đường cong điện trở $R_{TG}(V_{in})$ đạt cực đại quanh vùng giữa dải ($V_{in} \approx V_{DD}/2$) khi tính đầy đủ hiệu ứng thân, trái ngược với giả định $R_{TG} = R_{on,n}(0\text{V}) \parallel R_{on,p}(5\text{V})$.
-4. Khi so sánh tốc độ giữa `mux2_tg` và `MUX2` cổng logic tĩnh (`AOI22+INV`), tại sao không thể kết luận một cách tuyệt đối rằng `mux2_tg` luôn nhanh hơn khi chưa biết rõ trở kháng bộ lái đầu vào và số tầng mắc nối tiếp?
+4. Khi so sánh tốc độ giữa `mux2_tg` và `MUX2` cổng logic tĩnh (`AOI22+INV`), tại sao không thể kết luận một cách hoàn toàn rằng `mux2_tg` luôn nhanh hơn khi chưa biết rõ trở kháng bộ lái đầu vào và số tầng mắc nối tiếp?
 
 ---
 
