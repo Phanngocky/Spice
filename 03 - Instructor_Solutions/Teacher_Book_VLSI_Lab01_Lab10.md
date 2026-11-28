@@ -1338,63 +1338,32 @@ Hệ số góc của đường trễ theo $h'$ luôn bằng **$1 \cdot 	au$** đ
 # 4. LAB 4 — CỔNG TRUYỀN (TG) VÀ BỘ DỒN KÊNH MUX (CHƯƠNG 6)
 
 ## 4.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu cặn kẽ vì sao một transistor đơn lẻ không thể làm công tắc logic hoàn hảo: NMOS truyền mức 1 kém (Weak 1) và PMOS truyền mức 0 kém (Weak 0) do tác động của điện áp ngưỡng và hiệu ứng thân.
-2. Hiểu cơ chế bù trừ độ dẫn của Cổng truyền CMOS (Transmission Gate): khi kết hợp song song NMOS và PMOS kích hoạt pha ngược, điện trở tương đương $R_{TG}$ trở nên gần như phẳng trên toàn dải điện áp ngõ vào.
-3. Nắm vững mô hình trễ phân tán Elmore trong chuỗi cổng truyền: trễ tăng theo bình phương số tầng $O(N^2)$, từ đó giải thích vì sao cần chèn bộ đệm (Buffer).
+1. Hiểu cặn kẽ vì sao một transistor đơn lẻ không thể làm công tắc logic hoàn hảo: NMOS truyền mức 1 kém (Weak 1) và PMOS truyền mức 0 kém (Weak 0) do tác động của điện áp ngưỡng và hiệu ứng thân (cả NMOS và PMOS đều chịu Body Effect).
+2. Hiểu cơ chế bù trừ độ dẫn của Cổng truyền CMOS (Transmission Gate): điện trở tương đương $R_{TG}$ duy trì quanh $\approx 1,19\,\text{k}\Omega$ trên dải giữa (không body effect) và vồng lên $\approx 1,68\,\text{k}\Omega$ khi có body effect, tuyệt đối **không** phải $490\,\Omega$.
+3. Nhận diện hiện tượng chồng dẫn ngắn (khoảng $t_{pd,inv}$) khi tín hiệu chọn $S$ chuyển đổi trong `mux2_tg`, và nắm vững mô hình trễ phân tán Elmore $O(N^2)$ trong chuỗi $N$ cổng truyền.
 
 ---
 
-## 4.2 Bản chất suy hao điện áp và dòng rò tĩnh
-### a. NMOS truyền mức '1' và Hiệu ứng thân
-Khi cổng của NMOS nối $V_{DD} = 5\,\text{V}$ và cực má nối $5\,\text{V}$, nguồn $V_{out}$ tăng dần. Transistor sẽ ngắt khi điện thế quá cổng $V_{GS}$ tụt xuống bằng điện áp ngưỡng $V_{tn}$:
-$$V_{out,max} = V_{DD} - V_{tn}(V_{out,max})$$
-Do cực nguồn ở điện thế cao trong khi thân (substrate p) nối đất ($0\,\text{V}$), điện thế thiên thế thân $V_{SB} = V_{out,max} > 0$. Theo phương trình hiệu ứng thân trong `C5_models.txt` ($\gamma = 0,40\,\text{V}^{1/2}, 2\Phi_F = 0,70\,\text{V}$):
-$$V_{tn}(V_{SB}) = 0,70 + 0,40 \left(\sqrt{0,70 + V_{out}} - \sqrt{0,70}\right)$$
-Giải phương trình tự nhất quán:
-$$V_{out} = 5,0 - \left[0,70 + 0,40 \left(\sqrt{0,70 + V_{out}} - \sqrt{0,70}\right)\right] \implies V_{out,max} \approx \mathbf{3,631\,\text{V}}$$
+## 4.2 Bản chất suy hao điện áp (Body Effect) và dòng rò tĩnh
+### a. NMOS truyền mức '1' và PMOS truyền mức '0'
+- **NMOS Weak '1':** $V_{out,max} = V_{DD} - V_{tn}(V_{out,max})$. Với tham số `C5_models.txt` ($\gamma_n = 0,40\,\text{V}^{1/2}, 2\Phi_F = 0,70\,\text{V}$), giải điểm cố định cho $V_{thn,eff} = 1,213\,\text{V} \implies \mathbf{V_{out,max} = 3,787\,\text{V}}$ (hoặc $3,631\,\text{V}$ với $\gamma=0,53$).
+- **PMOS Weak '0':** Do cực Bulk nối $V_{DD} = 5,0\,\text{V}$ và Source là $V_{out}$, hiệu thế thân-nguồn $V_{BS} = V_{DD} - V_{out}$ tăng mạnh khi $V_{out} \to 0$. Với $\gamma_p = 0,50\,\text{V}^{1/2}, 2\Phi_F = 0,70\,\text{V}$, $|V_{tp}|$ tăng từ $0,80\,\text{V}$ lên $\mathbf{1,417\,\text{V}} \implies \mathbf{V_{out,min} = 1,417\,\text{V}}$ (không phải $0,80 - 1,05\,\text{V}$).
+- **Lưu ý đo SPICE:** Phải đặt cửa sổ đo `.meas MIN` sau sườn xuống đầu tiên (`FROM=35n TO=55n`) để tránh lấy nhầm điểm làm việc DC $0\,\text{V}$ tại $t=0$.
 
 ### b. Hậu quả tai hại đối với tầng sau
-Khi mức điện áp "Weak 1" ($3,63\,\text{V}$) này được đưa vào ngõ vào của một cổng Inverter tĩnh chuẩn tiếp theo:
-- Cực cổng của PMOS ở mức $3,63\,\text{V}$, trong khi cực nguồn PMOS nối $V_{DD} = 5,0\,\text{V}$.
-- Điện áp nguồn-cổng: $V_{SG,p} = 5,0 - 3,63 = 1,37\,\text{V}$.
-- Vì $V_{SG,p} = 1,37\,\text{V} > |V_{tp}| = 0,80\,\text{V}$, transistor PMOS **không bao giờ ngắt hoàn toàn**!
-- Kết quả: Tạo ra một dòng tĩnh xuyên qua Inverter lên tới $\approx 39\,\mu\text{A}$, làm tiêu tốn công suất tĩnh khổng lồ và làm suy giảm nghiêm trọng lề nhiễu mức cao $NM_H$. Đây là lý do sống còn vì sao các mạch logic transistor truyền (Pass-transistor logic) luôn bắt buộc phải có mạch khôi phục mức (Level Restorer).
+Khi đưa mức "Weak 1" vào cổng Inverter tĩnh tiếp theo, $V_{SG,p} = 5,0 - 3,787 = 1,213\,\text{V} > |V_{tp}| = 0,80\,\text{V}$, nên PMOS tầng sau **không ngắt hoàn toàn**, gây dòng rò tĩnh xuyên mạch $\approx 20,4\,\mu\text{A}$ (lên tới $\sim 38,9\,\mu\text{A}$ nếu $V_{out}=3,63\,\text{V}$).
 
 ---
 
-## 4.3 Đặc tính điện trở dẫn tương đương $R_{TG}$
+## 4.3 Đặc tính điện trở dẫn tương đương $R_{TG}$, Chồng dẫn và Trễ Elmore
 Độ dẫn tổng của cổng truyền khi cả hai transistor cùng dẫn ($1,0\,\text{V} \le V_{in} \le 4,0\,\text{V}$):
 $$g_{TG} = g_n + g_p = K'_n \left(\frac{W}{L}\right)_n (V_{DD} - V_{in} - V_{tn}) + K'_p \left(\frac{W}{L}\right)_p (V_{in} - |V_{tp}|)$$
-Khi ta chọn tỉ số kích thước cân bằng độ linh động $\beta_n = \beta_p$ (tức $K'_n W_n = K'_p W_p = 240\,\mu\text{A/V}^2$):
-$$g_{TG} = \beta [V_{DD} - V_{tn} - |V_{tp}|] = \text{Hằng số không phụ thuộc } V_{in}!$$
+Khi chọn kích thước cân bằng $\beta_n = \beta_p = 240\,\mu\text{A/V}^2$ ($W_n = 4\lambda, W_p = 12\lambda$), nếu bỏ qua body effect:
 $$g_{TG} = 240 \cdot 10^{-6} \cdot [5,0 - 0,70 - 0,80] = 840\,\mu\text{S} \implies R_{TG} = \frac{1}{g_{TG}} \approx \mathbf{1190\,\Omega} \approx 1,19\,\text{k}\Omega$$
+- **Chỗ cần chỉnh trong Handout gốc:** Handout cũ ghi $R_{TG}$ tại $V_{in} = 2,5\,\text{V}$ là $490\,\Omega$ (do lấy nhầm $969\,\Omega \parallel 992\,\Omega$). Tại $2,5\,\text{V}$, quá áp cổng của cả hai nhánh giảm một nửa ($R_n \approx 2,32\,\text{k}\Omega, R_p \approx 2,45\,\text{k}\Omega$), song song cho $\approx 1,19\,\text{k}\Omega$ (và tăng lên $\sim 1,68\,\text{k}\Omega$ khi có body effect).
+- **Chồng dẫn khi chuyển $S$:** Tín hiệu $\overline{S}$ trễ hơn $S$ một khoảng $t_{pd,inv} \approx 30-45\,\text{ps}$ khiến hai TG cùng mở thoáng qua, tạo xung nhiễu glitch trên $Y$ và đỉnh dòng $I(V_{DD})$ nếu $D_0 \neq D_1$.
+- **Trễ Elmore chuỗi $N$ TG:** $t_{pd}(N) \approx 0,69 \cdot R_{TG} \cdot C_{node} \cdot \frac{N(N+1)}{2} \propto O(N^2)$. Cần chèn bộ đệm `inv_x1` sau mỗi 3–4 tầng TG.
 
-**Chỗ cần chỉnh trong Handout gốc:** Handout ghi $R_{TG}$ tại $V_{in} = 2,5\,\text{V}$ là $490\,\Omega$ (do lấy nhầm $969\,\Omega \parallel 992\,\Omega$). Giảng viên chỉ rõ cho sinh viên: tại $2,5\,\text{V}$, độ mở quá cổng của cả hai transistor đều giảm một nửa, nên điện trở của mỗi nhánh tăng gấp đôi ($R_n \approx 2,3\,\text{k}\Omega, R_p \approx 2,45\,\text{k}\Omega$), khi mắc song song sẽ cho ra $\approx 1,19\,\text{k}\Omega$, chứ không phải $490\,\Omega$!
-
-```
-       TRANSMISSION GATE (TG)                   MUX 2:1 USING TG
-               CLK_B                                   S_B
-                 |                                      |
-             +---o---+                              +---o---+
-             | PMOS  |                              |  TG0  |
-   In -------+       +------- Out         IN0 ------+       +-------+
-             | NMOS  |                              |       |       |
-             +-------+                              +-------+       |
-                 |                                      |           |
-                CLK                                     S           |
-                                                                    +--- Out
-                                                        S           |
-                                                        |           |
-                                                    +-------+       |
-                                                    |  TG1  |       |
-                                          IN1 ------+       +-------+
-                                                    | PMOS  |
-                                                    +---o---+
-                                                        |
-                                                       S_B
-```
-
-*Sơ đồ nguyên lý Cổng truyền CMOS (TG) và Bộ dồn kênh MUX 2:1 (`mux2_tg_schematic.png`).*  
 *Tham khảo chi tiết ảnh đồ họa tại:* [mux2_tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/mux2_tg_schematic.png) và [tg_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/tg_schematic.png).
 
 ---
@@ -1402,28 +1371,17 @@ $$g_{TG} = 240 \cdot 10^{-6} \cdot [5,0 - 0,70 - 0,80] = 840\,\mu\text{S} \impli
 # 5. LAB 5 — MẠCH TUẦN TỰ: D-LATCH VÀ D-FLIP-FLOP (CHƯƠNG 7)
 
 ## 5.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Phân biệt rạch ròi giữa Mạch chốt (Latch - nhạy theo mức) và Mạch lật (Flip-Flop - nhạy theo sườn xung nhịp).
-2. Nắm vững định nghĩa và phương pháp đo 3 thông số định thời sống còn: Thời gian thiết lập ($t_{setup}$), Thời gian giữ ($t_{hold}$), và Trễ từ xung nhịp đến ngõ ra ($t_{c-q}$).
-3. Hiểu hiện tượng bất ổn định (Metastability) khi vi phạm cửa sổ định thời và quy tắc push-out $10\%$.
+1. Phân biệt rạch ròi giữa Mạch chốt (Latch - nhạy theo mức) và Mạch lật (Flip-Flop - nhạy theo sườn xung nhịp), đồng thời hiểu vì sao D-Latch có khóa cách ly $TG_2$ thì Inverter giữ trạng thái $I_3$ **không** cần định cỡ yếu (chỉ khi bỏ $TG_2$ mới phải tăng $L=4\lambda$ để thắng $TG_1$).
+2. Nắm vững định nghĩa, đường dẫn đầy đủ và phương pháp đo 3 thông số định thời: $t_{setup}$ (quy ước đẩy trễ 10% cho cả 2 hướng $D$), $t_{hold}$ (ngưỡng nhị phân quét bước $5\,\text{ps}$ sinh ra do trễ `X_CLK_INV`), và $t_{c-q}$ ($\approx 144\,\text{ps}$ qua `X_CLK_INV` $+ TG_{S1} + I_{S1} + I_{S2}$, khởi tạo bằng `.ic V(q)=0`).
+3. Hiểu hiện tượng bất ổn định (Metastability) khi vi phạm cửa sổ định thời và quy tắc đồng bộ hóa 2 tầng Flip-Flop.
 4. Nắm chắc phương trình ràng buộc chu kỳ xung nhịp hệ thống: $T_{clk} \ge t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$.
 
 ---
 
-## 5.2 Bản chất kiến trúc Master-Slave và Cơ chế hoạt động
-Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered DFF) được ghép nối từ hai tầng D-Latch mắc nối tiếp điều khiển bởi hai pha xung nhịp ngược nhau:
-
-```
-               +----------------- MASTER LATCH ----------------+   +----------------- SLAVE LATCH -----------------+
-               |                                               |   |                                               |
-               |        TG1 (CLK_B)                 TG2 (CLK)  |   |        TG3 (CLK)                   TG4 (CLK_B)|
-               |          +---+                       +---+    |   |          +---+                       +---+    |
-      D -------+--------->|   |----+---[INV I1]--*--->|   |--+ |   |     +--->|   |----+---[INV I3]--*--->|   |--+ |
-                          +---+    |    (X_M)    |    +---+  | |   |     |    +---+    |    (X_S)    |    +---+  | |
-                                   |             |           | +---------+             |             |           | |
-                                   +<--[INV I2]--+<----------+     |                   +<--[INV I4]--+<----------+ |
-                                                                   |                                               |
-                                                                   +-------------------[INV đệm]-----------------> Q
-```
+## 5.2 Bản chất kiến trúc Master-Slave và Vai trò khóa $TG_2$ / $I_3$
+Mạch lật D-Flip-Flop kích hoạt sườn dương (`dff_ms_x1`, 22T) được ghép nối từ hai tầng D-Latch (`dlatch_x1`, 10T) mắc nối tiếp điều khiển bởi `clk` và `clk_n` (tạo bởi `X_CLK_INV`):
+- **Lưu ý về $I_3$ trong D-Latch:** Vì $TG_1$ (`clk`/`clk_n`) và $TG_2$ (`clk_n`/`clk`) điều khiển đối pha nên ở trạng thái xác lập không dẫn cùng lúc $\implies I_3$ dùng kích thước nhỏ nhất ($4\lambda/2\lambda$). *(Nếu bỏ $TG_2$, kích thước $4\lambda/2\lambda$ cho $V_X = 2,244\,\text{V} < V_M = 2,45\,\text{V}$ sẽ không ghi được '1', bắt buộc phải tăng $L = 4\lambda$ để đạt $V_X = 3,098\,\text{V}$).*
+- **Nguồn gốc $t_{hold}$:** Tín hiệu `clk_n` đi qua `X_CLK_INV` bị trễ $\approx t_{pd,inv}$ so với `clk`, khiến NMOS của Master $TG_{M1}$ chưa đóng kịp ngay tại sườn lên của `clk` trong khi Slave đã bắt đầu mở. Khoảng chồng dẫn ngắn này đòi hỏi dữ liệu $D$ phải giữ ổn định sau sườn $CLK$ tối thiểu $t_{hold} \approx t_{pd,INV(CLK)}$.
 
 *Sơ đồ nguyên lý hoàn chỉnh D-Latch và D-Flip-Flop Master-Slave:*
 - [dlatch_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/dlatch_schematic.png)
@@ -1432,19 +1390,17 @@ Mạch lật D-Flip-Flop kích hoạt sườn dương (Positive Edge-Triggered D
 ### Bảng trạng thái hoạt động theo pha xung nhịp
 | Trạng thái xung nhịp | Tầng Master | Tầng Slave | Toàn mạch DFF | Ý nghĩa chức năng |
 | :---: | :---: | :---: | :---: | :--- |
-| **$\text{CLK} = 0$** | **Trong suốt (Transparent):** TG1 mở, nhận dữ liệu $D$ vào nút nội $X_M$. | **Giữ (Hold):** TG3 ngắt, TG4 dẫn, vòng lặp phản hồi giữ giá trị $Q$ cũ. | **Chặn ngõ ra:** Mọi thay đổi trên $D$ chưa thể đi tới ngõ ra $Q$. | Chuẩn bị dữ liệu sẵn sàng tại nút $X_M$. |
-| **Sườn lên $0 \to 1$** | **Đóng lại (Chuyển sang Giữ):** TG1 ngắt, khóa giá trị $D$ tại nút $X_M$. | **Mở ra (Chuyển sang Trong suốt):** TG3 dẫn, phóng dữ liệu từ $X_M$ ra $Q$. | **Chốt dữ liệu:** Giá trị của $D$ ngay trước sườn lên xuất hiện ở $Q$. | Điểm lấy mẫu sườn dương danh định. |
-| **$\text{CLK} = 1$** | **Giữ (Hold):** TG1 ngắt hoàn toàn; cách ly hoàn toàn $D$ với mạch. | **Trong suốt (Transparent):** Nút $X_S$ tiếp tục lái ngõ ra $Q$. | **Khóa an toàn:** Ngăn chặn hiện tượng chạy đua dữ liệu (Race condition). | Dữ liệu ngõ ra $Q$ hoàn toàn ổn định. |
+| **$\text{CLK} = 0$** | **Trong suốt (Transparent):** $TG_1$ mở, nhận dữ liệu $D$ vào nút nội $X_M$. | **Giữ (Hold):** $TG_3$ ngắt, $TG_4$ dẫn, vòng phản hồi giữ giá trị $Q$ cũ. | **Chặn ngõ ra:** Mọi thay đổi trên $D$ chưa tới được ngõ ra $Q$. | Chuẩn bị dữ liệu sẵn sàng tại nút $X_M$. |
+| **Sườn lên $0 \to 1$** | **Đóng lại (Chuyển sang Giữ):** $TG_1$ ngắt (NMOS trễ $\sim t_{pd,inv}$), khóa $Q_M$. | **Mở ra (Chuyển sang Trong suốt):** $TG_3$ dẫn, phóng dữ liệu từ $Q_M$ ra $Q$. | **Chốt dữ liệu:** Giá trị của $D$ tại cửa sổ lấy mẫu xuất hiện ở $Q$. | Điểm lấy mẫu sườn dương danh định. |
+| **$\text{CLK} = 1$** | **Giữ (Hold):** $TG_1$ ngắt; cách ly $D$ khỏi mạch. | **Trong suốt (Transparent):** Nút $X_S$ tiếp tục lái ngõ ra $Q$. | **Khóa an toàn:** Giảm race khi $\overline{CLK}$ bám sát $CLK$. | Dữ liệu ngõ ra $Q$ ổn định. |
 
 ---
 
-## 5.3 Phương pháp đo $t_{setup}, t_{hold}$ và Hiện tượng Metastability
-- **Quy tắc đẩy trễ $10\%$ (10% Push-out Rule):**  
-  Thời gian thiết lập $t_{setup}$ danh định được xác định là khoảng cách thời gian nhỏ nhất giữa sườn dữ liệu $D$ và sườn xung nhịp $\text{CLK}$ sao cho trễ $t_{c-q}$ chỉ tăng tối đa $10\%$ so với giá trị lý tưởng khi $D$ đến rất sớm.
-- **Hiện tượng bất ổn định (Metastability):**  
-  Khi $D$ thay đổi quá gần sườn xung nhịp, nút nội $X_M$ không kịp đạt mức logic đầy đủ ($0\,\text{V}$ hoặc $5\,\text{V}$) mà dừng ở vùng lơ lửng quanh ngưỡng $V_M \approx 2,45\,\text{V}$. Vòng phản hồi hai inverter mất thời gian phục hồi tăng theo quy luật hàm mũ:
-  $$t_{resolve} = \tau_{reg} \cdot \ln \left(\frac{V_{DD}}{\Delta V_0}\right)$$
-  với $\Delta V_0$ là độ lệch ban đầu so với $V_M$.
+## 5.3 Phương pháp đo $t_{c-q}, t_{setup}, t_{hold}$ và Metastability
+- **Khởi tạo & Đo $t_{c-q}$:** Bắt buộc dùng `.ic V(q)=0` và giới hạn `TD=` để `.meas` không bắt nhầm sườn chu kỳ sau. Đường dẫn đầy đủ của $t_{c-q}$ gồm `X_CLK_INV` $+ TG_{S1} + I_{S1} + I_{S2}$ ($\approx 144\,\text{ps}$).
+- **Quy tắc đẩy trễ $10\%$ cho $t_{setup}$:** Đo $\Delta t$ giữa hai mốc $50\%$–$50\%$ cho cả $D$ lên và $D$ xuống; xác định điểm $t_{c-q}(\Delta t) = 1,10 \times t_{c-q,nominal}$ (loại bỏ các điểm bị trượt chu kỳ).
+- **Đo $t_{hold}$ bằng ngưỡng nhị phân:** Không dùng tiêu chí 10% push-out; quét $\Delta t_{hold}$ từ $-50\,\text{ps}$ đến $+100\,\text{ps}$ (bước $5\,\text{ps}$) kết hợp `.meas FIND v(q) AT=...` để tìm ngưỡng chuyển đổi trạng thái.
+- **Hiện tượng bất ổn định (Metastability):** Khi $D$ chuyển quá sát sườn xung nhịp, nút nội $X_M$ trôi lơ lửng quanh $V_M \approx 2,45\,\text{V}$ với thời gian giải quyết $t_{resolve} = \tau_{reg} \cdot \ln (V_{DD}/\Delta V_0)$.
 
 ---
 
