@@ -1451,52 +1451,16 @@ $$\overline{Sum} = \overline{A \cdot B \cdot C_{in} + \overline{C_{out}} \cdot (
 # 8. LAB 8 — Ô NHỚ SRAM 6T VÀ SENSE AMPLIFIER (TỰ CHỌN / ĐỒ ÁN)
 
 ## 8.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
-1. Hiểu mâu thuẫn thiết kế cốt lõi của ô nhớ SRAM 6T: Chế độ Đọc đòi hỏi Driver phải mạnh hơn Access (tránh phá hủy dữ liệu - Read Stability), trong khi chế độ Ghi đòi hỏi Access phải mạnh hơn Load (đè được dữ liệu cũ - Writeability).
-2. Nắm vững phương pháp đo Lề nhiễu tĩnh (Static Noise Margin - SNM) thông qua đường cong cánh bướm (Butterfly Curve).
-3. Hiểu nguyên lý hoạt động của Mạch khuếch đại cảm nhận (Sense Amplifier): sử dụng phản hồi dương để biến chênh lệch điện áp nhỏ ($\Delta V \approx 100-150\,\text{mV}$) thành mức logic đầy đủ trong thời gian cực ngắn, tiết kiệm $>90\%$ năng lượng nạp xả bitline.
+1. Giải quyết triệt để mâu thuẫn $CR = 2,0$: công thức bậc nhất cho $1,075\,\text{V}$, nhưng nghiệm bậc hai cho $V_Q = \mathbf{0,789\,\text{V}}$ (không body) / $\mathbf{0,725\,\text{V}}$ (có body) $\ll V_M = \mathbf{1,485\,\text{V}}$ của Inverter đối diện. Khi ghi `'0'`, sức kéo Access/Load có xét $K'_n/K'_p=3$ đạt **$6\times$**, kéo nút $Q$ về $\mathbf{0,357\,\text{V}}$.
+2. Nắm vững phương pháp đo Lề nhiễu tĩnh ($SNM$) bằng phép xoay trục $45^\circ$ tại **thùy nhỏ hơn**: $SNM_{hold} \approx \mathbf{1,303\,\text{V}}$ ($26,1\% V_{DD}$) và $SNM_{read} \approx \mathbf{0,359\,\text{V}}$ ($7,2\% V_{DD}$, do $V_M$ dịch lên $2,090\,\text{V}$; bản cũ ghi nhầm $0,62\,\text{V}$).
+3. Tách bạch Đọc tĩnh ($bl=5\text{V}$ đo $V_Q$) vs Đọc động ($C_{BL}=1\,\text{pF}$ thả nổi đo $\Delta V_{BL}(t)$), dựng `sense_amp_vlsa` (`Mp` $12\lambda$, `Mn` $8\lambda$, `Mn_tail` $12\lambda$, `Mn_pass` $4\lambda$) đo $t_{latch}$ ($\pm 150\,\text{mV}$, ước lượng $70 - 200\,\text{ps}$) và đối sánh trực tiếp với đọc không VLSA.
 
 ---
 
-## 8.2 Bản chất hai ràng buộc kích thước: CR và PR
-Quy tắc kích thước vàng: $\text{Driver} > \text{Access} > \text{Load}$.
-
-```
-                            SRAM 6T CELL SCHEMATIC
-                     BL                                    BLB
-                      |                                     |
-                [NMOS AX1: 4λ]                        [NMOS AX2: 4λ]
-                (Gate: WL)                            (Gate: WL)
-                      |                                     |
-                      +-----------*-------------*-----------+
-                      |           |             |           |
-                      |        [PMOS L1]     [PMOS L2]      |
-                      |         (W=2λ)        (W=2λ)        |
-                    (Nút Q)       |             |        (Nút QB)
-                      |         +----+-------+----+         |
-                      |              | VDD   |              |
-                [NMOS D1: 8λ]        |       |        [NMOS D2: 8λ]
-                 (Gate: QB)          +-------+         (Gate: Q)
-                      |                                     |
-                     GND                                   GND
-```
-
-*Sơ đồ nguyên lý ô nhớ SRAM 6T và Mạch khuếch đại vi sai Sense Amplifier:*
-- [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sram_6t_cell_schematic.png)
-- [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sense_amplifier_schematic.png)
-
-### a. Phân tích ổn định khi đọc (Read Stability & Cell Ratio CR)
-Khi đọc nút $Q = 0\,\text{V}$, đường Bitline $BL$ đã được nạp trước lên $5,0\,\text{V}$. Khi $WL$ bật lên $5,0\,\text{V}$, dòng điện từ $BL$ đổ dồn qua Access Transistor $M_{AX1}$ vào nút $Q$ và thoát xuống GND qua Driver Transistor $M_{D1}$.
-- Lúc này, $M_{AX1}$ ở vùng Bão hòa ($V_{DS} = 5,0 - V_Q > V_{GS} - V_{tn}$), trong khi $M_{D1}$ ở vùng Tuyến tính.
-- Cân bằng dòng điện giữa hai transistor và đặt $u = V_{DD} - V_{tn} = 4,3\,\text{V}$:
-  $$(u - V_Q)^2 = CR \cdot (2u V_Q - V_Q^2)$$
-  Giải phương trình bậc hai cho điện áp đỉnh dâng lên tại nút $Q$:
-  $$V_Q = u \cdot \left[1 - \sqrt{\frac{CR}{1 + CR}}\right]$$
-  Với $CR = \frac{W_D}{W_{AX}} = \frac{8\lambda}{4\lambda} = 2,0$:
-  $$V_Q = 4,3 \cdot \left[1 - \sqrt{\frac{2}{3}}\right] = 4,3 \cdot [1 - 0,8165] \approx \mathbf{0,789\,\text{V}}$$
-
-**Chỗ cần chỉnh trong Handout gốc:**
-Handout cũ ghi công thức gần đúng $V_Q \approx \frac{V_{DD} - V_{tn}}{2 \cdot CR} = \frac{4,3}{4} = 1,075\,\text{V}$ và yêu cầu $V_Q < V_{tn} = 0,70\,\text{V}$. Đây là một mâu thuẫn toán học nghiêm trọng (vừa tính ra $1,075\,\text{V}$ lại vừa đòi nhỏ hơn $0,70\,\text{V}$).  
-Giảng viên giải thích cho sinh viên: Tiêu chí chuẩn xác không phải so với $V_{tn}$, mà $V_Q$ phải nhỏ hơn **ngưỡng lật của Inverter đối diện** ($M_{L2} - M_{D2}$). Với $W_D / W_L = 8\lambda / 2\lambda = 4,0$, ngưỡng lật của nửa ô nhớ đối diện lên tới $V_{trip} \approx 1,48\,\text{V}$. Do đó mức dâng $V_Q = 0,789\,\text{V}$ hoàn toàn an toàn dưới $1,48\,\text{V}$!
+## 8.2 Bản chất hai ràng buộc kích thước: CR, PR và Bảng đối chiếu $V_Q$
+- Quy tắc kích thước vàng (SPICE): Driver $8\lambda$ $>$ Access $4\lambda$ $>$ Load $2\lambda$ *(lưu ý nếu vẽ Layout phải dùng $W_L \ge 3\lambda$ và tăng $L_L$ để đạt DRC)*.
+- *Sơ đồ nguyên lý:* [sram_6t_cell_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sram_6t_cell_schematic.png) và [sense_amplifier_schematic.png](file:///d:/tam/VLSI_Spice/02%20-%20Student%20Workbook/images/sense_amplifier_schematic.png).
+- Nghiệm bậc hai $V_Q = u \left[1 - \sqrt{\frac{CR}{1 + CR}}\right]$ với $CR = 2,0$ cho $V_Q = \mathbf{0,789\,\text{V}}$ (không body effect) và $\mathbf{0,725\,\text{V}}$ (có body effect trên Access), hoàn toàn an toàn dưới $V_M = \mathbf{1,485\,\text{V}}$ (tiêu chí vật lý đúng thay cho $V_Q < V_{tn} = 0,70\,\text{V}$).
 
 ---
 
