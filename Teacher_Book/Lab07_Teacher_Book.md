@@ -11,6 +11,27 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 7.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Dynamic CMOS Logic (Logic động):** Thay thế toàn bộ mạng kéo lên PMOS (PUN) cồng kềnh bằng **duy nhất 1 PMOS nạp trước ($M_{pre}$)** và **1 Foot NMOS ($M_{eval}$)** điều khiển bởi xung nhịp `CLK`, giúp giảm mạnh tổng bề rộng $\Sigma W$ và điện dung ngõ vào $C_{in}$ trên mỗi chân so với logic tĩnh.
+   - **Domino CMOS Logic:** Gắn thêm một **Inverter tĩnh** ở ngõ ra nút động $X$ để đảm bảo tín hiệu ra $Y$ luôn bằng $0$ trong pha Precharge và chỉ có thể tăng đơn điệu ($0 \to 1$) trong pha Evaluate, cho phép ghép nối nhiều tầng liên tiếp.
+2. **Định nghĩa chuẩn:**
+   - **Pha Precharge (`CLK=0`) & Pha Evaluate (`CLK=1`):** Ở Precharge, $M_{pre}$ nạp $X$ lên $V_{DD}$ (Foot ngắt không cho xả); ở Evaluate, $M_{pre}$ ngắt và $M_{eval}$ mở để $X$ giữ mức cao hoặc xả qua PDN.
+   - **Charge Sharing (Chia sẻ điện tích):** Hiện tượng tụ ký sinh nút nội cô lập $C_{int}$ (đang ở $0\,\text{V}$) hút bớt điện tích từ nút động $C_X$ (đang ở $V_{DD}$) khi transistor trên mở và transistor dưới khóa trong pha Evaluate.
+   - **Tính đơn điệu (Monotonicity):** Tính chất ngõ ra $Y$ của cổng Domino chỉ chuyển $0 \to 1$ trong pha Evaluate (không thể chuyển $1 \to 0$ giữa chừng).
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **PMOS Precharge $M_{pre}$ & Foot $M_{eval}$** | $M_{pre}$ nạp nhanh nút $X$ lúc `CLK=0`; Foot $M_{eval}$ ngắt đường đất lúc `CLK=0` tránh ngắn mạch. Trong một số mạch Domino tốc độ cao có thể bỏ Foot (footless) ở tầng sau nhưng dễ gặp chia sẻ điện tích hơn. |
+| **Mạng PDN (chỉ dùng NMOS)** | Chỉ cần $N$ NMOS cho hàm $N$ ngõ vào; mỗi chân chỉ lái $1$ NMOS ($C_{in} = 4\lambda$ ở OR4 vs $52\lambda$ ở Static OR4), giúp giảm tải cho tầng trước gấp nhiều lần. |
+| **Inverter đệm Low-skew ($16\lambda/8\lambda$)** | Chuyển cực tính thành $0 \to 1$ đơn điệu để ghép tầng Domino; tỉ số $W_p/W_n = 2 < 3$ hạ $V_M \approx 2,27\,\text{V}$ giúp tăng lề nhiễu mức cao $NM_H$ chống lật giả khi $X$ bị sụt nhẹ. |
+| **Transistor Keeper $M_{kp}$ ($W \ge 3\lambda, L$ dài)** | Bù dòng rò dưới ngưỡng (subthreshold leakage) ở tần số thấp và giảm sụt áp Charge Sharing. Nếu Keeper quá lớn ($\ge 6-8\lambda$ với $L=2\lambda$), dòng tranh chấp sẽ thắng PDN và làm cổng kẹt ở mức 0. |
+
+---
+
 ### 7.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Ưu thế thực sự của Dynamic/Domino CMOS nằm ở $\Sigma W$ và $C_{in}$, không phải chỉ ở số lượng transistor:** Domino OR4 có $9\text{T}$ (so với $10\text{T}$ của Static OR4 = NOR4+INV), nhưng tổng bề rộng giảm từ $224\lambda$ xuống $\mathbf{62-64\lambda}$ và điện dung mỗi ngõ vào $C_{in}$ giảm từ $52\lambda$ xuống **$4\lambda$** ($13\times$!).
 2. **Điều kiện xảy ra Charge Sharing:** Cổng Domino OR4 có Foot NMOS **không thể** có chia sẻ điện tích trong pha Evaluate vì nút `n_eval` nối thẳng đất qua $M_{eval}$. Phải dùng mạch **2 NMOS nối tiếp** (tạo nút nội cô lập giữa `Mn_top` và `Mn_bot`).

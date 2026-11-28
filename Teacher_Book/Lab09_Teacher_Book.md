@@ -11,6 +11,26 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 9.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Ripple Carry Adder (RCA) vs Carry Lookahead Adder (CLA):** Trong RCA, số nhớ phải chờ gợn tuần tự qua từng bit ($O(N)$). CLA khắc phục bằng cách tính trước đồng thời toàn bộ các bit số nhớ $C_1 \dots C_N$ trực tiếp từ $A, B, C_0$ dựa trên hai cờ trung gian $G_i$ và $P_i$.
+2. **Định nghĩa chuẩn:**
+   - **Cờ Sinh số nhớ (Generate - $G_i = A_i \cdot B_i$):** Bằng $1$ khi cặp bit $(A_i, B_i) = (1,1)$, tự sinh số nhớ mới bất chấp $C_i$.
+   - **Cờ Truyền số nhớ (Propagate - $P_i = A_i \oplus B_i$):** Bằng $1$ khi $A_i \neq B_i$, cho phép số nhớ đi vào $C_i$ truyền thẳng sang $C_{i+1}$.
+   - **Fan-in (Số ngõ vào của cổng logic):** Số tín hiệu đầu vào quyết định độ sâu transistor mắc nối tiếp trong mạng PUN/PDN của cổng phức hợp AOI.
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Tầng 1: `pg_cell` ($G_i, P_i$)** | Tính song song $G_i$ (`NAND2+INV`) và $P_i$ (`XOR_TG`) cho mọi bit cùng lúc. Chịu tải đầu ra rất không đều: $P_1, P_2$ lái tới $6$ nhánh trong CLG ($\approx 86\,\text{fF}$) trong khi $G_3$ chỉ lái $1$ nhánh. |
+| **Tầng 2: `clg_4b` (AOI + INV, 76T)** | Hiện thực 2 tầng cổng phức hợp (`AOI21..AOI54321` + Inverter) để xuất $C_1 \dots C_4$ song song. Nếu giữ cỡ cố định ($8\lambda/24\lambda$) thì tiết kiệm $\Sigma W$ ($1\,152\lambda$) nhưng nhánh 5 transistor của $C_4$ bị giảm sức kéo còn $\approx 40\%$ `inv_x1`; nếu tăng cỡ theo độ sâu ($20\lambda/60\lambda$) thì $\Sigma W$ tăng lên $2\,288\lambda$. |
+| **Tầng 3: `sum_cell` ($S_i = P_i \oplus C_i$)** | Tái sử dụng cờ $P_i$ có sẵn từ Tầng 1, kết hợp $C_i$ từ `clg_4b` để xuất tổng $S_i$. |
+| **Giới hạn mở rộng ($8, 16, 32$ bit)** | Nếu mở rộng CLG phẳng, chuỗi nối tiếp tăng tới $N+1$ transistor (quá chậm) và số transistor tăng $O(N^2)$. Thực tế phải dùng **CLA phân cấp nhiều tầng** (chia nhóm 4-bit dùng $P_G, G_G$). |
+
+---
+
 ### 9.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Đính chính kiểm kê Transistor và $\Sigma W$:**
    - Khối `clg_4b` chuẩn CMOS đầy đủ gồm `AOI21` ($6\text{T}$) + `AOI321` ($12\text{T}$) + `AOI4321` ($20\text{T}$) + `AOI54321` ($30\text{T}$) = $68\text{T}$ + 4 Inverter ($8\text{T}$) = **$76$ Transistors** (bản cũ ghi nhầm $62\text{T}$ do thiếu nhánh PMOS trong file SPICE rút gọn).

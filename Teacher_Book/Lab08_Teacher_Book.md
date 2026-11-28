@@ -11,6 +11,27 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 8.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Ô nhớ tĩnh 6T SRAM (`sram_6t_cell`):** Phần tử lưu trữ 1-bit dùng cặp Inverter ghép chéo (giữ dữ liệu vô thời hạn khi còn nguồn, không cần làm tươi như DRAM) kết hợp 2 Access NMOS nối với cặp Bitline vi sai (`BL`, `BLB`). Chiếm phần lớn diện tích trong bộ nhớ đệm Cache L1/L2/L3 của vi xử lý.
+   - **Mạch khuếch đại cảm nhận (VLSA - Voltage Latch Sense Amplifier):** Mạch khuếch đại vi sai dùng hồi tiếp dương để phát hiện độ lệch áp rất nhỏ trên Bitline ($\Delta V_{BL} \approx 100 - 200\,\text{mV}$) và chốt nhanh thành mức logic $0/V_{DD}$, tránh phải chờ ô nhớ xả toàn dải trên tụ Bitline lớn ($C_{BL} \approx 1\,\text{pF}$).
+2. **Định nghĩa chuẩn:**
+   - **Cell Ratio ($CR = \frac{(W/L)_{driver}}{(W/L)_{access}}$):** Tỉ số kích thước giữa Driver NMOS và Access NMOS, quyết định độ ổn định khi Đọc (chống Read Disturb).
+   - **Pull-up Ratio ($PR = \frac{(W/L)_{load}}{(W/L)_{access}}$):** Tỉ số kích thước giữa Load PMOS và Access NMOS, quyết định khả năng Ghi đè (Writability).
+   - **Static Noise Margin ($SNM$):** Độ lớn nhiễu DC tối đa mà cặp Inverter ghép chéo chịu được trước khi lật trạng thái; đo bằng cạnh hình vuông lớn nhất nội tiếp trong **thùy nhỏ hơn** của đường cong Butterfly.
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Driver NMOS ($M_{D1}, M_{D2}$, $8\lambda$)** | Kéo giữ nút `'0'` xuống đất trong cả Hold và Read. Phải mạnh hơn Access ($CR \ge 1,5 - 2,0$) để điện áp dâng $V_Q$ khi đọc ($\approx 0,73 - 0,79\,\text{V}$) nằm an toàn dưới ngưỡng lật $V_M \approx 1,49\,\text{V}$ của Inverter đối diện. |
+| **Access NMOS ($M_{AX1}, M_{AX2}$, $4\lambda$)** | Đóng mở cổng nối với `BL`/`BLB` theo tín hiệu hàng `WL`. Nằm ở giao điểm của hai mâu thuẫn: to quá thì hỏng Đọc, nhỏ quá thì không Ghi được! |
+| **Load PMOS ($M_{L1}, M_{L2}$, $2\lambda$)** | Giữ nút `'1'` chống dòng rò lúc Hold; phải yếu hơn Access (nhờ $\mu_n \approx 3\mu_p$, $PR=0,5$ cho sức kéo Access/Load $= 6\times$) để khi ghi `'0'` kéo tụt được nút lưu trữ xuống $\approx 0,36\,\text{V} \ll V_M$. *(Layout thực tế dùng $W_L \ge 3\lambda$, tăng $L_L$)*. |
+| **Cụm VLSA & Chân `saen`** | Khi `saen` bật lên $V_{DD}$, cặp Inverter ghép chéo khuếch đại vi sai $\pm 150\,\text{mV}$ thành $0/5\,\text{V}$ chỉ trong $\sim 70-200\,\text{ps}$, giúp tiết kiệm $>90\%$ năng lượng nạp xả `BL`/`BLB`. |
+
+---
+
 ### 8.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Giải quyết triệt để mâu thuẫn công thức $V_Q$ khi đọc `'0'`:** Công thức xấp xỉ bậc nhất $\frac{V_{DD}-V_{tn}}{2\cdot CR}$ cho $1,075\,\text{V}$ ở $CR=2$ (lớn hơn $V_{tn}=0,70\,\text{V}$). Giải phương trình bậc hai chính xác cho $V_Q = \mathbf{0,789\,\text{V}}$ (không body effect) hoặc $\mathbf{0,725\,\text{V}}$ (có body effect trên Access NMOS). Tiêu chí vật lý đúng không phải $V_Q < V_{tn}$, mà là **$V_Q < V_M$ của Inverter đối diện** ($V_M \approx \mathbf{1,485\,\text{V}}$ với $8\lambda/2\lambda$).
 2. **Hiểu đúng sức kéo khi ghi `'0'` (`PR`):** Dù $PR = 0,5$ theo tỉ số $W/L$, nhưng vì $K'_n / K'_p = 3$ nên tỉ số dòng thực tế giữa Access ($4\lambda$) và Load ($2\lambda$) là **$6\times$**, kéo nút $Q$ xuống cân bằng ở $\mathbf{0,357\,\text{V}} \ll V_M = 1,485\,\text{V}$.

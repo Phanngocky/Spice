@@ -11,6 +11,27 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 6.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Full Adder 1-bit (Mạch cộng toàn phần):** Khối số học cơ sở cộng 3 bit $(A, B, C_{in})$ tạo Tổng $Sum = A \oplus B \oplus C_{in}$ và Số nhớ $C_{out} = AB + C_{in}(A+B)$.
+   - **Mirror Adder (28T) vs TG Adder (22T/16T):** Mirror Adder là cấu trúc cổng tĩnh khôi phục mức tiêu chuẩn trong thư viện ASIC; TG Adder tận dụng cổng truyền và XOR để giảm số transistor nhưng không khôi phục mức ở nhánh truyền $C_{out}$.
+2. **Định nghĩa chuẩn:**
+   - **Tính tự đối ngẫu (Self-dual) của hàm Carry:** Hàm đa số $C_{out}(A, B, C_{in}) = \overline{C_{out}(\bar{A}, \bar{B}, \bar{C}_{in})}$, cho phép mạng PMOS (PUN) và mạng NMOS (PDN) dùng **cùng cấu trúc topo** (đối xứng gương).
+   - **Đường tới hạn (Critical Path) của bộ cộng $N$-bit RCA:** Chuỗi lan truyền số nhớ từ $C_{in,0} \to C_{out,0} \to \dots \to C_{out,N-2} \to Sum_{N-1}$ (hoặc $C_{out,N-1}$).
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Khối Carry ($\overline{C_{out}}$ + `INV_Cout`, 12T)** | Tạo số nhớ đảo `cob` qua 1 tầng AOI (5N+5P) và đệm ra `cout`. Tối ưu đường $C_{in} \to C_{out}$ quyết định tốc độ bộ cộng nhiều bit RCA vì được nhân với hệ số $(N-1)$. |
+| **Tín hiệu trung gian `cob` ($\overline{C_{out}}$)** | Được tái sử dụng trực tiếp đưa vào khối Sum ($Sum = ABC_{in} + \overline{C_{out}}(A+B+C_{in})$), rút gọn khối Sum xuống chỉ còn 14T logic + 2T đệm. |
+| **Vị trí transistor $C_{in}$ sát `cob`** | Vì $C_{in}$ thường đến muộn nhất (chờ tầng trước), đặt $C_{in}$ sát ngõ ra `cob` giúp tận dụng việc $A, B$ đã xả/nạp sẵn các nút nội phía dưới ở nhiều tổ hợp. |
+| **Tải ngõ vào chân $C_{in}$ ($W_{Cin} = 128\lambda$)** | Chân $C_{in}$ lái cả khối Carry ($32\lambda$) và 2 nhánh khối Sum ($96\lambda$), tương đương $\approx 58\,\text{fF}$ ($8\times$ `inv_x1`). Đây là tải thực tế quyết định độ dốc trễ mỗi tầng trong chuỗi RCA thật. |
+| **2 Inverter đệm (`INV_Cout`, `INV_Sum`)** | Khôi phục mức logic đầy đủ (level-restoring) và đảo cực tính, giúp trễ chuỗi RCA tăng tuyến tính $O(N)$ thay vì tăng bậc hai $O(N^2)$ như TG Adder không đệm. |
+
+---
+
 ### 6.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Hiểu chính xác giải phẫu Mirror Adder 28T:** Khối Carry có **5 NMOS + 5 PMOS + 2T Inverter = 12T**; khối Sum có **7 NMOS + 7 PMOS + 2T Inverter = 16T**; tổng chuẩn xác là **28 Transistors**. Mạng PDN thực hiện $Sum = A B C_{in} + \overline{C_{out}}(A+B+C_{in})$ nên ngõ ra tầng là $\overline{Sum}$ (bản cũ ghi nhầm vế trái là $\overline{Sum}$).
 2. **Hiểu bản chất "Mirror" (tự đối ngẫu):** PUN và PDN của khối Carry dùng **cùng cấu trúc topo** $(A \cdot B) \parallel (C_{in} \cdot (A \parallel B))$, nhờ vậy cân bằng điện dung và dùng chung đường đi Euler 5 transistor (`B - A - Cin - A - B`).

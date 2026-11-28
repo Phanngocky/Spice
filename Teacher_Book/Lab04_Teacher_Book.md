@@ -11,6 +11,27 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 4.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Pass-Transistor Logic (PTL):** Dùng trực tiếp transistor MOS như một công tắc nối tiếp để truyền tín hiệu từ ngõ vào sang ngõ ra nhằm giảm số lượng transistor so với cổng CMOS tĩnh. Tuy nhiên, một transistor đơn lẻ bị suy hao điện áp ngưỡng ở một chiều truyền tín hiệu.
+   - **Cổng truyền CMOS (Transmission Gate - TG):** Ghép song song 1 NMOS và 1 PMOS điều khiển đối pha ($EN$ và $\overline{EN}$) để bù trừ lẫn nhau, tạo thành công tắc hai chiều truyền được toàn dải $0 \leftrightarrow V_{DD}$ ở tải điện dung.
+   - **Bộ dồn kênh MUX dùng TG (`mux2_tg`, `mux4_tg`):** Dùng 2 TG đóng/ngắt luân phiên và 1 Inverter đảo tín hiệu chọn $S$, rút gọn còn $6\text{T}$ (so với $10-12\text{T}$ của MUX tĩnh).
+2. **Định nghĩa chuẩn:**
+   - **Weak '1' / Weak '0':** Hiện tượng ngõ ra không đạt tới mức nguồn/đất khi truyền qua khóa đơn lẻ: NMOS bị chặn lại ở $V_{out,max} = V_{DD} - V_{thn}(V_{SB})$ (Weak '1'), còn PMOS bị chặn lại ở $V_{out,min} = |V_{tp}(V_{BS})|$ (Weak '0').
+   - **Điện trở dẫn tương đương $R_{TG}(V_{in})$:** Tổng song song của $R_{on,n}(V_{in}) \parallel R_{on,p}(V_{in})$ khi cổng truyền mở.
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Hệ số thân $\gamma_n, \gamma_p$ ($V_{SB}, V_{BS}$)** | Làm tăng $|V_{th}|$ khi cực Source không nối với Bulk. Trong thực tế làm sụt mạnh biên độ Weak '1' ($\approx 3,79\,\text{V}$) và nâng cao đáy Weak '0' ($\approx 1,42\,\text{V}$), đồng thời làm $R_{TG}$ vồng lên ở giữa dải ($1,68\,\text{k}\Omega$). |
+| **Tỉ số kích thước $W_p / W_n$ ($12\lambda / 4\lambda$)** | Cân bằng độ dẫn $\beta_n = \beta_p$ để $R_{TG}(V_{in})$ phẳng nhất có thể trên dải giữa; nếu không cân bằng thì $R_{TG}$ lệch theo mức logic. |
+| **Inverter tạo $\overline{S}$ trong MUX2** | Sinh ra độ trễ $\Delta t \approx t_{pd,inv}$ giữa $S$ và $\overline{S}$, tạo khoảng chồng dẫn ngắn khi chuyển kênh (gây glitch và dòng ngắn mạch khi $D_0 \neq D_1$). |
+| **Nút chung `y` & Chuỗi $N$ TG** | Nút `y` gộp 4 cực má làm tăng tụ ký sinh PEX. Khi nối tiếp $N$ TG không đệm, trễ tăng theo $O(N^2)$ (Elmore), nên thực tế chỉ nối tối đa 3–4 TG trước khi chèn bộ đệm `inv_x1`. |
+
+---
+
 ### 4.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Hiểu cặn kẽ giới hạn của Pass Transistor đơn lẻ:** NMOS truyền mức '1' kém (Weak '1') và PMOS truyền mức '0' kém (Weak '0'). **Điểm đính chính quan trọng:** cả hai đều chịu tác động của **hiệu ứng phân cực thân (Body Effect)**. Với PMOS, Bulk luôn nối $V_{DD} = 5,0\,\text{V}$, khi ngõ ra tiến về $0\,\text{V}$ thì $V_{BS} \approx 3,6\,\text{V}$, đẩy $|V_{tp}|$ từ $0,80\,\text{V}$ lên $\approx 1,42 - 1,46\,\text{V}$!
 2. **Hiểu đúng cơ chế điện trở $R_{TG}(V_{in})$:** Khi kết hợp song song NMOS ($4\lambda$) và PMOS ($12\lambda$), độ dẫn tổng $G_{TG} = \beta(V_{DD} - V_{tn} - |V_{tp}|)$ là hằng số trên dải giữa (nếu bỏ qua body effect), cho $R_{TG} \approx \mathbf{1,19\,\text{k}\Omega}$ (chứ **không** phải $490\,\Omega$). Khi tính đầy đủ body effect, $R_{TG}$ đạt đỉnh ở giữa dải khoảng $1,68\,\text{k}\Omega$.

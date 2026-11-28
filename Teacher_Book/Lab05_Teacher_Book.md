@@ -11,6 +11,29 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 5.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Mạch tuần tự (Sequential Logic):** Khác với mạch tổ hợp (ngõ ra chỉ phụ thuộc ngõ vào hiện tại), mạch tuần tự có khả năng lưu giữ trạng thái quá khứ nhờ vòng phản hồi dương (Cross-coupled Inverters).
+   - **D-Latch vs D-Flip-Flop (DFF):** D-Latch nhạy theo mức xung nhịp (trong suốt khi `CLK=1`, chốt khi `CLK=0`), dễ bị nhiễu xuyên tầng (Race) nếu mắc nối tiếp. DFF Master-Slave ghép 2 D-Latch đối pha để chỉ lấy mẫu dữ liệu quanh sườn xung nhịp, làm phần tử nhớ chuẩn cho hệ thống số đồng bộ (thanh ghi, pipeline, ALU).
+2. **Định nghĩa chuẩn:**
+   - **$t_{setup}$ (Thời gian thiết lập):** Khoảng thời gian tối thiểu $D$ phải ổn định **trước** mốc $50\%$ sườn lên `CLK` (đo bằng quy ước đẩy trễ $10\%$ của $t_{c-q}$).
+   - **$t_{hold}$ (Thời gian giữ):** Khoảng thời gian tối thiểu $D$ phải giữ nguyên **sau** mốc $50\%$ sườn lên `CLK` để dữ liệu mới không ghi đè làm hỏng trạng thái vừa chốt (điều kiện nhị phân).
+   - **$t_{c-q}$ (Clock-to-Q Delay):** Độ trễ từ mốc $50\%$ sườn lên `CLK` đến mốc $50\%$ ngõ ra $Q$ ổn định.
+   - **Metastability:** Trạng thái cân bằng không bền quanh $V_M \approx V_{DD}/2$ khi vi phạm cửa sổ setup/hold, đòi hỏi thời gian giải quyết kéo dài theo hàm mũ.
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Khóa $TG_1, TG_2$ trong Latch** | $TG_1$ nạp $D$ vào nút $X$; $TG_2$ đóng vòng phản hồi khi chốt. Vì $TG_1$ và $TG_2$ mở đối pha, $I_3$ được cách ly nên chỉ cần cỡ tối thiểu ($4\lambda/2\lambda$) để giữ rò, không tranh chấp với $TG_1$. |
+| **Tầng Master & Slave** | Master đón $D$ lúc `CLK=0` và khóa lúc `CLK` lên; Slave mở lúc `CLK=1` đẩy $Q_M$ ra $Q$. Giúp cô lập ngõ vào với ngõ ra trong phần lớn chu kỳ. |
+| **Bộ đảo xung nhịp `X_CLK_INV`** | Tạo `clk_n` bị trễ $\approx t_{pd,inv}$ so với `clk`. Khoảng trễ này khiến $TG_{M1}$ đóng chậm một chút sau sườn lên `CLK`, chính là nguyên nhân vật lý sinh ra $t_{hold} > 0$. |
+| **Cặp đệm ngõ ra $I_{S1}, I_{S2}$** | $I_{S1}$ tạo $\bar{Q}$ trong vòng chốt, $I_{S2}$ đệm ra $Q$ cách ly tụ tải ngoài $C_L$ khỏi vòng nhớ (tránh nhiễu tải ngoài làm lật Slave) và nằm trực tiếp trên đường $t_{c-q}$. |
+| **Ràng buộc $T_{clk} \ge t_{c-q} + t_{comb} + t_{setup} + t_{skew}$** | Quyết định tần số xung nhịp cực đại $f_{max}$ của toàn bộ chip; vi phạm $t_{setup}$ có thể sửa bằng giảm tần số $f_{clk}$, nhưng vi phạm $t_{hold}$ sẽ làm chip hỏng ở mọi tần số! |
+
+---
+
 ### 5.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
 1. **Phân biệt rạch ròi Latch (nhạy mức) và Flip-Flop (nhạy sườn)** và hiểu rõ tại sao D-Latch có khóa cách ly $TG_2$ lại **không** cần Inverter $I_3$ phải "yếu" để chống tranh chấp như mạch chốt không có $TG_2$.
 2. **Hiểu nguồn gốc vật lý của $t_{hold}$ và Race condition:** Cấu trúc Master-Slave chỉ giảm thiểu race khi $\overline{CLK}$ bám sát $CLK$. Độ trễ qua `X_CLK_INV` ($\approx t_{pd,inv}$) tạo ra khoảng chồng dẫn ngắn khi Master chưa kịp khóa hoàn toàn mà Slave đã mở $\implies$ sinh ra yêu cầu $t_{hold}$.

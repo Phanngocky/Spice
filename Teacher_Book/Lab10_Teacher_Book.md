@@ -10,6 +10,26 @@
 
 ## PHẦN I: KIẾN THỨC NỀN TẢNG, PHÂN TÍCH VẬT LÝ & ĐỊNH CỠ CHUYÊN SÂU
 
+### 10.0 Khái niệm chung, Định nghĩa chuẩn & Vai trò các tầng/tham số trong thực tế
+*(Phần trình bày nhanh trên bảng 5–7 phút trước khi vào bài)*
+
+1. **Khái niệm chung:**
+   - **Hệ thống Datapath đồng bộ (Registered ALU):** Kết hợp khối tính toán tổ hợp (cộng + logic + chọn kênh MUX) nằm giữa hai tầng thanh ghi chốt theo xung nhịp (`DFF`), cho phép ngăn chặn lan truyền xung kim (glitch), đồng bộ dữ liệu theo chu kỳ $T_{clk}$ và ghép nối nhiều tầng pipeline.
+   - **Quy trình Top-Down & Sign-off vật lý:** Đi từ đặc tả tập lệnh (`OP[1:0]`) $\to$ tích hợp các IP chuẩn (`inv_x1`, `nand2`, `nor2`, `mux4_tg`, `full_adder_1b`/`cla_adder_4b`, `dff_ms_x1`) $\to$ Floorplan mặt bằng chip + mạng cấp nguồn (Power Grid) $\to$ kiểm chứng DRC, LVS (NCC) và mô phỏng Post-layout PEX.
+2. **Định nghĩa chuẩn:**
+   - **Ngân sách thời gian (Timing Budget):** Phép cộng toàn bộ độ trễ trên đường tới hạn từ thanh ghi nguồn đến thanh ghi đích: $T_{clk,min} = t_{c-q} + t_{comb,max} + t_{setup} + t_{skew}$.
+   - **Sụt áp tĩnh ($IR\text{-drop}$) & Nhiễu động ($L \cdot di/dt$):** Độ sụt điện áp trên đường dây nguồn kim loại khi dòng điện lớn chạy qua điện trở ký sinh $R_{wire}$ (làm giảm $V_{DD}$ hiệu dụng tại các cổng ở xa chân nguồn, kéo theo tăng trễ chuyển mạch).
+3. **Vai trò từng tầng mạch & tham số trong thực tế:**
+
+| Tầng / Tham số | Vai trò trong mạch & Ý nghĩa thực tế khi thiết kế chip |
+| :--- | :--- |
+| **Thanh ghi đầu vào & đầu ra (`dff_ms_x1`)** | Chốt giữ toán hạng $A, B, C_{in}$ và kết quả $OUT[3:0], C_{out}, Z$ đồng bộ theo sườn lên `CLK`; quyết định $t_{c-q}$ và $t_{setup}$ trong ngân sách thời gian. |
+| **Khối Số học & Logic (`ADD, AND, OR, XOR`)** | Thực thi song song 4 phép toán theo `OP[1:0]`; phép `ADD` (qua `full_adder_1b` hoặc `cla_adder_4b`) tạo nên đường trễ dài nhất ($t_{comb,max}$). |
+| **Bộ dồn kênh `mux4_tg` & Mạch cờ `Z`** | `mux4_tg` chọn 1 trong 4 kết quả đưa ra thanh ghi đích; cổng `NOR4` kiểm tra $OUT=0000$ để xuất cờ Zero ($Z$). |
+| **Mạng Power Grid & `t_skew`** | Thanh nguồn Metal 1/2 đủ rộng giúp giảm $IR$-drop; phân phối `CLK` cân bằng (H-tree) giúp giữ `t_skew` nhỏ để không ăn vào ngân sách $T_{clk}$ và không gây vi phạm `t_hold`. |
+
+---
+
 # 10. LAB 10 — CAPSTONE: ALU 4-BIT TÍCH HỢP CÓ THANH GHI (ĐỒ ÁN)
 
 ## 10.1 Ý cốt lõi sinh viên phải mang ra khỏi phòng máy
